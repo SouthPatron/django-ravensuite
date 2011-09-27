@@ -25,15 +25,16 @@ class OrgList( ListView ):
 		return redirect( 'org-single', oid = oid )
 
 
-class OrgSingle( ListView ):
+class OrgSingle( SingleObjectView ):
 	template_name = 'pages/org/org/single'
 
 	def get_object( self, request, *args, **kwargs ):
-		pk = kwargs.get( 'pk', None )
-		if pk is None:
+		oid = kwargs.get( 'oid', None )
+		print 'oid = {}'.format( oid )
+		if oid is None:
 			self.not_found()
 
-		return get_object_or_404( Organization, id = pk )
+		return get_object_or_404( Organization, id = oid )
 
 
 

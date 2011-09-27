@@ -3,15 +3,14 @@ from __future__ import unicode_literals
 from django.http import HttpResponseServerError, HttpResponseForbidden
 
 
-from django.shortcuts import render_to_response, get_object_or_404, redirect
+from django.shortcuts import render_to_response
 from django.template import RequestContext
-from django.views.generic.base import View
 from django.http import Http404
 
-
 from ..models import *
+from base import Base
 
-class SingleObjectView( View ):
+class SingleObjectView( Base ):
 
 	# ************** Probably want to override
 
