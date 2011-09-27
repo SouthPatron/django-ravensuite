@@ -1,3 +1,5 @@
+from __future__ import unicode_literals
+
 from django.db import models
 from django.contrib.auth.models import User
 
@@ -22,11 +24,8 @@ State = ChoicesEnum(
 
 
 
-
-
 class DebugControl( models.Model ):
 	current_time = models.DateTimeField()
-
 
 class Organization( models.Model ):
 	trading_name = models.CharField( max_length = 192 )

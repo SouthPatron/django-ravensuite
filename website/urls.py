@@ -8,5 +8,7 @@ urlpatterns = patterns('',
 
 	url( r'^$', 'org.views.index', name = 'org-index' ),
 
+	url(r'^org/', include('org.urls')),
+
 )
 
