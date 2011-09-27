@@ -6,8 +6,6 @@ from django.conf.urls.defaults import patterns, include, url
 
 urlpatterns = patterns('',
 
-	url( r'^$', 'org.views.index', name = 'org-index' ),
-
 	url(r'^org/', include('org.urls')),
 
 )

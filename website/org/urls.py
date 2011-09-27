@@ -1,19 +1,22 @@
 from django.conf.urls.defaults import *
-from django.views.generic import RedirectView, UpdateView
 
 from views import *
-from models import *
 
-urlpatterns = patterns('org.views',
-
-	url( r'^$', 'index', name = 'org-index' ),
+urlpatterns = patterns('',
 
 	url(
-		r'^(?P<pk>\d+)$',
-		Org.as_view(),
+		r'^$',
+		OrgList.as_view(),
+		{
+		},
+		name = 'org-list' ),
+
+	url(
+		r'^(?P<oid>\d+)$',
+		OrgSingle.as_view(),
 		{ 
 		},
-		name = 'org-org',
+		name = 'org-single',
 	),
 
 )

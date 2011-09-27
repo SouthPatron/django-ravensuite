@@ -1,1 +1,1 @@
-{ 'name' : 'douglas' }
+[ {% for obj in object_list %} { "trading_name" : "{{ obj.trading_name }}" }{% if not forloop.last %},{% endif %} {% endfor %} ]

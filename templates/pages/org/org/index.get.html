@@ -3,6 +3,20 @@
 <title>Hola</title>
 </head>
 <body>
+
 <h1>Hello World!</h1>
+
+{% if object_list.count == 0 %}
+<p>No organizations found</p>
+{% else %}
+
+<ul>
+{% for obj in object_list %}
+	<li><a href='{% url org-single obj.id %}'>{{ obj.trading_name }}</a></li>
+{% endfor %}
+</ul>
+
+{% endif %}
+
 </body>
 </html>
