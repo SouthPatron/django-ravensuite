@@ -1,12 +1,14 @@
 from __future__ import unicode_literals
 
-from django.http import HttpResponseServerError
+from django.http import HttpResponseServerError, HttpResponseForbidden
 
 
 from django.shortcuts import render_to_response, get_object_or_404, redirect
 from django.template import RequestContext
 from django.views.generic.base import View
 from django.http import Http404
+
+import json
 
 
 from ..models import *
@@ -29,6 +31,7 @@ class Base( View ):
 	
 	def delete_object( self, request, ob, *args, **kwargs ):
 		ob.delete()
+		return True
 
 	# ************** Unlikely to override
 
@@ -43,13 +46,20 @@ class Base( View ):
 		raise Http404( 'Object Not Found' )
 
 
+	# ************** Support methods
+
+	def _parse_format( self, request ):
+		fmt = request.GET.get( 'format', 'html' )
+		if fmt not in self.supported_formats:
+			return None
+		return fmt
+
 
 	# ************** HTTP Operations
 
 	def get( self, request, *args, **kwargs ):
-		fmt = request.GET.get( 'format', 'html' )
-		if fmt not in self.supported_formats:
-			return HttpResponseServerError()
+		fmt = self._parse_format( request )
+		if fmt is None: return HttpResponseForbidden()
 
 		ob = self.get_object( request, *args, **kwargs )
 		if ob is None:
@@ -72,17 +82,38 @@ class Base( View ):
 
 	
 	def post( self, request, *args, **kwargs ):
+		fmt = self._parse_format( request )
+		if fmt is None: return HttpResponseForbidden()
 		return redirect( 'org-index' )
 
 
 	def put( self, request, *args, **kwargs ):
+		fmt = self._parse_format( request )
+		if fmt is None: return HttpResponseForbidden()
+
+
+		if fmt == 'html':
+			data = request.POST
+
+		if fmt == 'json':
+			body = request.read()
+			try:
+				data = json.loads( body )
+			except:
+				return HttpResponseServerError()
+
+		handler = getattr( self, 'create_object_{}'.format( fmt ), None )
+		if handler is None:
+			return HttpResponseForbidden()
+
+		ob = handler( request, data, *args, **kwargs )
+
 		return redirect( 'org-index' )
 
 
 	def delete( self, request, *args, **kwargs ):
-		fmt = request.GET.get( 'format', 'html' )
-		if fmt not in self.supported_formats:
-			return HttpResponseServerError()
+		fmt = self._parse_format( request )
+		if fmt is None: return HttpResponseForbidden()
 
 		ob = self.get_object( request, *args, **kwargs )
 		if ob is None:
