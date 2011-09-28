@@ -11,46 +11,42 @@ class ClientList( ListView ):
 	template_name = 'pages/org/client/index'
 
 	def get_object_list( self, request, *args, **kwargs ):
-		oid = kwargs.get( 'oid', None )
-		if oid is None:
-			self.not_found()
-
-		obj_list = Client.objects.filter( organization = oid )
+		mid = self._extract_ids( [ 'oid' ], **kwargs )
+		obj_list = Client.objects.filter( organization = mid.oid )
 		return obj_list
 	
 	def create_object_json( self, request, data, *args, **kwargs ):
-		oid = kwargs.get( 'oid', None )
-		if oid is None:
-			self.not_found()
+		mid = self._extract_ids( [ 'oid' ], **kwargs )
 
 		# TODO: select_for_update()
-		sc = OrganizationCounter.objects.get( organization = oid )
+		sc = OrganizationCounter.objects.get( organization = mid.oid )
 		refnum = sc.client_no
 		sc.client_no += 1
 		sc.save()
 
 		newclient = Client()
-		newclient.organization = Organization.objects.get( id = oid )
+		newclient.organization = Organization.objects.get( id = mid.oid )
 		newclient.refnum = refnum
 		newclient.trading_name = data[ 'trading_name' ]
 		newclient.save()
 
-		return redirect( 'org-client-single', oid = oid, cid = refnum )
+		return redirect( 'org-client-single', oid = mid.oid, cid = refnum )
 
 
 class ClientSingle( SingleObjectView ):
 	template_name = 'pages/org/client/single'
 
 	def get_object( self, request, *args, **kwargs ):
-		oid = kwargs.get( 'oid', None )
-		if oid is None:
-			self.not_found()
+		mid = self._extract_ids( [ 'oid', 'cid' ], **kwargs )
+		return get_object_or_404( Client, refnum = mid.cid, organization = mid.oid )
 
-		cid = kwargs.get( 'cid', None )
-		if cid is None:
-			self.not_found()
+	def delete_object( self, request, ob, *args, **kwargs ):
+		ob.delete()
+		return redirect( 'org-client-list', oid = ob.organization.refnum )
 
-		return get_object_or_404( Client, refnum = cid, organization = oid )
-
+	def update_object_json( self, request, obj, data, *args, **kwargs ):
+		obj.trading_name = data.get( 'trading_name', obj.trading_name )
+		obj.save()
+		return redirect( 'org-client-single', oid = obj.organization.refnum, cid = obj.refnum )
 
 

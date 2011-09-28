@@ -37,10 +37,8 @@ class OrgSingle( SingleObjectView ):
 	template_name = 'pages/org/org/single'
 
 	def get_object( self, request, *args, **kwargs ):
-		oid = kwargs.get( 'oid', None )
-		if oid is None:
-			self.not_found()
-		return get_object_or_404( Organization, refnum = oid )
+		mid = self._extract_ids( [ 'oid' ], **kwargs )
+		return get_object_or_404( Organization, refnum = mid.oid )
 
 	def delete_object( self, request, ob, *args, **kwargs ):
 		ob.delete()
