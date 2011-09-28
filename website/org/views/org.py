@@ -40,8 +40,14 @@ class OrgSingle( SingleObjectView ):
 		oid = kwargs.get( 'oid', None )
 		if oid is None:
 			self.not_found()
-
 		return get_object_or_404( Organization, refnum = oid )
 
+	def delete_object( self, request, ob, *args, **kwargs ):
+		ob.delete()
+		return redirect( 'org-list' )
 
+	def update_object_json( self, request, obj, data, *args, **kwargs ):
+		obj.trading_name = data.get( 'trading_name', obj.trading_name )
+		obj.save()
+		return redirect( 'org-single', oid = obj.refnum )
 

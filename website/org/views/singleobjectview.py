@@ -21,8 +21,7 @@ class SingleObjectView( Base ):
 		return None
 	
 	def delete_object( self, request, ob, *args, **kwargs ):
-		ob.delete()
-		return True
+		return HttpResponseForbidden()
 
 #	def update_object_<format>( self, request, obj, data, *args, **kwargs )
 	
@@ -81,5 +80,5 @@ class SingleObjectView( Base ):
 		extra = self.get_extra( request, ob, fmt, *args, **kwargs )
 		ntn = self.get_template_name( 'delete', fmt )
 
-		return self.delete_object( ob )
+		return self.delete_object( request, ob, *args, **kwargs )
 

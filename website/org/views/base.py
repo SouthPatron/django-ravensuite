@@ -5,6 +5,7 @@ from django.http import Http404
 
 import json
 
+from django.views.decorators.csrf import csrf_exempt, csrf_protect
 
 class Base( View ):
 	template_name = None
@@ -14,6 +15,22 @@ class Base( View ):
 		'json' : 'text/json',
 	}
 
+	# ************** CSRF workarounds per format
+
+
+	@csrf_exempt
+	def dispatch(self, request, *args, **kwargs):
+
+		@csrf_protect
+		def protected( request, *args, **kwargs ):
+			return super( Base, self ).dispatch( request, *args, **kwargs )
+
+		fmt = self._parse_format( request )
+
+		if fmt == 'html':
+			return protected( request, *args, **kwargs )
+
+		return super( Base, self ).dispatch( request, *args, **kwargs )
 
 	# ************** Unlikely to override
 
