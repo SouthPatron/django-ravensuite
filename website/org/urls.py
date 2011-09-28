@@ -19,6 +19,9 @@ urlpatterns = patterns('',
 	url( r'^(?P<oid>\d+)/client/(?P<cid>\d+)/account/(?P<aid>\d+)/transactions$', TransactionList.as_view(), name = 'org-client-account-transaction-list' ),
 	url( r'^(?P<oid>\d+)/client/(?P<cid>\d+)/account/(?P<aid>\d+)/transaction/(?P<tid>\d+)$', TransactionSingle.as_view(), name = 'org-client-account-transaction-single' ),
 
+	url( r'^(?P<oid>\d+)/client/(?P<cid>\d+)/account/(?P<aid>\d+)/reservations$', ReservationList.as_view(), name = 'org-client-account-reservation-list' ),
+	url( r'^(?P<oid>\d+)/client/(?P<cid>\d+)/account/(?P<aid>\d+)/reservation/(?P<rid>[0-9a-fA-F]{32})$', ReservationSingle.as_view(), name = 'org-client-account-reservation-single' ),
+
 
 )
 

@@ -20,3 +20,10 @@ lwp-request ${OPTIONS} -m PUT http://localhost:8000/org/1/client/1/account/1/tra
 
 lwp-request ${OPTIONS} -m PUT http://localhost:8000/org/1/client/1/account/1/transactions?format=json < 00006-mktrans.json > 00006.resp
 
+lwp-request ${OPTIONS} -m PUT http://localhost:8000/org/1/client/1/account/1/reservations?format=json < 00007-mkres.json > 00007.resp
+
+lwp-request ${OPTIONS} -m PUT http://localhost:8000/org/1/client/1/account/1/reservations?format=json < 00008-mkres.json > 00008.resp
+
+lwp-request ${OPTIONS} -m PUT http://localhost:8000/org/1/client/1/account/1/reservations?format=json < 00009-mkres.json > 00009.resp
+
+

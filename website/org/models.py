@@ -75,6 +75,17 @@ class TransactionData( models.Model ):
 	transaction = models.ForeignKey( Transaction )
 	data = models.TextField()
 
+class Reservation( models.Model ):
+	account = models.ForeignKey( Account )
+	event_time = models.DateTimeField()
+	expiry_time = models.DateTimeField()
+	group = models.CharField( max_length = 32 )
+	description = models.CharField( max_length = 64 )
+	uuid = models.CharField( max_length = 32, unique = True )
+	amount = models.BigIntegerField()
+	is_grouped = models.BooleanField()
+
+
 class Invoice( models.Model ):
 	account = models.ForeignKey( Account )
 	refnum = models.BigIntegerField()
@@ -101,12 +112,6 @@ class Payment( models.Model ):
 	transaction = models.ForeignKey( Transaction )
 
 	
-class Reservation( models.Model ):
-	account = models.ForeignKey( Account )
-	event_time = models.DateTimeField()
-	expiry_time = models.DateTimeField()
-	uuid = models.CharField( max_length = 32, unique = True )
-	amount = models.BigIntegerField()
 	
 class Subscription( models.Model ):
 	account = models.ForeignKey( Account )

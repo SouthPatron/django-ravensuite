@@ -47,6 +47,8 @@ class TransactionList( ListView ):
 		newt.is_voided = data.get( 'is_voided', False )
 		newt.save()
 
+		tdata = TransactionData.objects.create( transaction = newt, data = data.get( 'data', '' ) )
+
 		theaccount.balance += amount
 		theaccount.save()
 
