@@ -55,7 +55,6 @@ class Account( models.Model ):
 	name = models.CharField( max_length = 64 )
 
 	min_balance = models.BigIntegerField( default = 0 )
-
 	balance = models.BigIntegerField( default = 0 )
 	reserved = models.BigIntegerField( default = 0 )
 
@@ -64,9 +63,10 @@ class Transaction( models.Model ):
 	event_time = models.DateTimeField()
 	group = models.CharField( max_length = 32 )
 	description = models.CharField( max_length = 64 )
-	amount_before = models.BigIntegerField( default = 0 )
-	amount_adjustment = models.BigIntegerField( default = 0 )
-	amount_after = models.BigIntegerField( default = 0 )
+	balance_before = models.BigIntegerField( default = 0 )
+	balance_reserved = models.BigIntegerField( default = 0 )
+	balance_adjustment = models.BigIntegerField( default = 0 )
+	balance_after = models.BigIntegerField( default = 0 )
 
 	is_grouped = models.BooleanField()
 	is_voided = models.BooleanField()

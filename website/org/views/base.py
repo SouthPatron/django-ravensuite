@@ -45,4 +45,15 @@ class Base( View ):
 		if fmt == 'json':
 			return json.loads( request.read() )
 
+	def _extract_ids( self, required, **kwargs ):
+		class IdObject( object ):
+			pass
+		myid = IdObject()
+		for nm in required:
+			nid = kwargs.pop( nm, None )
+			if nid is None:
+				self.not_found()
+			setattr( myid, nm, nid )
+		return myid
+
 

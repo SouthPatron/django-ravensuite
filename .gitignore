@@ -2,3 +2,4 @@ autom4te.cache
 *.pyc
 *.swp
 /media
+*.resp

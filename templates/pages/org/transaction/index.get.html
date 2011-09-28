@@ -1,0 +1,22 @@
+<html>
+<head>
+<title>Hola</title>
+</head>
+<body>
+
+<h1>Hello World!</h1>
+
+{% if object_list.count == 0 %}
+<p>No transactions found</p>
+{% else %}
+
+<ul>
+{% for obj in object_list %}
+	<li><a href='{% url org-client-account-transaction-single obj.account.client.organization.refnum obj.account.client.refnum obj.account.refnum obj.id  %}'>{{ obj.description }}</a></li>
+{% endfor %}
+</ul>
+
+{% endif %}
+
+</body>
+</html>

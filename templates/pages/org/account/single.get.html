@@ -9,7 +9,7 @@
 <p>{{ instance.trading_name }}</p>
 
 
-<a href=''>Transactions</a>
+<a href='{% url org-client-account-transaction-list instance.client.organization.refnum instance.client.refnum instance.refnum %}'>Transactions</a>
 
 </body>
 </html>

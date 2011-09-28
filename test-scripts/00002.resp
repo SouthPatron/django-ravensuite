@@ -1,9 +1,0 @@
-PUT http://localhost:8000/org/1/clients?format=json --> 302 FOUND
-Date: Wed, 28 Sep 2011 13:59:50 GMT
-Location: http://localhost:8000/org/1/client/1
-Server: WSGIServer/0.1 Python/2.7.1
-Content-Type: text/html; charset=utf-8
-Client-Date: Wed, 28 Sep 2011 13:59:50 GMT
-Client-Peer: 127.0.0.1:8000
-Client-Response-Num: 1
-
