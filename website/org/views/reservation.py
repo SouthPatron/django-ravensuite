@@ -44,6 +44,7 @@ class ReservationList( ListView ):
 		res.expiry_time = datetime.datetime.now()
 		res.group = data.get( 'group', '' )
 		res.description = data.get( 'description', '' )
+		res.expiry_action = data.get( 'expiry_action', ExpiryAction.ROLLBACK )
 		res.is_grouped = data.get( 'is_grouped', False )
 
 		res.uuid = uuid.uuid4().hex

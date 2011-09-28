@@ -1,10 +1,14 @@
-<html>
-<head>
-<title>Hola</title>
-</head>
-<body>
+{% extends 'indexbase.html' %}
 
-<h1>Hello World!</h1>
+{% block title %}Account List{% endblock %}
+
+{% block orgname %}{% endblock %}
+
+{% block links %}
+{% endblock %}
+
+{% block list %}
+
 
 {% if object_list.count == 0 %}
 <p>No account found</p>
@@ -18,5 +22,6 @@
 
 {% endif %}
 
-</body>
-</html>
+
+{% endblock %}
+

@@ -22,6 +22,13 @@ State = ChoicesEnum(
 	FINAL = ( 5, 'Final' ),
 )
 
+ExpiryAction = ChoicesEnum(
+	COMMIT = ( 1, 'commit' ),
+	ROLLBACK = ( 2, 'rollback' ),
+)
+
+
+
 
 
 class DebugControl( models.Model ):
@@ -36,10 +43,10 @@ class Organization( models.Model ):
 	refnum = models.BigIntegerField( unique = True )
 
 class OrganizationAccount( models.Model ):
-	organization = models.ForeignKey( Organization )
+	organization = models.OneToOneField( Organization )
 
 class OrganizationCounter( models.Model ):
-	organization = models.ForeignKey( Organization )
+	organization = models.OneToOneField( Organization )
 	invoice_no = models.BigIntegerField( default = 1 )
 	client_no = models.BigIntegerField( default = 1 )
 
@@ -72,13 +79,14 @@ class Transaction( models.Model ):
 	is_voided = models.BooleanField()
 
 class TransactionData( models.Model ):
-	transaction = models.ForeignKey( Transaction )
+	transaction = models.OneToOneField( Transaction )
 	data = models.TextField()
 
 class Reservation( models.Model ):
 	account = models.ForeignKey( Account )
 	event_time = models.DateTimeField()
 	expiry_time = models.DateTimeField()
+	expiry_action = models.IntegerField( choices = ExpiryAction.choices(), default = ExpiryAction.COMMIT )
 	group = models.CharField( max_length = 32 )
 	description = models.CharField( max_length = 64 )
 	uuid = models.CharField( max_length = 32, unique = True )

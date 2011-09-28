@@ -1,0 +1,68 @@
+{% load captureas %}
+
+{% captureas thetitle %}{% block title %}{% endblock %}{% endcaptureas %}
+<html>
+<head>
+<title>{{ thetitle }}</title>
+
+
+<style type="text/css">
+
+#title {
+	font-size: 2em;
+	font-weight: bold;
+	margin: 10px 0px;
+	text-shadow: 5px 5px 5px #E0E0E0;
+}
+
+#orgname {
+	font-size: 1.5em;
+	font-weight: bold;
+	color: #5F0000;
+	margin: 10px 0px;
+}
+
+
+
+#linkdiv {
+	font-size: 1.3em;
+	margin: 20px 0px;
+}
+
+
+
+th {
+	width: 300px;
+	text-align: left;
+	background-color: #E0E0F0;
+	padding: 5px;
+}
+
+td {
+	padding: 5px;
+	background-color: #F0F0F0;
+}
+
+</style>
+
+
+</head>
+<body>
+
+<div id="title">{{ thetitle }}</div>
+
+<div id="orgname">{% block orgname %}{% endblock %}</div>
+
+
+<div id="linkdiv">
+Links: 
+{% block links %}
+{% endblock %}
+</div>
+
+
+{% block list %}
+{% endblock %}
+
+</body>
+</html>

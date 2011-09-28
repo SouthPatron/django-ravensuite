@@ -1,12 +1,65 @@
-<html>
-<head>
-<title>Hola</title>
-</head>
-<body>
+{% extends 'singlebase.html' %}
 
-<h1>Transaction</h1>
+{% block title %}View Transaction{% endblock %}
 
-<p>{{ instance.description }}</p>
+{% block orgname %}{{ instance.account.client.organization.trading_name }}{% endblock %}
 
-</body>
-</html>
+{% block links %}
+{% endblock %}
+
+{% block kvp %}
+
+<tr>
+	<td>Event Time:</td>
+	<td>{{ instance.event_time }}</td>
+</tr>
+
+<tr>
+	<td>Group</td>
+	<td>{{ instance.group }}</td>
+</tr>
+
+<tr>
+	<td>Description:</td>
+	<td>{{ instance.description }}</td>
+</tr>
+
+<tr>
+	<td>Balance Before:</td>
+	<td>{{ instance.balance_before }}</td>
+</tr>
+
+<tr>
+	<td>Balance Reserved:</td>
+	<td>{{ instance.balance_reserved }}</td>
+</tr>
+
+<tr>
+	<td>Balance Adjustment:</td>
+	<td>{{ instance.balance_adjustment }}</td>
+</tr>
+
+<tr>
+	<td>Balance After:</td>
+	<td>{{ instance.balance_after }}</td>
+</tr>
+
+<tr>
+	<td>Is Grouped:</td>
+	<td>{{ instance.is_grouped }}</td>
+</tr>
+
+<tr>
+	<td>Is Voided:</td>
+	<td>{{ instance.is_voided }}</td>
+</tr>
+
+<tr>
+	<td>Data:</td>
+	<td>{{ instance.transactiondata.data }}</td>
+</tr>
+
+
+
+{% endblock %}
+

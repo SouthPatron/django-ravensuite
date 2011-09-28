@@ -1,18 +1,23 @@
-<html>
-<head>
-<title>Hola</title>
-</head>
-<body>
+{% extends 'singlebase.html' %}
 
-<h1>Client</h1>
+{% block title %}View Client{% endblock %}
 
-<p>{{ instance.trading_name }}</p>
+{% block orgname %}{{ instance.organization.trading_name }}{% endblock %}
 
-
+{% block links %}
 <a href='{% url org-client-account-list instance.organization.refnum instance.refnum %}'>Accounts</a>
+{% endblock %}
 
+{% block kvp %}
 
+<tr>
+	<td>Reference Number:</td>
+	<td>{{ instance.refnum }}</td>
+</tr>
 
+<tr>
+	<td>Trading Name:</td>
+	<td>{{ instance.trading_name }}</td>
+</tr>
 
-</body>
-</html>
+{% endblock %}
