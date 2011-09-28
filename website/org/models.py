@@ -27,18 +27,30 @@ State = ChoicesEnum(
 class DebugControl( models.Model ):
 	current_time = models.DateTimeField()
 
+class SystemCounter( models.Model ):
+	account_no = models.BigIntegerField( default = 1 )
+	organization_no = models.BigIntegerField( default = 1 )
+
 class Organization( models.Model ):
 	trading_name = models.CharField( max_length = 192 )
+	refnum = models.BigIntegerField( unique = True )
 
 class OrganizationAccount( models.Model ):
 	organization = models.ForeignKey( Organization )
 
+class OrganizationCounter( models.Model ):
+	organization = models.ForeignKey( Organization )
+	invoice_no = models.BigIntegerField( default = 1 )
+	client_no = models.BigIntegerField( default = 1 )
+
 class Client( models.Model ):
 	organization = models.ForeignKey( Organization )
-	name = models.CharField( max_length = 192 )
+	refnum = models.BigIntegerField()
+	trading_name = models.CharField( max_length = 192 )
 
 class Account( models.Model ):
 	client = models.ForeignKey( Client )
+	refnum = models.BigIntegerField( unique = True )
 	is_enabled = models.BooleanField( default = True )
 	name = models.CharField( max_length = 64 )
 
@@ -65,6 +77,7 @@ class TransactionData( models.Model ):
 
 class Invoice( models.Model ):
 	account = models.ForeignKey( Account )
+	refnum = models.BigIntegerField()
 	reference = models.CharField( max_length = 64 )
 	creation_time = models.DateTimeField()
 	invoice_date = models.DateField()
@@ -92,7 +105,7 @@ class Reservation( models.Model ):
 	account = models.ForeignKey( Account )
 	event_time = models.DateTimeField()
 	expiry_time = models.DateTimeField()
-	uuid = models.CharField( max_length = 32 )
+	uuid = models.CharField( max_length = 32, unique = True )
 	amount = models.BigIntegerField()
 	
 class Subscription( models.Model ):

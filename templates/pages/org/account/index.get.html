@@ -7,12 +7,12 @@
 <h1>Hello World!</h1>
 
 {% if object_list.count == 0 %}
-<p>No organizations found</p>
+<p>No account found</p>
 {% else %}
 
 <ul>
 {% for obj in object_list %}
-	<li><a href='{% url org-single obj.refnum %}'>{{ obj.trading_name }}</a></li>
+	<li><a href='{% url org-client-account-single obj.client.organization.refnum obj.client.refnum obj.refnum  %}'>{{ obj.name }}</a></li>
 {% endfor %}
 </ul>
 

@@ -16,13 +16,21 @@ class OrgList( ListView ):
 	
 	def create_object_json( self, request, data, *args, **kwargs ):
 
+		# TODO: Use select_for_update()
+		sc = SystemCounter.objects.get( id = 1 )
+		refnum = sc.organization_no
+		sc.organization_no += 1
+		sc.save()
+
 		neworg = Organization()
 		neworg.trading_name = data[ 'trading_name' ]
+		neworg.refnum = refnum
 		neworg.save()
 
-		oid = neworg.id
+		OrganizationCounter.objects.create( organization = neworg )
+		OrganizationAccount.objects.create( organization = neworg )
 
-		return redirect( 'org-single', oid = oid )
+		return redirect( 'org-single', oid = refnum )
 
 
 class OrgSingle( SingleObjectView ):
@@ -30,11 +38,10 @@ class OrgSingle( SingleObjectView ):
 
 	def get_object( self, request, *args, **kwargs ):
 		oid = kwargs.get( 'oid', None )
-		print 'oid = {}'.format( oid )
 		if oid is None:
 			self.not_found()
 
-		return get_object_or_404( Organization, id = oid )
+		return get_object_or_404( Organization, refnum = oid )
 
 
 
