@@ -17,6 +17,12 @@ class ChoicesEnum( object ):
 			cho.append( val )
 		cho.sort()
 		return cho
+	
+	def contains( self, needle ):
+		for key, val in object.__getattribute__( self, "_vals" ).iteritems():
+			if needle == val[0]:
+				return True
+		return False
 
 	def __getattr__( self, name ):
 		return object.__getattribute__( self, "_vals" )[ name ][ 0 ]

@@ -23,8 +23,8 @@ State = ChoicesEnum(
 )
 
 ExpiryAction = ChoicesEnum(
-	COMMIT = ( 1, 'commit' ),
-	ROLLBACK = ( 2, 'rollback' ),
+	COMMIT = ( 'commit', 'Commit' ),
+	ROLLBACK = ( 'rollback', 'Rollback' ),
 )
 
 
@@ -88,12 +88,16 @@ class Reservation( models.Model ):
 	account = models.ForeignKey( Account )
 	event_time = models.DateTimeField()
 	expiry_time = models.DateTimeField()
-	expiry_action = models.IntegerField( choices = ExpiryAction.choices(), default = ExpiryAction.COMMIT )
+	expiry_action = models.CharField( choices = ExpiryAction.choices(), default = ExpiryAction.COMMIT, max_length = 16 )
 	group = models.CharField( max_length = 32 )
 	description = models.CharField( max_length = 64 )
 	uuid = models.CharField( max_length = 32, unique = True )
 	amount = models.BigIntegerField()
 	is_grouped = models.BooleanField()
+
+class ReservationData( models.Model ):
+	reservation = models.OneToOneField( Reservation )
+	data = models.TextField()
 
 
 class Invoice( models.Model ):

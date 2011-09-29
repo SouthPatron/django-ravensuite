@@ -1,4 +1,5 @@
 from django.conf.urls.defaults import *
+from django.conf import settings
 
 from views import *
 
@@ -20,8 +21,15 @@ urlpatterns = patterns('',
 	url( r'^(?P<oid>\d+)/client/(?P<cid>\d+)/account/(?P<aid>\d+)/transaction/(?P<tid>\d+)$', TransactionSingle.as_view(), name = 'org-client-account-transaction-single' ),
 
 	url( r'^(?P<oid>\d+)/client/(?P<cid>\d+)/account/(?P<aid>\d+)/reservations$', ReservationList.as_view(), name = 'org-client-account-reservation-list' ),
-	url( r'^(?P<oid>\d+)/client/(?P<cid>\d+)/account/(?P<aid>\d+)/reservation/(?P<rid>[0-9a-fA-F]{32})$', ReservationSingle.as_view(), name = 'org-client-account-reservation-single' ),
-
 
 )
+
+if settings.DEBUG is True:
+	urlpatterns += patterns( '',
+		url( r'^(?P<oid>\d+)/client/(?P<cid>\d+)/account/(?P<aid>\d+)/reservation/(?P<rid>.+)$', ReservationSingle.as_view(), name = 'org-client-account-reservation-single' ),
+	)
+else:
+	urlpatterns += patterns( '',
+		url( r'^(?P<oid>\d+)/client/(?P<cid>\d+)/account/(?P<aid>\d+)/reservation/(?P<rid>[0-9a-fA-F]{32})$', ReservationSingle.as_view(), name = 'org-client-account-reservation-single' ),
+	)
 
