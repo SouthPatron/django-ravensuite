@@ -1,11 +1,13 @@
 from __future__ import unicode_literals
 
 from django.shortcuts import get_object_or_404, redirect
+from django.conf import settings
 
 from singleobjectview import SingleObjectView
 from listview import ListView
 
 from ..models import *
+
 
 class OrgList( ListView ):
 	template_name = 'pages/org/org/index'
@@ -27,7 +29,14 @@ class OrgList( ListView ):
 		neworg.refnum = refnum
 		neworg.save()
 
-		OrganizationCounter.objects.create( organization = neworg )
+		if settings.DEBUG is True:
+			client_no = 11
+			invoice_no = 11
+		else:
+			client_no = 1
+			invoice_no = 1
+
+		OrganizationCounter.objects.create( organization = neworg, invoice_no = invoice_no, client_no = client_no )
 		OrganizationAccount.objects.create( organization = neworg )
 
 		return redirect( 'org-single', oid = refnum )

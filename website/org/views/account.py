@@ -11,27 +11,12 @@ class AccountList( ListView ):
 	template_name = 'pages/org/account/index'
 
 	def get_object_list( self, request, *args, **kwargs ):
-		oid = kwargs.get( 'oid', None )
-		if oid is None:
-			self.not_found()
-
-		cid = kwargs.get( 'cid', None )
-		if cid is None:
-			self.not_found()
-
-		obj_list = Account.objects.filter( client = cid, client__organization = oid )
+		mid = self._extract_ids( [ 'oid', 'cid' ], **kwargs )
+		obj_list = Account.objects.filter( client__refnum = mid.cid, client__organization__refnum = mid.oid )
 		return obj_list
 	
 	def create_object_json( self, request, data, *args, **kwargs ):
-		print "Here we are"
-		oid = kwargs.get( 'oid', None )
-		if oid is None:
-			self.not_found()
-
-		cid = kwargs.get( 'cid', None )
-		if cid is None:
-			self.not_found()
-
+		mid = self._extract_ids( [ 'oid', 'cid' ], **kwargs )
 
 		# TODO: select_for_update()
 		sc = SystemCounter.objects.get( id = 1 )
@@ -40,33 +25,34 @@ class AccountList( ListView ):
 		sc.save()
 
 		newacc = Account()
-		newacc.client = Client.objects.get( id = cid )
+		newacc.client = Client.objects.get( refnum = mid.cid, organization__refnum = mid.oid )
 		newacc.refnum = refnum
-		newacc.is_enabled = data[ 'is_enabled' ]
-		newacc.min_balance = data[ 'min_balance' ]
+		newacc.is_enabled = data.get( 'is_enabled', True )
+		newacc.min_balance = data.get( 'min_balance', 0 )
 		newacc.name = data[ 'name' ]
 		newacc.save()
 
-		return redirect( 'org-client-account-single', oid = oid, cid = cid, aid = refnum )
+		return redirect( 'org-client-account-single', oid = mid.oid, cid = mid.cid, aid = refnum )
 
 
 class AccountSingle( SingleObjectView ):
 	template_name = 'pages/org/account/single'
 
 	def get_object( self, request, *args, **kwargs ):
-		oid = kwargs.get( 'oid', None )
-		if oid is None:
-			self.not_found()
+		mid = self._extract_ids( [ 'oid', 'cid', 'aid' ], **kwargs )
 
-		cid = kwargs.get( 'cid', None )
-		if cid is None:
-			self.not_found()
+		return get_object_or_404( Account, refnum = mid.aid, client__refnum = mid.cid, client__organization__refnum = mid.oid )
 
-		aid = kwargs.get( 'aid', None )
-		if aid is None:
-			self.not_found()
+	def delete_object( self, request, ob, *args, **kwargs ):
+		ob.delete()
+		return redirect( 'org-client-account-list', cid = ob.client.refnum, oid = ob.client.organization.refnum )
 
-		return get_object_or_404( Account, refnum = aid, client = cid, client__organization = oid )
+	def update_object_json( self, request, obj, data, *args, **kwargs ):
+		obj.name = data.get( 'name', obj.name )
+		obj.is_enabled = data.get( 'is_enabled', obj.is_enabled )
+		obj.min_balance = data.get( 'min_balance', obj.min_balance )
+		obj.save()
+		return redirect( 'org-client-account-single', oid = obj.client.organization.refnum, cid = obj.client.refnum, aid = obj.refnum )
 
 
 

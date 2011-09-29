@@ -6,6 +6,6 @@ INSERT INTO org_systemcounter
 		organization_no
 	)
 	VALUES
-		( 1, 1, 1 );
+		( 1, 11, 11 );
 
 
