@@ -52,6 +52,25 @@ lwp-request ${OPTIONS} -m DELETE http://localhost:8000/org/11/client/11/account/
 lwp-request ${OPTIONS} -m POST http://localhost:8000/org/13/client/13/account/13?format=json < 03009-up.json > 03009.resp
 lwp-request ${OPTIONS} -m POST http://localhost:8000/org/13/client/13/account/15?format=json < 03010-up.json > 03010.resp
 
+
+# ----------------- TRANSACTIONS
+
+
+lwp-request ${OPTIONS} -m PUT http://localhost:8000/org/13/client/13/account/13/transactions?format=json < 04001-mk.json > 04001.resp
+
+lwp-request ${OPTIONS} -m PUT http://localhost:8000/org/13/client/13/account/15/transactions?format=json < 04001-mk.json > 04001.resp
+lwp-request ${OPTIONS} -m PUT http://localhost:8000/org/13/client/13/account/15/transactions?format=json < 04002-mk.json > 04002.resp
+lwp-request ${OPTIONS} -m PUT http://localhost:8000/org/13/client/13/account/15/transactions?format=json < 04003-mk.json > 04003.resp
+lwp-request ${OPTIONS} -m PUT http://localhost:8000/org/13/client/13/account/15/transactions?format=json < 04004-mk.json > 04004.resp
+lwp-request ${OPTIONS} -m PUT http://localhost:8000/org/13/client/13/account/15/transactions?format=json < 04005-mk.json > 04005.resp
+lwp-request ${OPTIONS} -m PUT http://localhost:8000/org/13/client/13/account/15/transactions?format=json < 04006-mk.json > 04006.resp
+
+
+lwp-request ${OPTIONS} -m DELETE http://localhost:8000/org/13/client/13/account/15/transaction/11?format=json > 04007.resp
+
+lwp-request ${OPTIONS} -m POST http://localhost:8000/org/13/client/13/account/15/transaction/13?format=json < 04008-up.json > 04008.resp
+lwp-request ${OPTIONS} -m POST http://localhost:8000/org/13/client/13/account/15/transaction/13?format=json < 04009-up.json > 04009.resp
+
 exit 0
 
 

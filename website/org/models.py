@@ -58,15 +58,19 @@ class Client( models.Model ):
 class Account( models.Model ):
 	client = models.ForeignKey( Client )
 	refnum = models.BigIntegerField( unique = True )
+
+	transaction_no = models.BigIntegerField( default = 11 )
+
 	is_enabled = models.BooleanField( default = True )
 	name = models.CharField( max_length = 64 )
-
 	min_balance = models.BigIntegerField( default = 0 )
+
 	balance = models.BigIntegerField( default = 0 )
 	reserved = models.BigIntegerField( default = 0 )
 
 class Transaction( models.Model ):
 	account = models.ForeignKey( Account )
+	refnum = models.BigIntegerField( default = 1 )
 	event_time = models.DateTimeField()
 	group = models.CharField( max_length = 32 )
 	description = models.CharField( max_length = 64 )
@@ -74,9 +78,7 @@ class Transaction( models.Model ):
 	balance_reserved = models.BigIntegerField( default = 0 )
 	balance_adjustment = models.BigIntegerField( default = 0 )
 	balance_after = models.BigIntegerField( default = 0 )
-
 	is_grouped = models.BooleanField()
-	is_voided = models.BooleanField()
 
 class TransactionData( models.Model ):
 	transaction = models.OneToOneField( Transaction )
