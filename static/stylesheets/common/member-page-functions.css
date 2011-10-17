@@ -1,0 +1,40 @@
+/* ----- PAGE FUNCTIONS DIV ------------------------------------ */
+
+#page-functions-div
+{
+	padding: 15px 150px 15px 40px;
+	height: 30px;
+	overflow: hidden;
+}
+
+#page-functions-proper ul
+{
+	list-style: none;
+	border-bottom: 1px solid black;
+}
+
+#page-functions-proper ul:after {
+	content: "\0020";
+	display: block;
+	height: 0;
+	clear: both;
+	visibility: hidden;
+	overflow: hidden;
+}
+
+#page-functions-proper ul li
+{
+	float: left;
+	margin: 0px 10px;
+	background: #2e2e2e;
+	padding: 8px 20px 5px 20px;
+}
+
+#page-functions-proper ul li a
+{
+	text-decoration: none;
+	font-size: 1em;
+	color: #cccccc;
+}
+
+

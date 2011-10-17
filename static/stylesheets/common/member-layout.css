@@ -31,22 +31,6 @@ h1, h2, h3, h4, h5, h6 {
 	font-family: Trebuchet MS;
 }
 
-h1
-{
-	font-size: 1.9em;
-	margin: 0 10px 25px 0;
-	border-bottom: 1px solid #CCCCCC;
-	color: #5890D1;
-}
-
-h2
-{
-	font-size: 1.3em;
-	margin: 10px 10px 5px 0;
-	border-bottom: 1px solid #CCCCCC;
-	color: #666666;
-}
-
 p {
 	margin: 0 0 1.5em;
 }
@@ -94,6 +78,37 @@ p {
 	color: #cccccc;
 }
 
+#header #header-options a
+{
+	text-decoration: none;
+	color: #cccccc;
+}
+
+#header #header-options a:hover
+{
+	text-decoration: underline;
+}
+
+#header #header-options a:visited
+{
+	text-decoration: underline;
+}
+
+
+
+
+/* ----- PAGE LABEL ------------------------------------------ */
+
+#page-label
+{
+	padding: 30px 40px;
+}
+
+#page-label #page-title
+{
+	font-size: 2.5em;
+	text-shadow: 1px 1px 1px #808080;
+}
 
 
 /* ----- CONTENT --------------------------------------------- */
@@ -102,7 +117,7 @@ p {
 #content {
 	height: auto;
 	min-height: 300px;
-	width: 950px;
+	padding: 30px 20px 0px 70px;
 	margin: auto;
 }
 
