@@ -9,13 +9,13 @@ from listview import ListView
 from ..models import *
 from ..utils.dbgdatetime import datetime
 
-class TransactionList( ListView ):
-	template_name = 'pages/org/transaction/index'
+class TabTransactionList( ListView ):
+	template_name = 'pages/org/tab_transaction/index'
 
 	def get_object_list( self, request, *args, **kwargs ):
 		mid = self._extract_ids( [ 'oid', 'cid', 'aid' ], **kwargs )
 
-		obj_list = Transaction.objects.filter( account__refnum = mid.aid, account__client__refnum = mid.cid, account__client__organization__refnum = mid.oid )
+		obj_list = TabTransaction.objects.filter( account__refnum = mid.aid, account__client__refnum = mid.cid, account__client__organization__refnum = mid.oid )
 		return obj_list
 	
 	def create_object_json( self, request, data, *args, **kwargs ):
@@ -34,7 +34,7 @@ class TransactionList( ListView ):
 		if newbal < theaccount.min_balance:
 			return HttpResponseForbidden()
 
-		newt = Transaction()
+		newt = TabTransaction()
 		newt.account = theaccount
 		newt.refnum = theaccount.transaction_no
 		newt.event_time = datetime.datetime.now()
@@ -49,21 +49,21 @@ class TransactionList( ListView ):
 		newt.is_grouped = data.get( 'is_grouped', False )
 		newt.save()
 
-		tdata = TransactionData.objects.create( transaction = newt, data = data.get( 'data', '' ) )
+		tdata = TabTransactionData.objects.create( transaction = newt, data = data.get( 'data', '' ) )
 
 		theaccount.balance += amount
 		theaccount.transaction_no += 1
 		theaccount.save()
 
-		return redirect( 'org-client-account-transaction-single', oid = mid.oid, cid = mid.cid, aid = mid.aid, tid = newt.refnum )
+		return redirect( 'org-client-tab-transaction-single', oid = mid.oid, cid = mid.cid, aid = mid.aid, tid = newt.refnum )
 
 
-class TransactionSingle( SingleObjectView ):
-	template_name = 'pages/org/transaction/single'
+class TabTransactionSingle( SingleObjectView ):
+	template_name = 'pages/org/tab_transaction/single'
 
 	def get_object( self, request, *args, **kwargs ):
 		mid = self._extract_ids( [ 'oid', 'cid', 'aid', 'tid' ], **kwargs )
-		return get_object_or_404( Transaction, refnum = mid.tid, account__refnum = mid.aid, account__client__refnum = mid.cid, account__client__organization__refnum = mid.oid )
+		return get_object_or_404( TabTransaction, refnum = mid.tid, account__refnum = mid.aid, account__client__refnum = mid.cid, account__client__organization__refnum = mid.oid )
 
 
 	def update_object_json( self, request, obj, data, *args, **kwargs ):
@@ -76,11 +76,11 @@ class TransactionSingle( SingleObjectView ):
 		obj.save()
 
 		if data.has_key( 'data' ):
-			tdata = TransactionData.objects.get( transaction = obj )
+			tdata = TabTransactionData.objects.get( transaction = obj )
 			tdata.data = data.get( 'data' )
 			tdata.save()
 
-		return redirect( 'org-client-account-transaction-single', oid = obj.account.client.organization.refnum, cid = obj.account.client.refnum, aid = obj.account.refnum, tid = obj.refnum )
+		return redirect( 'org-client-tab-transaction-single', oid = obj.account.client.organization.refnum, cid = obj.account.client.refnum, aid = obj.account.refnum, tid = obj.refnum )
 
 
 

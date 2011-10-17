@@ -1,0 +1,27 @@
+{% extends 'indexbase.html' %}
+
+{% block title %}Account List{% endblock %}
+
+{% block orgname %}{% endblock %}
+
+{% block links %}
+{% endblock %}
+
+{% block list %}
+
+
+{% if object_list.count == 0 %}
+<p>No account found</p>
+{% else %}
+
+<ul>
+{% for obj in object_list %}
+	<li><a href='{% url org-client-account-single obj.client.organization.refnum obj.client.refnum obj.refnum  %}'>{{ obj.name }}</a></li>
+{% endfor %}
+</ul>
+
+{% endif %}
+
+
+{% endblock %}
+

@@ -29,14 +29,7 @@ class OrgList( ListView ):
 		neworg.refnum = refnum
 		neworg.save()
 
-		if settings.DEBUG is True:
-			client_no = 11
-			invoice_no = 11
-		else:
-			client_no = 1
-			invoice_no = 1
-
-		OrganizationCounter.objects.create( organization = neworg, invoice_no = invoice_no, client_no = client_no )
+		OrganizationCounter.objects.create( organization = neworg )
 		OrganizationAccount.objects.create( organization = neworg )
 
 		return redirect( 'org-single', oid = refnum )

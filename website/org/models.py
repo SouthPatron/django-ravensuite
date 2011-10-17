@@ -20,6 +20,7 @@ Interval = ChoicesEnum(
 State = ChoicesEnum(
 	DRAFT = ( 0, 'Draft' ),
 	FINAL = ( 5, 'Final' ),
+	VOID = ( 10, 'Void' ),
 )
 
 ExpiryAction = ChoicesEnum(
@@ -49,6 +50,7 @@ class OrganizationCounter( models.Model ):
 	organization = models.OneToOneField( Organization )
 	invoice_no = models.BigIntegerField( default = 1 )
 	client_no = models.BigIntegerField( default = 1 )
+	tab_no = models.BigIntegerField( default = 1 )
 
 class Client( models.Model ):
 	organization = models.ForeignKey( Organization )
@@ -59,7 +61,32 @@ class Account( models.Model ):
 	client = models.ForeignKey( Client )
 	refnum = models.BigIntegerField( unique = True )
 
-	transaction_no = models.BigIntegerField( default = 11 )
+	transaction_no = models.BigIntegerField( default = 1 )
+
+	is_enabled = models.BooleanField( default = True )
+	name = models.CharField( max_length = 64 )
+	min_balance = models.BigIntegerField( default = 0 )
+	balance = models.BigIntegerField( default = 0 )
+
+class AccountTransaction( models.Model ):
+	account = models.ForeignKey( Account )
+	refnum = models.BigIntegerField( default = 1 )
+	event_time = models.DateTimeField()
+	group = models.CharField( max_length = 32 )
+	description = models.CharField( max_length = 64 )
+	balance_before = models.BigIntegerField( default = 0 )
+	balance_after = models.BigIntegerField( default = 0 )
+	amount = models.BigIntegerField( default = 0 )
+
+class AccountTransactionData( models.Model ):
+	account_transaction = models.OneToOneField( AccountTransaction )
+	data = models.TextField()
+
+class Tab( models.Model ):
+	client = models.ForeignKey( Client )
+	refnum = models.BigIntegerField( unique = True )
+
+	transaction_no = models.BigIntegerField( default = 1 )
 
 	is_enabled = models.BooleanField( default = True )
 	name = models.CharField( max_length = 64 )
@@ -68,24 +95,25 @@ class Account( models.Model ):
 	balance = models.BigIntegerField( default = 0 )
 	reserved = models.BigIntegerField( default = 0 )
 
-class Transaction( models.Model ):
-	account = models.ForeignKey( Account )
+
+class TabTransaction( models.Model ):
+	tab = models.ForeignKey( Tab )
 	refnum = models.BigIntegerField( default = 1 )
 	event_time = models.DateTimeField()
 	group = models.CharField( max_length = 32 )
 	description = models.CharField( max_length = 64 )
 	balance_before = models.BigIntegerField( default = 0 )
 	balance_reserved = models.BigIntegerField( default = 0 )
-	balance_adjustment = models.BigIntegerField( default = 0 )
 	balance_after = models.BigIntegerField( default = 0 )
-	is_grouped = models.BooleanField()
+	amount = models.BigIntegerField( default = 0 )
 
-class TransactionData( models.Model ):
-	transaction = models.OneToOneField( Transaction )
+class TabTransactionData( models.Model ):
+	tab_transaction = models.OneToOneField( TabTransaction )
 	data = models.TextField()
 
+
 class Reservation( models.Model ):
-	account = models.ForeignKey( Account )
+	tab = models.ForeignKey( Tab )
 	event_time = models.DateTimeField()
 	expiry_time = models.DateTimeField()
 	expiry_action = models.CharField( choices = ExpiryAction.choices(), default = ExpiryAction.COMMIT, max_length = 16 )
@@ -93,7 +121,6 @@ class Reservation( models.Model ):
 	description = models.CharField( max_length = 64 )
 	uuid = models.CharField( max_length = 32, unique = True )
 	amount = models.BigIntegerField()
-	is_grouped = models.BooleanField()
 
 class ReservationData( models.Model ):
 	reservation = models.OneToOneField( Reservation )
@@ -103,12 +130,11 @@ class ReservationData( models.Model ):
 class Invoice( models.Model ):
 	account = models.ForeignKey( Account )
 	refnum = models.BigIntegerField()
-	reference = models.CharField( max_length = 64 )
 	creation_time = models.DateTimeField()
 	invoice_date = models.DateField()
 	due_date = models.DateField()
 	total = models.BigIntegerField( default = 0 )
-	is_paid = models.BooleanField()
+	is_paid = models.BooleanField( default = False )
 
 	state = models.IntegerField( choices = State.choices(), default = State.DRAFT )
 
@@ -123,8 +149,7 @@ class InvoiceLine( models.Model ):
 
 class Payment( models.Model ):
 	invoice = models.ForeignKey( Invoice )
-	transaction = models.ForeignKey( Transaction )
-
+	transaction = models.ForeignKey( AccountTransaction )
 	
 	
 class Subscription( models.Model ):

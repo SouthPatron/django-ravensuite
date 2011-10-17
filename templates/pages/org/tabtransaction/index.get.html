@@ -1,0 +1,25 @@
+{% extends 'indexbase.html' %}
+
+{% block title %}Transaction List{% endblock %}
+
+{% block orgname %}{% endblock %}
+
+{% block links %}
+{% endblock %}
+
+{% block list %}
+
+{% if object_list.count == 0 %}
+<p>No transactions found</p>
+{% else %}
+
+<ul>
+{% for obj in object_list %}
+	<li><a href='{% url org-client-account-transaction-single obj.account.client.organization.refnum obj.account.client.refnum obj.account.refnum obj.refnum  %}'>{{ obj.description }}</a></li>
+{% endfor %}
+</ul>
+
+{% endif %}
+
+
+{% endblock %}
