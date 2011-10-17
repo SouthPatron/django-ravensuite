@@ -5,6 +5,11 @@ TEMPLATE_DEBUG = DEBUG
 
 AUTH_PROFILE_MODULE="account.UserProfile"
 
+LOGIN_URL='/account/login'
+LOGIN_REDIRECT_URL='/org/'
+LOGOUT_URL='/account/logout'
+
+
 ADMINS = (
 	( 'Webmaster', 'webmaster@smksoftware.com' ),
 )
