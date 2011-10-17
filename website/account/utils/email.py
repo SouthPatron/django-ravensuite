@@ -9,9 +9,9 @@ FROM_ADDRESS = '"Support at SMK" <support@smksoftware.com>'
 
 def send_templated_email( user, template_name, keys = {} ):
 
-	template_subject = get_template( 'emails/' + template_name + '.subject' )
-	template_text = get_template( 'emails/' + template_name + '.txt' )
-	template_html = get_template( 'emails/' + template_name + '.html' )
+	template_subject = get_template( 'emails/account/' + template_name + '.subject' )
+	template_text = get_template( 'emails/account/' + template_name + '.txt' )
+	template_html = get_template( 'emails/account/' + template_name + '.html' )
 
 	dkey = keys
 	dkey[ 'user' ] = user
