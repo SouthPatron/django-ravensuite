@@ -1,0 +1,194 @@
+
+
+.jForms .JFREQUIRED,
+.jForms .JFINVALID,
+.jForms .JFFOCUSHIGHLIGHT,
+.jForms .JFNONE
+{
+}
+
+
+.jForms .JFGROUPFIELD,
+.jForms .JFFIELD,
+.jForms .JFGROUP,
+{
+}
+
+.jForms .JFCLEAR
+{
+	clear: both;
+}
+
+
+.jForms .JFALIGNLEFT
+{
+	display:block;
+	float:left;
+	margin-right: 8px;
+}
+
+.jForms .JFWIDTHSMALL {
+	width: 2em;
+}
+
+.jForms .JFWIDTHMEDIUM {
+	width: 7em;
+}
+
+.jForms .JFWIDTHAVERAGE {
+	width: 10em;
+}
+
+.jForms .JFWIDTHLARGE {
+	width: 24em;
+}
+
+.jForms p.JFERROR {
+	color: red;
+	font-weight: bold;
+}
+
+
+.jForms {
+	font-family: Arial, sans-serif;
+	font-size: 1.3em;
+	line-height: 24px;
+	color: #333333;
+}
+
+.jForms .jFormDescription {
+	line-height: 1.5em;
+	font-size: 0.8em;
+	margin-bottom: 1.5em;
+}
+
+.jForms .jFormSection {
+	clear: both;
+	overflow: auto;
+}
+
+.jForms .jFormComponent {
+	border-radius: 5px;
+	-moz-border-radius: 5px;
+	-webkit-border-radius: 5px;
+	border: 1px solid transparent;
+	margin-bottom: 3px;
+	overflow: hidden;
+	padding: 0.25em 0.8em 0.5em 0.5em;
+}
+
+.jForms .jFormComponent.JFBORDERED {
+	border: 1px solid #f0f0ff;
+	background: #f8f8ff;
+}
+
+.jForms .jFormComponentHighlight {
+	background-color: #DFEFFF;
+	border: 1px solid #C2D7EF;
+}
+
+.jForms .jFormComponent input {
+	font-family: Arial;
+	font-size: .8em;
+	background: #EEE url(images/input-bg.gif) repeat-x 0 1px scroll;
+	border:1px solid #AAA;
+	padding:3px .35em
+}
+
+.jForms .jFormComponent div.JFINVALID input
+{
+	background: #EEE url(images/input-bg-invalid.gif) repeat-x 0 1px scroll;
+}
+
+.jForms .jFormComponent div.JFINVALID div.jFormComponentSublabel,
+.jForms .jFormComponent.jFormComponentSingleLineText.JFINVALID label
+{
+	color: red;
+}
+
+
+
+.jForms input[type='submit'] {
+	clear: both;
+	float: left;
+}
+
+.jForms .jFormComponent select {
+	font-family: Arial;
+	font-size: .8em;
+	background: #EEE;
+	border: 1px solid #AAA;
+	padding: 0.15em 0;
+}
+
+.jForms .jFormComponent textarea {
+	font-family: Arial;
+	font-size: .8em;
+	background: url(images/input-bg.gif) repeat-x 0 1px scroll #EEE;
+	border: 1px solid #AAA;
+	resize: none;
+	padding: 3px .35em
+}
+
+.jForms .jFormComponent .jFormComponentLabel {
+	display: block;
+	font-size: 0.8em;
+	font-weight: 700;
+}
+
+.jForms .jFormComponent .jFormComponentLabelRequiredStar {
+	color: red;
+}
+
+.jForms .jFormComponent .jFormComponentSublabel p {
+	font-size:.7em;
+	margin:0;
+	padding:0;
+}
+
+.jForms .jFormComponentSingleLineText input {
+	width: 12em;
+}
+
+.jForms .jFormComponent input:focus,
+.jForms .jFormComponent select:focus {
+	border: 1px solid #888;
+}
+
+
+.jForms .jFormComponentMultipleChoice .choice {
+	cursor: pointer;
+	margin: 0 .35em 0 0;
+	display: inline;
+}
+
+
+.jForms .jFormComponentMultipleChoice .choiceLabel {
+	font-size: .8em;
+	font-weight: 400;
+	margin-right: 1em;
+	cursor: pointer;
+	display: inline;
+}
+
+
+.jForms .jFormComponentValidationFailed {
+	background: url(images/icons/exclamation.png) no-repeat left;
+	padding-left: 20px;
+}
+
+/* simple css-based tooltip */
+.jFormTip {
+	background-color: #991111;
+	border: 1px solid #fff;
+	padding: 10px 15px;
+	width: 200px;
+	display: none;
+	color: #fff;
+	text-align: left;
+	font-size: 12px;
+	-moz-box-shadow: 0 0 10px #000;
+	-webkit-box-shadow: 0 0 10px #000;
+}
+
+

@@ -1,0 +1,131 @@
+/*
+ *	
+ *		. GLOBAL
+ *		. WRAP
+ *		. HEADER
+ *		. NAV MENU
+ *		. CONTENT
+ *		. FOOTER
+ *
+ */
+
+
+/* ----- GLOBAL --------------------------------------------- */
+
+html {
+	height: 100%;
+}
+
+html body {
+	position: relative;
+	width: auto;
+	height: 100%;
+	margin: 0;
+	padding: 0;
+	font-family: Tahoma, Geneva, Sans-Serif;
+	font-size: 12px;
+	background: white;
+}
+
+h1, h2, h3, h4, h5, h6 {
+	font-family: Trebuchet MS;
+}
+
+h1
+{
+	font-size: 1.9em;
+	margin: 0 10px 25px 0;
+	border-bottom: 1px solid #CCCCCC;
+	color: #5890D1;
+}
+
+h2
+{
+	font-size: 1.3em;
+	margin: 10px 10px 5px 0;
+	border-bottom: 1px solid #CCCCCC;
+	color: #666666;
+}
+
+p {
+	margin: 0 0 1.5em;
+}
+
+
+/* ----- WRAP ----------------------------------------------- */
+
+#wrap {
+	min-height: 100%;
+	min-width: 950px;
+	position: relative;
+	vertical-align: baseline;
+	margin: auto;
+	padding: 0;
+}
+
+/* ----- HEADER --------------------------------------------- */
+
+
+#header
+{
+	position: relative;
+	padding: 15px 20px;
+	margin: auto;
+	height: 18px;
+	background: #2e2e2e;
+}
+
+#header #header-orgname-title
+{
+	position: relative;
+	left: 0px;
+	top: 0px;
+	font-size: 1.5em;
+	color: #cccccc;
+	text-shadow: 1px 1px 1px black;
+}
+
+#header #header-options
+{
+	position: absolute;
+	padding: 15px 10px;
+	top: 0px;
+	right: 0px;
+	color: #cccccc;
+}
+
+
+
+/* ----- CONTENT --------------------------------------------- */
+
+
+#content {
+	height: auto;
+	min-height: 300px;
+	width: 950px;
+	margin: auto;
+}
+
+#content_container {
+	padding: 30px;
+}
+
+#content h2 {
+	background-color: #1c75bc;
+	border-bottom: 3px solid #124263;
+	clear: both;
+	color: #ffffff;
+	font-size: 1.4em;
+	height: 29px;
+	margin-top: 30px;
+	margin-bottom: 0.75em;
+	font-weight: normal;
+	padding: 3px 0 0 30px;
+}
+
+#centralbar {
+	padding-top: 20px;
+	margin: auto;
+}
+
+
