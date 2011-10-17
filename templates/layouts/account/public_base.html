@@ -61,6 +61,12 @@ $(document).ready(function(){
 <h1>Public Side</h1>
 </div> <!-- header -->
 
+<div>
+<a href='{% url register-url %}'>Register for a new account</a> |
+<a href='{% url login %}'>Login</a> |
+<a href='{% url resend-authentication-code %}'>Resend Authentication Code</a> 
+</div>
+
 
 <div id="content">
 {% block content %}

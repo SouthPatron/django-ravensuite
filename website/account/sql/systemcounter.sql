@@ -1,5 +1,5 @@
 
-INSERT INTO opas_systemcounter
+INSERT INTO account_systemcounter
 	(
 		id,
 		profile_no
