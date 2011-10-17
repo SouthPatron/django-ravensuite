@@ -1,0 +1,37 @@
+{% extends "layouts/account/public_page.html" %}
+
+{% block content_header %}{% endblock %}
+{% block page_title %}Authenticate Your Account{% endblock %}
+
+{% block page_content %}
+
+<div style='min-height: 40px; margin-bottom: 20px;'>
+{% include 'global/forms/form_global_errors.html' with width="364px" %}
+</div>
+
+<div class="form_top_box" style=" width: 378px; margin: auto;">
+
+{% include 'global/forms/form_start.html' %}
+
+<div class='JFGROUP' style="padding: 10px;">
+	<label>Authentication Code</label>
+{% include "global/forms/text_field.html" with field=form.authcode width='24em' class='JFGROUPFIELD' %}
+</div>
+
+<div class="form_bottom_box">
+<div style="float: left; padding-top: 15px; margin-left: 10px; font-size: 0.8em;">
+<a style="text-decoration: none; color: #336FB6; " href="{% url resend-authentication-code %}">Resend code?</a>
+</div>
+
+<div style="float: right; padding-top: 10px;">
+<input type="submit" value="Authenticate" />
+</div>
+<div style="clear: both;"></div>
+</div>
+
+</div>
+
+</form>
+
+{% endblock %}
+

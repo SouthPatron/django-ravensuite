@@ -1,0 +1,41 @@
+{% extends "layouts/account/public_page.html" %}
+
+{% block content_title %}Login{% endblock %}
+
+{% block content_header %}
+{% endblock %}
+
+{% block page_content %}
+
+<div style=" min-height: 40px; margin-bottom: 20px;" >
+{% include 'global/forms/form_global_errors.html' with width="464px" %}
+</div>
+
+<div class="form_top_box" style=" width: 478px; margin: auto;">
+
+{% include 'global/forms/form_start.html' %}
+
+<div class='JFGROUP' style="padding: 10px;">
+	<label>Login Details</label>
+{% include "global/forms/text_field.html" with field=form.email_address width='14em' class='JFGROUPFIELD JFALIGNLEFT' %}
+{% include "global/forms/text_field.html" with field=form.password width='14em' class='JFGROUPFIELD JFALIGNLEFT' type='password' %}
+</div>
+
+<div class="form_bottom_box">
+<div style="float: left; width: 300px; padding-top: 15px; margin-left: 10px; font-size: 0.8em;">
+<a style="text-decoration: none; color: #336FB6; " href="{% url password-reset %}">Forgot your password?</a>
+<a style="margin-left: 10px; text-decoration: none; color: #336FB6; " href="{% url register-step2 %}">Authenticated?</a>
+</div>
+
+<div style="float: left; width: 135px; padding-top: 8px;" >
+<input style=" float: right;" type="submit" value="Login" />
+</div>
+<div style="clear: both;"></div>
+</div>
+
+</div>
+
+</form>
+
+{% endblock %}
+

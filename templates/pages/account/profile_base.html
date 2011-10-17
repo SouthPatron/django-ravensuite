@@ -1,0 +1,17 @@
+{% extends 'pages/account/base.html' %}
+
+{% block page_functions %}
+
+{% url account-profile-view as accprof %}
+{% url account-profile-edit as accprofedit %}
+{% url account-profile-change-password as accprofcp %}
+
+<ul class="sf-menu sf-js-enabled sf-shadow">
+	<li class=""><a href="{{ accprof }}">Your Profile</a></li>
+	<li class=""><a href="{{ accprofedit }}">Edit your Profile</a></li>
+	<li class=""><a href="{{ accprofcp }}">Change your Password</a></li>
+</ul>
+{% endblock  %}
+
+
+

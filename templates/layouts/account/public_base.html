@@ -1,0 +1,75 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head profile="http://gmpg.org/xfn/11">
+	<title>{% block site_title %}My Website{% endblock %} | {% block page_title %}{% block content_title %}Home{% endblock %}{% endblock %}</title>
+
+	<!-- No caching ever -->
+	<meta http-equiv="expires" CONTENT="Fri, 1 Jan 1990 00:00:00 GMT">
+	<meta http-equiv="pragma" CONTENT="no-cache">
+	<meta http-equiv="cache-control" value="no-cache, no store, must-revalidate">
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+	<!-- Include custom stylesheets -->
+	<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}stylesheets/account/public-layout.css" media="screen" />
+
+	<!-- Include jquery -->
+	<script type='text/javascript' src="{{ STATIC_URL }}js/jquery.js"></script>
+
+	<!-- include jquery ui -->
+	<script type='text/javascript' src="{{ STATIC_URL }}js/jquery-ui.custom.min.js"></script>
+	<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}stylesheets/ui/jquery-ui.custom.css" media="screen" />
+
+	<!-- include forms -->
+	<script type='text/javascript' src="{{ STATIC_URL }}js/forms.js"></script>
+	<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}stylesheets/forms/forms.css" media="screen" />
+
+
+	{% block head_includes %}
+	{% endblock %}
+
+	<!-- Document OnReady -->
+	<script type="text/javascript">
+
+$(document).ready(function(){
+
+	$( '.jForms input[type=submit],button' ).button();
+	$( '.jForms' ).jForms( 'formify' );
+
+	$( '.jForms :input[title]').tooltip({
+		position: "top center",
+		offset: [-30, 10],
+		effect: "fade",
+		opacity: 0.9,
+		tipClass: "jFormTip"
+	});
+
+
+
+	{% block onready %}
+	{% endblock onready %}
+})
+
+	</script>
+
+
+</head>
+<body>
+
+<div id="wrap">
+
+<div id="header">
+<h1>Public Side</h1>
+</div> <!-- header -->
+
+
+<div id="content">
+{% block content %}
+{% endblock %}
+<div style='clear: both;'>&nbsp;</div>
+</div> <!-- content -->
+
+</div> <!-- wrap -->
+
+</body>
+</html>
+

@@ -1,0 +1,9 @@
+{% if messages %}
+<div class="message_group">
+{% for message in messages %}
+<div class="message_box {{ message.tags }}" >
+<span>{{ message }}</span>
+</div>
+{% endfor %}
+</div>
+{% endif %}

@@ -1,0 +1,49 @@
+/* ----- GLOBAL --------------------------------------------- */
+
+html {
+	height: 100%;
+}
+
+html body {
+	position: relative;
+	width: auto;
+	height: 100%;
+	margin: 0;
+	padding: 0;
+	font-family: Tahoma, Geneva, Sans-Serif;
+	font-size: 12px;
+	background: white;
+}
+
+
+/* ----- WRAP ----------------------------------------------- */
+
+#wrap {
+	min-height: 100%;
+	min-width: 950px;
+	position: relative;
+	vertical-align: baseline;
+	margin: auto;
+	padding: 0;
+}
+
+
+/* ----- HEADER --------------------------------------------- */
+
+#header
+{
+	font-size: 1.2em;
+	padding: 10px 30px;
+}
+
+/* ----- CONTENT --------------------------------------------- */
+
+
+#content {
+	height: auto;
+	min-height: 300px;
+	margin: auto;
+}
+
+
+

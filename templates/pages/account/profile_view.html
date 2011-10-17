@@ -1,0 +1,51 @@
+{% extends "pages/account/profile_base.html" %}
+
+{% block content_title %}Your Profile{% endblock %}
+
+{% block page_content %}
+
+{% load gravatar %}
+
+<div style="
+	border: 1px solid #c0c0c0;
+	padding: 10px 10px 20px;
+	margin-top: 20px;
+	min-height: 80px;
+
+	width: 430px;
+	height: 150px;
+
+	background: url('{% gravatar request.user.email 96 %}') no-repeat scroll 18px 18px transparent;
+
+	box-shadow: 1px 1px 5px #b0b0b0;
+	-moz-box-shadow: 1px 1px 5px #b0b0b0;
+	-webkit-box-shadow: 1px 1px 5px #b0b0b0;
+
+">
+
+<div style="
+	float: right;
+	width: 300px;
+">
+
+<ul style="
+		list-style: none;
+		padding: 0px;
+	">
+	<li style="
+		font-size: 1.3em;
+		font-weight: bold;
+	"
+	>{{ object.first_name }} {{ object.last_name }}</li>
+	<li>{{ object.email }}</li>
+
+	<li style='margin-top: 18px;'><a href='{% url account-profile-edit %}'>Edit profile</a></li>
+	<li><a href='{% url account-profile-change-password %}'>Change password</a></li>
+</ul>
+
+</div>
+
+</div>
+
+{% endblock %}
+

@@ -1,0 +1,19 @@
+
+
+Please follow the following link to confirm this email address and complete
+your registration.
+
+
+Your authentication code: {{ user.authenticationcode.authentication_code }}
+
+The authentication site: {% url register-step2 %}
+
+
+A direct link: {% url register-step2 %}?authcode={{
+user.authenticationcode.authentication_code }}
+
+
+
+
+
+

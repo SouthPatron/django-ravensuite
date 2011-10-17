@@ -1,0 +1,28 @@
+{% extends "layouts/account/member_base.html" %}
+
+{% load captureas %}
+
+{% block headermenu %}
+{% endblock %}
+
+{% block content %}
+
+
+{% captureas link_history_content %}{% block link_history %}{% endblock %}{% endcaptureas %}
+
+{% if link_history_content %}
+<div id="link_history_div">
+{{ link_history_content }}
+</div>
+{% endif %}
+
+
+{% include 'global/messages.html' %}
+
+<div>
+{% block page_content %}...{% endblock %}
+</div>
+
+{% endblock %}
+
+

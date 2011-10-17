@@ -1,0 +1,13 @@
+<div class="{{ class }} {{ field.field.widget.attrs.div_class }} {% if field.errors %}JFINVALID{% endif %}">
+	<label for="{{ field.auto_id }}" {% if field.field.required %}class="JFREQUIRED"{% endif %}>{{ field.label }}</label>
+	<input
+		type="{{ type|default:"text" }}"
+		name="{{ field.name }}"
+		id="{{ field.auto_id }}"
+		value="{% if field.value %}{{ field.value }}{% endif %}"
+		style='width: {{ width }}'
+		{% if field.errors %}
+		title="{% for error in field.errors %}{{ error|escape }}{% endfor %}"
+		{% endif %}
+	/>
+</div>
