@@ -3,15 +3,26 @@
 {% block page_functions %}
 
 {% url account-profile-view as accprof %}
+
+<ul>
+	<li class=""><a href="{{ accprof }}">Your Profile</a></li>
+</ul>
+{% endblock  %}
+
+
+{% block content_menu %}
+
+{% load active %}
+
+{% url account-profile-view as accprof %}
 {% url account-profile-edit as accprofedit %}
 {% url account-profile-change-password as accprofcp %}
 
 <ul>
-	<li class=""><a href="{{ accprof }}">Your Profile</a></li>
-	<li class=""><a href="{{ accprofedit }}">Edit your Profile</a></li>
-	<li class=""><a href="{{ accprofcp }}">Change your Password</a></li>
+	<li class="{% active request accprof %}"><a href="{{ accprof }}">Your Profile</a></li>
+	<li class="{% active request accprofedit %}"><a href="{{ accprofedit }}">Edit your Profile</a></li>
+	<li class="{% active request accprofcp %}"><a href="{{ accprofcp }}">Change your Password</a></li>
 </ul>
-{% endblock  %}
-
+{% endblock %}
 
 

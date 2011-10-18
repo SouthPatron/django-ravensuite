@@ -113,34 +113,45 @@ p {
 
 /* ----- CONTENT --------------------------------------------- */
 
+#content-wrap {
+	position: relative;
+}
 
 #content {
+	margin: auto;
 	height: auto;
 	min-height: 300px;
-	padding: 30px 20px 0px 70px;
-	margin: auto;
+	background: #fafafa;
+
+	border-radius: 0px 5px 5px 5px;
+	-moz-border-radius: 0px 5px 5px 5px;
+	-webkit-border-radius: 0px 5px 5px 5px;
+
+	border: 1px solid #e9e9e9;
 }
 
-#content_container {
-	padding: 30px;
+
+#content.without-menu {
+	position: absolute;
+	left: 50px;
+	top: 0px;
+	min-width: 860px;
 }
 
-#content h2 {
-	background-color: #1c75bc;
-	border-bottom: 3px solid #124263;
-	clear: both;
-	color: #ffffff;
-	font-size: 1.4em;
-	height: 29px;
-	margin-top: 30px;
-	margin-bottom: 0.75em;
-	font-weight: normal;
-	padding: 3px 0 0 30px;
+#content-menu
+{
+	position: absolute;
+	left: 50px;
+	top: 0px;
+	width: 200px;
 }
 
-#centralbar {
-	padding-top: 20px;
-	margin: auto;
+#content.with-menu {
+	position: absolute;
+	left: 270px;
+	top: 0px;
+	min-width: 640px;
 }
+
 
 

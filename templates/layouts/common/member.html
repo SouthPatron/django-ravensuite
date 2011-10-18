@@ -18,6 +18,7 @@
 	<!-- Include custom stylesheets -->
 	<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}stylesheets/reset.css" media="screen" />
 	<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}stylesheets/common/member-layout.css" media="screen" />
+	<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}stylesheets/common/member-content-menu.css" media="screen" />
 	<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}stylesheets/common/member-page-functions.css" media="screen" />
 
 	<!-- Include jquery -->
@@ -104,10 +105,29 @@ $(document).ready(function(){
 {% endif %}
 
 
+<div id="content-wrap">
 
-<div id="content">
-{% block content %}{% endblock %}
+{% captureas content_menu %}{% block content_menu %}{% endblock %}{% endcaptureas %}
+{% captureas content %}{% block content %}{% endblock %}{% endcaptureas %}
+
+{% if content_menu %}
+<div id="content-menu">
+{{ content_menu }}
+</div> <!-- #content-menu -->
+
+<div id="content" class="with-menu">
+{{ content }}
 </div> <!-- #content -->
+
+{% else %}
+
+<div id="content" class="without-menu">
+{{ content }}
+</div> <!-- #content -->
+
+{% endif %}
+
+</div> <!-- content-wrap -->
 
 </div> <!-- #wrap -->
 
