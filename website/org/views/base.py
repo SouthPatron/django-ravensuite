@@ -9,6 +9,7 @@ from django.views.decorators.csrf import csrf_exempt, csrf_protect
 
 class Base( View ):
 	template_name = None
+	url_kwargs = None
 
 	supported_formats = {
 		'html' : 'text/html',
@@ -20,6 +21,8 @@ class Base( View ):
 
 	@csrf_exempt
 	def dispatch(self, request, *args, **kwargs):
+
+		self.url_kwargs = self._extract_all_kwargs( **kwargs )
 
 		@csrf_protect
 		def protected( request, *args, **kwargs ):
@@ -61,6 +64,15 @@ class Base( View ):
 
 		if fmt == 'json':
 			return json.loads( request.read() )
+
+	def _extract_all_kwargs( self, **kwargs ):
+		class IdObject( object ):
+			pass
+		myid = IdObject()
+		for nm, val in kwargs.iteritems():
+			setattr( myid, nm, val )
+		return myid
+
 
 	def _extract_ids( self, required, **kwargs ):
 		class IdObject( object ):

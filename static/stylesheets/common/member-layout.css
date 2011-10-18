@@ -65,9 +65,22 @@ p {
 	left: 0px;
 	top: 0px;
 	font-size: 1.5em;
-	color: #cccccc;
 	text-shadow: 1px 1px 1px black;
 }
+
+#header #header-orgname-title a,
+#header #header-orgname-title a:visited,
+#header #header-orgname-title a:active
+{
+	text-decoration: none;
+	color: #cccccc;
+}
+
+#header #header-orgname-title a:hover
+{
+	text-decoration: underline;
+}
+
 
 #header #header-options
 {
@@ -78,18 +91,14 @@ p {
 	color: #cccccc;
 }
 
-#header #header-options a
+#header #header-options a,
+#header #header-options a:visited
 {
 	text-decoration: none;
 	color: #cccccc;
 }
 
 #header #header-options a:hover
-{
-	text-decoration: underline;
-}
-
-#header #header-options a:visited
 {
 	text-decoration: underline;
 }

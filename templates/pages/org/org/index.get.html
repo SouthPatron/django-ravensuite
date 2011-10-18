@@ -1,13 +1,10 @@
 {% extends 'layouts/org/member.html' %}
 
-{% block title %}Organization List{% endblock %}
+{% block the_section %}Organizations{% endblock %}
+{% block the_title %}Choose an Organization{% endblock %}
 
-{% block orgname %}{% endblock %}
 
-{% block links %}
-{% endblock %}
-
-{% block list %}
+{% block content %}
 
 {% if object_list.count == 0 %}
 <p>No organizations found</p>

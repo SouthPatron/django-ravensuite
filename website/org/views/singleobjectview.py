@@ -44,6 +44,7 @@ class SingleObjectView( Base ):
 					{
 						'instance' : ob,
 						'extra' : extra,
+						'kwargs' : self.url_kwargs,
 					},
 					context_instance=RequestContext(request)
 				)

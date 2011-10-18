@@ -42,6 +42,7 @@ class ListView( Base ):
 					{
 						'object_list' : obj_list,
 						'extra' : extra,
+						'kwargs' : self.url_kwargs,
 					},
 					context_instance=RequestContext(request)
 				)

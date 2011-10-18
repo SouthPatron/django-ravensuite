@@ -3,6 +3,7 @@
 <head profile="http://gmpg.org/xfn/11">
 
 {% load captureas %}
+{% captureas org_name %}{% block org_name %}{% endblock %}{% endcaptureas %}
 {% captureas the_title %}{% block the_title %}{% endblock %}{% endcaptureas %}
 {% captureas the_section %}{% block the_section %}{% endblock %}{% endcaptureas %}
 {% captureas page_functions_content %}{% block page_functions %}{% endblock %}{% endcaptureas %}
@@ -85,8 +86,10 @@ $(document).ready(function(){
 <div id="wrap">
 
 <div id="header">
-	<div id="header-orgname-title">SMK Software CC</div>
-	<div id="header-options"><a href='{% url account-profile %}'>{{ request.user.email }}</a> | <a href='{% url logout %}'>logout</a></div>
+{% if org_name %}
+	<div id="header-orgname-title"><a href="{% url org-view kwargs.oid %}">{{ org_name }}</a></div>
+{% endif %}
+	<div id="header-options"><a href='{% url account-profile %}'>{{ request.user.email }}</a> | <a href="{% url org-list %}">organizations</a> | <a href='{% url logout %}'>logout</a></div>
 
 </div> <!-- #header -->
 
