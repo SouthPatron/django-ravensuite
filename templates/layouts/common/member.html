@@ -110,24 +110,60 @@ $(document).ready(function(){
 
 <div id="content-wrap">
 
-{% captureas content_menu %}{% block content_menu %}{% endblock %}{% endcaptureas %}
+{% captureas content_menu_left %}{% block content_menu_left %}{% endblock %}{% endcaptureas %}
+{% captureas content_menu_right %}{% block content_menu_right %}{% endblock %}{% endcaptureas %}
 {% captureas content %}{% block content %}{% endblock %}{% endcaptureas %}
 
-{% if content_menu %}
-<div id="content-menu">
-{{ content_menu }}
-</div> <!-- #content-menu -->
 
-<div id="content" class="with-menu">
+{% comment %} ********** 1 COLUMN-LEFT ************ {% endcomment %}
+
+{% if content_menu_left and not content_menu_right %}
+<div id="content-menu-left" class="content-menu">
+{{ content_menu_left }}
+</div> <!-- #content-menu-left -->
+
+<div id="content" class="with-menu-left">
 {{ content }}
 </div> <!-- #content -->
+{% endif %}
 
-{% else %}
+{% comment %} ********** 1 COLUMN-RIGHT ************ {% endcomment %}
 
+{% if not content_menu_left and content_menu_right %}
+<div id="content-menu-right" class="content-menu">
+{{ content_menu_right }}
+</div> <!-- #content-menu-right -->
+
+<div id="content" class="with-menu-right">
+{{ content }}
+</div> <!-- #content -->
+{% endif %}
+
+
+{% comment %} ********** 2 COLUMNS ************ {% endcomment %}
+
+{% if content_menu_left and content_menu_right %}
+<div id="content-menu-left" class="content-menu">
+{{ content_menu_left }}
+</div> <!-- #content-menu-left -->
+
+<div id="content-menu-right" class="content-menu">
+{{ content_menu_right }}
+</div> <!-- #content-menu-right -->
+
+<div id="content" class="with-menu-both">
+{{ content }}
+</div> <!-- #content -->
+{% endif %}
+
+
+
+{% comment %} ********** NO COLUMNS ************ {% endcomment %}
+
+{% if not content_menu_left and not content_menu_right %}
 <div id="content" class="without-menu">
 {{ content }}
 </div> <!-- #content -->
-
 {% endif %}
 
 </div> <!-- content-wrap -->

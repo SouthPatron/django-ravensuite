@@ -1,11 +1,11 @@
 
-#content-menu ul {
+.content-menu ul {
 	list-style: none;
 }
 
-#content-menu ul li {
+.content-menu ul li {
 	padding: 20px 0px 20px 15px;
-	margin: 0px 0px 20px 0px;
+	margin: 0px 7px 20px 0px;
 
 	background: #fafafa;
 	border-left: 1px solid #e9e9e9;
@@ -18,26 +18,26 @@
 	-webkit-box-shadow: 1px 1px 5px #cccccc;
 }
 
-#content-menu ul li.active {
+.content-menu ul li.active {
 	background: #BBCCFF;
 }
 
-#content-menu ul li:hover {
+.content-menu ul li:hover {
 	background: #E3E9FF;
 }
 
-#content-menu ul li a,
-#content-menu ul li a:visited
+.content-menu ul li a,
+.content-menu ul li a:visited
 {
 	text-decoration: none;
 }
 
-#content-menu ul li a:hover
+.content-menu ul li a:hover
 {
 	text-decoration: underline;
 }
 
-#content-menu ul li a {
+.content-menu ul li a {
 	font-size: 1.0em;
 	font-weight: bold;
 	color: black;
