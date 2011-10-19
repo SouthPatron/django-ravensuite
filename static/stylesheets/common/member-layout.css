@@ -143,6 +143,7 @@ p {
 	position: absolute;
 	left: 50px;
 	top: 0px;
+	right: 50px;
 	min-width: 860px;
 }
 

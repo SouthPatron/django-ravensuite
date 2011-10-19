@@ -15,6 +15,25 @@ class OrgList( ListView ):
 	def get_object_list( self, request, *args, **kwargs ):
 		obj_list = Organization.objects.all()
 		return obj_list
+
+	def create_object_html( self, request, data, *args, **kwargs ):
+
+		# TODO: Use select_for_update()
+		sc = SystemCounter.objects.get( id = 1 )
+		refnum = sc.organization_no
+		sc.organization_no += 1
+		sc.save()
+
+		neworg = Organization()
+		neworg.trading_name = data[ 'trading_name' ]
+		neworg.refnum = refnum
+		neworg.save()
+
+		OrganizationCounter.objects.create( organization = neworg )
+		OrganizationAccount.objects.create( organization = neworg )
+
+		return redirect( 'org-single', oid = refnum )
+
 	
 	def create_object_json( self, request, data, *args, **kwargs ):
 

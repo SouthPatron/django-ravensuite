@@ -87,7 +87,7 @@ $(document).ready(function(){
 
 <div id="header">
 {% if org_name %}
-	<div id="header-orgname-title"><a href="{% url org-view kwargs.oid %}">{{ org_name }}</a></div>
+	<div id="header-orgname-title"><a href="{% url org-single kwargs.oid %}">{{ org_name }}</a></div>
 {% endif %}
 	<div id="header-options"><a href='{% url account-profile %}'>{{ request.user.email }}</a> | <a href="{% url org-list %}">organizations</a> | <a href='{% url logout %}'>logout</a></div>
 
@@ -95,7 +95,7 @@ $(document).ready(function(){
 
 
 <div id="page-label">
-	<span id="page-title">{{ the_section }}</span>
+	<span id="page-title">{{ the_title }}</span>
 </div>
 
 
