@@ -67,3 +67,7 @@ class ListView( Base ):
 		return handler( request, data, *args, **kwargs )
 
 
+	def post( self, request, *args, **kwargs ):
+		return self.put( request, *args, **kwargs )
+
+
