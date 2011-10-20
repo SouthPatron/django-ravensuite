@@ -51,7 +51,7 @@ class ListView( Base ):
 		return response
 
 	
-	def put( self, request, *args, **kwargs ):
+	def post( self, request, *args, **kwargs ):
 		fmt = self._parse_format( request )
 		if fmt is None: return HttpResponseForbidden()
 	
@@ -65,9 +65,5 @@ class ListView( Base ):
 			return HttpResponseForbidden()
 
 		return handler( request, data, *args, **kwargs )
-
-
-	def post( self, request, *args, **kwargs ):
-		return self.put( request, *args, **kwargs )
 
 

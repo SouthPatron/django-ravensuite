@@ -53,7 +53,7 @@ class SingleObjectView( Base ):
 		return response
 
 	
-	def post( self, request, *args, **kwargs ):
+	def put( self, request, *args, **kwargs ):
 		fmt = self._parse_format( request )
 		if fmt is None: return HttpResponseForbidden()
 
@@ -68,6 +68,17 @@ class SingleObjectView( Base ):
 			return HttpResponseForbidden()
 
 		return handler( request, ob, data, *args, **kwargs )
+
+	def post( self, request, *args, **kwargs ):
+		"""
+		Only accepts POST for HTML formats so that web forms work. Otherwise
+		PUT is the correct method to use for updating in RESTful apps.
+		"""
+		fmt = self._parse_format( request )
+		if fmt is None or fmt != 'html':
+			return HttpResponseForbidden()
+
+		return self.put( request, *args, **kwargs )
 
 
 	def delete( self, request, *args, **kwargs ):

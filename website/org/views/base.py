@@ -1,7 +1,7 @@
 from __future__ import unicode_literals
 
 from django.views.generic.base import View
-from django.http import Http404
+from django.http import HttpResponse, Http404
 
 import json
 
@@ -13,7 +13,7 @@ class Base( View ):
 
 	supported_formats = {
 		'html' : 'text/html',
-		'json' : 'text/json',
+		'json' : 'application/json',
 	}
 
 	# ************** CSRF workarounds per format
@@ -84,5 +84,21 @@ class Base( View ):
 				self.not_found()
 			setattr( myid, nm, nid )
 		return myid
+
+	# ************** Response methods
+
+	def _api_json( self, response, body ):
+		response.write( json.dumps( body ) )
+		return response
+
+
+	def api_resp( self, body, form = 'json' ):
+		resp = HttpResponse( mimetype = self.supported_formats[ form ], status = 200 )
+		resp['Cache-Control'] = 'no-cache'
+
+		if form == 'json':
+			return self._api_json( resp, body )
+
+		raise RuntimeError( 'No such known form: {}'.format( form ) )
 
 

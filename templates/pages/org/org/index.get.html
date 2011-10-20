@@ -25,10 +25,8 @@
 
 	$(function() {
 		
-		var name = $( "#name" ),
-			email = $( "#email" ),
-			password = $( "#password" ),
-			allFields = $( [] ).add( name ).add( email ).add( password ),
+		var trading_name = $( "#id_trading_name" ),
+			allFields = $( [] ).add( trading_name ),
 			tips = $( ".validateTips" );
 
 		function updateTips( t ) {
@@ -71,7 +69,7 @@
 					var bValid = true;
 					allFields.removeClass( "ui-state-error" );
 
-					bValid = bValid && checkLength( name, "Trading Name", 3, 192 );
+					bValid = bValid && checkLength( trading_name, "Trading Name", 3, 192 );
 
 					if ( bValid ) {
 						$( "#create-new-form" ).submit();
@@ -105,8 +103,8 @@
 	<form id="create-new-form" method="POST" action="">
 		{% csrf_token %}
 		<fieldset>
-			<label for="name">Trading Name</label>
-			<input type="text" name="name" id="name" class="text ui-widget-content ui-corner-all" />
+			<label for="trading_name">Trading Name</label>
+			<input type="text" name="trading_name" id="id_trading_name" class="text ui-widget-content ui-corner-all" />
 		</fieldset>
 	</form>
 </div>
