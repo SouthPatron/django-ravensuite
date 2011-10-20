@@ -88,7 +88,9 @@ class Base( View ):
 	# ************** Response methods
 
 	def _api_json( self, response, body ):
-		response.write( json.dumps( body ) )
+		encoded = json.dumps( body )
+		response[ 'Content-Length' ] = len(encoded)
+		response.write( encoded )
 		return response
 
 
