@@ -1,10 +1,10 @@
 from __future__ import unicode_literals
 
+from django.core.urlresolvers import reverse
 from django.db import models
 from django.contrib.auth.models import User
 
 from utils.enum import ChoicesEnum
-
 
 Interval = ChoicesEnum(
 	MINUTE = ( 0, 'Minute' ),
@@ -14,8 +14,6 @@ Interval = ChoicesEnum(
 	MONTH = ( 4, 'Month' ),
 	YEAR = ( 5, 'Year' ),
 )
-
-
 
 State = ChoicesEnum(
 	DRAFT = ( 0, 'Draft' ),
@@ -32,8 +30,12 @@ ExpiryAction = ChoicesEnum(
 
 
 
+
 class DebugControl( models.Model ):
 	current_time = models.DateTimeField()
+
+
+
 
 class SystemCounter( models.Model ):
 	account_no = models.BigIntegerField( default = 1 )
@@ -42,6 +44,13 @@ class SystemCounter( models.Model ):
 class Organization( models.Model ):
 	trading_name = models.CharField( max_length = 192 )
 	refnum = models.BigIntegerField( unique = True )
+
+	def get_single_url( self ):
+		return reverse( 'org-single', kwargs = { 'oid' : self.refnum } )
+	
+	def get_client_list_url( self ):
+		return reverse( 'org-client-list', kwargs = { 'oid' : self.refnum } )
+		
 
 class OrganizationAccount( models.Model ):
 	organization = models.OneToOneField( Organization )
@@ -52,10 +61,37 @@ class OrganizationCounter( models.Model ):
 	client_no = models.BigIntegerField( default = 1 )
 	tab_no = models.BigIntegerField( default = 1 )
 
+
+"""
+class UserRole( models.Model ):
+	organization = models.ForeignKey( Organization )
+	role = models.CharField( max_length = 192 )
+	description = models.CharField( max_length = 192 )
+
+
+class UserGroup( models.Model ):
+	organization = models.ForeignKey( Organization )
+	name = models.CharField( max_length = 192 )
+	description = models.CharField( max_length = 192 )
+	roles = models.ManyToManyField( UserRole )
+	members = models.ManyToManyField( User )
+"""
+
+
 class Client( models.Model ):
 	organization = models.ForeignKey( Organization )
 	refnum = models.BigIntegerField()
 	trading_name = models.CharField( max_length = 192 )
+
+	def get_org( self ):
+		return self.organization
+
+	def get_single_url( self ):
+		return reverse( 'org-client-single', kwargs = { 'oid' : self.organization.refnum, 'cid' : self.refnum } )
+	
+	def get_account_list_url( self ):
+		return reverse( 'org-client-account-list', kwargs = { 'oid' : self.organization.refnum, 'cid' : self.refnum } )
+	
 
 class Account( models.Model ):
 	client = models.ForeignKey( Client )
@@ -67,6 +103,19 @@ class Account( models.Model ):
 	name = models.CharField( max_length = 64 )
 	min_balance = models.BigIntegerField( default = 0 )
 	balance = models.BigIntegerField( default = 0 )
+
+	def get_org( self ):
+		return self.client.organization
+
+	def get_client( self ):
+		return self.client
+
+	def get_single_url( self ):
+		return reverse( 'org-client-account-single', kwargs = { 'oid' : self.client.organization.refnum, 'cid' : self.client.refnum, 'aid' : self.refnum } )
+	
+	def get_transaction_list_url( self ):
+		return reverse( 'org-client-account-transaction-list', kwargs = { 'oid' : self.client.organization.refnum, 'cid' : self.client.refnum, 'aid' : self.refnum } )
+	
 
 class AccountTransaction( models.Model ):
 	account = models.ForeignKey( Account )

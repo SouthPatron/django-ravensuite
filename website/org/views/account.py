@@ -7,15 +7,20 @@ from listview import ListView
 
 from ..models import *
 
+from ..forms import account as forms
+
 class AccountList( ListView ):
 	template_name = 'pages/org/account/index'
+
+	def get_extra( self, request, obj_list, fmt, *args, **kwargs ):
+		return Client.objects.get( refnum = self.url_kwargs.cid, organization__refnum = self.url_kwargs.oid )
 
 	def get_object_list( self, request, *args, **kwargs ):
 		mid = self._extract_ids( [ 'oid', 'cid' ], **kwargs )
 		obj_list = Account.objects.filter( client__refnum = mid.cid, client__organization__refnum = mid.oid )
 		return obj_list
 	
-	def create_object_json( self, request, data, *args, **kwargs ):
+	def _create_object( self, request, data, *args, **kwargs ):
 		mid = self._extract_ids( [ 'oid', 'cid' ], **kwargs )
 
 		# TODO: select_for_update()
@@ -32,7 +37,23 @@ class AccountList( ListView ):
 		newacc.name = data[ 'name' ]
 		newacc.save()
 
-		return redirect( 'org-client-account-single', oid = mid.oid, cid = mid.cid, aid = refnum )
+		return newacc
+
+
+	def create_object_json( self, request, data, *args, **kwargs ):
+		newo = self._create_object( self, request, data, *args, **kwargs )
+		resp = { 'url' : newo.get_single_url() }
+		return self.api_resp( resp )
+
+	def create_object_html( self, request, data, *args, **kwargs ):
+		form = forms.CreateAccount( data or None )
+		if form.is_valid() is False:
+			print form
+			return redirect( 'org-client-account-list', oid = self.url_kwargs.oid, cid = self.url_kwargs.cid )
+		newo = self._create_object( request, form.cleaned_data, *args, **kwargs )
+		return redirect( newo.get_single_url() )
+
+
 
 
 class AccountSingle( SingleObjectView ):

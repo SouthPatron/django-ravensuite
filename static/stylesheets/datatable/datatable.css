@@ -4,15 +4,6 @@
 
 .dataTables_wrapper {
 	position: relative;
-	min-height: 302px;
-	clear: both;
-	_height: 302px;
-	zoom: 1;
-	padding: 15px 10px 40px 10px;
-	border-radius: 5px;
-	-webkit-border-radius: 5px;
-	-moz-border-radius: 5px;
-	-moz-box-shadow: 1px 1px 10px #AAAAAA;
 }
 
 .dataTables_processing {
@@ -38,14 +29,11 @@
 }
 
 .dataTables_filter {
-	width: 50%;
-	float: right;
-	text-align: right;
 	padding-bottom: 10px;
+	float: left;
 }
 
 .dataTables_info {
-	width: 60%;
 	float: left;
 	padding: 5px;
 }
@@ -53,7 +41,7 @@
 .dataTables_paginate {
 	width: 44px;
 	* width: 50px;
-	float: right;
+	float: left;
 	text-align: right;
 }
 
@@ -87,21 +75,19 @@
  * DataTables display
  */
 .dataTables_wrapper table {
-	margin: 10px 0 20px 0;
-	clear: both;
 	width: 100%;
-	border-spacing: 1px;
 }
 
 .dataTables_wrapper table thead {
-	background-color: #BDD2FF;
+	background-color: #2e2e2e;
 }
-
 
 .dataTables_wrapper table thead th {
 	padding: 8px 18px 8px 10px;
 	border-bottom: 1px solid black;
-	font-weight: bold;
+	font-size: 1.2em;
+	color: #cccccc;
+
 	cursor: pointer;
 	* cursor: hand;
 }
@@ -112,21 +98,36 @@
 	font-weight: bold;
 }
 
-.dataTables_wrapper table tr.heading2 td {
-	border-bottom: 1px solid #aaa;
+.dataTables_wrapper table tbody td {
+	padding: 8px 15px;
 }
 
-.dataTables_wrapper table tbody td {
-	padding: 3px 15px;
+.dataTables_wrapper table tbody {
+	border-bottom: 1px solid black;
 }
+
 
 .dataTables_wrapper table tbody td a {
 	text-decoration: none;
-	color: #336FB6;
+	color: black;
 }
 
 .dataTables_wrapper table tbody td.center {
 	text-align: center;
+}
+
+
+.dataTables_wrapper .bottom {
+}
+
+
+.dataTables_wrapper .bottom:after {
+	content: "\0020";
+	display: block;
+	height: 0;
+	clear: both;
+	visibility: hidden;
+	overflow: hidden;
 }
 
 
@@ -157,37 +158,37 @@
 
 
 .dataTables_wrapper tr.odd {
-	background-color: #E2E4FF;
+	background-color: #eaeaea;
 }
 
 .dataTables_wrapper tr.even {
-	background-color: white;
+	background-color: #fafafa;
 }
 
 
 
 
 .dataTables_wrapper tr.odd td.sorting_1 {
-	background-color: #D3D6FF;
+	background-color: #e0e0e0;
 }
 
 .dataTables_wrapper tr.odd td.sorting_2 {
-	background-color: #DADCFF;
+	background-color: #e3e3e3;
 }
 
 .dataTables_wrapper tr.odd td.sorting_3 {
-	background-color: #E0E2FF;
+	background-color: #e6e6e6;
 }
 
 .dataTables_wrapper tr.even td.sorting_1 {
-	background-color: #EAEBFF;
+	background-color: #f0f0f0;
 }
 
 .dataTables_wrapper tr.even td.sorting_2 {
-	background-color: #F2F3FF;
+	background-color: #f3f3f3;
 }
 
 .dataTables_wrapper tr.even td.sorting_3 {
-	background-color: #F9F9FF;
+	background-color: #f6f6f6;
 }
 

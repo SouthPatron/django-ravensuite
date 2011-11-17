@@ -1,51 +1,35 @@
-{% extends 'singlebase.html' %}
+{% extends 'layouts/org/member.html' %}
 
-{% block title %}View Account{% endblock %}
+{% block str_org_name %}{{ instance.get_org.trading_name }}{% endblock %}
+{% block str_client_name %}{{ instance.get_client.trading_name }}{% endblock %}
+{% block str_section_name %}Account: {{ instance.name }} {% endblock %}
 
-{% block orgname %}{{ instance.client.organization.trading_name }}{% endblock %}
 
-{% block links %}
-<a href='{% url org-client-account-transaction-list instance.client.organization.refnum instance.client.refnum instance.refnum %}'>Transactions</a> | 
-<a href='{% url org-client-account-reservation-list instance.client.organization.refnum instance.client.refnum instance.refnum %}'>Reservations</a> |
-<a href='{% url org-client-account-invoice-list instance.client.organization.refnum instance.client.refnum instance.refnum %}'>Invoices</a> |
-{% endblock %}
+{% block page_functions %}
 
-{% block kvp %}
+<ul>
+	<li class=""><a href="{{ instance.get_single_url }}">Dashboard</a></li>
+	<li class=""><a href="{{ instance.get_transaction_list_url }}">Transactions</a></li>
+</ul>
 
+{% endblock  %}
+
+
+{% block content %}
+
+<table>
 <tr>
 	<td>Reference Number:</td>
 	<td>{{ instance.refnum }}</td>
 </tr>
 
 <tr>
-	<td>Is Enabled:</td>
-	<td>{{ instance.is_enabled }}</td>
-</tr>
-
-<tr>
 	<td>Name:</td>
 	<td>{{ instance.name }}</td>
 </tr>
-
-<tr>
-	<td>Min Balance:</td>
-	<td>{{ instance.min_balance }}</td>
-</tr>
-
-
-<tr>
-	<td>Balance:</td>
-	<td>{{ instance.balance }}</td>
-</tr>
-
-
-<tr>
-	<td>Reserved:</td>
-	<td>{{ instance.reserved }}</td>
-</tr>
-
-
-
+</table>
 
 {% endblock %}
+
+
 

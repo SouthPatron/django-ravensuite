@@ -104,18 +104,50 @@ p {
 }
 
 
-/* ----- PAGE LABEL ------------------------------------------ */
+/* ----- PAGE SECTION INFO ----------------------------------- */
 
-#page-label
+#page-section-info
 {
+	position: relative;
+	height: 90px;
+	overflow: hidden;
+}
+
+#page-section-info #client-name
+{
+	position: absolute;
+	left: 0px;
+	top: 0px;
 	padding: 30px 40px;
 }
 
-#page-label #page-title
+#page-section-info #client-name a
+{
+	text-decoration: none;
+	color: inherit;
+}
+
+#page-section-info #client-name-title
 {
 	font-size: 2.5em;
 	text-shadow: 1px 1px 1px #808080;
 }
+
+#page-section-info #section-name
+{
+	position: absolute;
+	right: 0px;
+	top: 0px;
+	padding: 30px 40px;
+}
+
+#page-section-info #section-name-title
+{
+	font-size: 2.5em;
+	text-shadow: 1px 1px 1px #808080;
+	color: #409040;
+}
+
 
 
 /* ----- CONTENT --------------------------------------------- */

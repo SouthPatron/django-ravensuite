@@ -3,12 +3,16 @@
 <head profile="http://gmpg.org/xfn/11">
 
 {% load captureas %}
-{% captureas org_name %}{% block org_name %}{% endblock %}{% endcaptureas %}
-{% captureas the_title %}{% block the_title %}{% endblock %}{% endcaptureas %}
-{% captureas the_section %}{% block the_section %}{% endblock %}{% endcaptureas %}
+{% captureas str_org_name %}{% block str_org_name %}{% endblock %}{% endcaptureas %}
+{% captureas str_client_name %}{% block str_client_name %}{% endblock %}{% endcaptureas %}
+{% captureas str_section_name %}{% block str_section_name %}{% endblock %}{% endcaptureas %}
 {% captureas page_functions_content %}{% block page_functions %}{% endblock %}{% endcaptureas %}
 
-	<title>{{ the_section }} | {{ the_title }}</title>
+<title>
+{% if str_org_name %}{{ str_org_name }}{% if str_client_name or str_section_name %} | {% endif %}{% endif %}
+{% if str_client_name %}{{ str_client_name }}{% if str_section_name %} | {% endif %}{% endif %}
+{% if str_section_name %}{{ str_section_name }}{% endif %}
+</title>
 
 	<!-- No caching ever -->
 	<meta http-equiv="expires" CONTENT="Fri, 1 Jan 1990 00:00:00 GMT">
@@ -85,21 +89,36 @@ $(document).ready(function(){
 
 <div id="wrap">
 
+<!-- HEADER ------------------------------------------------- -->
+
 <div id="header">
-{% if org_name %}
-	<div id="header-orgname-title"><a href="{% url org-single kwargs.oid %}">{{ org_name }}</a></div>
+{% if str_org_name %}
+	<div id="header-orgname-title"><a href="{% url org-single kwargs.oid %}">{{ str_org_name }}</a></div>
 {% endif %}
 	<div id="header-options"><a href='{% url account-profile %}'>{{ request.user.email }}</a> | <a href="{% url org-list %}">organizations</a> | <a href='{% url logout %}'>logout</a></div>
 
 </div> <!-- #header -->
 
+<!-- PAGE SECTION INFO ------------------------------------- -->
 
-<div id="page-label">
-	<span id="page-title">{{ the_title }}</span>
+<div id="page-section-info">
+
+{% if str_client_name %}
+<div id="client-name">
+	<a href="{% url org-client-single kwargs.oid kwargs.cid %}"><span id="client-name-title">{{ str_client_name }}</span></a>
 </div>
+{% endif %}
 
+{% if str_section_name %}
+<div id="section-name">
+	<span id="section-name-title">{{ str_section_name }}</span>
+</div>
+{% endif %}
+
+</div> <!-- #page-section-info -->
 
 {% if page_functions_content %}
+<!-- PAGE FUNCTIONS ------------------------------------- -->
 <div id="page-functions-div">
 <div id="page-functions-proper">
 {{ page_functions_content }}

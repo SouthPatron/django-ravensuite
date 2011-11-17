@@ -7,15 +7,20 @@ from listview import ListView
 
 from ..models import *
 
+from ..forms import client as forms
+
 class ClientList( ListView ):
 	template_name = 'pages/org/client/index'
+
+	def get_extra( self, request, obj_list, fmt, *args, **kwargs ):
+		return Organization.objects.get( refnum = self.url_kwargs.oid )
 
 	def get_object_list( self, request, *args, **kwargs ):
 		mid = self._extract_ids( [ 'oid' ], **kwargs )
 		obj_list = Client.objects.filter( organization__refnum = mid.oid )
 		return obj_list
 	
-	def create_object_json( self, request, data, *args, **kwargs ):
+	def _create_object( self, request, data, *args, **kwargs ):
 		mid = self._extract_ids( [ 'oid' ], **kwargs )
 
 		# TODO: select_for_update()
@@ -30,7 +35,22 @@ class ClientList( ListView ):
 		newclient.trading_name = data[ 'trading_name' ]
 		newclient.save()
 
-		return redirect( 'org-client-single', oid = mid.oid, cid = refnum )
+		return newclient
+
+	def create_object_html( self, request, data, *args, **kwargs ):
+		form = forms.AddClient( data or None )
+		if form.is_valid() is False:
+			return redirect( 'org-client-list', oid = self.url_kwargs.oid )
+
+		newo = self._create_object( request, form.cleaned_data, *args, **kwargs )
+		return redirect( 'org-client-single', oid = newo.organization.refnum, cid = newo.refnum )
+
+	def create_object_json( self, request, data, *args, **kwargs ):
+		newo = self._create_object( request, data, *args, **kwargs )
+		resp = { 'url' : reverse( 'org-client-single', kwargs = { 'oid' : newo.organization.refnum, 'cid' : newo.refnum } ) }
+		return self.api_resp( resp )
+
+
 
 
 class ClientSingle( SingleObjectView ):

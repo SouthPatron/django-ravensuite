@@ -1,15 +1,24 @@
-{% extends 'singlebase.html' %}
+{% extends 'layouts/org/member.html' %}
 
-{% block title %}View Client{% endblock %}
+{% block str_org_name %}{{ instance.get_org.trading_name }}{% endblock %}
+{% block str_client_name %}{{ instance.trading_name }}{% endblock %}
 
-{% block orgname %}{{ instance.organization.trading_name }}{% endblock %}
+{% block str_section_name %}Dashboard{% endblock %}
 
-{% block links %}
-<a href='{% url org-client-account-list instance.organization.refnum instance.refnum %}'>Accounts</a>
-{% endblock %}
 
-{% block kvp %}
+{% block page_functions %}
 
+<ul>
+	<li class=""><a href="{{ instance.get_single_url }}">Dashboard</a></li>
+	<li class=""><a href="{{ instance.get_account_list_url }}">Accounts</a></li>
+</ul>
+
+{% endblock  %}
+
+
+{% block content %}
+
+<table>
 <tr>
 	<td>Reference Number:</td>
 	<td>{{ instance.refnum }}</td>
@@ -19,5 +28,9 @@
 	<td>Trading Name:</td>
 	<td>{{ instance.trading_name }}</td>
 </tr>
+</table>
 
 {% endblock %}
+
+
+

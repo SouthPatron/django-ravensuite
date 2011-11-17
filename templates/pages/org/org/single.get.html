@@ -1,18 +1,14 @@
 {% extends 'layouts/org/member.html' %}
 
-{% block the_section %}{{ instance.trading_name }}{% endblock %}
-{% block the_title %}Overview{% endblock %}
-{% block org_name %}{{ instance.trading_name }}{% endblock %}
+{% block str_org_name %}{{ instance.trading_name }}{% endblock %}
+{% block str_section_name %}Overview{% endblock %}
 
 
 {% block page_functions %}
 
-{% url org-single instance.refnum as orgdash %}
-{% url org-client-list instance.refnum as orgclist %}
-
 <ul>
-	<li class=""><a href="{{ orgdash }}">Dashboard</a></li>
-	<li class=""><a href="{{ orgclist }}">Clients</a></li>
+	<li class=""><a href="{{ instance.get_single_url }}">Dashboard</a></li>
+	<li class=""><a href="{{ instance.get_client_list_url }}">Clients</a></li>
 </ul>
 
 {% endblock  %}
@@ -20,7 +16,7 @@
 
 {% block content %}
 
-{{ kwargs.oid }}
+<table>
 <tr>
 	<td>Reference Number:</td>
 	<td>{{ instance.refnum }}</td>
@@ -30,6 +26,8 @@
 	<td>Trading Name:</td>
 	<td>{{ instance.trading_name }}</td>
 </tr>
+</table>
+
 {% endblock %}
 
 
