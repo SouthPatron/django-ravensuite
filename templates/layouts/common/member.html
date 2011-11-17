@@ -105,7 +105,13 @@ $(document).ready(function(){
 
 {% if str_client_name %}
 <div id="client-name">
-	<a href="{% url org-client-single kwargs.oid kwargs.cid %}"><span id="client-name-title">{{ str_client_name }}</span></a>
+	{% if kwargs.oid %}
+	<a href="{% url org-client-single kwargs.oid kwargs.cid %}">
+	{% endif %}
+	<span id="client-name-title">{{ str_client_name }}</span>
+	{% if kwargs.oid %}
+	</a>
+	{% endif %}
 </div>
 {% endif %}
 

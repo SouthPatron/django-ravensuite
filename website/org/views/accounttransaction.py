@@ -12,6 +12,9 @@ from ..utils.dbgdatetime import datetime
 class AccountTransactionList( ListView ):
 	template_name = 'pages/org/account_transaction/index'
 
+	def get_extra( self, request, obj_list, fmt, *args, **kwargs ):
+		return Account.objects.get( client__organization__refnum = self.url_kwargs.oid, client__refnum = self.url_kwargs.cid, refnum = self.url_kwargs.aid )
+
 	def get_object_list( self, request, *args, **kwargs ):
 		mid = self._extract_ids( [ 'oid', 'cid', 'aid' ], **kwargs )
 

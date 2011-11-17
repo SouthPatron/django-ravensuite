@@ -127,6 +127,19 @@ class AccountTransaction( models.Model ):
 	balance_after = models.BigIntegerField( default = 0 )
 	amount = models.BigIntegerField( default = 0 )
 
+	def get_org( self ):
+		return self.account.client.organization
+
+	def get_client( self ):
+		return self.account.client
+
+	def get_account( self ):
+		return self.account
+
+	def get_single_url( self ):
+		return reverse( 'org-client-account-transaction-single', kwargs = { 'oid' : self.get_org().refnum, 'cid' : self.get_client().refnum, 'aid' : self.get_account().refnum } )
+
+
 class AccountTransactionData( models.Model ):
 	account_transaction = models.OneToOneField( AccountTransaction )
 	data = models.TextField()
