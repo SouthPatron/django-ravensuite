@@ -26,7 +26,21 @@ ExpiryAction = ChoicesEnum(
 	ROLLBACK = ( 'rollback', 'Rollback' ),
 )
 
+UserCategory = ChoicesEnum(
+	OWNER = ( 0, 'Owner' ),
+	ADMINISTRATOR = ( 10, 'Administrator' ),
+	EMPLOYEE = ( 20, 'Employee' ),
+	CONTRACTOR = ( 30, 'Contractor' ),
+	CLIENT = ( 40, 'Client' ),
+	GUEST = ( 50, 'Guest' ),
+)
 
+CrudAccess = ChoicesEnum(
+	CREATE = ( 0, 'Create' ),
+	READ = ( 10, 'Read' ),
+	UPDATE = ( 20, 'Update' ),
+	DELETE = ( 30, 'Delete' ),
+)
 
 
 
@@ -53,6 +67,9 @@ class Organization( models.Model ):
 
 	def get_activity_list_url( self ):
 		return reverse( 'org-activity-list', kwargs = { 'oid' : self.refnum } )
+
+	def get_user_list_url( self ):
+		return reverse( 'org-user-list', kwargs = { 'oid' : self.refnum } )
 		
 
 class OrganizationAccount( models.Model ):
@@ -65,20 +82,24 @@ class OrganizationCounter( models.Model ):
 	tab_no = models.BigIntegerField( default = 1 )
 
 
-"""
-class UserRole( models.Model ):
+class UserMembership( models.Model ):
+	user = models.ForeignKey( User )
 	organization = models.ForeignKey( Organization )
-	role = models.CharField( max_length = 192 )
-	description = models.CharField( max_length = 192 )
+	category = models.IntegerField( choices = UserCategory.choices() ) 
+	is_enabled = models.BooleanField( default = True )
+
+	def get_org( self ):
+		return self.organization
+
+	def get_single_url( self ):
+		return reverse( 'org-user-single', kwargs = { 'oid' : self.organization.refnum, 'uid' : self.id } )
 
 
-class UserGroup( models.Model ):
-	organization = models.ForeignKey( Organization )
-	name = models.CharField( max_length = 192 )
-	description = models.CharField( max_length = 192 )
-	roles = models.ManyToManyField( UserRole )
-	members = models.ManyToManyField( User )
-"""
+class UserPermissions( models.Model ):
+	user_membership = models.ForeignKey( UserMembership )
+	entity = models.CharField( max_length = 255 )
+	refnum = models.BigIntegerField()
+	crud = models.CommaSeparatedIntegerField( max_length = 255, choices = CrudAccess.choices() )
 
 
 class Client( models.Model ):

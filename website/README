@@ -13,3 +13,5 @@ iid = Invoice ID  (refnum)
 actid = Activity ID  (id)
 taskid = Task ID (id)
 
+uid = User ID (id)
+

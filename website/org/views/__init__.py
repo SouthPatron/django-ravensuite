@@ -16,3 +16,5 @@ from invoice import *
 from activity import *
 from task import *
 
+from user import *
+
