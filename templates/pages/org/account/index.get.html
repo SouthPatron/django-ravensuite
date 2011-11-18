@@ -1,7 +1,7 @@
 {% extends 'layouts/org/member.html' %}
 
 
-{% block str_org_name %}{{ extra.organization.trading_name }}{% endblock %}
+{% block str_org_name %}{{ extra.get_org.trading_name }}{% endblock %}
 {% block str_client_name %}{{ extra.trading_name }}{% endblock %}
 {% block str_section_name %}Accounts{% endblock %}
 
@@ -9,8 +9,9 @@
 {% block page_functions %}
 
 <ul>
-	<li class=""><a href="{{ instance.get_org.get_single_url }}">Dashboard</a></li>
-	<li class=""><a href="{{ instance.get_client.get_account_list_url }}">Accounts</a></li>
+	<li class=""><a href="{{ extra.get_single_url }}">Dashboard</a></li>
+	<li class=""><a href="{{ extra.get_account_list_url }}">Accounts</a></li>
+	<li class=""><a href="{{ extra.get_tab_list_url }}">Tabs</a></li>
 </ul>
 
 {% endblock  %}

@@ -18,9 +18,6 @@
 
 {% block head_includes %}
 
-	<script type="text/javascript" src="{{ STATIC_URL }}js/validations.js"></script>
-		
-
 <style>
 	body { font-size: 62.5%; }
 	label, input { display:block; }
@@ -38,48 +35,11 @@
 
 {% block onready %}
 
-	$(function() {
-		
-		var name = $( "#id_name" ),
-			min_balance = $( "#id_min_balance" ),
-			allFields = $( [] ).add( name ).add( min_balance ),
-			tips = $( ".validateTips" );
-
-		$( "#dialog-form" ).dialog({
-			autoOpen: false,
-			height: 400,
-			width: 550,
-			modal: true,
-			buttons: {
-				"Create a new Account": function() {
-					var bValid = true;
-					allFields.removeClass( "ui-state-error" );
-
-					bValid = bValid && validation.length( tips, name, "Name", 3, 64 );
-
-					if ( bValid ) {
-						$( "#create-new-form" ).submit();
-					}
-				},
-				Cancel: function() {
-					$( this ).dialog( "close" );
-				}
-			},
-			close: function() {
-				allFields.val( "" ).removeClass( "ui-state-error" );
-			}
-		});
-
-		$( "#client-add-new-account" )
-			.click(function() {
-				$( "#dialog-form" ).dialog( "open" );
-			});
-	});
-
-
 	$('#account_list_table').dataTable( {
 		"aaSorting" : [[ 0, "asc" ] ],
 		"aoColumns" : [
+			null,
+			null,
 			null,
 			null,
 			null
@@ -88,27 +48,6 @@
 	});
 
 
-{% endblock %}
-
-
-{% block content_menu_right %}
-<ul>
-	<li><a href="#" id="client-add-new-account">Create a new Account</a></li>
-</ul>
-
-<div id="dialog-form" title="Create a new Account">
-	<p class="validateTips">All form fields are required</p>
-	<form id="create-new-form" method="POST" action="">
-		{% csrf_token %}
-		<fieldset>
-			<label for="name">Account Name</label>
-			<input type="text" name="name" id="id_name" class="text ui-widget-content ui-corner-all" />
-
-			<label for="name">Minimum Balance</label>
-			<input type="text" name="min_balance" id="id_min_balance" class="text ui-widget-content ui-corner-all" value="0" />
-		</fieldset>
-	</form>
-</div>
 {% endblock %}
 
 
@@ -124,6 +63,7 @@
 		<th>Time</th>
 		<th>Description</th>
 		<th>Amount</th>
+		<th>Balance</th>
 	</tr>
 </thead>
 <tbody>
@@ -134,6 +74,7 @@
 		<td><a href='{{ obj.get_single_url }}'>{{ obj.event_time }}</a></td>
 		<td><a href='{{ obj.get_single_url }}'>{{ obj.description }}</a></td>
 		<td><a href='{{ obj.get_single_url }}'>{{ obj.amount }}</a></td>
+		<td><a href='{{ obj.get_single_url }}'>{{ obj.balance_after }}</a></td>
 	</tr>
 {% endfor %}
 </tbody>

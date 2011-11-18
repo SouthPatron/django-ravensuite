@@ -31,8 +31,8 @@ urlpatterns = patterns('',
 # ------ CLIENTS / TABS ----------------------
 
 
-	url( r'^(?P<oid>\d+)/client/(?P<cid>\d+)/tabs$', login_required( AccountList.as_view() ), name = 'org-client-tab-list' ),
-	url( r'^(?P<oid>\d+)/client/(?P<cid>\d+)/tab/(?P<tabid>\d+)$', login_required( AccountSingle.as_view() ), name = 'org-client-tab-single' ),
+	url( r'^(?P<oid>\d+)/client/(?P<cid>\d+)/tabs$', login_required( TabList.as_view() ), name = 'org-client-tab-list' ),
+	url( r'^(?P<oid>\d+)/client/(?P<cid>\d+)/tab/(?P<tabid>\d+)$', login_required( TabSingle.as_view() ), name = 'org-client-tab-single' ),
 
 
 	url( r'^(?P<oid>\d+)/client/(?P<cid>\d+)/tab/(?P<tabid>\d+)/transactions$', login_required( TabTransactionList.as_view() ), name = 'org-client-tab-transaction-list' ),

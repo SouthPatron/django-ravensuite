@@ -91,6 +91,10 @@ class Client( models.Model ):
 	
 	def get_account_list_url( self ):
 		return reverse( 'org-client-account-list', kwargs = { 'oid' : self.organization.refnum, 'cid' : self.refnum } )
+
+	def get_tab_list_url( self ):
+		return reverse( 'org-client-tab-list', kwargs = { 'oid' : self.organization.refnum, 'cid' : self.refnum } )
+	
 	
 
 class Account( models.Model ):
@@ -115,6 +119,8 @@ class Account( models.Model ):
 	
 	def get_transaction_list_url( self ):
 		return reverse( 'org-client-account-transaction-list', kwargs = { 'oid' : self.client.organization.refnum, 'cid' : self.client.refnum, 'aid' : self.refnum } )
+
+
 	
 
 class AccountTransaction( models.Model ):
@@ -157,6 +163,23 @@ class Tab( models.Model ):
 	balance = models.BigIntegerField( default = 0 )
 	reserved = models.BigIntegerField( default = 0 )
 
+	def get_org( self ):
+		return self.client.organization
+
+	def get_client( self ):
+		return self.client
+
+	def get_single_url( self ):
+		return reverse( 'org-client-tab-single', kwargs = { 'oid' : self.get_org().refnum, 'cid' : self.get_client().refnum, 'tabid' : self.refnum } )
+
+	def get_transaction_list_url( self ):
+		return reverse( 'org-client-tab-transaction-list', kwargs = { 'oid' : self.get_org().refnum, 'cid' : self.get_client().refnum, 'tabid' : self.refnum } )
+
+	def get_reservation_list_url( self ):
+		return reverse( 'org-client-tab-reservation-list', kwargs = { 'oid' : self.get_org().refnum, 'cid' : self.get_client().refnum, 'tabid' : self.refnum } )
+
+
+
 
 class TabTransaction( models.Model ):
 	tab = models.ForeignKey( Tab )
@@ -168,6 +191,19 @@ class TabTransaction( models.Model ):
 	balance_reserved = models.BigIntegerField( default = 0 )
 	balance_after = models.BigIntegerField( default = 0 )
 	amount = models.BigIntegerField( default = 0 )
+
+	def get_org( self ):
+		return self.tab.client.organization
+
+	def get_client( self ):
+		return self.tab.client
+
+	def get_tab( self ):
+		return self.tab
+
+	def get_single_url( self ):
+		return reverse( 'org-client-tab-transaction-single', kwargs = { 'oid' : self.get_org().refnum, 'cid' : self.get_client().refnum, 'tabid' : self.get_tab().refnum, 'tid' : self.refnum } )
+
 
 class TabTransactionData( models.Model ):
 	tab_transaction = models.OneToOneField( TabTransaction )
@@ -183,6 +219,19 @@ class Reservation( models.Model ):
 	description = models.CharField( max_length = 64 )
 	uuid = models.CharField( max_length = 32, unique = True )
 	amount = models.BigIntegerField()
+
+	def get_org( self ):
+		return self.tab.client.organization
+
+	def get_client( self ):
+		return self.tab.client
+
+	def get_tab( self ):
+		return self.tab
+
+	def get_single_url( self ):
+		return reverse( 'org-client-tab-reservation-single', kwargs = { 'oid' : self.get_org().refnum, 'cid' : self.get_client().refnum, 'tabid' : self.get_tab().refnum, 'rid' : self.uuid } )
+
 
 class ReservationData( models.Model ):
 	reservation = models.OneToOneField( Reservation )

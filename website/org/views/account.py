@@ -6,7 +6,6 @@ from singleobjectview import SingleObjectView
 from listview import ListView
 
 from ..models import *
-
 from ..forms import account as forms
 
 class AccountList( ListView ):
@@ -32,7 +31,7 @@ class AccountList( ListView ):
 		newacc = Account()
 		newacc.client = Client.objects.get( refnum = mid.cid, organization__refnum = mid.oid )
 		newacc.refnum = refnum
-		newacc.is_enabled = data.get( 'is_enabled', True )
+		newacc.is_enabled = True
 		newacc.min_balance = data.get( 'min_balance', 0 )
 		newacc.name = data[ 'name' ]
 		newacc.save()

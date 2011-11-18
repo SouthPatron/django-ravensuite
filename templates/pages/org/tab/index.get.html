@@ -1,27 +1,143 @@
-{% extends 'indexbase.html' %}
-
-{% block title %}Account List{% endblock %}
-
-{% block orgname %}{% endblock %}
-
-{% block links %}
-{% endblock %}
-
-{% block list %}
+{% extends 'layouts/org/member.html' %}
 
 
-{% if object_list.count == 0 %}
-<p>No account found</p>
-{% else %}
+{% block str_org_name %}{{ extra.get_org.trading_name }}{% endblock %}
+{% block str_client_name %}{{ extra.trading_name }}{% endblock %}
+{% block str_section_name %}Tabs{% endblock %}
+
+
+{% block page_functions %}
 
 <ul>
-{% for obj in object_list %}
-	<li><a href='{% url org-client-account-single obj.client.organization.refnum obj.client.refnum obj.refnum  %}'>{{ obj.name }}</a></li>
-{% endfor %}
+	<li class=""><a href="{{ extra.get_single_url }}">Dashboard</a></li>
+	<li class=""><a href="{{ extra.get_account_list_url }}">Accounts</a></li>
+	<li class=""><a href="{{ extra.get_tab_list_url }}">Tabs</a></li>
 </ul>
 
-{% endif %}
+{% endblock  %}
+
+
+{% block head_includes %}
+
+	<script type="text/javascript" src="{{ STATIC_URL }}js/validations.js"></script>
+		
+
+<style>
+	body { font-size: 62.5%; }
+	label, input { display:block; }
+	input.text { margin-bottom:12px; width:95%; padding: .4em; }
+	fieldset { padding:0; border:0; margin-top:25px; }
+	h1 { font-size: 1.2em; margin: .6em 0; }
+	div#users-contain { width: 350px; margin: 20px 0; }
+	div#users-contain table { margin: 1em 0; border-collapse: collapse; width: 100%; }
+	div#users-contain table td, div#users-contain table th { border: 1px solid #eee; padding: .6em 10px; text-align: left; }
+	.ui-dialog .ui-state-error { padding: .3em; }
+	.validateTips { border: 1px solid transparent; padding: 0.3em; }
+</style>
+
+{% endblock %}
+
+{% block onready %}
+
+	$(function() {
+		
+		var name = $( "#id_name" ),
+			min_balance = $( "#id_min_balance" ),
+			allFields = $( [] ).add( name ).add( min_balance ),
+			tips = $( ".validateTips" );
+
+		$( "#dialog-form" ).dialog({
+			autoOpen: false,
+			height: 400,
+			width: 550,
+			modal: true,
+			buttons: {
+				"Create a new Tab": function() {
+					var bValid = true;
+					allFields.removeClass( "ui-state-error" );
+
+					bValid = bValid && validation.length( tips, name, "Name", 3, 64 );
+
+					if ( bValid ) {
+						$( "#create-new-form" ).submit();
+					}
+				},
+				Cancel: function() {
+					$( this ).dialog( "close" );
+				}
+			},
+			close: function() {
+				allFields.val( "" ).removeClass( "ui-state-error" );
+			}
+		});
+
+		$( "#client-add-new-tab" )
+			.click(function() {
+				$( "#dialog-form" ).dialog( "open" );
+			});
+	});
+
+
+	$('#tab_list_table').dataTable( {
+		"aaSorting" : [[ 0, "asc" ] ],
+		"aoColumns" : [
+			null,
+			null,
+			null
+		],
+		"sDom" : 't<"bottom"fip><"clear">'
+	});
 
 
 {% endblock %}
+
+
+{% block content_menu_right %}
+<ul>
+	<li><a href="#" id="client-add-new-tab">Create a new Tab</a></li>
+</ul>
+
+<div id="dialog-form" title="Create a new Tab">
+	<p class="validateTips">All form fields are required</p>
+	<form id="create-new-form" method="POST" action="">
+		{% csrf_token %}
+		<fieldset>
+			<label for="name">Tab Name</label>
+			<input type="text" name="name" id="id_name" class="text ui-widget-content ui-corner-all" />
+
+			<label for="name">Minimum Balance</label>
+			<input type="text" name="min_balance" id="id_min_balance" class="text ui-widget-content ui-corner-all" value="0" />
+		</fieldset>
+	</form>
+</div>
+{% endblock %}
+
+
+{% block content %}
+
+<table
+	id="tab_list_table"
+	style=' text-align: left; '
+	>
+<thead>
+	<tr>
+		<th>Name</th>
+		<th>Name</th>
+		<th>Name</th>
+	</tr>
+</thead>
+<tbody>
+{% for obj in object_list %}
+
+	<tr>
+		<td><a href='{{ obj.get_single_url }}'>{{ obj.name }}</a></td>
+		<td><a href='{{ obj.get_single_url }}'>{{ obj.name }}</a></td>
+		<td><a href='{{ obj.get_single_url }}'>{{ obj.name }}</a></td>
+	</tr>
+{% endfor %}
+</tbody>
+</table>
+
+{% endblock %}
+
 

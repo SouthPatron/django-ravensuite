@@ -15,11 +15,17 @@ from ..utils.dbgdatetime import datetime
 class ReservationList( ListView ):
 	template_name = 'pages/org/reservation/index'
 
+	def get_extra( self, request, obj_list, fmt, *args, **kwargs ):
+		return Tab.objects.get( refnum = self.url_kwargs.tabid, client__refnum = self.url_kwargs.cid, client__organization__refnum = self.url_kwargs.oid )
+
+
 	def get_object_list( self, request, *args, **kwargs ):
-		mid = self._extract_ids( [ 'oid', 'cid', 'aid' ], **kwargs )
-		obj_list = Reservation.objects.filter( account__refnum = mid.aid, account__client__refnum = mid.cid, account__client__organization__refnum = mid.oid )
+		mid = self._extract_ids( [ 'oid', 'cid', 'tabid' ], **kwargs )
+
+		obj_list = Reservation.objects.filter( tab__refnum = mid.tabid, tab__client__refnum = mid.cid, tab__client__organization__refnum = mid.oid )
 		return obj_list
 	
+
 	def create_object_json( self, request, data, *args, **kwargs ):
 		amount = data.get( 'amount', 0 )
 
@@ -74,7 +80,7 @@ class ReservationList( ListView ):
 		theaccount.reserved += amount
 		theaccount.save()
 
-		return redirect( 'org-client-account-reservation-single', oid = mid.oid, cid = mid.cid, aid = mid.aid, rid = res.uuid )
+		return redirect( 'org-client-tab-reservation-single', oid = mid.oid, cid = mid.cid, aid = mid.aid, rid = res.uuid )
 
 
 class ReservationSingle( SingleObjectView ):
