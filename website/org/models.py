@@ -50,6 +50,9 @@ class Organization( models.Model ):
 	
 	def get_client_list_url( self ):
 		return reverse( 'org-client-list', kwargs = { 'oid' : self.refnum } )
+
+	def get_activity_list_url( self ):
+		return reverse( 'org-activity-list', kwargs = { 'oid' : self.refnum } )
 		
 
 class OrganizationAccount( models.Model ):
@@ -278,6 +281,35 @@ class Subscription( models.Model ):
 
 	amount = models.BigIntegerField( default = 0 )
 
+
+class Activity( models.Model ):
+	organization = models.ForeignKey( Organization )
+	name = models.CharField( max_length = 32 )
+	description = models.TextField()
+
+	def get_org( self ):
+		return self.organization
+
+	def get_task_list_url( self ):
+		return reverse( 'org-activity-task-list', kwargs = { 'oid' : self.get_org().refnum, 'actid' : self.id } )
+
+	def get_single_url( self ):
+		return reverse( 'org-activity-single', kwargs = { 'oid' : self.get_org().refnum, 'actid' : self.id } )
+
+
+class Task( models.Model ):
+	activity = models.ForeignKey( Activity )
+	name = models.CharField( max_length = 32 )
+	description = models.TextField()
+
+	def get_org( self ):
+		return self.activity.organization
+
+	def get_activity( self ):
+		return self.activity
+
+	def get_single_url( self ):
+		return reverse( 'org-activity-task-single', kwargs = { 'oid' : self.get_org().refnum, 'actid' : self.get_activity().id, 'taskid' : self.id } )
 
 
 

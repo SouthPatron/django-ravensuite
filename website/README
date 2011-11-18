@@ -2,10 +2,14 @@
 
 ID Mappings
 
-oid = Organization ID
-cid = Client ID
-aid = Account ID
-tid = Transaction ID
-tabid = Tab ID
-iid = Invoice ID
+oid = Organization ID  (refnum)
+cid = Client ID  (refnum)
+aid = Account ID  (refnum)
+tid = Transaction ID  (refnum)
+tabid = Tab ID  (refnum)
+iid = Invoice ID  (refnum)
+
+
+actid = Activity ID  (id)
+taskid = Task ID (id)
 

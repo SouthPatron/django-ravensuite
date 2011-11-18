@@ -1,0 +1,33 @@
+{% extends 'layouts/org/member.html' %}
+
+{% block str_org_name %}{{ instance.get_org.trading_name }}{% endblock %}
+{% block str_section_name %}Task: {{ instance.name }}{% endblock %}
+
+
+{% block page_functions %}
+
+<ul>
+	<li class=""><a href="{{ instance.get_single_url }}">Dashboard</a></li>
+</ul>
+
+{% endblock  %}
+
+
+{% block content %}
+
+<table>
+<tr>
+	<td>Name:</td>
+	<td>{{ instance.name }}</td>
+</tr>
+
+<tr>
+	<td>Description:</td>
+	<td>{{ instance.description }}</td>
+</tr>
+</table>
+
+{% endblock %}
+
+
+

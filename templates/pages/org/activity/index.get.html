@@ -2,7 +2,7 @@
 
 
 {% block str_org_name %}{{ extra.trading_name }}{% endblock %}
-{% block str_section_name %}Clients{% endblock %}
+{% block str_section_name %}Activities{% endblock %}
 
 
 {% block page_functions %}
@@ -39,8 +39,9 @@
 
 	$(function() {
 		
-		var trading_name = $( "#id_trading_name" ),
-			allFields = $( [] ).add( trading_name ),
+		var name = $( "#id_name" ),
+			description = $( "#id_description" ),
+			allFields = $( [] ).add( name ).add( description ),
 			tips = $( ".validateTips" );
 
 		$( "#dialog-form" ).dialog({
@@ -49,11 +50,11 @@
 			width: 550,
 			modal: true,
 			buttons: {
-				"Add a new Client": function() {
+				"Add a new Activity": function() {
 					var bValid = true;
 					allFields.removeClass( "ui-state-error" );
 
-					bValid = bValid && validations.length( tips, trading_name, "Trading Name", 3, 192 );
+					bValid = bValid && validation.length( tips, name, "Name", 3, 192 );
 
 					if ( bValid ) {
 						$( "#create-new-form" ).submit();
@@ -68,14 +69,14 @@
 			}
 		});
 
-		$( "#org-add-new-client" )
+		$( "#org-create-new-activity" )
 			.click(function() {
 				$( "#dialog-form" ).dialog( "open" );
 			});
 	});
 
 
-	$('#client_list_table').dataTable( {
+	$('#activity_list_table').dataTable( {
 		"aaSorting" : [[ 0, "asc" ] ],
 		"aoColumns" : [
 			null,
@@ -91,16 +92,18 @@
 
 {% block content_menu_right %}
 <ul>
-	<li><a href="#" id="org-add-new-client">Add a new Client</a></li>
+	<li><a href="#" id="org-create-new-activity">Add a new Activity</a></li>
 </ul>
 
-<div id="dialog-form" title="Add a new client">
+<div id="dialog-form" title="Add a new activity">
 	<p class="validateTips">All form fields are required</p>
 	<form id="create-new-form" method="POST" action="">
 		{% csrf_token %}
 		<fieldset>
-			<label for="trading_name">Trading Name</label>
-			<input type="text" name="trading_name" id="id_trading_name" class="text ui-widget-content ui-corner-all" />
+			<label for="name">Name</label>
+			<input type="text" name="name" id="id_name" class="text ui-widget-content ui-corner-all" />
+			<label for="name">Description</label>
+			<textarea name="description" id="id_description" class="text ui-widget-content ui-corner-all"></textarea>
 		</fieldset>
 	</form>
 </div>
@@ -110,7 +113,7 @@
 {% block content %}
 
 <table
-	id="client_list_table"
+	id="activity_list_table"
 	style=' text-align: left; '
 	>
 <thead>
@@ -124,9 +127,9 @@
 {% for obj in object_list %}
 
 	<tr>
-		<td><a href='{{ obj.get_single_url }}'>{{ obj.trading_name }}</a></td>
-		<td><a href='{{ obj.get_single_url }}'>{{ obj.trading_name }}</a></td>
-		<td><a href='{{ obj.get_single_url }}'>{{ obj.trading_name }}</a></td>
+		<td><a href='{{ obj.get_single_url }}'>{{ obj.name }}</a></td>
+		<td><a href='{{ obj.get_single_url }}'>{{ obj.name }}</a></td>
+		<td><a href='{{ obj.get_single_url }}'>{{ obj.name }}</a></td>
 	</tr>
 {% endfor %}
 </tbody>

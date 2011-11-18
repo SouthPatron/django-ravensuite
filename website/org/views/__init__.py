@@ -12,3 +12,7 @@ from reservation import *
 
 from invoice import *
 
+
+from activity import *
+from task import *
+
