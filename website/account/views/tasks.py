@@ -2,7 +2,7 @@ from django.views.generic import FormView
 from django.shortcuts import redirect
 from django.core.urlresolvers import reverse
 
-from ..utils.email import send_templated_email
+from common.utils.email import send_templated_email
 
 from ..forms import *
 from ..models import *
@@ -20,7 +20,7 @@ class ResendAuthCode( FormView ):
 
 		email_address = form.cleaned_data[ 'email_address' ]
 		luser = User.objects.get( email = email_address )
-		send_templated_email( luser, 'authentication_request' )
+		send_templated_email( luser, 'account', 'authentication_request' )
 		return rc
 
 
@@ -40,7 +40,7 @@ class ResetPassword( FormView ):
 		new_password = User.objects.make_random_password()
 		luser.set_password( new_password )
 		luser.save()
-		send_templated_email( luser, 'password_reset', { 'new_password' : new_password } )
+		send_templated_email( luser, 'account', 'password_reset', { 'new_password' : new_password } )
 		return rc
 
 

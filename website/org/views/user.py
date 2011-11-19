@@ -9,6 +9,9 @@ from ..models import *
 
 from ..forms import user as forms
 
+from website.account.support import AccountSupport
+from common.utils.email import send_templated_email
+
 
 class UserList( ListView ):
 	template_name = 'pages/org/user/index'
@@ -24,13 +27,25 @@ class UserList( ListView ):
 	def _create_object( self, request, data, *args, **kwargs ):
 		mid = self._extract_ids( [ 'oid' ], **kwargs )
 
+		wasNewUser = False
+
+		try:
+			the_user = User.objects.get( email = data[ 'email_address' ] )
+		except User.DoesNotExist:
+			new_password = User.objects.make_random_password()
+			the_user = AccountSupport.create( data[ 'email_address'], new_password, data[ 'first_name' ], data[ 'last_name' ] )
+			wasNewUser = True
+
+
 		newuser = UserMembership()
-		# TODO: invite the user
-		newuser.user = request.user
+		newuser.user = the_user
 		newuser.organization = Organization.objects.get( refnum = mid.oid )
 		newuser.category = data[ 'category' ]
 		newuser.is_enabled = True
 		newuser.save()
+
+		if wasNewUser is True:
+			send_templated_email( the_user, 'org', 'user_added', { 'password' : new_password, 'organization' : newuser.organization } )
 
 		return newuser
 

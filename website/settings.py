@@ -107,6 +107,7 @@ INSTALLED_APPS = (
 
 	'account',
 	'org',
+	'common',
 )
 
 

@@ -6,7 +6,7 @@ from ..models import *
 from ..forms import *
 
 from ..support import AccountSupport
-from ..utils.email import send_templated_email
+from common.utils.email import send_templated_email
 
 import datetime
 
@@ -33,7 +33,7 @@ class RegistrationStep1( FormView ):
 					lastname = lastname
 				)
 
-		send_templated_email( luser, 'authentication_request' )
+		send_templated_email( luser, 'account', 'authentication_request' )
 		return rc
 
 
@@ -57,7 +57,7 @@ class RegistrationStep2( FormView ):
 			return rc
 
 		AccountSupport.authenticate( luser )
-		send_templated_email( luser, 'registration_successful' )
+		send_templated_email( luser, 'account', 'registration_successful' )
 		return rc
 
 	def get_success_url( self ):

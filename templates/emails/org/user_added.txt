@@ -1,0 +1,35 @@
+
+
+Please follow the following link to confirm this email address and complete
+your registration.
+
+
+Your authentication code: {{ user.authenticationcode.authentication_code }}
+
+The authentication site: {% url register-step2 %}
+
+
+A direct link: {% url register-step2 %}?authcode={{
+user.authenticationcode.authentication_code }}
+
+
+
+
+{{ user.first_name }} {{ user.last_name }} has granted you access to:
+
+{{ organization.trading_name }}
+
+Please follow the following link to confirm this email address and complete your registration.
+
+Your password: {{ password }}
+
+Your authentication code: {{ user.authenticationcode.authentication_code }}
+
+The authentication site: {% url register-step2 %}
+
+A direct link: {% url register-step2 %}?authcode={{ user.authenticationcode.authentication_code }}
+
+
+
+
+

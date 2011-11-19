@@ -4,7 +4,7 @@ from django.core.urlresolvers import reverse
 from django.db import models
 from django.contrib.auth.models import User
 
-from utils.enum import ChoicesEnum
+from common.utils.enum import ChoicesEnum
 
 Interval = ChoicesEnum(
 	MINUTE = ( 0, 'Minute' ),

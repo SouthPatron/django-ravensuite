@@ -49,6 +49,14 @@ class OrgList( ListView ):
 
 		OrganizationCounter.objects.create( organization = neworg )
 		OrganizationAccount.objects.create( organization = neworg )
+
+		newuser = UserMembership()
+		newuser.user = request.user
+		newuser.organization = neworg
+		newuser.category = UserCategory.OWNER
+		newuser.is_enabled = True
+		newuser.save()
+
 		return neworg
 
 

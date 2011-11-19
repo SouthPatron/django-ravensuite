@@ -7,11 +7,11 @@ from django.template import Context
 FROM_ADDRESS = '"Support at SMK" <support@smksoftware.com>'
 
 
-def send_templated_email( user, template_name, keys = {} ):
+def send_templated_email( user, app, template_name, keys = {} ):
 
-	template_subject = get_template( 'emails/account/' + template_name + '.subject' )
-	template_text = get_template( 'emails/account/' + template_name + '.txt' )
-	template_html = get_template( 'emails/account/' + template_name + '.html' )
+	template_subject = get_template( 'emails/{}/{}.subject'.format( app, template_name ) )
+	template_text = get_template( 'emails/{}/{}.txt'.format( app, template_name ) )
+	template_html = get_template( 'emails/{}/{}.html'.format( app, template_name ) )
 
 	dkey = keys
 	dkey[ 'user' ] = user
