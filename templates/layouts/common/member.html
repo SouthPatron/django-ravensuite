@@ -8,6 +8,8 @@
 {% captureas str_section_name %}{% block str_section_name %}{% endblock %}{% endcaptureas %}
 {% captureas page_functions_content %}{% block page_functions %}{% endblock %}{% endcaptureas %}
 
+{% captureas breadcrumbs %}{% block breadcrumbs %}{% endblock %}{% endcaptureas %}
+
 <title>
 {% if str_org_name %}{{ str_org_name }}{% if str_client_name or str_section_name %} | {% endif %}{% endif %}
 {% if str_client_name %}{{ str_client_name }}{% if str_section_name %} | {% endif %}{% endif %}
@@ -95,9 +97,17 @@ $(document).ready(function(){
 {% if str_org_name %}
 	<div id="header-orgname-title"><a href="{% url org-single kwargs.oid %}">{{ str_org_name }}</a></div>
 {% endif %}
+
 	<div id="header-options"><a href='{% url account-profile %}'>{{ request.user.email }}</a> | <a href="{% url org-list %}">organizations</a> | <a href='{% url logout %}'>logout</a></div>
 
 </div> <!-- #header -->
+
+<!-- BREADCRUMBS ------------------------------------- -->
+
+<div id="breadcrumbs">
+{{ breadcrumbs }}
+</div>
+
 
 <!-- PAGE SECTION INFO ------------------------------------- -->
 
@@ -117,11 +127,13 @@ $(document).ready(function(){
 
 {% if str_section_name %}
 <div id="section-name">
+
 	<span id="section-name-title">{{ str_section_name }}</span>
 </div>
 {% endif %}
 
 </div> <!-- #page-section-info -->
+
 
 {% if page_functions_content %}
 <!-- PAGE FUNCTIONS ------------------------------------- -->

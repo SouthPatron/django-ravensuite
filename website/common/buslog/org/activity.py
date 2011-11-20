@@ -9,7 +9,7 @@ class ActivityBusLog( object ):
 	def create( org, name, description ):
 
 		newact = Activity()
-		newact.organization = organization
+		newact.organization = org
 		newact.name = name
 		newact.description = description
 		newact.save()

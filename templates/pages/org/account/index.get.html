@@ -6,6 +6,14 @@
 {% block str_section_name %}Accounts{% endblock %}
 
 
+{% block breadcrumbs %}
+	{{ block.super }}
+	<a href="{{ extra.get_org.get_clients_url }}">Clients</a>&gt;
+	<a href="{{ extra.get_single_url }}">{{ extra.trading_name }}</a>&gt;
+{% endblock %}
+
+
+
 {% block page_functions %}
 
 <ul>

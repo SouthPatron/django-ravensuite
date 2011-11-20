@@ -2,8 +2,15 @@
 
 {% block str_org_name %}{{ instance.get_org.trading_name }}{% endblock %}
 {% block str_client_name %}{{ instance.trading_name }}{% endblock %}
-
 {% block str_section_name %}Dashboard{% endblock %}
+
+{% block breadcrumbs %}
+	{{ block.super }}
+	<a href="{{ instance.get_org.get_client_list_url }}">Clients</a>&gt;
+	<a href="{{ instance.get_single_url }}">{{ instance.trading_name }}</a>&gt;
+{% endblock %}
+
+
 
 
 {% block page_functions %}

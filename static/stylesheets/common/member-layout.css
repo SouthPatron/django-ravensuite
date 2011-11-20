@@ -61,11 +61,12 @@ p {
 
 #header #header-orgname-title
 {
-	position: relative;
-	left: 0px;
-	top: 0px;
+	position: absolute;
+	left: 20px;
+	top: 15px;
 	font-size: 1.5em;
 	text-shadow: 1px 1px 1px black;
+	overflow: hidden;
 }
 
 #header #header-orgname-title a,
@@ -103,6 +104,26 @@ p {
 	text-decoration: underline;
 }
 
+/* ----- BREADCRUMBS ---------------------------------------- */
+
+#breadcrumbs
+{
+	position: relative;
+	height: 20px;
+	overflow: hidden;
+	padding: 0px 40px;
+	margin-top: 20px;
+
+	color: #a0a0a0;
+}
+
+#breadcrumbs a
+{
+	color: #a0a0a0;
+	text-decoration: none;
+	padding-right: 5px;
+}
+
 
 /* ----- PAGE SECTION INFO ----------------------------------- */
 
@@ -113,12 +134,27 @@ p {
 	overflow: hidden;
 }
 
-#page-section-info #client-name
+#page-section-info #section-name
 {
 	position: absolute;
 	left: 0px;
 	top: 0px;
-	padding: 30px 40px;
+	padding: 0px 40px;
+}
+
+#page-section-info #section-name-title
+{
+	font-size: 2.5em;
+	text-shadow: 1px 1px 1px #205020;
+	color: #209020;
+}
+
+#page-section-info #client-name
+{
+	position: absolute;
+	right: 0px;
+	top: 0px;
+	padding: 0px 40px;
 }
 
 #page-section-info #client-name a
@@ -131,21 +167,6 @@ p {
 {
 	font-size: 2.5em;
 	text-shadow: 1px 1px 1px #808080;
-}
-
-#page-section-info #section-name
-{
-	position: absolute;
-	right: 0px;
-	top: 0px;
-	padding: 30px 40px;
-}
-
-#page-section-info #section-name-title
-{
-	font-size: 2.5em;
-	text-shadow: 1px 1px 1px #808080;
-	color: #409040;
 }
 
 

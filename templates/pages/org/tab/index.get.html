@@ -5,6 +5,13 @@
 {% block str_client_name %}{{ extra.trading_name }}{% endblock %}
 {% block str_section_name %}Tabs{% endblock %}
 
+{% block breadcrumbs %}
+	{{ block.super }}
+	<a href="{{ extra.get_org.get_client_list_url }}">Clients</a>&gt;
+	<a href="{{ extra.get_single_url }}">{{ extra.trading_name }}</a>&gt;
+{% endblock %}
+
+
 
 {% block page_functions %}
 

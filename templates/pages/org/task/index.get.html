@@ -5,6 +5,14 @@
 {% block str_section_name %}Tasks{% endblock %}
 
 
+{% block breadcrumbs %}
+	{{ block.super }}
+	<a href="{{ extra.get_org.get_activity_list_url }}">Activities</a>&gt;
+	<a href="{{ extra.get_single_url }}">{{ extra.name }}</a>&gt;
+{% endblock %}
+
+
+
 {% block page_functions %}
 
 <ul>

@@ -1,7 +1,13 @@
 {% extends 'layouts/org/member.html' %}
 
 {% block str_org_name %}{{ instance.get_org.trading_name }}{% endblock %}
-{% block str_section_name %}{{ instance.user.email }}{% endblock %}
+{% block str_section_name %}Dashboard{% endblock %}
+
+{% block breadcrumbs %}
+	{{ block.super }}
+	<a href="{{ instance.get_org.get_user_list_url }}">Users</a>&gt;
+	<a href="{{ instance.get_single_url }}">{{ instance.user.first_name }} {{ instance.user.last_name }}</a>&gt;
+{% endblock %}
 
 
 {% block page_functions %}

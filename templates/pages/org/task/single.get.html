@@ -1,7 +1,17 @@
 {% extends 'layouts/org/member.html' %}
 
 {% block str_org_name %}{{ instance.get_org.trading_name }}{% endblock %}
-{% block str_section_name %}Task: {{ instance.name }}{% endblock %}
+{% block str_section_name %}{{ instance.name }}{% endblock %}
+
+
+{% block breadcrumbs %}
+	{{ block.super }}
+	<a href="{{ instance.get_org.get_activity_list_url }}">Activities</a>&gt;
+	<a href="{{ instance.get_activity.get_single_url }}">{{ instance.get_activity.name }}</a>&gt;
+	<a href="{{ instance.get_activity.get_task_list_url }}">Tasks</a>&gt;
+{% endblock %}
+
+
 
 
 {% block page_functions %}
