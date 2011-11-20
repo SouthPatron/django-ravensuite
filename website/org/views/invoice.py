@@ -7,7 +7,7 @@ from singleobjectview import SingleObjectView
 from listview import ListView
 
 from ..models import *
-from ..utils.dbgdatetime import datetime
+from common.utils.dbgdatetime import datetime
 
 class InvoiceList( ListView ):
 	template_name = 'pages/org/invoice/index'

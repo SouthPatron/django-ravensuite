@@ -10,7 +10,7 @@ from listview import ListView
 import uuid
 
 from ..models import *
-from ..utils.dbgdatetime import datetime
+from common.utils.dbgdatetime import datetime
 
 class ReservationList( ListView ):
 	template_name = 'pages/org/reservation/index'

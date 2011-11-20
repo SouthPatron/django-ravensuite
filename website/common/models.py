@@ -1,3 +1,8 @@
 from django.db import models
 
-# Create your models here.
+
+class DebugControl( models.Model ):
+	current_time = models.DateTimeField()
+
+
+

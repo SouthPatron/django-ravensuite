@@ -9,7 +9,7 @@ from ..models import *
 
 from ..forms import user as forms
 
-from website.account.support import AccountSupport
+from common.account import AccountSupport
 from common.utils.email import send_templated_email
 
 
@@ -55,7 +55,7 @@ class UserList( ListView ):
 			return redirect( 'org-user-list', oid = self.url_kwargs.oid )
 
 		newo = self._create_object( request, form.cleaned_data, *args, **kwargs )
-		return redirect( newo.get_single_url() )
+		return redirect( 'org-user-list', oid = self.url_kwargs.oid )
 
 	def create_object_json( self, request, data, *args, **kwargs ):
 		newo = self._create_object( request, data, *args, **kwargs )

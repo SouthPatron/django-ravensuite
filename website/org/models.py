@@ -45,11 +45,6 @@ CrudAccess = ChoicesEnum(
 
 
 
-class DebugControl( models.Model ):
-	current_time = models.DateTimeField()
-
-
-
 
 class SystemCounter( models.Model ):
 	account_no = models.BigIntegerField( default = 1 )
