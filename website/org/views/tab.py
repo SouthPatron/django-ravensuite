@@ -6,6 +6,8 @@ from singleobjectview import SingleObjectView
 from listview import ListView
 
 from common.models import *
+from common.buslog.org import *
+
 from ..forms import tab as forms
 
 class TabList( ListView ):
@@ -22,21 +24,14 @@ class TabList( ListView ):
 	def _create_object( self, request, data, *args, **kwargs ):
 		mid = self._extract_ids( [ 'oid', 'cid' ], **kwargs )
 
-		# TODO: select_for_update()
-		sc = SystemCounter.objects.get( id = 1 )
-		refnum = sc.account_no
-		sc.account_no += 1
-		sc.save()
+		client = Client.objects.get( refnum = mid.cid, organization__refnum = mid.oid )
+		newtab = TabBusLog.create(
+					client,
+					data.get( 'name' ),
+					data.get( 'min_balance', 0 ),
+				)
 
-		newacc = Tab()
-		newacc.client = Client.objects.get( refnum = mid.cid, organization__refnum = mid.oid )
-		newacc.refnum = refnum
-		newacc.is_enabled = True
-		newacc.min_balance = data.get( 'min_balance', 0 )
-		newacc.name = data[ 'name' ]
-		newacc.save()
-
-		return newacc
+		return newtab
 
 	def create_object_json( self, request, data, *args, **kwargs ):
 		newo = self._create_object( self, request, data, *args, **kwargs )
@@ -48,7 +43,7 @@ class TabList( ListView ):
 		if form.is_valid() is False:
 			return redirect( 'org-client-tab-list', oid = self.url_kwargs.oid, cid = self.url_kwargs.cid )
 		newo = self._create_object( request, form.cleaned_data, *args, **kwargs )
-		return redirect( newo.get_single_url() )
+		return redirect( 'org-client-tab-list', oid = self.url_kwargs.oid, cid = self.url_kwargs.cid )
 
 
 

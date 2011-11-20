@@ -86,6 +86,7 @@ CrudAccess = ChoicesEnum(
 class SystemCounter( models.Model ):
 	profile_no = models.BigIntegerField( default = 1 )
 	account_no = models.BigIntegerField( default = 1 )
+	tab_no = models.BigIntegerField( default = 1 )
 	organization_no = models.BigIntegerField( default = 1 )
 
 class Organization( models.Model ):
