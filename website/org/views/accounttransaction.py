@@ -6,7 +6,7 @@ from django.http import HttpResponseForbidden
 from singleobjectview import SingleObjectView
 from listview import ListView
 
-from ..models import *
+from common.models import *
 from common.utils.dbgdatetime import datetime
 
 class AccountTransactionList( ListView ):

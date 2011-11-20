@@ -7,7 +7,7 @@ from django.shortcuts import render_to_response
 from django.template import RequestContext
 from django.http import Http404
 
-from ..models import *
+from common.models import *
 from base import Base
 
 class SingleObjectView( Base ):

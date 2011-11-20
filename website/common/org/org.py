@@ -6,7 +6,7 @@ from ..models import *
 from website.account.models import *
 
 
-class AccountSupport( object ):
+class OrgBusLog( object ):
 
 	@staticmethod
 	def get_next_refnum():

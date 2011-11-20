@@ -2,7 +2,7 @@ from django.views.generic import FormView
 from django.shortcuts import redirect
 from django.core.urlresolvers import reverse
 
-from ..models import *
+from common.models import *
 from ..forms import *
 
 from common.account import AccountSupport

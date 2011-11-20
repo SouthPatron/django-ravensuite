@@ -9,7 +9,7 @@ from django.http import HttpResponseForbidden
 from singleobjectview import SingleObjectView
 from listview import ListView
 
-from ..models import *
+from common.models import *
 
 from ..forms import org as forms
 
@@ -27,7 +27,7 @@ class OrgList( ListView ):
 			return redirect( 'org-list' )
 
 		neworg = self._create_object( request, form.cleaned_data, *args, **kwargs )
-		return redirect( 'org-single', oid = neworg.refnum )
+		return redirect( 'org-list' )
 
 	def create_object_json( self, request, data, *args, **kwargs ):
 		neworg = self._create_object( request, data, *args, **kwargs )

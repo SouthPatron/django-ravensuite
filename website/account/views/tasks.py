@@ -3,9 +3,9 @@ from django.shortcuts import redirect
 from django.core.urlresolvers import reverse
 
 from common.utils.email import send_templated_email
+from common.models import *
 
 from ..forms import *
-from ..models import *
 
 class ResendAuthCode( FormView ):
 	template_name = 'pages/account/resend-authcode.html'

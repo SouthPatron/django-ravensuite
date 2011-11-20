@@ -3,7 +3,7 @@
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 
-AUTH_PROFILE_MODULE="account.UserProfile"
+AUTH_PROFILE_MODULE="common.UserProfile"
 
 LOGIN_URL='/account/login'
 LOGIN_REDIRECT_URL='/org/'

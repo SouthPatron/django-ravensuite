@@ -5,7 +5,7 @@ from django.shortcuts import get_object_or_404, redirect
 from singleobjectview import SingleObjectView
 from listview import ListView
 
-from ..models import *
+from common.models import *
 
 from ..forms import client as forms
 

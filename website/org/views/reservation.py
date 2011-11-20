@@ -9,7 +9,7 @@ from listview import ListView
 
 import uuid
 
-from ..models import *
+from common.models import *
 from common.utils.dbgdatetime import datetime
 
 class ReservationList( ListView ):
