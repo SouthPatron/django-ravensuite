@@ -2,11 +2,10 @@ import datetime
 
 from django.contrib.auth.models import User
 
-from ..models import *
-from website.account.models import *
+from common.models import *
 
 
-class OrgBusLog( object ):
+class AccountSupport( object ):
 
 	@staticmethod
 	def get_next_refnum():

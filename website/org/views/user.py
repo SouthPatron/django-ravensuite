@@ -9,7 +9,7 @@ from common.models import *
 
 from ..forms import user as forms
 
-from common.account import AccountSupport
+from common.buslog.account import AccountSupport
 from common.utils.email import send_templated_email
 
 

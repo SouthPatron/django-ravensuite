@@ -6,6 +6,7 @@ from singleobjectview import SingleObjectView
 from listview import ListView
 
 from common.models import *
+from common.buslog.org.client import ClientBusLog
 
 from ..forms import client as forms
 
@@ -22,20 +23,9 @@ class ClientList( ListView ):
 	
 	def _create_object( self, request, data, *args, **kwargs ):
 		mid = self._extract_ids( [ 'oid' ], **kwargs )
+		org = Organization.objects.get( refnum = mid.oid )
+		return ClientBusLog.create( org, data[ 'trading_name' ] )
 
-		# TODO: select_for_update()
-		sc = OrganizationCounter.objects.get( organization__refnum = mid.oid )
-		refnum = sc.client_no
-		sc.client_no += 1
-		sc.save()
-
-		newclient = Client()
-		newclient.organization = Organization.objects.get( refnum = mid.oid )
-		newclient.refnum = refnum
-		newclient.trading_name = data[ 'trading_name' ]
-		newclient.save()
-
-		return newclient
 
 	def create_object_html( self, request, data, *args, **kwargs ):
 		form = forms.AddClient( data or None )
@@ -43,7 +33,7 @@ class ClientList( ListView ):
 			return redirect( 'org-client-list', oid = self.url_kwargs.oid )
 
 		newo = self._create_object( request, form.cleaned_data, *args, **kwargs )
-		return redirect( 'org-client-single', oid = newo.organization.refnum, cid = newo.refnum )
+		return redirect( 'org-client-list', oid = self.url_kwargs.oid )
 
 	def create_object_json( self, request, data, *args, **kwargs ):
 		newo = self._create_object( request, data, *args, **kwargs )

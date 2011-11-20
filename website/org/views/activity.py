@@ -7,6 +7,8 @@ from listview import ListView
 
 from common.models import *
 
+from common.buslog.org import *
+
 from ..forms import activity as forms
 
 class ActivityList( ListView ):
@@ -23,13 +25,9 @@ class ActivityList( ListView ):
 	def _create_object( self, request, data, *args, **kwargs ):
 		mid = self._extract_ids( [ 'oid' ], **kwargs )
 
-		newactivity = Activity()
-		newactivity.organization = Organization.objects.get( refnum = mid.oid )
-		newactivity.name = data[ 'name' ]
-		newactivity.description = data[ 'description' ]
-		newactivity.save()
-
-		return newactivity
+		org = Organization.objects.get( refnum = mid.oid )
+		newact = ActivityBusLog.create( org, data[ 'name' ], data[ 'description' ] )
+		return newact
 
 	def create_object_html( self, request, data, *args, **kwargs ):
 		form = forms.CreateActivity( data or None )
@@ -37,7 +35,8 @@ class ActivityList( ListView ):
 			return redirect( 'org-activity-list', oid = self.url_kwargs.oid )
 
 		newo = self._create_object( request, form.cleaned_data, *args, **kwargs )
-		return redirect( 'org-activity-single', oid = newo.organization.refnum, actid = newo.id )
+		return redirect( 'org-activity-list', oid = self.url_kwargs.oid )
+
 
 	def create_object_json( self, request, data, *args, **kwargs ):
 		newo = self._create_object( request, data, *args, **kwargs )

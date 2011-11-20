@@ -6,6 +6,7 @@ from singleobjectview import SingleObjectView
 from listview import ListView
 
 from common.models import *
+from common.buslog.org import *
 
 from ..forms import task as forms
 
@@ -23,20 +24,20 @@ class TaskList( ListView ):
 	def _create_object( self, request, data, *args, **kwargs ):
 		mid = self._extract_ids( [ 'oid', 'actid' ], **kwargs )
 
-		newtask = Task()
-		newtask.activity = Activity.objects.get( id = mid.actid, organization__refnum = mid.oid )
-		newtask.name = data[ 'name' ]
-		newtask.description = data[ 'description' ]
-		newtask.save()
+		newtask = TaskBusLog.create( 
+						Activity.objects.get( id = mid.actid, organization__refnum = mid.oid ),
+						data[ 'name' ],
+						data[ 'description' ],
+					)
 
 		return newtask
 
 	def create_object_html( self, request, data, *args, **kwargs ):
 		form = forms.CreateTask( data or None )
 		if form.is_valid() is False:
-			return redirect( 'org-activity-task-list', oid = self.url_kwargs.oid )
+			return redirect( 'org-activity-task-list', oid = self.url_kwargs.oid, actid = self.url_kwargs.actid )
 		newo = self._create_object( request, form.cleaned_data, *args, **kwargs )
-		return redirect( newo.get_single_url() )
+		return redirect( 'org-activity-task-list', oid = self.url_kwargs.oid, actid = self.url_kwargs.actid )
 
 	def create_object_json( self, request, data, *args, **kwargs ):
 		newo = self._create_object( request, data, *args, **kwargs )

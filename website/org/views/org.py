@@ -13,6 +13,9 @@ from common.models import *
 
 from ..forms import org as forms
 
+from common.buslog.org.org import *
+from common.buslog.org.user import *
+
 
 class OrgList( ListView ):
 	template_name = 'pages/org/org/index'
@@ -36,27 +39,8 @@ class OrgList( ListView ):
 
 
 	def _create_object( self, request, data, *args, **kwargs ):
-		# TODO: Use select_for_update()
-		sc = SystemCounter.objects.get( id = 1 )
-		refnum = sc.organization_no
-		sc.organization_no += 1
-		sc.save()
-
-		neworg = Organization()
-		neworg.trading_name = data[ 'trading_name' ]
-		neworg.refnum = refnum
-		neworg.save()
-
-		OrganizationCounter.objects.create( organization = neworg )
-		OrganizationAccount.objects.create( organization = neworg )
-
-		newuser = UserMembership()
-		newuser.user = request.user
-		newuser.organization = neworg
-		newuser.category = UserCategory.OWNER
-		newuser.is_enabled = True
-		newuser.save()
-
+		neworg = OrgBusLog.create( data[ 'trading_name' ] )
+		UserBusLog.grant( request.user, neworg, UserCategory.OWNER )
 		return neworg
 
 

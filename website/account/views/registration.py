@@ -5,7 +5,7 @@ from django.core.urlresolvers import reverse
 from common.models import *
 from ..forms import *
 
-from common.account import AccountSupport
+from common.buslog.account import AccountSupport
 from common.utils.email import send_templated_email
 
 import datetime

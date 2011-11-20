@@ -54,7 +54,7 @@
 					var bValid = true;
 					allFields.removeClass( "ui-state-error" );
 
-					bValid = bValid && validations.length( tips, trading_name, "Trading Name", 3, 192 );
+					bValid = bValid && validation.length( tips, trading_name, "Trading Name", 3, 192 );
 
 					if ( bValid ) {
 						$( "#create-new-form" ).submit();

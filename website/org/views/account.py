@@ -6,6 +6,7 @@ from singleobjectview import SingleObjectView
 from listview import ListView
 
 from common.models import *
+from common.buslog.org import *
 from ..forms import account as forms
 
 class AccountList( ListView ):
@@ -22,19 +23,13 @@ class AccountList( ListView ):
 	def _create_object( self, request, data, *args, **kwargs ):
 		mid = self._extract_ids( [ 'oid', 'cid' ], **kwargs )
 
-		# TODO: select_for_update()
-		sc = SystemCounter.objects.get( id = 1 )
-		refnum = sc.account_no
-		sc.account_no += 1
-		sc.save()
+		client = Client.objects.get( refnum = mid.cid, organization__refnum = mid.oid )
 
-		newacc = Account()
-		newacc.client = Client.objects.get( refnum = mid.cid, organization__refnum = mid.oid )
-		newacc.refnum = refnum
-		newacc.is_enabled = True
-		newacc.min_balance = data.get( 'min_balance', 0 )
-		newacc.name = data[ 'name' ]
-		newacc.save()
+		newacc = AccountBusLog.create(
+					client,
+					data.get( 'name' ),
+					data.get( 'min_balance', 0 ),
+				)
 
 		return newacc
 
@@ -50,7 +45,7 @@ class AccountList( ListView ):
 			print form
 			return redirect( 'org-client-account-list', oid = self.url_kwargs.oid, cid = self.url_kwargs.cid )
 		newo = self._create_object( request, form.cleaned_data, *args, **kwargs )
-		return redirect( newo.get_single_url() )
+		return redirect( 'org-client-account-list', oid = self.url_kwargs.oid, cid = self.url_kwargs.cid )
 
 
 
