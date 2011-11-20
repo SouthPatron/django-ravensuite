@@ -1,9 +1,8 @@
 from django.views.generic import FormView
-from django.contrib.auth import authenticate, login
 from django.shortcuts import redirect
 from django.core.urlresolvers import reverse
 
-import datetime
+from common.buslog.account import *
 
 from ..forms import *
 
@@ -18,12 +17,11 @@ class LoginView( FormView ):
 
 		cd = form.cleaned_data
 
-		user = auth.authenticate(
+		AuthBusLog.login(
+					self.request,
 					username = cd['email_address'],
-					password = cd['password']
+					password = cd['password'],
 				)
-
-		login( self.request, user )
 
 		if self.request.GET.get( 'next', None ) is not None:
 			return redirect( self.request.GET[ 'next' ] )
@@ -35,7 +33,7 @@ class LoginView( FormView ):
 
 
 def logout_view( request ):
-	auth.logout( request )
+	AuthBusLog.logout( request )
 	return redirect( 'home-index' )
 
 
