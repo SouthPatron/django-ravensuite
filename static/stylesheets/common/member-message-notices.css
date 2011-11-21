@@ -1,0 +1,51 @@
+
+
+.message-notice
+{
+	color: black;
+	margin: 5px 0px;
+	padding: 5px;
+
+	border: 1px solid #ffffff;
+	box-shadow: 1px 1px 5px #707070;
+}
+
+.message-notice span {
+	padding-left: 20px;
+}
+
+.message-notice.success {
+	background-color: #f2fff2;
+}
+
+.message-notice.success span {
+	background: url(../../images/icons/message_tick.png) no-repeat left;
+}
+
+.message-notice.error {
+	color: red;
+	background-color: #fff2f2;
+}
+
+.message-notice.error span {
+	background: url(../../images/icons/message_error.png) no-repeat left;
+}
+
+.message-notice.info span {
+	background: url(../../images/icons/message_info.png) no-repeat left;
+}
+
+.message-notice.info {
+	background-color: #f2f2ff;
+}
+
+.message-notice.warning {
+	color: red;
+	background-color: #fff2f2;
+}
+
+.message-notice.warning span {
+	background: url(../../images/icons/message_warning.png) no-repeat left;
+}
+
+

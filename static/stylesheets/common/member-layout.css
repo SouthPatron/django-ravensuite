@@ -105,14 +105,46 @@ p {
 }
 
 
-/* ----- BREADCRUMBS ---------------------------------------- */
+
+/* ----- PAGE SECTION INFO ----------------------------------- */
+
+#page-section-info
+{
+	position: relative;
+	height: 130px;
+	overflow: hidden;
+	background: #f2f2f2;
+	margin-bottom: 10px;
+	border-bottom: 1px solid #e0e0e0;
+}
+
+#page-section-info #location-block
+{
+	position: absolute;
+	right: 350px;
+	left: 50px;
+	top: 20px;
+	padding: 0px 0px;
+}
+
+#page-section-info #client-name
+{
+	padding: 0px;
+	color: #209020;
+}
+
+#page-section-info #client-name a
+{
+	text-decoration: none;
+	color: inherit;
+}
 
 #breadcrumbs
 {
 	height: 20px;
 	overflow: hidden;
-	padding: 0px 40px;
-	margin-top: 20px;
+	padding: 0px;
+	margin-top: 10px;
 	color: #a0a0a0;
 }
 
@@ -123,43 +155,10 @@ p {
 	padding-right: 5px;
 }
 
-
-/* ----- PAGE SECTION INFO ----------------------------------- */
-
-#page-section-info
-{
-	position: relative;
-	height: 90px;
-	overflow: hidden;
-}
-
-#page-section-info #section-name
-{
-	position: absolute;
-	left: 0px;
-	top: 0px;
-	padding: 0px 40px;
-}
-
-#page-section-info #section-name-title
+#page-section-info #location-block-title
 {
 	font-size: 2.5em;
-	text-shadow: 1px 1px 1px #205020;
-	color: #209020;
-}
-
-#page-section-info #client-name
-{
-	position: absolute;
-	right: 0px;
-	top: 0px;
-	padding: 0px 40px;
-}
-
-#page-section-info #client-name a
-{
-	text-decoration: none;
-	color: inherit;
+	text-shadow: 1px 1px 5px #a0a0a0;
 }
 
 #page-section-info #client-name-title
@@ -168,6 +167,15 @@ p {
 	text-shadow: 1px 1px 1px #808080;
 }
 
+
+#page-section-info #message-block
+{
+	position: absolute;
+	right: 50px;
+	width: 300px;
+	top: 20px;
+	padding: 0px 0px;
+}
 
 
 /* ----- CONTENT --------------------------------------------- */

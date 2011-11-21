@@ -27,6 +27,7 @@
 	<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}stylesheets/common/member-layout.css" media="screen" />
 	<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}stylesheets/common/member-content-menu.css" media="screen" />
 	<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}stylesheets/common/member-page-functions.css" media="screen" />
+	<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}stylesheets/common/member-message-notices.css" media="screen" />
 
 	<!-- Include jquery -->
 	<script type='text/javascript' src="{{ STATIC_URL }}js/jquery.js"></script>
@@ -81,19 +82,7 @@ $(document).ready(function(){
 
 	{% block onready %}
 	{% endblock onready %}
-
-	$( '#bubba' ).delay(5000).animate({
-				height: 0,
-				opacity: 0,
-			},
-			2000,
-				function(){
-					$( '#bubba' ).css('display', 'none');
-				}
-			);
-
 })
-
 	</script>
 
 
@@ -113,52 +102,39 @@ $(document).ready(function(){
 
 </div> <!-- #header -->
 
-<div id="bubba" style="
-	position: absolute;
-	left: 350px;
-	top: 48px;
-	width: 350px;
-	height: 50px;
-	background: #208020;
-	color: white;
-	font-size: 1.2em;
-	padding: 5px;
-	border-left: 1px solid #104010;
-	border-right: 1px solid #104010;
-	border-bottom: 1px solid #104010;
-	box-shadow: 2px 2px 5px #101010;
-">
-	<p>Success</p>
-</div>
-
-
-<!-- BREADCRUMBS ------------------------------------- -->
-
-<div id="breadcrumbs">
-{{ breadcrumbs }}
-</div>
-
 
 <!-- PAGE SECTION INFO ------------------------------------- -->
 
 <div id="page-section-info">
 
-{% if str_client_name %}
-<div id="client-name">
-	{% if kwargs.oid %}
-	<a href="{% url org-client-single kwargs.oid kwargs.cid %}">
-	{% endif %}
-	<span id="client-name-title">{{ str_client_name }}</span>
-	{% if kwargs.oid %}
-	</a>
-	{% endif %}
-</div>
-{% endif %}
+<div id="location-block">
 
-{% if str_section_name %}
-<div id="section-name">
+	{% if str_client_name %}
+	<div id="client-name">
+		{% if kwargs.oid %}
+		<a href="{% url org-client-single kwargs.oid kwargs.cid %}">
+		{% endif %}
+		<span id="client-name-title">{{ str_client_name }}</span>
+		{% if kwargs.oid %}
+		</a>
+		{% endif %}
+	</div>
+	{% endif %}
 
-	<span id="section-name-title">{{ str_section_name }}</span>
+	<div id="breadcrumbs">
+	{{ breadcrumbs }}
+	</div>
+
+	{% if str_section_name %}
+	<div id="location-block-title">{{ str_section_name }}</div>
+	{% endif %}
+</div> <!-- #location-block -->
+
+{% if messages %}
+<div id="message-block">
+{% for message in messages %}
+	<div class="message-notice {{ message.tags }}"><span>{{ message }}</span></div>
+{% endfor %}
 </div>
 {% endif %}
 
