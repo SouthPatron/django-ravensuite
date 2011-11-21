@@ -133,7 +133,7 @@ $(document).ready(function(){
 {% if messages %}
 <div id="message-block">
 {% for message in messages %}
-	<div class="message-notice {{ message.tags }}"><span>{{ message }}</span></div>
+	<div class="message-notice {{ message.tags }}"><span>{{ message|safe }}</span></div>
 {% endfor %}
 </div>
 {% endif %}

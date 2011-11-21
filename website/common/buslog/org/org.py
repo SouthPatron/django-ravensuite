@@ -1,3 +1,5 @@
+
+from common.exceptions import *
 from common.models import *
 
 
@@ -14,7 +16,14 @@ class OrgBusLog( object ):
 
 
 	@staticmethod
-	def create( trading_name ):
+	def create( user, trading_name ):
+
+		try:
+			neworg = Organization.objects.get( trading_name = trading_name, usermembership__user = user )
+
+			raise BusLogError( 'An organization already exists with that name' )
+		except Organization.DoesNotExist:
+			pass
 
 		refnum = OrgBusLog.get_next_refnum()
 

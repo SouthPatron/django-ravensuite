@@ -16,6 +16,7 @@ from ..forms import org as forms
 
 from common.buslog.org.org import *
 from common.buslog.org.user import *
+from common.exceptions import *
 
 
 class OrgList( ListView ):
@@ -30,7 +31,14 @@ class OrgList( ListView ):
 		if form.is_valid() is False:
 			return redirect( 'org-list' )
 
-		neworg = self._create_object( request, form.cleaned_data, *args, **kwargs )
+		try:
+			neworg = self._create_object( request, form.cleaned_data, *args, **kwargs )
+		except BusLogError, berror:
+			messages.error( request, berror.message )
+			return redirect( 'org-list' )
+
+		messages.success( request, 'Created new organization <a href="{}">{}</a>'.format( neworg.get_single_url(), neworg.trading_name ) )
+
 		return redirect( 'org-list' )
 
 	def create_object_json( self, request, data, *args, **kwargs ):
@@ -40,7 +48,7 @@ class OrgList( ListView ):
 
 
 	def _create_object( self, request, data, *args, **kwargs ):
-		neworg = OrgBusLog.create( data[ 'trading_name' ] )
+		neworg = OrgBusLog.create( request.user, data[ 'trading_name' ] )
 		UserBusLog.grant( request.user, neworg, UserCategory.OWNER )
 		return neworg
 
