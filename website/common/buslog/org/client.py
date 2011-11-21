@@ -27,3 +27,4 @@ class ClientBusLog( object ):
 		newclient.save()
 
 		return newclient
+

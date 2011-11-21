@@ -104,16 +104,15 @@ p {
 	text-decoration: underline;
 }
 
+
 /* ----- BREADCRUMBS ---------------------------------------- */
 
 #breadcrumbs
 {
-	position: relative;
 	height: 20px;
 	overflow: hidden;
 	padding: 0px 40px;
 	margin-top: 20px;
-
 	color: #a0a0a0;
 }
 
@@ -176,6 +175,7 @@ p {
 #content-wrap {
 	position: relative;
 }
+
 
 #content {
 	margin: auto;
