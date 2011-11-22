@@ -1,7 +1,5 @@
 {% extends 'layouts/org/member.html' %}
 
-{% load field_usercategory %}
-
 {% block str_section_name %}Choose an Organization{% endblock %}
 
 
@@ -114,12 +112,12 @@
 	{% if obj.membership.is_enabled %}
 	<tr class="tablerow_enabled">
 		<td><a href='{{ obj.get_single_url }}'>{{ obj.trading_name }}</a></td>
-		<td><a href='{{ obj.get_single_url }}'>{% field_usercategory obj.membership.category %}</a></td>
+		<td><a href='{{ obj.get_single_url }}'>{{ obj.membership.get_category_display }}</a></td>
 	</tr>
 	{% else %}
 	<tr class="tablerow_disabled">
 		<td>{{ obj.trading_name }}</td>
-		<td>{% field_usercategory obj.membership.category %}</td>
+		<td>{{ obj.membership.get_category_display }}</td>
 	</tr>
 	{% endif %}
 
