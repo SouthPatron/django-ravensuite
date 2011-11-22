@@ -10,7 +10,7 @@ from ..forms import *
 class LoginView( FormView ):
 	template_name = 'pages/account/login.html'
 	form_class = LoginForm
-	success_url = 'account-profile'
+	success_url = 'org-list'
 
 	def form_valid( self, form ):
 		rc = super( LoginView, self ).form_valid( form )
