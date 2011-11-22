@@ -24,6 +24,12 @@ class ChoicesEnum( object ):
 				return True
 		return False
 
+	def get( self, value ):
+		for key, val in object.__getattribute__( self, "_vals" ).iteritems():
+			if value == val[0]:
+				return val
+		return None
+
 	def __getattr__( self, name ):
 		return object.__getattribute__( self, "_vals" )[ name ][ 0 ]
 

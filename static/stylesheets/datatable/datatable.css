@@ -33,17 +33,54 @@
 	float: left;
 }
 
+.dataTables_wrapper .bottom {
+	padding: 10px;
+}
+
 .dataTables_info {
 	float: left;
 	padding: 5px;
+	width: 48%;
+	overflow: hidden;
+	height: 25px;
 }
 
 .dataTables_paginate {
-	width: 44px;
-	* width: 50px;
-	float: left;
+	float: right;
 	text-align: right;
+	width: 48%;
+	height: 25px;
+	padding-top: 8px;
 }
+
+.dataTables_paginate span {
+	padding: 5px 5px;
+	border: 1px solid #e0e0e0;
+}
+
+.dataTables_paginate span.paginate_button_disabled {
+	color: #a0a0a0;
+}
+
+
+
+.dataTables_paginate span.first {
+	border-radius: 5px 0px 0px 5px;
+}
+
+.dataTables_paginate span.last {
+	border-radius: 0px 5px 5px 0px;
+}
+
+
+
+
+.dataTables_paginate span span {
+	border: 0px;
+}
+
+
+
 
 /* Pagination nested */
 .paginate_disabled_previous, .paginate_enabled_previous, .paginate_disabled_next, .paginate_enabled_next {
@@ -167,7 +204,6 @@
 
 
 
-
 .dataTables_wrapper tr.odd td.sorting_1 {
 	background-color: #e0e0e0;
 }
@@ -191,4 +227,15 @@
 .dataTables_wrapper tr.even td.sorting_3 {
 	background-color: #f6f6f6;
 }
+
+
+/* ---------- DURAND ADDED -------------------- */
+
+.dataTables_wrapper tr.tablerow_disabled {
+	color: #808080;
+}
+
+.dataTables_wrapper tr.tablerow_enabled {
+}
+
 

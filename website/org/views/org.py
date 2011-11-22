@@ -23,7 +23,10 @@ class OrgList( ListView ):
 	template_name = 'pages/org/org/index'
 
 	def get_object_list( self, request, *args, **kwargs ):
-		obj_list = Organization.objects.all()
+		obj_list = Organization.objects.filter( usermembership__user = request.user )
+		for obj in obj_list:
+				obj.membership = obj.usermembership_set.all()[0]
+
 		return obj_list
 
 	def create_object_html( self, request, data, *args, **kwargs ):

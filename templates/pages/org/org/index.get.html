@@ -1,5 +1,7 @@
 {% extends 'layouts/org/member.html' %}
 
+{% load field_usercategory %}
+
 {% block str_section_name %}Choose an Organization{% endblock %}
 
 
@@ -60,12 +62,13 @@
 
 	$('#company_list_table').dataTable( {
 		"iDisplayLength" : 25,
+		"bFilter" : false,
+		"bSort" : true,
 		"sPaginationType" : "full_numbers",
-		"aaSorting" : [[ 0, "asc" ] ],
+		"aaSortingFixed" : [[ 0, "asc" ]],
 		"aoColumns" : [
-			null,
-			null,
-			null
+			{ "sType" : "html", "bSortable" : false },
+			{ "sType" : "html", "bSortable" : false }
 		],
 		"sDom" : 't<"bottom"ip><"clear">'
 	});
@@ -102,18 +105,24 @@
 <thead>
 	<tr>
 		<th>Name</th>
-		<th>Name</th>
-		<th>Name</th>
+		<th width="100px">Membership</th>
 	</tr>
 </thead>
 <tbody>
 {% for obj in object_list %}
 
-	<tr>
+	{% if obj.membership.is_enabled %}
+	<tr class="tablerow_enabled">
 		<td><a href='{{ obj.get_single_url }}'>{{ obj.trading_name }}</a></td>
-		<td><a href='{{ obj.get_single_url }}'>{{ obj.trading_name }}</a></td>
-		<td><a href='{{ obj.get_single_url }}'>{{ obj.trading_name }}</a></td>
+		<td><a href='{{ obj.get_single_url }}'>{% field_usercategory obj.membership.category %}</a></td>
 	</tr>
+	{% else %}
+	<tr class="tablerow_disabled">
+		<td>{{ obj.trading_name }}</td>
+		<td>{% field_usercategory obj.membership.category %}</td>
+	</tr>
+	{% endif %}
+
 {% endfor %}
 </tbody>
 </table>
