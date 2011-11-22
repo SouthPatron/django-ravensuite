@@ -1,5 +1,7 @@
 {% extends 'layouts/org/member.html' %}
 
+{% load field_usercategory %}
+
 
 {% block str_org_name %}{{ extra.trading_name }}{% endblock %}
 {% block str_section_name %}Users{% endblock %}
@@ -82,14 +84,21 @@
 
 
 	$('#user_list_table').dataTable( {
-		"aaSorting" : [[ 0, "asc" ] ],
+		"iDisplayLength" : 25,
+		"bFilter" : false,
+		"bSort" : true,
+		"sPaginationType" : "full_numbers",
+		"aaSortingFixed" : [[ 0, "asc" ]],
 		"aoColumns" : [
-			null,
-			null,
-			null
+			{ "sType" : "html", "bSortable" : false },
+			{ "sType" : "html", "bSortable" : false },
+			{ "sType" : "html", "bSortable" : false },
+			{ "sType" : "html", "bSortable" : false }
 		],
-		"sDom" : 't<"bottom"fip><"clear">'
+		"sDom" : 't<"bottom"ip><"clear">'
 	});
+
+
 
 
 {% endblock %}
@@ -136,19 +145,22 @@
 	>
 <thead>
 	<tr>
-		<th>First Name</th>
-		<th>Last Name</th>
+		<th width="200px">Name</th>
 		<th>Email Address</th>
+		<th width="150px">Last Seen</th>
+		<th width="100px">Membership</th>
 	</tr>
 </thead>
 <tbody>
 {% for obj in object_list %}
 
 	<tr>
-		<td><a href='{{ obj.get_single_url }}'>{{ obj.user.first_name }}</a></td>
-		<td><a href='{{ obj.get_single_url }}'>{{ obj.user.last_name }}</a></td>
+		<td><a href='{{ obj.get_single_url }}'>{{ obj.user.first_name }} {{ obj.user.last_name }}</a></td>
 		<td><a href='{{ obj.get_single_url }}'>{{ obj.user.email }}</a></td>
+		<td><a href='{{ obj.get_single_url }}'>{{ obj.user.get_profile.last_seen }}</a></td>
+		<td><a href='{{ obj.get_single_url }}'>{% field_usercategory obj.category %}</a></td>
 	</tr>
+
 {% endfor %}
 </tbody>
 </table>

@@ -34,6 +34,6 @@ class LoginView( FormView ):
 
 def logout_view( request ):
 	AuthBusLog.logout( request )
-	return redirect( 'home-index' )
+	return redirect( 'login' )
 
 

@@ -1,5 +1,5 @@
 from django import forms
-from django.contrib import auth
+from django.contrib.auth import authenticate
 
 from common.models import *
 
@@ -99,7 +99,7 @@ class LoginForm(InstanceAwareForm):
 		email_address = self.cleaned_data[ "email_address" ]
 		password = self.cleaned_data[ "password" ]
 
-		luser = auth.authenticate( username = email_address, password = password )
+		luser = authenticate( username = email_address, password = password )
 
 		if luser is None:
 			raise forms.ValidationError( 'Your username or password was incorrect. Remember, it\'s case sensitive.' )

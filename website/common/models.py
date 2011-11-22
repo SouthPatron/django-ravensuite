@@ -31,6 +31,7 @@ class UserProfile( models.Model ):
 	refnum = models.BigIntegerField()
 	state = models.CharField( max_length = 16, choices = ProfileState.choices(), default = 'unauthenticated' )
 	creation_time = models.DateTimeField()
+	last_seen = models.DateTimeField()
 
 
 class AuthenticationCode( models.Model ):

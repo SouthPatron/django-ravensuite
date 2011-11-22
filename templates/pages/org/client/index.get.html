@@ -78,14 +78,18 @@
 
 
 	$('#client_list_table').dataTable( {
-		"aaSorting" : [[ 0, "asc" ] ],
+		"iDisplayLength" : 25,
+		"bFilter" : false,
+		"bSort" : true,
+		"sPaginationType" : "full_numbers",
+		"aaSortingFixed" : [[ 0, "asc" ]],
 		"aoColumns" : [
-			null,
-			null,
-			null
+			{ "sType" : "html", "bSortable" : false }
 		],
-		"sDom" : 't<"bottom"fip><"clear">'
+		"sDom" : 't<"bottom"ip><"clear">'
 	});
+
+
 
 
 {% endblock %}
@@ -118,16 +122,12 @@
 <thead>
 	<tr>
 		<th>Name</th>
-		<th>Name</th>
-		<th>Name</th>
 	</tr>
 </thead>
 <tbody>
 {% for obj in object_list %}
 
 	<tr>
-		<td><a href='{{ obj.get_single_url }}'>{{ obj.trading_name }}</a></td>
-		<td><a href='{{ obj.get_single_url }}'>{{ obj.trading_name }}</a></td>
 		<td><a href='{{ obj.get_single_url }}'>{{ obj.trading_name }}</a></td>
 	</tr>
 {% endfor %}

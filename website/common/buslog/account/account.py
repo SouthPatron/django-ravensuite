@@ -1,4 +1,4 @@
-import datetime
+from common.utils.dbgdatetime import datetime
 
 from django.contrib.auth.models import User
 
@@ -30,6 +30,7 @@ class AccountSupport( object ):
 		luser_profile.refnum = AccountSupport.get_next_refnum()
 		luser_profile.state = ProfileState.UNAUTHENTICATED
 		luser_profile.creation_time = datetime.datetime.now()
+		luser_profile.last_seen = datetime.datetime.now()
 		luser_profile.save()
 
 		lauth_code = AuthenticationCode( user = luser, authentication_code = User.objects.make_random_password(), creation_time = datetime.datetime.now() )
