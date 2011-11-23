@@ -1,6 +1,7 @@
 from __future__ import unicode_literals
 
 from common.models import *
+from common.exceptions import *
 
 
 class TabBusLog( object ):
@@ -17,6 +18,13 @@ class TabBusLog( object ):
 
 	@staticmethod
 	def create( client, name, min_balance ):
+
+		try:
+			newacc = Tab.objects.get( client = client, name = name )
+			raise BusLogError( 'A tab with that name already exists' )
+		except Tab.DoesNotExist:
+			pass
+
 
 		refnum = TabBusLog.get_next_refnum()
 

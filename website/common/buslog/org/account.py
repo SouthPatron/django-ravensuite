@@ -1,6 +1,7 @@
 from __future__ import unicode_literals
 
 from common.models import *
+from common.exceptions import *
 
 
 class AccountBusLog( object ):
@@ -17,6 +18,12 @@ class AccountBusLog( object ):
 
 	@staticmethod
 	def create( client, name, min_balance ):
+
+		try:
+			newacc = Account.objects.get( client = client, name = name )
+			raise BusLogError( 'An account with that name already exists' )
+		except Account.DoesNotExist:
+			pass
 
 		refnum = AccountBusLog.get_next_refnum()
 

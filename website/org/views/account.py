@@ -1,12 +1,15 @@
 from __future__ import unicode_literals
 
 from django.shortcuts import get_object_or_404, redirect
+from django.contrib import messages
 
 from singleobjectview import SingleObjectView
 from listview import ListView
 
 from common.models import *
 from common.buslog.org import *
+from common.exceptions import *
+
 from ..forms import account as forms
 
 class AccountList( ListView ):
@@ -42,10 +45,18 @@ class AccountList( ListView ):
 	def create_object_html( self, request, data, *args, **kwargs ):
 		form = forms.CreateAccount( data or None )
 		if form.is_valid() is False:
-			print form
 			return redirect( 'org-client-account-list', oid = self.url_kwargs.oid, cid = self.url_kwargs.cid )
-		newo = self._create_object( request, form.cleaned_data, *args, **kwargs )
+
+		try:
+			newo = self._create_object( request, form.cleaned_data, *args, **kwargs )
+		except BusLogError, berror:
+			messages.error( request, berror.message )
+			return redirect( 'org-client-account-list', oid = self.url_kwargs.oid, cid = self.url_kwargs.cid )
+
+		messages.success( request, 'Account <a href="{}">{}</a> was successfully created.'.format( newo.get_single_url(), newo.name ) )
 		return redirect( 'org-client-account-list', oid = self.url_kwargs.oid, cid = self.url_kwargs.cid )
+
+
 
 
 

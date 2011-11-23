@@ -1,12 +1,14 @@
 from __future__ import unicode_literals
 
 from django.shortcuts import get_object_or_404, redirect
+from django.contrib import messages
 
 from singleobjectview import SingleObjectView
 from listview import ListView
 
 from common.models import *
 from common.buslog.org.client import ClientBusLog
+from common.exceptions import *
 
 from ..forms import client as forms
 
@@ -32,7 +34,13 @@ class ClientList( ListView ):
 		if form.is_valid() is False:
 			return redirect( 'org-client-list', oid = self.url_kwargs.oid )
 
-		newo = self._create_object( request, form.cleaned_data, *args, **kwargs )
+		try:
+			newo = self._create_object( request, form.cleaned_data, *args, **kwargs )
+		except BusLogError, berror:
+			messages.error( request, berror.message )
+			return redirect( 'org-client-list', oid = self.url_kwargs.oid )
+
+		messages.success( request, '<a href="{}">{}</a> was added as a new client.'.format( newo.get_single_url(), newo.trading_name ) )
 		return redirect( 'org-client-list', oid = self.url_kwargs.oid )
 
 	def create_object_json( self, request, data, *args, **kwargs ):

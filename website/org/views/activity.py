@@ -1,6 +1,7 @@
 from __future__ import unicode_literals
 
 from django.shortcuts import get_object_or_404, redirect
+from django.contrib import messages
 
 from singleobjectview import SingleObjectView
 from listview import ListView
@@ -34,8 +35,15 @@ class ActivityList( ListView ):
 		if form.is_valid() is False:
 			return redirect( 'org-activity-list', oid = self.url_kwargs.oid )
 
-		newo = self._create_object( request, form.cleaned_data, *args, **kwargs )
+		try:
+			newo = self._create_object( request, form.cleaned_data, *args, **kwargs )
+		except BusLogError, berror:
+			messages.error( request, berror.message )
+			return redirect( 'org-activity-list', oid = self.url_kwargs.oid )
+
+		messages.success( request, 'Activity <a href="{}">{}</a> was successfully created.'.format( newo.get_single_url(), newo.name ) )
 		return redirect( 'org-activity-list', oid = self.url_kwargs.oid )
+
 
 
 	def create_object_json( self, request, data, *args, **kwargs ):

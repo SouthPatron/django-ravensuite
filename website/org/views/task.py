@@ -1,6 +1,7 @@
 from __future__ import unicode_literals
 
 from django.shortcuts import get_object_or_404, redirect
+from django.contrib import messages
 
 from singleobjectview import SingleObjectView
 from listview import ListView
@@ -36,8 +37,17 @@ class TaskList( ListView ):
 		form = forms.CreateTask( data or None )
 		if form.is_valid() is False:
 			return redirect( 'org-activity-task-list', oid = self.url_kwargs.oid, actid = self.url_kwargs.actid )
-		newo = self._create_object( request, form.cleaned_data, *args, **kwargs )
+
+		try:
+			newo = self._create_object( request, form.cleaned_data, *args, **kwargs )
+		except BusLogError, berror:
+			messages.error( request, berror.message )
+			return redirect( 'org-activity-task-list', oid = self.url_kwargs.oid, actid = self.url_kwargs.actid )
+
+		messages.success( request, 'Task <a href="{}">{}</a> was successfully created.'.format( newo.get_single_url(), newo.name ) )
 		return redirect( 'org-activity-task-list', oid = self.url_kwargs.oid, actid = self.url_kwargs.actid )
+
+
 
 	def create_object_json( self, request, data, *args, **kwargs ):
 		newo = self._create_object( request, data, *args, **kwargs )

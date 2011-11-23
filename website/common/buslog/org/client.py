@@ -1,6 +1,7 @@
 from __future__ import unicode_literals
 
 from common.models import *
+from common.exceptions import *
 
 
 class ClientBusLog( object ):
@@ -17,6 +18,14 @@ class ClientBusLog( object ):
 
 	@staticmethod
 	def create( org, trading_name ):
+
+		try:
+			newclient = Client.objects.get( trading_name = trading_name, organization = org )
+
+			raise BusLogError( 'There is already a client with that name.' )
+		except Client.DoesNotExist:
+			pass
+
 
 		refnum = ClientBusLog.get_next_refnum( org )
 
