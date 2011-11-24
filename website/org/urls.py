@@ -26,6 +26,13 @@ urlpatterns = patterns('',
 	url( r'^(?P<oid>\d+)/client/(?P<cid>\d+)$', login_required( ClientSingle.as_view() ), name = 'org-client-single' ),
 
 
+# ------ CLIENTS / PROJECTS ------------------
+
+	url( r'^(?P<oid>\d+)/client/(?P<cid>\d+)/projects$', login_required( ProjectList.as_view() ), name = 'org-client-project-list' ),
+	url( r'^(?P<oid>\d+)/client/(?P<cid>\d+)/project/(?P<pid>\d+)$', login_required( ProjectSingle.as_view() ), name = 'org-client-project-single' ),
+
+
+
 # ------ CLIENTS / ACCOUNTS ------------------
 
 	url( r'^(?P<oid>\d+)/client/(?P<cid>\d+)/accounts$', login_required( AccountList.as_view() ), name = 'org-client-account-list' ),

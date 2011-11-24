@@ -80,6 +80,13 @@ CrudAccess = ChoicesEnum(
 	DELETE = ( 30, 'Delete' ),
 )
 
+ProjectStatus = ChoicesEnum(
+	INACTIVE = ( 0, 'Inactive' ),
+	ACTIVE = ( 10, 'Active' ),
+	COMPLETE = ( 20, 'Complete' ),
+	MAINTENANCE = ( 30, 'Maintenance' ),
+)
+
 
 
 
@@ -115,6 +122,7 @@ class OrganizationCounter( models.Model ):
 	invoice_no = models.BigIntegerField( default = 1 )
 	client_no = models.BigIntegerField( default = 1 )
 	tab_no = models.BigIntegerField( default = 1 )
+	project_no = models.BigIntegerField( default = 1 )
 
 
 class UserMembership( models.Model ):
@@ -147,6 +155,9 @@ class Client( models.Model ):
 
 	def get_single_url( self ):
 		return reverse( 'org-client-single', kwargs = { 'oid' : self.organization.refnum, 'cid' : self.refnum } )
+
+	def get_project_list_url( self ):
+		return reverse( 'org-client-project-list', kwargs = { 'oid' : self.organization.refnum, 'cid' : self.refnum } )
 	
 	def get_account_list_url( self ):
 		return reverse( 'org-client-account-list', kwargs = { 'oid' : self.organization.refnum, 'cid' : self.refnum } )
@@ -366,6 +377,26 @@ class Task( models.Model ):
 
 	def get_single_url( self ):
 		return reverse( 'org-activity-task-single', kwargs = { 'oid' : self.get_org().refnum, 'actid' : self.get_activity().id, 'taskid' : self.id } )
+
+
+
+class Project( models.Model ):
+	client = models.ForeignKey( Client )
+	refnum = models.BigIntegerField()
+
+	status = models.IntegerField( choices = ProjectStatus.choices(), default = ProjectStatus.INACTIVE )
+
+	name = models.CharField( max_length = 32 )
+	description = models.TextField()
+
+	def get_org( self ):
+		return self.client.organization
+
+	def get_client( self ):
+		return self.client
+
+	def get_single_url( self ):
+		return reverse( 'org-client-project-single', kwargs = { 'oid' : self.get_org().refnum, 'cid' : self.get_client().refnum, 'pid' : self.refnum } )
 
 
 
