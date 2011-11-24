@@ -352,7 +352,7 @@ class Subscription( models.Model ):
 class Activity( models.Model ):
 	organization = models.ForeignKey( Organization )
 	name = models.CharField( max_length = 32 )
-	description = models.TextField()
+	description = models.TextField( blank = True )
 
 	def get_org( self ):
 		return self.organization
@@ -367,7 +367,7 @@ class Activity( models.Model ):
 class Task( models.Model ):
 	activity = models.ForeignKey( Activity )
 	name = models.CharField( max_length = 32 )
-	description = models.TextField()
+	description = models.TextField( blank = True )
 
 	def get_org( self ):
 		return self.activity.organization
@@ -387,7 +387,7 @@ class Project( models.Model ):
 	status = models.IntegerField( choices = ProjectStatus.choices(), default = ProjectStatus.INACTIVE )
 
 	name = models.CharField( max_length = 32 )
-	description = models.TextField()
+	description = models.TextField( blank = True )
 
 	def get_org( self ):
 		return self.client.organization
@@ -398,5 +398,24 @@ class Project( models.Model ):
 	def get_single_url( self ):
 		return reverse( 'org-client-project-single', kwargs = { 'oid' : self.get_org().refnum, 'cid' : self.get_client().refnum, 'pid' : self.refnum } )
 
+
+
+class TimesheetEntry( models.Model ):
+	user = models.ForeignKey( User )
+	project = models.ForeignKey( Project )
+	task = models.ForeignKey( Task )
+	invoice = models.ForeignKey( Invoice, null = True ):
+	start_time = models.DateTimeField()
+	end_time = models.DateTimeField()
+	description = models.CharField( max_length = 255, blank = True )
+
+	def get_org( self ):
+		return project.client.organization
+
+	def get_client( self ):
+		return project.client
+
+	def get_activity( self ):
+		return task.activity
 
 
