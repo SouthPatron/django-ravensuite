@@ -1,0 +1,70 @@
+{% extends 'layouts/timesheet/member.html' %}
+
+{% block str_section_name %}Timesheet{% endblock %}
+
+{% block page_functions %}
+
+<ul>
+	<li class=""><a href="{% url timesheet-entry-list %} }}">Dashboard</a></li>
+</ul>
+
+{% endblock  %}
+
+
+{% block onready %}
+
+	$('#entry_list_table').dataTable( {
+		"iDisplayLength" : 25,
+		"bFilter" : false,
+		"bSort" : true,
+		"sPaginationType" : "full_numbers",
+		"aaSortingFixed" : [[ 0, "asc" ]],
+		"aoColumns" : [
+			{ "sType" : "html", "bSortable" : false },
+			{ "sType" : "html", "bSortable" : false },
+			{ "sType" : "html", "bSortable" : false },
+			{ "sType" : "html", "bSortable" : false },
+			{ "sType" : "html", "bSortable" : false },
+			{ "sType" : "html", "bSortable" : false }
+		],
+		"sDom" : 't<"bottom"ip><"clear">'
+	});
+
+{% endblock %}
+
+
+{% block content %}
+
+<table
+	id="entry_list_table"
+	style=' text-align: left; '
+	>
+<thead>
+	<tr>
+		<th>Organization</th>
+		<th>Project</th>
+		<th>Activity</th>
+		<th>Task</th>
+		<th>Start Time</th>
+		<th>End Time</th>
+	</tr>
+</thead>
+<tbody>
+
+{% for obj in object_list %}
+	<tr>
+		<td>{{ obj.get_org.trading_name }}</td>
+		<td>{{ obj.project.name }}</td>
+		<td>{{ obj.get_activity.name }}</td>
+		<td>{{ obj.task.name }}</td>
+		<td>{{ obj.start_time }}</td>
+		<td>{{ obj.end_time }}</td>
+	</tr>
+{% endfor %}
+
+</tbody>
+</table>
+
+{% endblock %}
+
+

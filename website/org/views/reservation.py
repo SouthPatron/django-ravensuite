@@ -4,8 +4,8 @@ from django.shortcuts import get_object_or_404, redirect
 from django.http import HttpResponseForbidden
 from django.conf import settings
 
-from singleobjectview import SingleObjectView
-from listview import ListView
+from common.views.singleobjectview import SingleObjectView
+from common.views.listview import ListView
 
 import uuid
 

@@ -8,6 +8,7 @@ urlpatterns = patterns('',
 
 	url(r'^account/', include('account.urls')),
 	url(r'^org/', include('org.urls')),
+	url(r'^timesheet/', include('timesheet.urls')),
 
 )
 

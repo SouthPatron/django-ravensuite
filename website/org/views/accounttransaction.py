@@ -3,8 +3,8 @@ from __future__ import unicode_literals
 from django.shortcuts import get_object_or_404, redirect
 from django.http import HttpResponseForbidden
 
-from singleobjectview import SingleObjectView
-from listview import ListView
+from common.views.singleobjectview import SingleObjectView
+from common.views.listview import ListView
 
 from common.models import *
 from common.utils.dbgdatetime import datetime

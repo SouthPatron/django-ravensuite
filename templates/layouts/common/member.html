@@ -98,7 +98,7 @@ $(document).ready(function(){
 	<div id="header-orgname-title"><a href="{% url org-single kwargs.oid %}">{{ str_org_name }}</a></div>
 {% endif %}
 
-	<div id="header-options"><a href='{% url account-profile %}'>{{ request.user.email }}</a> | <a href="{% url org-list %}">organizations</a> | <a href='{% url logout %}'>logout</a></div>
+	<div id="header-options"><a href='{% url timesheet-entry-list %}'>Timesheet</a> | <a href='{% url account-profile %}'>{{ request.user.email }}</a> | <a href="{% url org-list %}">organizations</a> | <a href='{% url logout %}'>logout</a></div>
 
 </div> <!-- #header -->
 

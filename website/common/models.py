@@ -400,13 +400,34 @@ class Project( models.Model ):
 
 
 
+
+# --- TIMESHEET --------------------------------------------------
+
+
 class TimesheetEntry( models.Model ):
 	user = models.ForeignKey( User )
 	project = models.ForeignKey( Project )
 	task = models.ForeignKey( Task )
-	invoice = models.ForeignKey( Invoice, null = True ):
+	invoice = models.ForeignKey( Invoice, null = True, default = None )
 	start_time = models.DateTimeField()
 	end_time = models.DateTimeField()
+	description = models.CharField( max_length = 255, blank = True )
+
+	def get_org( self ):
+		return project.client.organization
+
+	def get_client( self ):
+		return project.client
+
+	def get_activity( self ):
+		return task.activity
+
+
+class TimesheetTimer( models.Model ):
+	user = models.ForeignKey( User )
+	project = models.ForeignKey( Project )
+	task = models.ForeignKey( Task )
+	start_time = models.DateTimeField()
 	description = models.CharField( max_length = 255, blank = True )
 
 	def get_org( self ):

@@ -7,8 +7,8 @@ from django.contrib import messages
 from django.conf import settings
 from django.http import HttpResponseForbidden
 
-from singleobjectview import SingleObjectView
-from listview import ListView
+from common.views.singleobjectview import SingleObjectView
+from common.views.listview import ListView
 
 from common.models import *
 
