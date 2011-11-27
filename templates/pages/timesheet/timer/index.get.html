@@ -38,8 +38,13 @@
 
 	$(function() {
 		
-		var trading_name = $( "#id_trading_name" ),
-			allFields = $( [] ).add( trading_name ),
+		var organization = $( "#id_organization" ),
+			client = $( "#id_client" ),
+			project = $( "#id_project" ),
+			activity = $( "#id_activity" ),
+			task = $( "#id_task" ),
+			description = $( "#id_description" ),
+			allFields = $( [] ).add( organization ).add( client ).add( project ).add( activity ).add( task ).add( description ),
 			tips = $( ".validateTips" );
 
 		$( "#dialog-form" ).dialog({
@@ -52,7 +57,13 @@
 					var bValid = true;
 					allFields.removeClass( "ui-state-error" );
 
-					bValid = bValid && validation.length( tips, trading_name, "Trading Name", 3, 192 );
+					bValid = bValid && validation.notdefault( tips, organization, "Organization", -1 );
+					bValid = bValid && validation.notdefault( tips, client, "Client", -1 );
+					bValid = bValid && validation.notdefault( tips, project, "Project", -1 );
+					bValid = bValid && validation.notdefault( tips, activity, "Activity", -1 );
+					bValid = bValid && validation.notdefault( tips, task, "Task", -1 );
+
+					bValid = bValid && validation.length( tips, description, "Description", 3, 255 );
 
 					if ( bValid ) {
 						$( "#start-new-timer" ).submit();
@@ -86,6 +97,7 @@
 			{ "sType" : "html", "bSortable" : false },
 			{ "sType" : "html", "bSortable" : false },
 			{ "sType" : "html", "bSortable" : false },
+			{ "sType" : "html", "bSortable" : false },
 			{ "sType" : "html", "bSortable" : false }
 		],
 		"sDom" : 't<"bottom"ip><"clear">'
@@ -106,7 +118,7 @@
 				function( data ) {
 					target = $('#id_client' );
 					target.empty();
-					target.append( '<option value="">Select...</option>' );
+					target.append( '<option value="-1">Select...</option>' );
 					for ( var i = 0; i < data.length; i++ )
 					{
 						target.append( '<option value="{0}">{1}</option>'.format( data[i][ "refnum" ], data[i][ "trading_name" ] ) );
@@ -119,7 +131,7 @@
 				function( data ) {
 					target = $( '#id_activity' );
 					target.empty();
-					target.append( '<option value="">Select...</option>' );
+					target.append( '<option value="-1">Select...</option>' );
 					for ( var i = 0; i < data.length; i++ )
 					{
 						target.append( '<option value="{0}">{1}</option>'.format( data[i][ "id" ], data[i][ "name" ] ) );
@@ -138,7 +150,7 @@
 			$.getJSON( '/org/{0}/client/{1}/projects?format=json'.format( $("#id_organization").find(":selected").attr("value"), $(this).find(":selected").attr("value") ),
 				function( data ) {
 
-					target.append( '<option value="">Select...</option>' );
+					target.append( '<option value="-1">Select...</option>' );
 					for ( var i = 0; i < data.length; i++ )
 					{
 						target.append( '<option value="{0}">{1}</option>'.format( data[i][ "refnum" ], data[i][ "name" ] ) );
@@ -154,7 +166,7 @@
 				function( data ) {
 					target = $('#id_task');
 					target.empty();
-					target.append( '<option value="">Select...</option>' );
+					target.append( '<option value="-1">Select...</option>' );
 					for ( var i = 0; i < data.length; i++ )
 					{
 						target.append( '<option value="{0}">{1}</option>'.format( data[i][ "id" ], data[i][ "name" ] ) );
@@ -180,7 +192,7 @@
 		<fieldset>
 			<label for="trading_name">Organization</label>
 			<select name="organization" id="id_organization" class="select ui-widget-content ui-corner-all">
-				<option>Select...</option>
+				<option value="-1"> ... </option>
 				{% for obj in request.user.usermembership_set.all %}
 					<option value="{{ obj.organization.refnum }}">{{ obj.organization.trading_name }}</option>
 				{% endfor %}
@@ -210,7 +222,7 @@
 			</select>
 
 			<label for="description">Description</label>
-			<input type="text" name="description" id="id_description" class="text ui-widget-content ui-corner-all" />
+			<input type="text" name="description" id="id_description" class="text ui-widget-content ui-corner-all" value="{{ extra.description }}" />
 		</fieldset>
 	</form>
 </div>
@@ -232,6 +244,7 @@
 		<th>Activity</th>
 		<th>Task</th>
 		<th>Start Time</th>
+		<th>Actions</th>
 	</tr>
 </thead>
 <tbody>
@@ -244,6 +257,13 @@
 		<td>{{ obj.get_activity.name }}</td>
 		<td>{{ obj.task.name }}</td>
 		<td>{{ obj.start_time }}</td>
+		<td>
+			<form action="{{ obj.get_single_url }}" method="POST">
+				{% csrf_token %}
+				<input type="hidden" name="action" value="stop" />
+				<button type="submit">STOP</button>
+			</form>
+		</td>
 	</tr>
 {% endfor %}
 

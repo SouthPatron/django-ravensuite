@@ -414,13 +414,13 @@ class TimesheetEntry( models.Model ):
 	description = models.CharField( max_length = 255, blank = True )
 
 	def get_org( self ):
-		return project.client.organization
+		return self.project.client.organization
 
 	def get_client( self ):
-		return project.client
+		return self.project.client
 
 	def get_activity( self ):
-		return task.activity
+		return self.task.activity
 
 
 class TimesheetTimer( models.Model ):
@@ -431,12 +431,15 @@ class TimesheetTimer( models.Model ):
 	description = models.CharField( max_length = 255, blank = True )
 
 	def get_org( self ):
-		return project.client.organization
+		return self.project.client.organization
 
 	def get_client( self ):
-		return project.client
+		return self.project.client
 
 	def get_activity( self ):
-		return task.activity
+		return self.task.activity
+
+	def get_single_url( self ):
+		return reverse( 'timesheet-timer-single', kwargs = { 'timerid' : self.id } )
 
 

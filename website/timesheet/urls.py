@@ -12,6 +12,8 @@ urlpatterns = patterns('',
 
 	url( r'^timers$', login_required( TimerList.as_view() ), name = 'timesheet-timer-list' ),
 
+	url( r'^timer/(?P<timerid>\d+)$', login_required( TimerSingle.as_view() ), name = 'timesheet-timer-single' ),
+
 )
 
 
