@@ -1,1 +1,1 @@
-{ "trading_name" : "{{ instance.name }}", "refnum" : {{ instance.refnum }} }
+{ "name" : "{{ instance.name }}", "refnum" : {{ instance.refnum }}, "status" : {{ instance.status }}, "status_text" : "{{ instance.get_status_display }}", "description" : "{{ instance.description }}" }

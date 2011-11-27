@@ -5,7 +5,8 @@
 {% block page_functions %}
 
 <ul>
-	<li class=""><a href="{% url timesheet-entry-list %} }}">Dashboard</a></li>
+	<li class=""><a href="{% url timesheet-entry-list %}">Dashboard</a></li>
+	<li class=""><a href="{% url timesheet-timer-list %}">Active Timers</a></li>
 </ul>
 
 {% endblock  %}
@@ -20,6 +21,7 @@
 		"sPaginationType" : "full_numbers",
 		"aaSortingFixed" : [[ 0, "asc" ]],
 		"aoColumns" : [
+			{ "sType" : "html", "bSortable" : false },
 			{ "sType" : "html", "bSortable" : false },
 			{ "sType" : "html", "bSortable" : false },
 			{ "sType" : "html", "bSortable" : false },
@@ -42,6 +44,7 @@
 <thead>
 	<tr>
 		<th>Organization</th>
+		<th>Client</th>
 		<th>Project</th>
 		<th>Activity</th>
 		<th>Task</th>
@@ -54,6 +57,7 @@
 {% for obj in object_list %}
 	<tr>
 		<td>{{ obj.get_org.trading_name }}</td>
+		<td>{{ obj.get_client.trading_name }}</td>
 		<td>{{ obj.project.name }}</td>
 		<td>{{ obj.get_activity.name }}</td>
 		<td>{{ obj.task.name }}</td>

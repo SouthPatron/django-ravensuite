@@ -1,0 +1,255 @@
+{% extends 'layouts/timesheet/member.html' %}
+
+{% block str_section_name %}Active Timers{% endblock %}
+
+{% block page_functions %}
+
+<ul>
+	<li class=""><a href="{% url timesheet-entry-list %}">Dashboard</a></li>
+	<li class=""><a href="{% url timesheet-timer-list %}">Active Timers</a></li>
+</ul>
+
+{% endblock  %}
+
+
+{% block head_includes %}
+
+	<script type="text/javascript" src="{{ STATIC_URL }}js/validations.js"></script>
+	<script type="text/javascript" src="{{ STATIC_URL }}js/smk.js"></script>
+
+<style>
+	body { font-size: 62.5%; }
+	label, input { display:block; }
+	input.text { margin-bottom:12px; width:95%; padding: .4em; }
+	fieldset { padding:0; border:0; margin-top:25px; }
+	h1 { font-size: 1.2em; margin: .6em 0; }
+	div#users-contain { width: 350px; margin: 20px 0; }
+	div#users-contain table { margin: 1em 0; border-collapse: collapse; width: 100%; }
+	div#users-contain table td, div#users-contain table th { border: 1px solid #eee; padding: .6em 10px; text-align: left; }
+	.ui-dialog .ui-state-error { padding: .3em; }
+	.validateTips { border: 1px solid transparent; padding: 0.3em; }
+</style>
+
+{% endblock %}
+
+
+
+{% block onready %}
+
+	$(function() {
+		
+		var trading_name = $( "#id_trading_name" ),
+			allFields = $( [] ).add( trading_name ),
+			tips = $( ".validateTips" );
+
+		$( "#dialog-form" ).dialog({
+			autoOpen: false,
+			height: 400,
+			width: 550,
+			modal: true,
+			buttons: {
+				"Start Timer": function() {
+					var bValid = true;
+					allFields.removeClass( "ui-state-error" );
+
+					bValid = bValid && validation.length( tips, trading_name, "Trading Name", 3, 192 );
+
+					if ( bValid ) {
+						$( "#start-new-timer" ).submit();
+					}
+				},
+				Cancel: function() {
+					$( this ).dialog( "close" );
+				}
+			},
+			close: function() {
+				allFields.val( "" ).removeClass( "ui-state-error" );
+			}
+		});
+
+		$( "#timesheet-start-new-timer" )
+			.click(function() {
+				$( "#dialog-form" ).dialog( "open" );
+			});
+	});
+
+
+	$('#timer_list_table').dataTable( {
+		"iDisplayLength" : 25,
+		"bFilter" : false,
+		"bSort" : true,
+		"sPaginationType" : "full_numbers",
+		"aaSortingFixed" : [[ 0, "asc" ]],
+		"aoColumns" : [
+			{ "sType" : "html", "bSortable" : false },
+			{ "sType" : "html", "bSortable" : false },
+			{ "sType" : "html", "bSortable" : false },
+			{ "sType" : "html", "bSortable" : false },
+			{ "sType" : "html", "bSortable" : false },
+			{ "sType" : "html", "bSortable" : false }
+		],
+		"sDom" : 't<"bottom"ip><"clear">'
+	});
+
+
+	$('#id_organization').change( function() {
+
+			$('#id_client' ).empty();
+			$('#id_activity' ).empty();
+			$('#id_task' ).empty();
+			$('#id_project' ).empty();
+
+
+			org_ref = $(this).find(":selected").attr("value");
+
+			$.getJSON( '/org/{0}/clients?format=json'.format( org_ref ),
+				function( data ) {
+					target = $('#id_client' );
+					target.empty();
+					target.append( '<option value="">Select...</option>' );
+					for ( var i = 0; i < data.length; i++ )
+					{
+						target.append( '<option value="{0}">{1}</option>'.format( data[i][ "refnum" ], data[i][ "trading_name" ] ) );
+					}
+				}
+			);
+
+
+			$.getJSON( '/org/{0}/activities?format=json'.format( org_ref ),
+				function( data ) {
+					target = $( '#id_activity' );
+					target.empty();
+					target.append( '<option value="">Select...</option>' );
+					for ( var i = 0; i < data.length; i++ )
+					{
+						target.append( '<option value="{0}">{1}</option>'.format( data[i][ "id" ], data[i][ "name" ] ) );
+					}
+				}
+			);
+
+		}
+	);
+
+	$('#id_client').change( function() {
+
+			target = $('#id_project' );
+			target.empty();
+
+			$.getJSON( '/org/{0}/client/{1}/projects?format=json'.format( $("#id_organization").find(":selected").attr("value"), $(this).find(":selected").attr("value") ),
+				function( data ) {
+
+					target.append( '<option value="">Select...</option>' );
+					for ( var i = 0; i < data.length; i++ )
+					{
+						target.append( '<option value="{0}">{1}</option>'.format( data[i][ "refnum" ], data[i][ "name" ] ) );
+					}
+				}
+			);
+		}
+	);
+
+	$('#id_activity').change( function() {
+
+			$.getJSON( '/org/{0}/activity/{1}/tasks?format=json'.format( $("#id_organization").find(":selected").attr("value"), $(this).find(":selected").attr("value") ),
+				function( data ) {
+					target = $('#id_task');
+					target.empty();
+					target.append( '<option value="">Select...</option>' );
+					for ( var i = 0; i < data.length; i++ )
+					{
+						target.append( '<option value="{0}">{1}</option>'.format( data[i][ "id" ], data[i][ "name" ] ) );
+					}
+				}
+			);
+		}
+	);
+
+
+{% endblock %}
+
+
+{% block content_menu_right %}
+<ul>
+	<li><a href="#" id="timesheet-start-new-timer">Start a new Timer</a></li>
+</ul>
+
+<div id="dialog-form" title="Start a new Timer">
+	<p class="validateTips">All form fields are required</p>
+	<form id="start-new-timer" method="POST" action="">
+		{% csrf_token %}
+		<fieldset>
+			<label for="trading_name">Organization</label>
+			<select name="organization" id="id_organization" class="select ui-widget-content ui-corner-all">
+				<option>Select...</option>
+				{% for obj in request.user.usermembership_set.all %}
+					<option value="{{ obj.organization.refnum }}">{{ obj.organization.trading_name }}</option>
+				{% endfor %}
+			</select>
+
+			<label for="client">Client</label>
+			<select name="client" id="id_client" class="select ui-widget-content ui-corner-all">
+				<option> ... </option>
+			</select>
+
+
+			<label for="project">Project</label>
+			<select name="project" id="id_project" class="select ui-widget-content ui-corner-all">
+				<option> ... </option>
+			</select>
+
+
+			<label for="activity">Activity</label>
+			<select name="activity" id="id_activity" class="select ui-widget-content ui-corner-all">
+				<option> ... </option>
+			</select>
+
+
+			<label for="task">Task</label>
+			<select name="task" id="id_task" class="select ui-widget-content ui-corner-all">
+				<option> ... </option>
+			</select>
+
+			<label for="description">Description</label>
+			<input type="text" name="description" id="id_description" class="text ui-widget-content ui-corner-all" />
+		</fieldset>
+	</form>
+</div>
+
+{% endblock %}
+
+
+{% block content %}
+
+<table
+	id="timer_list_table"
+	style=' text-align: left; '
+	>
+<thead>
+	<tr>
+		<th>Organization</th>
+		<th>Client</th>
+		<th>Project</th>
+		<th>Activity</th>
+		<th>Task</th>
+		<th>Start Time</th>
+	</tr>
+</thead>
+<tbody>
+
+{% for obj in object_list %}
+	<tr>
+		<td>{{ obj.get_org.trading_name }}</td>
+		<td>{{ obj.get_client.trading_name }}</td>
+		<td>{{ obj.project.name }}</td>
+		<td>{{ obj.get_activity.name }}</td>
+		<td>{{ obj.task.name }}</td>
+		<td>{{ obj.start_time }}</td>
+	</tr>
+{% endfor %}
+
+</tbody>
+</table>
+
+{% endblock %}
+
+

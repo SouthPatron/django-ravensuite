@@ -1,4 +1,15 @@
 
+
+String.prototype.format = function() {
+	var formatted = this;
+	for (var i = 0; i < arguments.length; i++) {
+		var regexp = new RegExp('\\{'+i+'\\}', 'gi');
+		formatted = formatted.replace(regexp, arguments[i]);
+	}
+	return formatted;
+};
+
+
 function fade_replace( block1, block2 )
 {
 	block1.animate({
@@ -42,7 +53,6 @@ function fade_in( block )
 	block.css('display', 'block');
 	block.animate({ opacity: 1, }, "slow");
 }
-
 
 
 

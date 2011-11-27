@@ -1,1 +1,1 @@
-{ "trading_name" : "{{ instance.trading_name }}", "refnum" : {{ instance.refnum }} }
+{ "id" : {{ instance.id }}, "name" : "{{ instance.name }}", "description" : "{{ instance.description }}" }
