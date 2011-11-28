@@ -3,12 +3,7 @@
 {% block str_section_name %}Timesheet{% endblock %}
 
 {% block page_functions %}
-
-<ul>
-	<li class=""><a href="{% url timesheet-entry-list %}">Dashboard</a></li>
-	<li class=""><a href="{% url timesheet-timer-list %}">Active Timers</a></li>
-</ul>
-
+{% include 'page_functions/timesheet/timesheet_level.html' %}
 {% endblock  %}
 
 
