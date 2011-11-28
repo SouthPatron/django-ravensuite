@@ -1,0 +1,57 @@
+
+.timer-block {
+	position: relative;
+	padding: 0px;
+	margin: 0px;
+	background-color: #f2f2f2;
+}
+
+.timer-block a {
+	text-decoration: none;
+}
+
+
+.timer-block a:visited {
+	color: inherit;
+}
+
+.timer-block a:hover {
+	text-decoration: underline;
+}
+
+.timer-block .info {
+	min-height: 100px;
+	padding: 10px 170px 15px 90px;
+	height: 100%;
+}
+
+.timer-block .info .title-div {
+	font-size: 1.2em;
+	margin-bottom: 10px;
+}
+
+.timer-block .info .description-div {
+	margin-top: 10px;
+}
+
+.timer-block .left-side {
+	position: absolute;
+	left: 0px;
+	top: 0px;
+	bottom: 0px;
+	width: 75px;
+	background-color: #a2a2a2;
+	border-radius: 5px 0px 0px 5px;
+}
+
+.timer-block .right-side {
+	position: absolute;
+	right: 0px;
+	top: 0px;
+	bottom: 0px;
+	width: 150px;
+	height: 100%;
+	background-color: #e2e2e2;
+	border-radius: 0px 5px 5px 0px;
+}
+

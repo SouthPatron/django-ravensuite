@@ -81,24 +81,6 @@
 	});
 
 
-	$('#timer_list_table').dataTable( {
-		"iDisplayLength" : 25,
-		"bFilter" : false,
-		"bSort" : true,
-		"sPaginationType" : "full_numbers",
-		"aaSortingFixed" : [[ 0, "asc" ]],
-		"aoColumns" : [
-			{ "sType" : "html", "bSortable" : false },
-			{ "sType" : "html", "bSortable" : false },
-			{ "sType" : "html", "bSortable" : false },
-			{ "sType" : "html", "bSortable" : false },
-			{ "sType" : "html", "bSortable" : false },
-			{ "sType" : "html", "bSortable" : false },
-			{ "sType" : "html", "bSortable" : false }
-		],
-		"sDom" : 't<"bottom"ip><"clear">'
-	});
-
 
 	$('#id_organization').change( function() {
 
@@ -228,43 +210,39 @@
 
 {% block content %}
 
-<table
-	id="timer_list_table"
-	style=' text-align: left; '
-	>
-<thead>
-	<tr>
-		<th>Organization</th>
-		<th>Client</th>
-		<th>Project</th>
-		<th>Activity</th>
-		<th>Task</th>
-		<th>Start Time</th>
-		<th>Actions</th>
-	</tr>
-</thead>
-<tbody>
-
 {% for obj in object_list %}
-	<tr>
-		<td>{{ obj.get_org.trading_name }}</td>
-		<td>{{ obj.get_client.trading_name }}</td>
-		<td>{{ obj.project.name }}</td>
-		<td>{{ obj.get_activity.name }}</td>
-		<td>{{ obj.task.name }}</td>
-		<td>{{ obj.start_time }}</td>
-		<td>
-			<form action="{{ obj.get_single_url }}" method="POST">
-				{% csrf_token %}
-				<input type="hidden" name="action" value="stop" />
-				<button type="submit">STOP</button>
-			</form>
-		</td>
-	</tr>
+
+<div class="timer-block">
+
+	<div class="info">
+
+		<div class="title-div"><a href='{{ obj.get_client.get_single_url }}'>{{ obj.get_client.trading_name }}</a> : <a href='{{ obj.project.get_single_url }}'>{{ obj.project.name }}</a></div>
+		<div><a href='{{ obj.get_org.get_single_url }}'>{{ obj.get_org.trading_name }}</a></div>
+		<div><a href='{{ obj.get_activity.get_single_url }}'>{{ obj.get_activity.name }}</a> : <a href='{{ obj.task.get_single_url }}'>{{ obj.task.name }}</a></div>
+		<div class="description-div">{{ obj.description }}</div>
+	</div> <!-- .info -->
+
+	<div class="left-side">&nbsp;</div> <!-- .left-side -->
+
+	<div class="right-side">
+		<form action="{{ obj.get_single_url }}" method="POST">
+			{% csrf_token %}
+			<input type="hidden" name="action" value="delete" />
+			<button type="submit">DELETE</button>
+		</form>
+		<form action="{{ obj.get_single_url }}" method="POST">
+			{% csrf_token %}
+			<input type="hidden" name="action" value="stop" />
+			<button type="submit">STOP</button>
+		</form>
+	</div> <!-- .right-side -->
+
+</div> <!-- .timer-block -->
+
+<div style="height: 30px;">&nbsp;</div>
+
 {% endfor %}
 
-</tbody>
-</table>
 
 {% endblock %}
 

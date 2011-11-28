@@ -28,6 +28,18 @@ class TimerBusLog( object ):
 		return newo
 
 	@staticmethod
+	def delete_timer( user, project ):
+
+		try:
+			newo = TimesheetTimer.objects.get( user = user, project = project  )
+		except TimesheetTimer.DoesNotExist:
+			raise BusLogError( 'There is no timer running for that user on that project.' )
+
+		newo.delete()
+		return newo
+
+
+	@staticmethod
 	def stop_timer( user, project ):
 
 		try:
