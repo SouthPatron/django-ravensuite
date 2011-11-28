@@ -14,17 +14,9 @@
 {% endblock %}
 
 
-
-
 {% block page_functions %}
-
-<ul>
-	<li class=""><a href="{{ extra.get_single_url }}">Dashboard</a></li>
-	<li class=""><a href="{{ extra.get_transaction_list_url }}">Transactions</a></li>
-	<li class=""><a href="{{ extra.get_reservation_list_url }}">Reservations</a></li>
-</ul>
-
-{% endblock  %}
+{% include 'page_functions/org/tab_level.html' with instance=extra %}
+{% endblock %}
 
 
 {% block head_includes %}

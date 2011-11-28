@@ -41,6 +41,7 @@ class AuthenticationCode( models.Model ):
 
 
 
+
 # --- ORG ----------------------------------------------------
 
 
@@ -441,5 +442,9 @@ class TimesheetTimer( models.Model ):
 
 	def get_single_url( self ):
 		return reverse( 'timesheet-timer-single', kwargs = { 'timerid' : self.id } )
+
+
+
+
 
 

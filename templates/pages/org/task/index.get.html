@@ -14,13 +14,8 @@
 
 
 {% block page_functions %}
-
-<ul>
-	<li class=""><a href="{{ extra.get_single_url }}">Dashboard</a></li>
-	<li class=""><a href="{{ extra.get_task_list_url }}">Tasks</a></li>
-</ul>
-
-{% endblock  %}
+{% include 'page_functions/org/activity_level.html' with instance=extra %}
+{% endblock %}
 
 
 {% block head_includes %}

@@ -1,0 +1,10 @@
+
+{% load active %}
+
+<ul>
+	<li class="{% active request '^/org\/\d+$' %}"><a href="{{ instance.get_single_url }}">Dashboard</a></li>
+	<li class="{% active request '\/clients$' %}"><a href="{{ instance.get_client_list_url }}">Clients</a></li>
+	<li class="{% active request '\/activities$' %}"><a href="{{ instance.get_activity_list_url }}">Activities</a></li>
+	<li class="{% active request '\/users$' %}"><a href="{{ instance.get_user_list_url }}">Users</a></li>
+</ul>
+

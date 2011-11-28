@@ -14,14 +14,8 @@
 
 
 {% block page_functions %}
-
-<ul>
-	<li class=""><a href="{{ instance.get_single_url }}">Dashboard</a></li>
-	<li class=""><a href="{{ instance.get_transaction_list_url }}">Transactions</a></li>
-</ul>
-
-{% endblock  %}
-
+{% include 'page_functions/org/account_level.html' with instance=instance %}
+{% endblock %}
 
 {% block content %}
 

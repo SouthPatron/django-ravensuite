@@ -5,16 +5,8 @@
 {% block str_section_name %}Clients{% endblock %}
 
 
-
 {% block page_functions %}
-
-<ul>
-	<li class=""><a href="{{ extra.get_single_url }}">Dashboard</a></li>
-	<li class=""><a href="{{ extra.get_client_list_url }}">Clients</a></li>
-	<li class=""><a href="{{ extra.get_activity_list_url }}">Activities</a></li>
-	<li class=""><a href="{{ extra.get_user_list_url }}">Users</a></li>
-</ul>
-
+{% include 'page_functions/org/org_level.html' with instance=extra %}
 {% endblock  %}
 
 
