@@ -2,6 +2,8 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head profile="http://gmpg.org/xfn/11">
 
+{% load active %}
+
 {% load captureas %}
 {% captureas str_org_name %}{% block str_org_name %}{% endblock %}{% endcaptureas %}
 {% captureas str_client_name %}{% block str_client_name %}{% endblock %}{% endcaptureas %}
@@ -94,14 +96,29 @@ $(document).ready(function(){
 <!-- HEADER ------------------------------------------------- -->
 
 <div id="header">
-{% if str_org_name %}
-	<div id="header-orgname-title"><a href="{% url org-single kwargs.oid %}">{{ str_org_name }}</a></div>
-{% endif %}
 
-	<div id="header-options"><a href='{% url timesheet-entry-list %}'>Timesheet</a>{% if request.user.timesheettimer_set.count != 0 %} (<a href='{% url timesheet-timer-list %}'>{{ request.user.timesheettimer_set.count }} active timers</a>) {% endif %} | <a href='{% url account-profile %}'>{{ request.user.email }}</a> | <a href="{% url org-list %}">organizations</a> | <a href='{% url logout %}'>logout</a></div>
+	<div id="global-links">
+		<ul>
+			<li class="{% active request '^/org' %}"><a href='{% url org-list %}'>Organizations</a></li>
+
+			<li class="{% active request '^/timesheet' %}"><a href='{% url timesheet-entry-list %}'>Timesheet</a>{% if request.user.timesheettimer_set.count != 0 %} (<a href='{% url timesheet-timer-list %}'>{{ request.user.timesheettimer_set.count }} active timers</a>) {% endif %}</li>
+		</ul>
+	</div>
+
+	<div id="header-options"><a href='{% url account-profile %}'>{{ request.user.email }}</a> | <a href='{% url logout %}'>logout</a></div>
+
+	<div style="clear: both;">&nbsp;</div>
 
 </div> <!-- #header -->
 
+
+<!-- SUBGROUP PANEL ----------------------------------------- -->
+
+<div id="subgroup-panel">
+{% if str_org_name %}
+	<div id="subgroup-panel-orgname-title"><a href="{% url org-single kwargs.oid %}">{{ str_org_name }}</a></div>
+{% endif %}
+</div>
 
 <!-- PAGE SECTION INFO ------------------------------------- -->
 

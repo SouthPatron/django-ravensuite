@@ -53,43 +53,70 @@ p {
 #header
 {
 	position: relative;
-	padding: 15px 20px;
+	padding: 0px;
 	margin: auto;
-	height: 18px;
-	background: #2e2e2e;
-}
-
-#header #header-orgname-title
-{
-	position: absolute;
-	left: 20px;
-	top: 15px;
-	font-size: 1.5em;
-	text-shadow: 1px 1px 1px black;
+	height: 40px;
+	background: #4e4e4e;
 	overflow: hidden;
 }
 
-#header #header-orgname-title a,
-#header #header-orgname-title a:visited,
-#header #header-orgname-title a:active
+#header #global-links
 {
+	float: left;
+	margin: 0px;
+	width: 650px;
+	padding-top: 5px;
+	height: 35px;
+	z-index: 0;
+	color: #cccccc;
+}
+
+#header #global-links ul
+{
+	list-style: none;
+}
+
+#header #global-links ul li
+{
+	float: left;
+	padding: 12px 10px;
+	border-left: 1px solid #808080;
+	border-top: 1px solid #808080;
+	border-right: 1px solid #808080;
+	font-size: 1em;
+	border-radius: 5px 5px 0px 0px;
+}
+
+#header #global-links ul li.active
+{
+	background: #2e2e2e;
+}
+
+
+
+#header #global-links a
+{
+	list-style: none;
 	text-decoration: none;
 	color: #cccccc;
 }
 
-#header #header-orgname-title a:hover
+#header #global-links a:hover
 {
 	text-decoration: underline;
 }
 
 
+
+
 #header #header-options
 {
-	position: absolute;
-	padding: 15px 10px;
-	top: 0px;
-	right: 0px;
+	float: right;
+	padding: 15px 10px 0px 0px;
+	margin: 0px;
 	color: #cccccc;
+	height: 25px;
+	text-align: right;
 }
 
 #header #header-options a,
@@ -105,6 +132,44 @@ p {
 }
 
 
+/* ----- SUBGROUP PANEL ----------------------------------- */
+
+
+#subgroup-panel
+{
+	position: relative;
+	padding: 15px 20px;
+	margin: auto;
+	height: 18px;
+	background: #2e2e2e;
+}
+
+
+#subgroup-panel #subgroup-panel-orgname-title
+{
+	position: absolute;
+	left: 20px;
+	top: 15px;
+	font-size: 1.5em;
+	text-shadow: 1px 1px 1px black;
+	overflow: hidden;
+}
+
+#subgroup-panel #subgroup-panel-orgname-title a,
+#subgroup-panel #subgroup-panel-orgname-title a:visited,
+#subgroup-panel #subgroup-panel-orgname-title a:active
+{
+	text-decoration: none;
+	color: #cccccc;
+}
+
+#subgroup-panel #subgroup-panel-orgname-title a:hover
+{
+	text-decoration: underline;
+}
+
+
+
 
 /* ----- PAGE SECTION INFO ----------------------------------- */
 
@@ -117,6 +182,7 @@ p {
 	margin-bottom: 10px;
 	border-bottom: 1px solid #e0e0e0;
 }
+
 
 #page-section-info #location-block
 {
