@@ -1,60 +1,253 @@
-{% extends 'singlebase.html' %}
+{% extends 'layouts/org/member.html' %}
 
-{% block title %}View Transaction{% endblock %}
+{% block str_org_name %}{{ instance.get_org.trading_name }}{% endblock %}
+{% block str_client_name %}{{ instance.get_client.trading_name }}{% endblock %}
+{% block str_section_name %}Invoice {{ instance.refnum }}{% endblock %}
 
-{% block orgname %}{{ instance.account.client.organization.trading_name }}{% endblock %}
-
-{% block links %}
+{% block breadcrumbs %}
+	{{ block.super }}
+	<a href="{{ instance.get_org.get_client_list_url }}">Clients</a>&gt;
+	<a href="{{ instance.get_client.get_single_url }}">{{ instance.get_client.trading_name }}</a>&gt;
+	<a href="{{ instance.get_client.get_account_list_url }}">Accounts</a>&gt;
+	<a href="{{ instance.get_account.get_single_url }}">{{ instance.get_account.name }}</a>&gt;
+	<a href="{{ instance.get_account.get_invoice_list_url }}">Invoices</a>&gt;
 {% endblock %}
 
-{% block kvp %}
 
-<tr>
-	<td>Event Time:</td>
-	<td>{{ instance.event_time }}</td>
-</tr>
+{% block page_functions %}
+{% include 'page_functions/org/invoice_level.html' with instance=instance %}
+{% endblock  %}
 
-<tr>
-	<td>Group</td>
-	<td>{{ instance.group }}</td>
-</tr>
+{% block onready %}
 
-<tr>
-	<td>Description:</td>
-	<td>{{ instance.description }}</td>
-</tr>
+	$('#id_invoice_date').datepicker();
+	$('#id_due_date').datepicker();
 
-<tr>
-	<td>Balance Before:</td>
-	<td>{{ instance.balance_before }}</td>
-</tr>
 
-<tr>
-	<td>Balance Reserved:</td>
-	<td>{{ instance.balance_reserved }}</td>
-</tr>
+	$('#id_invoice_add_item_row').click( function() {
 
-<tr>
-	<td>Balance Adjustment:</td>
-	<td>{{ instance.balance_adjustment }}</td>
-</tr>
+		$('.invoice .item-list table tbody').append( '	\
+				<tr>	\
+					<td>&nbsp;</td>	\
+					<td>&nbsp;</td>	\
+					<td>&nbsp;</td>	\
+					<td>&nbsp;</td>	\
+					<td>&nbsp;</td>	\
+					<td class="delete-entry"><a class="delete-entry-link" href="#">Del</a></td> \
+				</tr>	\
+			'
+		);
 
-<tr>
-	<td>Balance After:</td>
-	<td>{{ instance.balance_after }}</td>
-</tr>
+		$('.invoice .item-list table .delete-entry-link').click( function() {
+			$(this).parents( "tr" ).remove();
+		});
 
-<tr>
-	<td>Is Grouped:</td>
-	<td>{{ instance.is_grouped }}</td>
-</tr>
+	});
 
-<tr>
-	<td>Data:</td>
-	<td>{{ instance.transactiondata.data }}</td>
-</tr>
+	$('.invoice .item-list table .delete-entry-link').click( function() {
+		$(this).parents( "tr" ).remove();
+	});
 
+{% endblock %}
+
+
+
+{% block content %}
+
+<style>
+
+.invoice
+{
+	margin: 10px 10px;
+	background-color: #f2f2f2;
+	border: 1px solid #a2a2a2;
+	box-shadow: 1px 1px 2px #cccccc;
+}
+
+.invoice .invoice-header
+{
+	border-bottom: 1px solid #e2e2e2;
+	padding: 0px 0px 20px 0px;
+	margin: 15px 15px;
+}
+
+.invoice .tax-row
+{
+	padding: 0px 15px;
+}
+
+.invoice .item-list
+{
+	padding: 0px 15px;
+}
+
+.invoice .item-list table
+{
+	width: 100%;
+}
+
+.invoice .item-list thead tr
+{
+	border-bottom: 1px solid #707070;
+}
+
+.invoice .item-list thead th
+{
+	text-align: left;
+	padding: 5px 5px;
+	background-color: #ffffff;
+}
+
+.invoice .item-list tbody td
+{
+	text-align: left;
+	padding: 5px 5px;
+	background-color: #ffffff;
+	border-right: 1px solid #e8e8e8;
+	border-bottom: 1px solid #f8f8f8;
+}
+
+.invoice .item-list tbody td.delete-entry
+{
+	background-color: inherit;
+}
+
+
+.invoice .summary-row
+{
+	margin: 20px 20px;
+}
+
+
+.invoice .summary-row .add-row-portion
+{
+	float: left;
+}
+
+.invoice .summary-row .summary-portion
+{
+	float: right;
+	width: 350px;
+	padding: 0px 30px;
+}
+
+.invoice .summary-row .summary-portion .inner-summary
+{
+	border-bottom: 1px solid black;
+}
+
+.invoice .summary-row .summary-portion .inner-total
+{
+	border-bottom: 1px solid black;
+}
+
+.invoice .button-row
+{
+	background-color: #a2a2a8;
+	padding: 10px;
+}
+
+.invoice .button-row .button-row-left
+{
+	float: left;
+}
+
+.invoice .button-row .button-row-right
+{
+	float: right;
+}
+
+
+</style>
+
+<div class="invoice">
+
+	<div class="invoice-header">
+		{% csrf_token %}
+		<fieldset>
+
+			<label for="name">Invoice Date</label>
+			<input type="text" name="invoice_date" id="id_invoice_date" class="text ui-widget-content ui-corner-all" value="0" />
+
+			<label for="name">Due Date</label>
+			<input type="text" name="due_date" id="id_due_date" class="text ui-widget-content ui-corner-all" value="0" />
+
+		</fieldset>
+	</div>
+
+	<div class="tax-row">
+		<div style="float: right;">
+			<label for="name">Amounts are</label>
+			<select name="default_tax" id="id_default_tax">
+				<option value="none">No Tax</option>
+				<option value="inclusive">Tax Inclusive</option>
+				<option value="exclusive">Tax Exclusive</option>
+				<option value="exempt">Tax Exempt</option>
+			</select>
+		</div>
+		<div style="clear: both;">&nbsp;</div>
+	</div>
+
+	<div class="item-list">
+		<table>
+			<thead>
+				<tr>
+					<th>Description</th>
+					<th>Qty</th>
+					<th>Unit Price</th>
+					<th>Tax Rate</th>
+					<th>Amount</th>
+					<th width="20px;"></th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td>&nbsp;</td>
+					<td>&nbsp;</td>
+					<td>&nbsp;</td>
+					<td>&nbsp;</td>
+					<td>&nbsp;</td>
+					<td class="delete-entry"><a class="delete-entry-link" href='#'>Del</a></td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+
+	<div class="summary-row">
+
+		<div class="add-row-portion">
+			<button id="id_invoice_add_item_row">Add a new line</button>
+		</div>
+
+		<div class="summary-portion">
+			<div class="inner-summary">
+				Summary
+			</div>
+			<div class="inner-total">
+				Total
+			</div>
+		</div>
+
+		<div style="clear: both;">&nbsp;</div>
+	</div>
+
+	<div class="button-row">
+		<div class="button-row-left">
+			<button>Save</button>
+		</div>
+
+		<div class="button-row-right">
+			<button>Approve</button>
+			<button>Cancel</button>
+		</div>
+
+		<div style="clear: both;">&nbsp;</div>
+	</div>
+
+</div>
 
 
 {% endblock %}
+
+
 

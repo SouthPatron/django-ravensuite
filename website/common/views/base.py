@@ -63,7 +63,10 @@ class Base( View ):
 			return request.POST
 
 		if fmt == 'json':
-			return json.loads( request.read() )
+			data = request.read()
+			if data is None or len(data) == 0:
+				return {}
+			return json.loads( data )
 
 	def _extract_all_kwargs( self, **kwargs ):
 		class IdObject( object ):

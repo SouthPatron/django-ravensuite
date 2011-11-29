@@ -191,6 +191,9 @@ class Account( models.Model ):
 	def get_transaction_list_url( self ):
 		return reverse( 'org-client-account-transaction-list', kwargs = { 'oid' : self.client.organization.refnum, 'cid' : self.client.refnum, 'aid' : self.refnum } )
 
+	def get_invoice_list_url( self ):
+		return reverse( 'org-client-account-invoice-list', kwargs = { 'oid' : self.client.organization.refnum, 'cid' : self.client.refnum, 'aid' : self.refnum } )
+
 
 	
 
@@ -319,6 +322,21 @@ class Invoice( models.Model ):
 	is_paid = models.BooleanField( default = False )
 
 	state = models.IntegerField( choices = State.choices(), default = State.DRAFT )
+
+	def get_org( self ):
+		return self.account.client.organization
+
+	def get_client( self ):
+		return self.account.client
+
+	def get_account( self ):
+		return self.account
+
+	def get_single_url( self ):
+		return reverse( 'org-client-account-invoice-single', kwargs = { 'oid' : self.get_org().refnum, 'cid' : self.get_client().refnum, 'aid' : self.get_account().refnum, 'iid' : self.refnum } )
+
+
+
 
 
 class InvoiceLine( models.Model ):

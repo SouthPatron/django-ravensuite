@@ -59,7 +59,7 @@ urlpatterns = patterns('',
 
 
 
-# ------ CLIENTS / INVOICES ------------------
+# ------ CLIENTS / ACCOUNT / INVOICES ------------------
 
 	url( r'^(?P<oid>\d+)/client/(?P<cid>\d+)/account/(?P<aid>\d+)/invoices$', login_required( InvoiceList.as_view() ), name = 'org-client-account-invoice-list' ),
 	url( r'^(?P<oid>\d+)/client/(?P<cid>\d+)/account/(?P<aid>\d+)/invoice/(?P<iid>\d+)$', login_required( InvoiceSingle.as_view() ), name = 'org-client-account-invoice-single' ),

@@ -12,6 +12,9 @@ from common.utils.dbgdatetime import datetime
 class InvoiceList( ListView ):
 	template_name = 'pages/org/invoice/index'
 
+	def get_extra( self, request, obj_list, fmt, *args, **kwargs ):
+		return Account.objects.get( refnum = self.url_kwargs.aid, client__refnum = self.url_kwargs.cid, client__organization__refnum = self.url_kwargs.oid )
+
 	def get_object_list( self, request, *args, **kwargs ):
 		mid = self._extract_ids( [ 'oid', 'cid', 'aid' ], **kwargs )
 
@@ -42,11 +45,12 @@ class InvoiceList( ListView ):
 		orgcounter.invoice_no += 1
 		orgcounter.save()
 
-		return redirect( 'org-client-account-invoice-single', oid = mid.oid, cid = mid.cid, aid = mid.aid, iid = newt.refnum )
+		resp = { 'url' : newt.get_single_url() }
+		return self.api_resp( resp )
 
 
 class InvoiceSingle( SingleObjectView ):
-	template_name = 'pages/org/transaction/single'
+	template_name = 'pages/org/invoice/single'
 
 	def get_object( self, request, *args, **kwargs ):
 		mid = self._extract_ids( [ 'oid', 'cid', 'aid', 'iid' ], **kwargs )

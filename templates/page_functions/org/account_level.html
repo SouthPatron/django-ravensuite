@@ -2,6 +2,7 @@
 
 <ul>
 	<li class="{% active request '\/account\/\d+$' %}"><a href="{{ instance.get_single_url }}">Dashboard</a></li>
+	<li class="{% active request '\/invoices$' %}"><a href="{{ instance.get_invoice_list_url }}">Invoices</a></li>
 	<li class="{% active request '\/transactions$' %}"><a href="{{ instance.get_transaction_list_url }}">Transactions</a></li>
 </ul>
 

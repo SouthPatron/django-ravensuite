@@ -1,25 +1,87 @@
-{% extends 'indexbase.html' %}
+{% extends 'layouts/org/member.html' %}
 
-{% block title %}Invoice List{% endblock %}
 
-{% block orgname %}{% endblock %}
+{% block str_org_name %}{{ extra.get_org.trading_name }}{% endblock %}
+{% block str_client_name %}{{ extra.get_client.trading_name }}{% endblock %}
+{% block str_section_name %}Invoices{% endblock %}
 
-{% block links %}
+{% block breadcrumbs %}
+	{{ block.super }}
+	<a href="{{ extra.get_org.get_client_list_url }}">Clients</a>&gt;
+	<a href="{{ extra.get_client.get_single_url }}">{{ extra.get_client.trading_name }}</a>&gt;
+	<a href="{{ extra.get_client.get_account_list_url }}">Accounts</a>&gt;
+	<a href="{{ extra.get_single_url }}">{{ extra.name }}</a>&gt;
 {% endblock %}
 
-{% block list %}
 
-{% if object_list.count == 0 %}
-<p>No invoices found</p>
-{% else %}
+{% block page_functions %}
+{% include 'page_functions/org/account_level.html' with instance=extra %}
+{% endblock %}
 
+{% block head_includes %}
+	<script type="text/javascript" src="{{ STATIC_URL }}js/smk.js"></script>
+{% endblock %}
+
+
+
+
+{% block onready %}
+
+	$( "#account-invoice-create" ).click(function() {
+
+		invoice_list_url = '/org/{0}/client/{1}/account/{2}/invoices?format=json'.format( {{ extra.get_org.refnum }}, {{ extra.get_client.refnum }}, {{ extra.refnum }} );
+
+		$.post( invoice_list_url, function( data ) {
+				window.location.replace( data[ 'url' ] );
+			}
+		);
+	});
+
+	$('#invoice_list_table').dataTable( {
+		"iDisplayLength" : 25,
+		"bFilter" : false,
+		"bSort" : false,
+		"sPaginationType" : "full_numbers",
+		"aaSortingFixed" : [[ 0, "asc" ]],
+		"sDom" : 't<"bottom"ip><"clear">'
+	});
+
+{% endblock %}
+
+
+{% block content_menu_right %}
 <ul>
-{% for obj in object_list %}
-	<li><a href='{% url org-client-account-transaction-single obj.account.client.organization.refnum obj.account.client.refnum obj.account.refnum obj.refnum  %}'>{{ obj.description }}</a></li>
-{% endfor %}
+	<li><a href="#" id="account-invoice-create">New Invoice</a></li>
 </ul>
+{% endblock %}
 
-{% endif %}
+{% block content %}
 
+<table
+	id="invoice_list_table"
+	style=' text-align: left; '
+	>
+<thead>
+	<tr>
+		<th>Ref</th>
+		<th>Time</th>
+		<th>Description</th>
+		<th>Amount</th>
+	</tr>
+</thead>
+<tbody>
+{% for obj in object_list %}
+
+	<tr>
+		<td><a href='{{ obj.get_single_url }}'>{{ obj.refnum }}</a></td>
+		<td><a href='{{ obj.get_single_url }}'>{{ obj.event_time }}</a></td>
+		<td><a href='{{ obj.get_single_url }}'>{{ obj.description }}</a></td>
+		<td><a href='{{ obj.get_single_url }}'>{{ obj.amount }}</a></td>
+	</tr>
+{% endfor %}
+</tbody>
+</table>
 
 {% endblock %}
+
+
