@@ -28,25 +28,44 @@
 
 		$('.invoice .item-list table tbody').append( '	\
 				<tr>	\
-					<td>&nbsp;</td>	\
-					<td>&nbsp;</td>	\
-					<td>&nbsp;</td>	\
-					<td>&nbsp;</td>	\
-					<td>&nbsp;</td>	\
-					<td class="delete-entry"><img class="delete-entry-link" src="{{ STATIC_URL }}images/icons/line_delete_grey.png" /></td> \
+					<td class="item-description">&nbsp;<input type="hidden" name="description" value="" /></td>	\
+					<td class="item-qty">&nbsp;<input type="hidden" name="units" value="" /></td>	\
+					<td class="item-unit-price">&nbsp;<input type="hidden" name="perunit" value="" /></td>	\
+					<td class="item-tax-rate">&nbsp;<input type="hidden" name="tax_rate" value="" /></td>	\
+					<td class="item-amount">&nbsp;</td>	\
+					<td class="item-delete"><img class="item-delete-link" src="{{ STATIC_URL }}images/icons/line_delete_grey.png" /></td>	\
 				</tr>	\
 			'
 		);
 
-		$('.invoice .item-list table .delete-entry-link').click( function() {
+		$('.invoice .item-list table .item-delete-link').click( function() {
 			$(this).parents( "tr" ).remove();
 		});
 
 	});
 
-	$('.invoice .item-list table .delete-entry-link').click( function() {
+	$('.invoice .item-list table .item-delete-link').click( function() {
 		$(this).parents( "tr" ).remove();
 	});
+
+	textreplace = function() {
+		oldVal = $(this).find( 'input' ).attr( 'value' );
+		$(this).empty();
+		$(this).append('<input type="text" name="description" value="' + oldVal + '" />' );
+		$(this).find( 'input' ).focus();
+		$(this).find( 'input' ).focusout( function() {
+			oldVal = $(this).val();
+			par = $(this).parent( 'td' );
+			par.empty();
+			par.append('<span>'+oldVal+'</span><input type="hidden" name="description" value="' + oldVal + '" />');
+			par.one( 'click', textreplace );
+		});
+	}
+
+	$('.invoice .item-list .item-description').one( 'click', textreplace );
+	$('.invoice .item-list .item-qty').one( 'click', textreplace );
+	$('.invoice .item-list .item-unit-price').one( 'click', textreplace );
+	$('.invoice .item-list .item-tax-rate').one( 'click', textreplace );
 
 {% endblock %}
 
@@ -98,16 +117,60 @@
 	background-color: #ffffff;
 }
 
+.invoice .item-list thead .head-description { width: 235px; }
+.invoice .item-list thead .head-qty { width: 123px; }
+.invoice .item-list thead .head-unit-price { width: 147px; }
+.invoice .item-list thead .head-tax-rate { width: 195px; }
+.invoice .item-list thead .head-amount { width: 158px; }
+.invoice .item-list thead .head-delete { width: 20px; }
+
+
+.invoice .item-list tbody tr
+{
+	border-left: 1px solid #d8d8d8;
+}
+
 .invoice .item-list tbody td
 {
 	text-align: left;
 	padding: 5px 5px;
 	background-color: #ffffff;
-	border-right: 1px solid #e8e8e8;
-	border-bottom: 1px solid #f8f8f8;
+	border-right: 1px solid #d8d8d8;
+	border-bottom: 1px solid #c8c8c8;
+	overflow: hidden;
 }
 
-.invoice .item-list tbody td.delete-entry
+.invoice .item-list tbody input
+{
+	border: 0px;
+	background-color: #f0f0f0;
+	width: 100%;
+}
+
+
+
+.invoice .item-list tbody td.item-qty
+{
+	text-align: right;
+	padding-right: 8px;
+}
+
+.invoice .item-list tbody td.item-unit-price
+{
+	text-align: right;
+	padding-right: 8px;
+}
+
+.invoice .item-list tbody td.item-amount
+{
+	text-align: right;
+	padding-right: 8px;
+}
+
+
+
+
+.invoice .item-list tbody td.item-delete
 {
 	background-color: inherit;
 }
@@ -192,22 +255,33 @@
 		<table>
 			<thead>
 				<tr>
-					<th>Description</th>
-					<th>Qty</th>
-					<th>Unit Price</th>
-					<th>Tax Rate</th>
-					<th>Amount</th>
-					<th width="20px;"></th>
+					<th class="head-description">Description</th>
+					<th class="head-qty">Qty</th>
+					<th class="head-unit-price">Unit Price</th>
+					<th class="head-tax-rate">Tax Rate</th>
+					<th class="head-amount">Amount</th>
+					<th class="head-delete">&nbsp;</th>
 				</tr>
 			</thead>
 			<tbody>
+				{% for li in instance.invoiceline_set.all %}
+					<tr>
+						<td class="item-description"><span>{{ li.description }}</span><input type="hidden" name="description" value="{{ li.description }}" /></td>
+						<td class="item-qty"><span>{{ li.units|floatformat:2 }}</span><input type="hidden" name="units" value="{{ li.units }}" /></td>
+						<td class="item-unit-price"><span>{{ li.perunit|floatformat:2 }}</span><input type="hidden" name="perunit" value="{{ li.perunit }}" /></td>
+						<td class="item-tax-rate"><span>{{ li.get_tax_rate_display }}</span><input type="hidden" name="tax_rate" value="{{ li.get_tax_rate_display }}" /></td>
+						<td class="item-amount"><span>{{ li.total|floatformat:2 }}</span></td>
+						<td class="item-delete"><img class="item-delete-link" src='{{ STATIC_URL }}images/icons/line_delete_grey.png' /></td>
+					</tr>
+				{% endfor %}
+
 				<tr>
-					<td>&nbsp;</td>
-					<td>&nbsp;</td>
-					<td>&nbsp;</td>
-					<td>&nbsp;</td>
-					<td>&nbsp;</td>
-					<td class="delete-entry"><img class="delete-entry-link" src='{{ STATIC_URL }}images/icons/line_delete_grey.png' /></td>
+					<td class="item-description"><span>&nbsp;</span><input type="hidden" name="description" value="" /></td>
+					<td class="item-qty"><span>&nbsp;</span><input type="hidden" name="units" value="" /></td>
+					<td class="item-unit-price"><span>&nbsp;</span><input type="hidden" name="perunit" value="" /></td>
+					<td class="item-tax-rate"><span>&nbsp;</span><input type="hidden" name="tax_rate" value="" /></td>
+					<td class="item-amount"><span>&nbsp;</span></td>
+					<td class="item-delete"><img class="item-delete-link" src="{{ STATIC_URL }}images/icons/line_delete_grey.png" /></td>
 				</tr>
 			</tbody>
 		</table>

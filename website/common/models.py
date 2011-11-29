@@ -89,6 +89,13 @@ ProjectStatus = ChoicesEnum(
 )
 
 
+TaxRate = ChoicesEnum(
+	NONE = ( 0, 'No Tax' ),
+	INCLUSIVE = ( 1, 'Tax Inclusive' ),
+	EXCLUSIVE = ( 2, 'Tax Exclusive' ),
+	EXEMPT = ( 3, 'Tax Exempt' ),
+)
+
 
 
 
@@ -336,15 +343,12 @@ class Invoice( models.Model ):
 		return reverse( 'org-client-account-invoice-single', kwargs = { 'oid' : self.get_org().refnum, 'cid' : self.get_client().refnum, 'aid' : self.get_account().refnum, 'iid' : self.refnum } )
 
 
-
-
-
 class InvoiceLine( models.Model ):
 	invoice = models.ForeignKey( Invoice )
-	event_time = models.DateTimeField()
 	description = models.CharField( max_length = 64 )
 	units = models.BigIntegerField( default = 0 )
 	perunit = models.BigIntegerField( default = 0 )
+	tax_rate = models.IntegerField( choices = TaxRate.choices() ) 
 	total = models.BigIntegerField( default = 0 )
 
 class Payment( models.Model ):
