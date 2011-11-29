@@ -39,8 +39,23 @@
 	<td>Description:</td>
 	<td>{{ instance.description }}</td>
 </tr>
-
 </table>
+
+
+<h2>Active Timers:</h2>
+
+{% for timer in instance.timesheettimer_set.all %}
+	{{ timer.user.first_name }} {{ timer.user.last_name }} - {{ timer.start_time }}<br />
+{% endfor %}
+
+
+<h2>Total Hours Logged Against Project:</h2>
+
+{% for entry in instance.timesheetentry_set.all %}
+	{{ entry.end_time }} - {{ entry.start_time }}<br />
+{% endfor %}
+
+
 
 {% endblock %}
 
