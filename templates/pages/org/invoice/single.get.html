@@ -71,8 +71,6 @@
 	}
 
 
-	$('#id_invoice_add_item_row').click( add_item_line );
-
 
 	update_totals = function() {
 
@@ -319,6 +317,9 @@
 		$("#id_invoice_form").submit();
 	}
 
+
+	$('#id_invoice_add_item_row').click( add_item_line );
+
 	$("#id_button_save").click( { 'new_state' : 0 }, invoice_submit );
 	$("#id_button_approve").click( { 'new_state' : 5 }, invoice_submit );
 //	$("#id_button_void").click( { 'new_state' : 10 }, invoice_submit );
@@ -347,6 +348,13 @@
 	padding: 0px 0px 20px 0px;
 	margin: 15px 15px;
 }
+
+.invoice .invoice-header input
+{
+	padding-left: 5px;
+}
+
+
 
 .invoice .tax-row
 {
@@ -513,7 +521,6 @@
 
 .invoice .summary-row .summary-portion .inner-total
 {
-	border-bottom: 1px solid black;
 	height: 30px;
 	padding: 5px;
 	margin-top: 10px;
@@ -624,7 +631,7 @@
 	<div class="summary-row">
 
 		<div class="add-row-portion">
-			<button id="id_invoice_add_item_row">Add a new line</button>
+			<button id="id_invoice_add_item_row" type="button">Add a new line</button>
 		</div>
 
 		<div class="summary-portion">
@@ -665,12 +672,12 @@
 
 	<div class="button-row">
 		<div class="button-row-left">
-			<button id="id_button_save">Save as Draft</button>
+			<button id="id_button_save" type="button">Save as Draft</button>
 		</div>
 
 		<div class="button-row-right">
-			<button id="id_button_approve">Approve</button>
-			<button id="id_button_cancel">Cancel</button>
+			<button id="id_button_approve" type="button">Approve</button>
+			<button id="id_button_cancel" type="button">Cancel</button>
 		</div>
 
 		<div style="clear: both;">&nbsp;</div>
