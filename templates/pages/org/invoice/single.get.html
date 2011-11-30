@@ -18,6 +18,11 @@
 {% include 'page_functions/org/invoice_level.html' with instance=instance %}
 {% endblock  %}
 
+{% block head_includes %}
+	<script type="text/javascript" src="{{ STATIC_URL }}js/smk.js"></script>
+{% endblock %}
+	
+
 {% block onready %}
 
 	$('#id_invoice_date').datepicker();
@@ -32,7 +37,7 @@
 					<td class="item-qty">&nbsp;<input type="hidden" name="units" value="" /></td>	\
 					<td class="item-unit-price">&nbsp;<input type="hidden" name="perunit" value="" /></td>	\
 					<td class="item-tax-rate">&nbsp;<input type="hidden" name="tax_rate" value="" /></td>	\
-					<td class="item-amount">&nbsp;</td>	\
+					<td class="item-amount"><span>&nbsp;</span><input type="hidden" name="amount" value="" /></td>	\
 					<td class="item-delete"><img class="item-delete-link" src="{{ STATIC_URL }}images/icons/line_delete_grey.png" /></td>	\
 				</tr>	\
 			'
@@ -48,24 +53,176 @@
 		$(this).parents( "tr" ).remove();
 	});
 
-	textreplace = function() {
+
+	update_totals = function() {
+
+		// Columns:
+		//		0 - qty
+		//		1 - unit price
+		//		2 - tax option
+		//		3 - amount
+		//		4 - tax
+		//		5 - total
+
+		values = [];
+
+		$(".invoice .item-list tbody tr").each( function() {
+
+			my_value = [];
+
+			my_value[0] = $(this).find( ".item-qty input" ).attr( "value" );
+			my_value[1] = $(this).find( ".item-unit-price input" ).attr( "value" );
+			my_value[2] = $(this).find( ".item-tax-rate input" ).attr( "value" );
+
+			if ( (isNaN( my_value[0] )) || (isNaN( my_value[1])) || (my_value[2].length <= 0) )
+				return;
+
+			my_value[5] = ((new Number( my_value[0] )) * (new Number( my_value[1] )) );
+
+			rate = ( new Number( "0.14" ) );
+
+			if ( my_value[2] == 'Tax Inclusive' )
+			{
+				my_value[4] = (new Number(my_value[5] * rate)).toFixed(2);
+				my_value[3] = my_value[5] - my_value[4];
+			}
+			else if ( my_value[2] == 'Tax Exclusive' )
+			{
+				my_value[3] = my_value[5];
+				my_value[4] = (new Number(my_value[3] * rate)).toFixed(2);
+				my_value[5] = (my_value[3] + my_value[5]);
+			}
+			else
+			{
+				my_value[3] = my_value[5];
+				my_value[4] = 0;
+			}
+			values.push( my_value );
+		});
+
+		total_amount = new Number( 0 );
+		total_tax = new Number( 0 );
+		total_total = new Number( 0 );
+
+		for ( var i = 0; i < values.length; i++ )
+		{
+			total_amount += (new Number(values[i][3]));
+			total_tax += (new Number(values[i][4]));
+			total_total += (new Number(values[i][5]));
+		}
+
+		$( "#summary_amount" ).empty().append( total_amount.toFixed(2) );
+		$( "#summary_tax" ).empty().append( total_tax.toFixed(2) );
+		$( "#summary_total" ).empty().append( total_total.toFixed(2) );
+	}
+
+
+	end_numerical_edit = function( event ) {
+		oldVal = $(this).val();
+
+		if ( (isNaN( oldVal )) || (oldVal < 0) )
+		{
+			oldVal = event.data[ 'original_value' ];
+			if ( isNaN( oldVal ) ) oldVal = 0;
+		}
+
+		
+		oldVal = (new Number( oldVal )).toFixed(2);
+
+		par = $(this).parent( 'td' );
+		par.empty();
+		par.append('<span>'+oldVal+'</span><input type="hidden" name="description" value="' + oldVal + '" />');
+
+		row = $(par).parent( "tr" );
+
+		qty = $(row).find( ".item-qty input" ).val();
+		price = $(row).find( ".item-unit-price input" ).val();
+
+		if ( (isNaN( qty ) || isNaN( price )) == false )
+		{
+			amount = (new Number(qty * price)).toFixed(2);
+			$(row).find( ".item-amount span" ).empty().append( amount );
+			$(row).find( ".item-amount input" ).attr( 'value', amount );
+		}
+
+		update_totals();
+
+		par.one( 'click', start_numerical_edit );
+	}
+
+	start_numerical_edit = function( event ) {
+		oldVal = $(this).find( 'input' ).attr( 'value' );
+		$(this).empty();
+		$(this).append('<input type="text" name="description" value="' + (new Number(oldVal)).toFixed(2) + '" />' );
+		$(this).find( 'input' ).focus();
+		$(this).find( 'input' ).focusout(
+				{ 'original_value' : oldVal },
+				end_numerical_edit
+			);
+	}
+
+
+
+	end_field_edit = function( event ) {
+		oldVal = $(this).val();
+		par = $(this).parent( 'td' );
+		par.empty();
+		par.append('<span>'+oldVal+'</span><input type="hidden" name="description" value="' + oldVal + '" />');
+		par.one( 'click', start_field_edit );
+	}
+
+	start_field_edit = function( event ) {
 		oldVal = $(this).find( 'input' ).attr( 'value' );
 		$(this).empty();
 		$(this).append('<input type="text" name="description" value="' + oldVal + '" />' );
 		$(this).find( 'input' ).focus();
-		$(this).find( 'input' ).focusout( function() {
-			oldVal = $(this).val();
-			par = $(this).parent( 'td' );
-			par.empty();
-			par.append('<span>'+oldVal+'</span><input type="hidden" name="description" value="' + oldVal + '" />');
-			par.one( 'click', textreplace );
-		});
+		$(this).find( 'input' ).focusout( end_field_edit );
 	}
 
-	$('.invoice .item-list .item-description').one( 'click', textreplace );
-	$('.invoice .item-list .item-qty').one( 'click', textreplace );
-	$('.invoice .item-list .item-unit-price').one( 'click', textreplace );
-	$('.invoice .item-list .item-tax-rate').one( 'click', textreplace );
+
+	end_tax_edit = function( event ) {
+		oldVal = $(this).val();
+		par = $(this).parent( 'td' );
+		par.empty();
+		par.append('<span>'+oldVal+'</span><input type="hidden" name="description" value="' + oldVal + '" />');
+		par.one( 'click', start_tax_edit );
+	}
+
+	start_tax_edit = function( event ) {
+		oldVal = $(this).find( 'input' ).attr( 'value' );
+
+		$(this).empty();
+
+		tax_brackets = [
+			'No Tax',
+			'Tax Inclusive',
+			'Tax Exclusive',
+			'Tax Exempt'
+		];
+
+		replacement = '<select name="tax_rate">';
+		for ( var rate in tax_brackets )
+		{
+			level = tax_brackets[ rate ];
+
+				replacement += '<option value="{0}" {1}>{0}</option>'.format( level, ((level==oldVal)?"SELECTED":"") );
+		}
+		replacement += '</select>';
+
+		$(this).append( replacement );
+
+		$(this).find( 'input' ).focus();
+		$(this).find( 'input' ).focusout( end_tax_edit );
+	}
+
+
+
+	$('.invoice .item-list .item-description').one( 'click', start_field_edit );
+	$('.invoice .item-list .item-qty').one( 'click', start_numerical_edit );
+	$('.invoice .item-list .item-unit-price').one( 'click', start_numerical_edit );
+	$('.invoice .item-list .item-tax-rate').one( 'click', start_tax_edit );
+
+	update_totals();
 
 {% endblock %}
 
@@ -155,11 +312,28 @@
 	padding-right: 8px;
 }
 
+.invoice .item-list tbody td.item-qty input
+{
+	text-align: right;
+}
+
 .invoice .item-list tbody td.item-unit-price
 {
 	text-align: right;
 	padding-right: 8px;
 }
+
+.invoice .item-list tbody td.item-unit-price input
+{
+	text-align: right;
+}
+
+.invoice .item-list tbody td.item-tax-rate select
+{
+	width: 100%;
+}
+
+
 
 .invoice .item-list tbody td.item-amount
 {
@@ -192,17 +366,66 @@
 	float: right;
 	width: 350px;
 	padding: 0px 30px;
+	font-size: 1.3em;
 }
 
-.invoice .summary-row .summary-portion .inner-summary
+.invoice .summary-row .summary-portion .inner-amount
 {
 	border-bottom: 1px solid black;
+}
+
+.invoice .summary-row .summary-portion .inner-amount .inner-amount-label
+{
+	float: left;
+	width: 130px;
+}
+
+.invoice .summary-row .summary-portion .inner-amount .inner-amount-amount
+{
+	float: right;
+	width: 200px;
+	text-align: right;
+}
+
+
+.invoice .summary-row .summary-portion .inner-tax
+{
+	border-bottom: 1px solid black;
+}
+
+.invoice .summary-row .summary-portion .inner-tax .inner-tax-label
+{
+	float: left;
+	width: 130px;
+}
+
+.invoice .summary-row .summary-portion .inner-tax .inner-tax-amount
+{
+	float: right;
+	width: 200px;
+	text-align: right;
 }
 
 .invoice .summary-row .summary-portion .inner-total
 {
 	border-bottom: 1px solid black;
 }
+
+.invoice .summary-row .summary-portion .inner-total .inner-total-label
+{
+	float: left;
+	width: 130px;
+}
+
+.invoice .summary-row .summary-portion .inner-total .inner-total-amount
+{
+	float: right;
+	width: 200px;
+	text-align: right;
+}
+
+
+	
 
 .invoice .button-row
 {
@@ -270,7 +493,7 @@
 						<td class="item-qty"><span>{{ li.units|floatformat:2 }}</span><input type="hidden" name="units" value="{{ li.units }}" /></td>
 						<td class="item-unit-price"><span>{{ li.perunit|floatformat:2 }}</span><input type="hidden" name="perunit" value="{{ li.perunit }}" /></td>
 						<td class="item-tax-rate"><span>{{ li.get_tax_rate_display }}</span><input type="hidden" name="tax_rate" value="{{ li.get_tax_rate_display }}" /></td>
-						<td class="item-amount"><span>{{ li.total|floatformat:2 }}</span></td>
+						<td class="item-amount"><span>{{ li.total|floatformat:2 }}</span><input type="hidden" name="amount" value="{{ li.total|floatformat:2 }}" /></td>
 						<td class="item-delete"><img class="item-delete-link" src='{{ STATIC_URL }}images/icons/line_delete_grey.png' /></td>
 					</tr>
 				{% endfor %}
@@ -280,7 +503,7 @@
 					<td class="item-qty"><span>&nbsp;</span><input type="hidden" name="units" value="" /></td>
 					<td class="item-unit-price"><span>&nbsp;</span><input type="hidden" name="perunit" value="" /></td>
 					<td class="item-tax-rate"><span>&nbsp;</span><input type="hidden" name="tax_rate" value="" /></td>
-					<td class="item-amount"><span>&nbsp;</span></td>
+					<td class="item-amount"><span>&nbsp;</span><input type="hidden" name="amount" value="" /></td>
 					<td class="item-delete"><img class="item-delete-link" src="{{ STATIC_URL }}images/icons/line_delete_grey.png" /></td>
 				</tr>
 			</tbody>
@@ -294,11 +517,35 @@
 		</div>
 
 		<div class="summary-portion">
-			<div class="inner-summary">
-				Summary
+
+			<div class="inner-amount">
+				<div class="inner-amount-label">
+					Amount
+				</div>
+				<div class="inner-amount-amount">
+					<span id="summary_amount">0.00</span>
+				</div>
+				<div style="clear: both;">&nbsp;</div>
 			</div>
+
+			<div class="inner-tax">
+				<div class="inner-tax-label">
+					Sales Tax
+				</div>
+				<div class="inner-tax-amount">
+					<span id="summary_tax">0.00</span>
+				</div>
+				<div style="clear: both;">&nbsp;</div>
+			</div>
+
 			<div class="inner-total">
-				Total
+				<div class="inner-total-label">
+					Total
+				</div>
+				<div class="inner-total-amount">
+					<span id="summary_total">0.00</span>
+				</div>
+				<div style="clear: both;">&nbsp;</div>
 			</div>
 		</div>
 
