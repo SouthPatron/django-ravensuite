@@ -54,10 +54,11 @@ Interval = ChoicesEnum(
 	YEAR = ( 5, 'Year' ),
 )
 
-State = ChoicesEnum(
+InvoiceState = ChoicesEnum(
 	DRAFT = ( 0, 'Draft' ),
 	FINAL = ( 5, 'Final' ),
 	VOID = ( 10, 'Void' ),
+	CANCEL = ( 99, 'Cancel' ),
 )
 
 ExpiryAction = ChoicesEnum(
@@ -333,7 +334,7 @@ class Invoice( models.Model ):
 
 	is_paid = models.BooleanField( default = False )
 
-	state = models.IntegerField( choices = State.choices(), default = State.DRAFT )
+	state = models.IntegerField( choices = InvoiceState.choices(), default = InvoiceState.DRAFT )
 
 	def get_org( self ):
 		return self.account.client.organization

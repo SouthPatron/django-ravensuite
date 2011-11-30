@@ -42,9 +42,9 @@
 	$('#id_due_date').datepicker( datesettings );
 
 	apply_edit_hooks = function() {
-		$('.invoice .item-list .item-description').one( 'click', start_field_edit );
-		$('.invoice .item-list .item-qty').one( 'click', start_numerical_edit );
-		$('.invoice .item-list .item-unit-price').one( 'click', start_numerical_edit );
+		$('.invoice .item-list .item-description').one( 'click', { 'name' : 'description' }, start_field_edit );
+		$('.invoice .item-list .item-qty').one( 'click', { 'name' : 'units' }, start_numerical_edit );
+		$('.invoice .item-list .item-unit-price').one( 'click', { 'name' : 'perunit' }, start_numerical_edit );
 		$('.invoice .item-list .item-tax-rate').one( 'click', start_tax_edit );
 
 		$('.invoice .item-list table .item-delete-link').click( function() {
@@ -154,7 +154,7 @@
 
 		par = $(this).parent( 'td' );
 		par.empty();
-		par.append('<span>'+oldVal+'</span><input type="hidden" name="description" value="' + oldVal + '" />');
+		par.append('<span>'+oldVal+'</span><input type="hidden" name="' + event.data[ 'name' ] + '" value="' + oldVal + '" />');
 
 		row = $(par).parent( "tr" );
 
@@ -170,21 +170,24 @@
 
 		update_totals();
 
-		par.one( 'click', start_numerical_edit );
+		par.one( 'click', event.data, start_numerical_edit );
 	}
 
 	start_numerical_edit = function( event ) {
 		oldVal = $(this).find( 'input' ).attr( 'value' );
 		$(this).empty();
-		$(this).append('<input type="text" name="description" value="' + (new Number(oldVal)).toFixed(2) + '" />' );
+		$(this).append('<input type="text" name="' + event.data[ 'name' ] + '" value="' + (new Number(oldVal)).toFixed(2) + '" />' );
+
+		event.data[ 'original_value' ] = oldVal; 
+
 		$(this).find( 'input' ).focus();
 		$(this).find( 'input' ).focusout(
-				{ 'original_value' : oldVal },
+				event.data,
 				end_numerical_edit
 			);
 
 		original_td = $(this);
-		$(this).find( 'input' ).keydown( function(event) {
+		$(this).find( 'input' ).keydown( event.data, function(event) {
 				if ( event.keyCode == '13') {
 					event.preventDefault();
 					$(this).focusout();
@@ -208,16 +211,17 @@
 		oldVal = $(this).val();
 		par = $(this).parent( 'td' );
 		par.empty();
-		par.append('<span>'+oldVal+'</span><input type="hidden" name="description" value="' + oldVal + '" />');
-		par.one( 'click', start_field_edit );
+		par.append('<span>'+oldVal+'</span><input type="hidden" name="' + event.data[ 'name' ] + '" value="' + oldVal + '" />');
+		par.one( 'click', event.data, start_field_edit );
 	}
 
 	start_field_edit = function( event ) {
 		oldVal = $(this).find( 'input' ).attr( 'value' );
 		$(this).empty();
-		$(this).append('<input type="text" name="description" value="' + oldVal + '" />' );
+		$(this).append('<input type="text" name="'+event.data['name'] + '" value="' + oldVal + '" />' );
 		original_td = $(this);
-		$(this).find( 'input' ).focus().focusout( end_field_edit ).keydown( function(event) {
+
+		$(this).find( 'input' ).focus().focusout( event.data, end_field_edit ).keydown( event.data,  function(event) {
 				if ( event.keyCode == '13') {
 					event.preventDefault();
 					$(this).focusout();
@@ -240,7 +244,7 @@
 		oldVal = $(this).val();
 		par = $(this).parent( 'td' );
 		par.empty();
-		par.append('<span>'+oldVal+'</span><input type="hidden" name="description" value="' + oldVal + '" />');
+		par.append('<span>'+oldVal+'</span><input type="hidden" name="tax_rate" value="' + oldVal + '" />');
 
 		update_totals();
 
@@ -309,6 +313,17 @@
 	}
 
 	apply_edit_hooks();
+
+	invoice_submit = function( event ) {
+		$("#id_invoice_state").val( event.data[ 'new_state' ] );
+		$("#id_invoice_form").submit();
+	}
+
+	$("#id_button_save").click( { 'new_state' : 0 }, invoice_submit );
+	$("#id_button_approve").click( { 'new_state' : 5 }, invoice_submit );
+//	$("#id_button_void").click( { 'new_state' : 10 }, invoice_submit );
+	$("#id_button_cancel").click( { 'new_state' : 99 }, invoice_submit );
+
 
 {% endblock %}
 
@@ -452,12 +467,13 @@
 	float: right;
 	width: 350px;
 	padding: 0px 30px;
-	font-size: 1.3em;
 }
 
 .invoice .summary-row .summary-portion .inner-amount
 {
 	border-bottom: 1px solid black;
+	height: 30px;
+	padding: 5px;
 }
 
 .invoice .summary-row .summary-portion .inner-amount .inner-amount-label
@@ -477,6 +493,9 @@
 .invoice .summary-row .summary-portion .inner-tax
 {
 	border-bottom: 1px solid black;
+	height: 30px;
+	padding: 5px;
+	margin-top: 10px;
 }
 
 .invoice .summary-row .summary-portion .inner-tax .inner-tax-label
@@ -495,6 +514,10 @@
 .invoice .summary-row .summary-portion .inner-total
 {
 	border-bottom: 1px solid black;
+	height: 30px;
+	padding: 5px;
+	margin-top: 10px;
+	font-size: 1.3em;
 }
 
 .invoice .summary-row .summary-portion .inner-total .inner-total-label
@@ -534,7 +557,7 @@
 
 <div class="invoice">
 
-	<form method="POST">
+	<form method="POST" id="id_invoice_form">
 
 	<div class="invoice-header">
 		{% csrf_token %}
@@ -611,10 +634,9 @@
 					Amount
 				</div>
 				<div class="inner-amount-amount">
-					<span id="summary_amount">{{ instance.amount }}</span>
-					<input type="hidden" id="id_summary_amount" name="invoice_amount" value="{{ instance.amount }}" />
+					<span id="summary_amount">{{ instance.amount|floatformat:2 }}</span>
+					<input type="hidden" id="id_summary_amount" name="invoice_amount" value="{{ instance.amount|floatformat:2 }}" />
 				</div>
-				<div style="clear: both;">&nbsp;</div>
 			</div>
 
 			<div class="inner-tax">
@@ -622,10 +644,9 @@
 					Sales Tax
 				</div>
 				<div class="inner-tax-amount">
-					<span id="summary_tax">{{ instance.tax }}</span>
-					<input type="hidden" id="id_summary_tax" name="invoice_tax" value="{{ instance.tax }}" />
+					<span id="summary_tax">{{ instance.tax|floatformat:2 }}</span>
+					<input type="hidden" id="id_summary_tax" name="invoice_tax" value="{{ instance.tax|floatformat:2 }}" />
 				</div>
-				<div style="clear: both;">&nbsp;</div>
 			</div>
 
 			<div class="inner-total">
@@ -633,10 +654,9 @@
 					Total
 				</div>
 				<div class="inner-total-amount">
-					<span id="summary_total">{{ instance.total }}</span>
-					<input type="hidden" id="id_summary_total" name="invoice_total" value="{{ instance.total }}" />
+					<span id="summary_total">{{ instance.total|floatformat:2 }}</span>
+					<input type="hidden" id="id_summary_total" name="invoice_total" value="{{ instance.total|floatformat:2 }}" />
 				</div>
-				<div style="clear: both;">&nbsp;</div>
 			</div>
 		</div>
 
@@ -645,12 +665,12 @@
 
 	<div class="button-row">
 		<div class="button-row-left">
-			<button>Save</button>
+			<button id="id_button_save">Save as Draft</button>
 		</div>
 
 		<div class="button-row-right">
-			<button>Approve</button>
-			<button>Cancel</button>
+			<button id="id_button_approve">Approve</button>
+			<button id="id_button_cancel">Cancel</button>
 		</div>
 
 		<div style="clear: both;">&nbsp;</div>

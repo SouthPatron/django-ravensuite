@@ -39,7 +39,7 @@ class InvoiceList( ListView ):
 		newt.creation_time = datetime.datetime.now()
 		newt.invoice_date = datetime.date.today()
 		newt.due_date = datetime.date.today()
-		newt.state = State.DRAFT
+		newt.state = InvoiceState.DRAFT
 		newt.save()
 
 		orgcounter.invoice_no += 1
@@ -57,7 +57,7 @@ class InvoiceSingle( SingleObjectView ):
 		return get_object_or_404( Invoice, refnum = mid.iid, account__refnum = mid.aid, account__client__refnum = mid.cid, account__client__organization__refnum = mid.oid )
 
 	def delete_object( self, request, ob, *args, **kwargs ):
-		if ob.state == State.FINAL:
+		if ob.state == InvoiceState.FINAL:
 			return HttpResponseForbidden()
 
 		ob.delete()
@@ -80,23 +80,53 @@ class InvoiceSingle( SingleObjectView ):
 		return redirect( 'org-client-account-invoice-single', oid = obj.account.client.organization.refnum, cid = obj.account.client.refnum, aid = obj.account.refnum, iid = obj.refnum )
 
 
+	def update_object_html( self, request, obj, data, *args, **kwargs ):
+
+		invoice_data = {}
+
+		invoice_data[ 'invoice_date' ] = data.get( 'invoice_date' )
+		invoice_data[ 'due_date' ] = data.get( 'due_date' )
+		invoice_data[ 'tax' ] = data.get( 'invoice_tax' )
+		invoice_data[ 'amount' ] = data.get( 'invoice_amount' )
+		invoice_data[ 'total' ] = data.get( 'invoice_total' )
+		invoice_data[ 'comment' ] = data.get( 'invoice_comment', "" )
+
+		invoice_data[ 'state' ] = data.get( 'invoice_state' )
+
+		invoice_data[ 'items' ] = []
+		
+		for pos in range( len(data.getlist( 'description' )) ):
+			invoice_data[ 'items' ].append( [
+						data.getlist( 'description' )[ pos ],
+						data.getlist( 'units' )[ pos ],
+						data.getlist( 'perunit' )[ pos ],
+						data.getlist( 'tax_rate' )[ pos ],
+						data.getlist( 'amount' )[ pos ]
+					] )
+
+
+		print invoice_data;
+
+		return redirect( obj.get_single_url() )
+
+
 	def update_object_json( self, request, obj, data, *args, **kwargs ):
 
 		newstate = data.get( 'state', None )
 
 		if newstate is not None:
-			if State.contains( newstate ) is False:
+			if InvoiceState.contains( newstate ) is False:
 				return HttpResponseForbidden()
 
-			if obj.state == State.FINAL:
-				if newstate != State.VOID:
+			if obj.state == InvoiceState.FINAL:
+				if newstate != InvoiceState.VOID:
 					return HttpResponseForbidden()
 				return void_invoice( request, obj, data, *args, **kwargs )
 
-			if newstate == State.VOID:
+			if newstate == InvoiceState.VOID:
 				return delete_object( request, obj, data, *args, **kwargs )
 
-			if newstate == State.FINAL:
+			if newstate == InvoiceState.FINAL:
 				return finalize_invoice( request, obj, data, *args, **kwargs )
 
 			return HttpResponseServerError()
