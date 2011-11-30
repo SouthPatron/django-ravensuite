@@ -20,13 +20,26 @@
 
 {% block head_includes %}
 	<script type="text/javascript" src="{{ STATIC_URL }}js/smk.js"></script>
+	<script type="text/javascript" src="{{ STATIC_URL }}js/date.js"></script>
 {% endblock %}
 	
 
 {% block onready %}
 
-	$('#id_invoice_date').datepicker();
-	$('#id_due_date').datepicker();
+
+	datesettings = {
+		dateFormat: 'd M yy',
+		onClose: function( theDate ) {
+			requested_date = Date.parse( theDate );
+			if ( requested_date != null )
+				$(this).val( $.datepicker.formatDate( 'd M yy', requested_date ) );
+			else
+				$(this).val( $.datepicker.formatDate( 'd M yy', Date.today() ) );
+		}
+	}
+
+	$('#id_invoice_date').datepicker( datesettings );
+	$('#id_due_date').datepicker( datesettings );
 
 	apply_edit_hooks = function() {
 		$('.invoice .item-list .item-description').one( 'click', start_field_edit );
@@ -237,6 +250,11 @@
 	start_tax_edit = function( event ) {
 		oldVal = $(this).find( 'input' ).attr( 'value' );
 
+		if ( (oldVal == undefined) || (oldVal.length <= 0) )
+		{
+			oldVal = $("#id_default_tax").val();
+		}
+
 		$(this).empty();
 
 		tax_brackets = [
@@ -251,7 +269,7 @@
 		{
 			level = tax_brackets[ rate ];
 
-			replacement += '<option value="{0}" {1}>{0}</option>'.format( level, ((level==oldVal)?"SELECTED":"") );
+			replacement += '<option value="{0}" {1}>{0}</option>'.format( level, ((level==oldVal)?"SELECTED=\"1\" ":"") );
 		}
 		replacement += '</select>';
 
@@ -290,8 +308,6 @@
 
 	}
 
-
-	update_totals();
 	apply_edit_hooks();
 
 {% endblock %}
@@ -518,15 +534,17 @@
 
 <div class="invoice">
 
+	<form method="POST">
+
 	<div class="invoice-header">
 		{% csrf_token %}
 		<fieldset>
 
 			<label for="name">Invoice Date</label>
-			<input type="text" name="invoice_date" id="id_invoice_date" class="text ui-widget-content ui-corner-all" value="0" />
+			<input type="text" name="invoice_date" id="id_invoice_date" class="text ui-widget-content ui-corner-all" value="{{ instance.invoice_date|date:"j M Y" }}" />
 
 			<label for="name">Due Date</label>
-			<input type="text" name="due_date" id="id_due_date" class="text ui-widget-content ui-corner-all" value="0" />
+			<input type="text" name="due_date" id="id_due_date" class="text ui-widget-content ui-corner-all" value="{{ instance.due_date|date:"j M Y" }}" />
 
 		</fieldset>
 	</div>
@@ -535,10 +553,10 @@
 		<div style="float: right;">
 			<label for="name">Amounts are</label>
 			<select name="default_tax" id="id_default_tax">
-				<option value="none">No Tax</option>
-				<option value="inclusive">Tax Inclusive</option>
-				<option value="exclusive">Tax Exclusive</option>
-				<option value="exempt">Tax Exempt</option>
+				<option value="No Tax">No Tax</option>
+				<option value="Tax Inclusive" SELECTED="1">Tax Inclusive</option>
+				<option value="Tax Exclusive">Tax Exclusive</option>
+				<option value="Tax Exempt">Tax Exempt</option>
 			</select>
 		</div>
 		<div style="clear: both;">&nbsp;</div>
@@ -593,7 +611,8 @@
 					Amount
 				</div>
 				<div class="inner-amount-amount">
-					<span id="summary_amount">0.00</span>
+					<span id="summary_amount">{{ instance.amount }}</span>
+					<input type="hidden" id="id_summary_amount" name="invoice_amount" value="{{ instance.amount }}" />
 				</div>
 				<div style="clear: both;">&nbsp;</div>
 			</div>
@@ -603,7 +622,8 @@
 					Sales Tax
 				</div>
 				<div class="inner-tax-amount">
-					<span id="summary_tax">0.00</span>
+					<span id="summary_tax">{{ instance.tax }}</span>
+					<input type="hidden" id="id_summary_tax" name="invoice_tax" value="{{ instance.tax }}" />
 				</div>
 				<div style="clear: both;">&nbsp;</div>
 			</div>
@@ -613,7 +633,8 @@
 					Total
 				</div>
 				<div class="inner-total-amount">
-					<span id="summary_total">0.00</span>
+					<span id="summary_total">{{ instance.total }}</span>
+					<input type="hidden" id="id_summary_total" name="invoice_total" value="{{ instance.total }}" />
 				</div>
 				<div style="clear: both;">&nbsp;</div>
 			</div>
@@ -634,6 +655,9 @@
 
 		<div style="clear: both;">&nbsp;</div>
 	</div>
+
+	<input type="hidden" id="id_invoice_state" name="invoice_state" value="{{ instance.state }}" />
+	</form>
 
 </div>
 

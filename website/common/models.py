@@ -325,7 +325,12 @@ class Invoice( models.Model ):
 	creation_time = models.DateTimeField()
 	invoice_date = models.DateField()
 	due_date = models.DateField()
+	amount = models.BigIntegerField( default = 0 )
+	tax = models.BigIntegerField( default = 0 )
 	total = models.BigIntegerField( default = 0 )
+
+	comment = models.CharField( max_length = 255 )
+
 	is_paid = models.BooleanField( default = False )
 
 	state = models.IntegerField( choices = State.choices(), default = State.DRAFT )
