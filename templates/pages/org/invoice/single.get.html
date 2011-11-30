@@ -181,6 +181,11 @@
 					$(this).focusout();
 					$(original_td).next( "td" ).click();
 				}
+				if ( event.keyCode == '27') {
+					event.preventDefault();
+					$(this).val( oldVal );
+					$(this).focusout();
+				}
 			});
 	}
 
@@ -208,6 +213,11 @@
 					event.preventDefault();
 					$(this).focusout();
 					$(original_td).next( "td" ).click();
+				}
+				if ( event.keyCode == '27') {
+					event.preventDefault();
+					$(this).val( oldVal );
+					$(this).focusout();
 				}
 			});
 	}
@@ -269,6 +279,13 @@
 					
 					$(doug).find(".item-description").first().click();
 				}
+
+				if ( event.keyCode == '27') {
+					event.preventDefault();
+					$(this).val( oldVal );
+					$(this).focusout();
+				}
+
 			});
 
 	}
