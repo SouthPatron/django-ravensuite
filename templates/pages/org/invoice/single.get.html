@@ -28,9 +28,20 @@
 	$('#id_invoice_date').datepicker();
 	$('#id_due_date').datepicker();
 
+	apply_edit_hooks = function() {
+		$('.invoice .item-list .item-description').one( 'click', start_field_edit );
+		$('.invoice .item-list .item-qty').one( 'click', start_numerical_edit );
+		$('.invoice .item-list .item-unit-price').one( 'click', start_numerical_edit );
+		$('.invoice .item-list .item-tax-rate').one( 'click', start_tax_edit );
 
-	$('#id_invoice_add_item_row').click( function() {
+		$('.invoice .item-list table .item-delete-link').click( function() {
+			$(this).parents( "tr" ).remove();
+		});
+	};
 
+
+	add_item_line = function()
+	{
 		$('.invoice .item-list table tbody').append( '	\
 				<tr>	\
 					<td class="item-description">&nbsp;<input type="hidden" name="description" value="" /></td>	\
@@ -43,15 +54,11 @@
 			'
 		);
 
-		$('.invoice .item-list table .item-delete-link').click( function() {
-			$(this).parents( "tr" ).remove();
-		});
+		apply_edit_hooks();
+	}
 
-	});
 
-	$('.invoice .item-list table .item-delete-link').click( function() {
-		$(this).parents( "tr" ).remove();
-	});
+	$('#id_invoice_add_item_row').click( add_item_line );
 
 
 	update_totals = function() {
@@ -74,7 +81,7 @@
 			my_value[1] = $(this).find( ".item-unit-price input" ).attr( "value" );
 			my_value[2] = $(this).find( ".item-tax-rate input" ).attr( "value" );
 
-			if ( (isNaN( my_value[0] )) || (isNaN( my_value[1])) || (my_value[2].length <= 0) )
+			if ( (isNaN( my_value[0] )) || (isNaN( my_value[1])) || ((my_value[2] ==undefined) || (my_value[2].length <= 0)) )
 				return;
 
 			my_value[5] = ((new Number( my_value[0] )) * (new Number( my_value[1] )) );
@@ -86,16 +93,19 @@
 				my_value[4] = (new Number(my_value[5] * rate)).toFixed(2);
 				my_value[3] = my_value[5] - my_value[4];
 			}
-			else if ( my_value[2] == 'Tax Exclusive' )
-			{
-				my_value[3] = my_value[5];
-				my_value[4] = (new Number(my_value[3] * rate)).toFixed(2);
-				my_value[5] = (my_value[3] + my_value[5]);
-			}
 			else
 			{
-				my_value[3] = my_value[5];
-				my_value[4] = 0;
+				if ( my_value[2] == 'Tax Exclusive' )
+				{
+					my_value[3] = my_value[5];
+					my_value[4] = (new Number(my_value[3] * rate)).toFixed(2);
+					my_value[5] = (my_value[3] + my_value[5]);
+				}
+				else
+				{
+					my_value[3] = my_value[5];
+					my_value[4] = 0;
+				}
 			}
 			values.push( my_value );
 		});
@@ -159,6 +169,19 @@
 				{ 'original_value' : oldVal },
 				end_numerical_edit
 			);
+
+		original_td = $(this);
+		$(this).find( 'input' ).keydown( function(event) {
+				if ( event.keyCode == '13') {
+					event.preventDefault();
+					$(this).focusout();
+				}
+				if ( event.keyCode == '9') {
+					event.preventDefault();
+					$(this).focusout();
+					$(original_td).next( "td" ).click();
+				}
+			});
 	}
 
 
@@ -175,8 +198,18 @@
 		oldVal = $(this).find( 'input' ).attr( 'value' );
 		$(this).empty();
 		$(this).append('<input type="text" name="description" value="' + oldVal + '" />' );
-		$(this).find( 'input' ).focus();
-		$(this).find( 'input' ).focusout( end_field_edit );
+		original_td = $(this);
+		$(this).find( 'input' ).focus().focusout( end_field_edit ).keydown( function(event) {
+				if ( event.keyCode == '13') {
+					event.preventDefault();
+					$(this).focusout();
+				}
+				if ( event.keyCode == '9') {
+					event.preventDefault();
+					$(this).focusout();
+					$(original_td).next( "td" ).click();
+				}
+			});
 	}
 
 
@@ -185,6 +218,9 @@
 		par = $(this).parent( 'td' );
 		par.empty();
 		par.append('<span>'+oldVal+'</span><input type="hidden" name="description" value="' + oldVal + '" />');
+
+		update_totals();
+
 		par.one( 'click', start_tax_edit );
 	}
 
@@ -205,24 +241,41 @@
 		{
 			level = tax_brackets[ rate ];
 
-				replacement += '<option value="{0}" {1}>{0}</option>'.format( level, ((level==oldVal)?"SELECTED":"") );
+			replacement += '<option value="{0}" {1}>{0}</option>'.format( level, ((level==oldVal)?"SELECTED":"") );
 		}
 		replacement += '</select>';
 
 		$(this).append( replacement );
 
-		$(this).find( 'input' ).focus();
-		$(this).find( 'input' ).focusout( end_tax_edit );
+		original_td = $(this);
+
+		$(this).find( 'select' ).focus().focusout( end_tax_edit ).change( end_tax_edit ).keydown( function(event) {
+
+				if ( event.keyCode == '13') {
+					event.preventDefault();
+					$(this).focusout();
+				}
+
+				if ( event.keyCode == '9') {
+					event.preventDefault();
+					$(this).focusout();
+					doug = $(original_td).parent("tr").next("tr");
+
+					if ( doug.length == 0)
+					{
+						add_item_line();
+						doug = $(original_td).parent("tr").next("tr");
+					}
+					
+					$(doug).find(".item-description").first().click();
+				}
+			});
+
 	}
 
 
-
-	$('.invoice .item-list .item-description').one( 'click', start_field_edit );
-	$('.invoice .item-list .item-qty').one( 'click', start_numerical_edit );
-	$('.invoice .item-list .item-unit-price').one( 'click', start_numerical_edit );
-	$('.invoice .item-list .item-tax-rate').one( 'click', start_tax_edit );
-
 	update_totals();
+	apply_edit_hooks();
 
 {% endblock %}
 
