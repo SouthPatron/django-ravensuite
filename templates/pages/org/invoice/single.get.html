@@ -475,6 +475,27 @@
 .invoice .summary-row .add-row-portion
 {
 	float: left;
+	max-width: 440px;
+}
+
+.invoice .summary-row .add-row-portion .comment-title
+{
+	margin-top: 10px;
+	margin-bottom: 5px;
+	font-size: 1em;
+	color: #525252;
+}
+
+.invoice .summary-row .add-row-portion .comment-block
+{
+}
+
+.invoice .summary-row .add-row-portion .comment-block textarea
+{
+	width: 430px;
+	height: 60px;
+	border: 1px solid #e2e2e2;
+	resize: none;
 }
 
 .invoice .summary-row .summary-portion
@@ -638,7 +659,18 @@
 	<div class="summary-row">
 
 		<div class="add-row-portion">
-			<button id="id_invoice_add_item_row" type="button">Add a new line</button>
+			<div>
+				<button id="id_invoice_add_item_row" type="button">Add a new line</button>
+			</div>
+
+			<div>
+				<div class="comment-title">
+					<span>Comments:</span>
+				</div>
+				<div class="comment-block">
+					<textarea maxlength="255" name="invoice_comment">{{ instance.comment }}</textarea>
+				</div>
+			</div>
 		</div>
 
 		<div class="summary-portion">
