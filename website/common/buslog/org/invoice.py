@@ -191,7 +191,7 @@ class InvoiceBusLog( object ):
 				invoice.account,
 				'INVOICE',
 				'Invoice {}'.format( invoice.refnum ),
-				invoice.total,
+				float(0)-invoice.total,
 				''
 			)
 
@@ -202,7 +202,7 @@ class InvoiceBusLog( object ):
 				invoice.account,
 				'VOID',
 				'Void of Invoice {}'.format( invoice.refnum ),
-				float(0)-invoice.total,
+				invoice.total,
 				''
 			)
 
