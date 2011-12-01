@@ -2,12 +2,16 @@ from __future__ import unicode_literals
 
 from django.shortcuts import get_object_or_404, redirect
 from django.http import HttpResponseForbidden, HttpResponseServerError
+from django.contrib import messages
 
 from common.views.singleobjectview import SingleObjectView
 from common.views.listview import ListView
 
+from common.buslog.org import InvoiceBusLog
+
+from common.exceptions import *
 from common.models import *
-from common.utils.dbgdatetime import datetime
+
 
 class InvoiceList( ListView ):
 	template_name = 'pages/org/invoice/index'
@@ -20,32 +24,31 @@ class InvoiceList( ListView ):
 
 		obj_list = Invoice.objects.filter( account__refnum = mid.aid, account__client__refnum = mid.cid, account__client__organization__refnum = mid.oid )
 		return obj_list
-	
-	def create_object_json( self, request, data, *args, **kwargs ):
+
+	def _create_object( self, request, data, *args, **kwargs ):
 		mid = self._extract_ids( [ 'oid', 'cid', 'aid' ], **kwargs )
+		account = Account.objects.get( refnum = mid.aid, client__refnum = mid.cid, client__organization__refnum = mid.oid )
+		newo = InvoiceBusLog.create( account )
+		return newo
+		
+	
+	def create_object_html( self, request, data, *args, **kwargs ):
 
-		# TODO: select_for_update()
-		orgcounter = OrganizationCounter.objects.get( organization__refnum = mid.oid )
+		mid = self._extract_ids( [ 'oid', 'cid', 'aid' ], **kwargs )
+		account = Account.objects.get( refnum = mid.aid, client__refnum = mid.cid, client__organization__refnum = mid.oid )
 
-		# TODO: select_for_update()
-		theaccount = Account.objects.get( refnum = mid.aid )
+		try:
+			newo = self._create_object( request, data, *args, **kwargs )
+		except BusLogError, berror:
+			messages.error( request, berror.message )
+			return redirect( account.get_invoice_list_url() )
 
-		if theaccount.is_enabled is False:
-			return HttpResponseForbidden()
+		return redirect( newo.get_single_url() )
 
-		newt = Invoice()
-		newt.account = theaccount
-		newt.refnum = orgcounter.invoice_no
-		newt.creation_time = datetime.datetime.now()
-		newt.invoice_date = datetime.date.today()
-		newt.due_date = datetime.date.today()
-		newt.state = InvoiceState.DRAFT
-		newt.save()
 
-		orgcounter.invoice_no += 1
-		orgcounter.save()
-
-		resp = { 'url' : newt.get_single_url() }
+	def create_object_json( self, request, data, *args, **kwargs ):
+		newo = self._create_object( request, data, *args, **kwargs )
+		resp = { 'url' : newo.get_single_url() }
 		return self.api_resp( resp )
 
 
@@ -57,27 +60,8 @@ class InvoiceSingle( SingleObjectView ):
 		return get_object_or_404( Invoice, refnum = mid.iid, account__refnum = mid.aid, account__client__refnum = mid.cid, account__client__organization__refnum = mid.oid )
 
 	def delete_object( self, request, ob, *args, **kwargs ):
-		if ob.state == InvoiceState.FINAL:
-			return HttpResponseForbidden()
-
-		ob.delete()
-		return redirect( 'org-client-account-invoice-list', cid = ob.account.client.refnum, oid = ob.account.client.organization.refnum, aid = ob.account.refnum )
-
-
-	def void_invoice( self, request, obj, data, *args, **kwargs ):
-
-		return redirect( 'org-client-account-invoice-single', oid = obj.account.client.organization.refnum, cid = obj.account.client.refnum, aid = obj.account.refnum, iid = obj.refnum )
-
-	def finalize_invoice( self, request, obj, data, *args, **kwargs ):
-
-		return redirect( 'org-client-account-invoice-single', oid = obj.account.client.organization.refnum, cid = obj.account.client.refnum, aid = obj.account.refnum, iid = obj.refnum )
-
-	def update_invoice( self, request, obj, data, *args, **kwargs ):
-		obj.invoice_date = data.get( 'invoice_date', obj.invoice_date )
-		obj.due_date = data.get( 'due_date', obj.due_date )
-		obj.save()
-
-		return redirect( 'org-client-account-invoice-single', oid = obj.account.client.organization.refnum, cid = obj.account.client.refnum, aid = obj.account.refnum, iid = obj.refnum )
+		InvoiceBusLog.delete( ob )
+		return redirect( ob.get_account().get_invoice_list_url() )
 
 
 	def update_object_html( self, request, obj, data, *args, **kwargs ):
@@ -90,9 +74,7 @@ class InvoiceSingle( SingleObjectView ):
 		invoice_data[ 'amount' ] = data.get( 'invoice_amount' )
 		invoice_data[ 'total' ] = data.get( 'invoice_total' )
 		invoice_data[ 'comment' ] = data.get( 'invoice_comment', "" )
-
 		invoice_data[ 'state' ] = data.get( 'invoice_state' )
-
 		invoice_data[ 'items' ] = []
 		
 		for pos in range( len(data.getlist( 'description' )) ):
@@ -104,10 +86,13 @@ class InvoiceSingle( SingleObjectView ):
 						data.getlist( 'amount' )[ pos ]
 					] )
 
-
-		print invoice_data;
-
-		return redirect( obj.get_single_url() )
+		try:
+			InvoiceBusLog.update( obj, invoice_data )
+		except BusLogError, berror:
+			messages.error( request, berror.message )
+			return redirect( obj.get_single_url() )
+	
+		return redirect( obj.get_account().get_invoice_list_url() )
 
 
 	def update_object_json( self, request, obj, data, *args, **kwargs ):

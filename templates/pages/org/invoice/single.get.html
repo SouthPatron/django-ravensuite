@@ -1,5 +1,7 @@
 {% extends 'layouts/org/member.html' %}
 
+{% load decshift %}
+
 {% block str_org_name %}{{ instance.get_org.trading_name }}{% endblock %}
 {% block str_client_name %}{{ instance.get_client.trading_name }}{% endblock %}
 {% block str_section_name %}Invoice {{ instance.refnum }}{% endblock %}
@@ -101,8 +103,8 @@
 
 			if ( my_value[2] == 'Tax Inclusive' )
 			{
-				my_value[4] = (new Number(my_value[5] * rate)).toFixed(2);
-				my_value[3] = my_value[5] - my_value[4];
+				my_value[3] = (new Number(my_value[5] / (rate + 1))).toFixed(2);
+				my_value[4] = (new Number(my_value[5])) - (new Number(my_value[3]));
 			}
 			else
 			{
@@ -110,7 +112,7 @@
 				{
 					my_value[3] = my_value[5];
 					my_value[4] = (new Number(my_value[3] * rate)).toFixed(2);
-					my_value[5] = (my_value[3] + my_value[5]);
+					my_value[5] = ((new Number(my_value[3])) + (new Number(my_value[4])));
 				}
 				else
 				{
@@ -132,9 +134,14 @@
 			total_total += (new Number(values[i][5]));
 		}
 
+
 		$( "#summary_amount" ).empty().append( total_amount.toFixed(2) );
 		$( "#summary_tax" ).empty().append( total_tax.toFixed(2) );
 		$( "#summary_total" ).empty().append( total_total.toFixed(2) );
+
+		$( "#id_invoice_amount" ).val( total_amount.toFixed(2) );
+		$( "#id_invoice_tax" ).val( total_tax.toFixed(2) );
+		$( "#id_invoice_total" ).val( total_total.toFixed(2) );
 	}
 
 
@@ -608,10 +615,10 @@
 				{% for li in instance.invoiceline_set.all %}
 					<tr>
 						<td class="item-description"><span>{{ li.description }}</span><input type="hidden" name="description" value="{{ li.description }}" /></td>
-						<td class="item-qty"><span>{{ li.units|floatformat:2 }}</span><input type="hidden" name="units" value="{{ li.units }}" /></td>
-						<td class="item-unit-price"><span>{{ li.perunit|floatformat:2 }}</span><input type="hidden" name="perunit" value="{{ li.perunit }}" /></td>
+						<td class="item-qty"><span>{{ li.units|decshift|floatformat:2 }}</span><input type="hidden" name="units" value="{{ li.units|decshift|floatformat:2 }}" /></td>
+						<td class="item-unit-price"><span>{{ li.perunit|decshift|floatformat:2 }}</span><input type="hidden" name="perunit" value="{{ li.perunit|decshift|floatformat:2 }}" /></td>
 						<td class="item-tax-rate"><span>{{ li.get_tax_rate_display }}</span><input type="hidden" name="tax_rate" value="{{ li.get_tax_rate_display }}" /></td>
-						<td class="item-amount"><span>{{ li.total|floatformat:2 }}</span><input type="hidden" name="amount" value="{{ li.total|floatformat:2 }}" /></td>
+						<td class="item-amount"><span>{{ li.total|decshift|floatformat:2 }}</span><input type="hidden" name="amount" value="{{ li.total|decshift|floatformat:2 }}" /></td>
 						<td class="item-delete"><img class="item-delete-link" src='{{ STATIC_URL }}images/icons/line_delete_grey.png' /></td>
 					</tr>
 				{% endfor %}
@@ -641,8 +648,8 @@
 					Amount
 				</div>
 				<div class="inner-amount-amount">
-					<span id="summary_amount">{{ instance.amount|floatformat:2 }}</span>
-					<input type="hidden" id="id_summary_amount" name="invoice_amount" value="{{ instance.amount|floatformat:2 }}" />
+					<span id="summary_amount">{{ instance.amount|decshift|floatformat:2 }}</span>
+					<input type="hidden" id="id_invoice_amount" name="invoice_amount" value="{{ instance.amount|decshift|floatformat:2 }}" />
 				</div>
 			</div>
 
@@ -651,8 +658,8 @@
 					Sales Tax
 				</div>
 				<div class="inner-tax-amount">
-					<span id="summary_tax">{{ instance.tax|floatformat:2 }}</span>
-					<input type="hidden" id="id_summary_tax" name="invoice_tax" value="{{ instance.tax|floatformat:2 }}" />
+					<span id="summary_tax">{{ instance.tax|decshift|floatformat:2 }}</span>
+					<input type="hidden" id="id_invoice_tax" name="invoice_tax" value="{{ instance.tax|decshift|floatformat:2 }}" />
 				</div>
 			</div>
 
@@ -661,8 +668,8 @@
 					Total
 				</div>
 				<div class="inner-total-amount">
-					<span id="summary_total">{{ instance.total|floatformat:2 }}</span>
-					<input type="hidden" id="id_summary_total" name="invoice_total" value="{{ instance.total|floatformat:2 }}" />
+					<span id="summary_total">{{ instance.total|decshift|floatformat:2 }}</span>
+					<input type="hidden" id="id_invoice_total" name="invoice_total" value="{{ instance.total|decshift|floatformat:2 }}" />
 				</div>
 			</div>
 		</div>

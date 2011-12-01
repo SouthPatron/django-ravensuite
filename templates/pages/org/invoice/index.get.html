@@ -1,5 +1,7 @@
 {% extends 'layouts/org/member.html' %}
 
+{% load decshift %}
+
 
 {% block str_org_name %}{{ extra.get_org.trading_name }}{% endblock %}
 {% block str_client_name %}{{ extra.get_client.trading_name }}{% endblock %}
@@ -64,8 +66,8 @@
 <thead>
 	<tr>
 		<th>Ref</th>
-		<th>Time</th>
-		<th>Description</th>
+		<th>Invoice Date</th>
+		<th>Due Date</th>
 		<th>Amount</th>
 	</tr>
 </thead>
@@ -74,9 +76,9 @@
 
 	<tr>
 		<td><a href='{{ obj.get_single_url }}'>{{ obj.refnum }}</a></td>
-		<td><a href='{{ obj.get_single_url }}'>{{ obj.event_time }}</a></td>
-		<td><a href='{{ obj.get_single_url }}'>{{ obj.description }}</a></td>
-		<td><a href='{{ obj.get_single_url }}'>{{ obj.amount }}</a></td>
+		<td><a href='{{ obj.get_single_url }}'>{{ obj.invoice_date }}</a></td>
+		<td><a href='{{ obj.get_single_url }}'>{{ obj.due_date }}</a></td>
+		<td><a href='{{ obj.get_single_url }}'>{{ obj.total|decshift|floatformat:2 }}</a></td>
 	</tr>
 {% endfor %}
 </tbody>

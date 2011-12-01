@@ -30,6 +30,12 @@ class ChoicesEnum( object ):
 				return val
 		return None
 
+	def get_by_display( self, value ):
+		for key, val in object.__getattribute__( self, "_vals" ).iteritems():
+			if value == val[1]:
+				return val
+		return None
+
 	def __getattr__( self, name ):
 		return object.__getattribute__( self, "_vals" )[ name ][ 0 ]
 
