@@ -58,7 +58,6 @@ InvoiceState = ChoicesEnum(
 	DRAFT = ( 0, 'Draft' ),
 	FINAL = ( 5, 'Final' ),
 	VOID = ( 10, 'Void' ),
-	CANCEL = ( 99, 'Cancel' ),
 )
 
 ExpiryAction = ChoicesEnum(

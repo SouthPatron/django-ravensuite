@@ -4,9 +4,8 @@ from math import *
 
 from common.models import *
 from common.exceptions import *
-
+from common.buslog.org import AccountBusLog
 from common.moe import MarginsOfError
-
 from common.utils.dbgdatetime import datetime
 
 
@@ -47,6 +46,8 @@ class InvoiceBusLog( object ):
 	def delete( invoice ):
 		if invoice.state == InvoiceState.FINAL:
 			raise BusLogError( 'This invoice has already been finalized. Try voiding it instead.' )
+		if invoice.state == InvoiceState.VOID:
+			raise BusLogError( 'This invoice has already been voided. It can not be removed.' )
 		invoice.delete()
 
 
@@ -66,6 +67,13 @@ class InvoiceBusLog( object ):
 			raise BusLogError( 'The due date is before the invoice date' )
 
 	@staticmethod
+	def _update_sanitize_state( new_data ):
+		new_data['state'] = int(new_data['state'])
+		if InvoiceState.get( new_data['state'] ) is None:
+			raise BusLogError( 'Unknown new state requested for invoice.' )
+
+
+	@staticmethod
 	def _update_get_tax_rate( mystr ):
 		val = TaxRate.get_by_display( mystr )
 		if val is None:
@@ -82,8 +90,9 @@ class InvoiceBusLog( object ):
 					row[2] = long(float(row[2]) * 100)
 					row[3] = InvoiceBusLog._update_get_tax_rate( row[3] )
 					row[4] = long(float(row[4]) * 100)
-					new_items.append( row )
-					continue	# Everything passed okay for numericals
+
+					if (row[1] >= 0) and (row[2] >= 0) and (row[4] >= 0):
+						new_items.append( row )
 				except:
 					pass
 		new_data[ 'items' ] = new_items
@@ -150,31 +159,80 @@ class InvoiceBusLog( object ):
 	@staticmethod
 	def _update_sanitize( new_data ):
 		InvoiceBusLog._update_sanitize_dates( new_data )
+		InvoiceBusLog._update_sanitize_state( new_data )
 		InvoiceBusLog._update_sanitize_items( new_data )
 		InvoiceBusLog._update_sanitize_major_numbers( new_data )
 		InvoiceBusLog._update_sanitize_item_numbers( new_data )
 		InvoiceBusLog._update_sanitize_tax_amounts( new_data )
-	
+
+		new_data["comment"] = new_data["comment"][:255]
+
+
+	@staticmethod
+	def _update_perform_update( invoice, new_data ):
+		invoice.invoice_date = new_data[ 'invoice_date' ]
+		invoice.due_date = new_data[ 'due_date' ]
+		invoice.comment = new_data[ 'comment' ]
+
+		if invoice.state == InvoiceState.DRAFT:
+			invoice.amount = new_data[ 'amount' ]
+			invoice.tax = new_data[ 'tax' ] 
+			invoice.total = new_data[ 'total' ]
+
+			InvoiceLine.objects.filter( invoice = invoice ).delete()
+
+			for row in new_data[ 'items' ]:
+				il = InvoiceLine.objects.create( invoice = invoice, description = row[0], units = row[1], perunit = row[2], tax_rate = row[3], total = row[4] )
+
+
+	@staticmethod
+	def _update_finalize_invoice( invoice ):
+		transaction = AccountBusLog.adjust(
+				invoice.account,
+				'INVOICE',
+				'Invoice {}'.format( invoice.refnum ),
+				invoice.total,
+				''
+			)
+
+
+	@staticmethod
+	def _update_void_invoice( invoice ):
+		transaction = AccountBusLog.adjust(
+				invoice.account,
+				'VOID',
+				'Void of Invoice {}'.format( invoice.refnum ),
+				float(0)-invoice.total,
+				''
+			)
+
+	@staticmethod
+	def _update_handle_state_change( invoice, new_data ):
+		ns = new_data['state']
+
+		if invoice.state == ns:
+			return
+
+		if invoice.state == InvoiceState.DRAFT:
+			if ns != InvoiceState.FINAL:
+				raise BusLogError( 'You can only finalize this invoice' )
+			invoice.state = ns
+			InvoiceBusLog._update_finalize_invoice( invoice )
+			return
+
+		if invoice.state == InvoiceState.FINAL:
+			if ns != InvoiceState.VOID:
+				raise BusLogError( 'You can only void this invoice' )
+			invoice.state = ns
+			InvoiceBusLog._update_void_invoice( invoice )
+			return
+
 
 	@staticmethod
 	def update( invoice, new_data ):
 		InvoiceBusLog._update_sanitize( new_data )
-
-		invoice.invoice_date = new_data[ 'invoice_date' ]
-		invoice.due_date = new_data[ 'due_date' ]
-
-		invoice.amount = new_data[ 'amount' ]
-		invoice.tax = new_data[ 'tax' ] 
-		invoice.total = new_data[ 'total' ]
-		invoice.comment = new_data[ 'comment' ]
-		invoice.state = new_data[ 'state' ]
-
-		InvoiceLine.objects.filter( invoice = invoice ).delete()
-
-		for row in new_data[ 'items' ]:
-			il = InvoiceLine.objects.create( invoice = invoice, description = row[0], units = row[1], perunit = row[2], tax_rate = row[3], total = row[4] )
-
+		InvoiceBusLog._update_perform_update( invoice, new_data )
+		InvoiceBusLog._update_handle_state_change( invoice, new_data )
 		invoice.save()
-
 
 

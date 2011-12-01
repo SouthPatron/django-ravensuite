@@ -328,9 +328,9 @@
 	$('#id_invoice_add_item_row').click( add_item_line );
 
 	$("#id_button_save").click( { 'new_state' : 0 }, invoice_submit );
+	$("#id_button_delete").click( { 'new_state' : 99 }, invoice_submit );
 	$("#id_button_approve").click( { 'new_state' : 5 }, invoice_submit );
-//	$("#id_button_void").click( { 'new_state' : 10 }, invoice_submit );
-	$("#id_button_cancel").click( { 'new_state' : 99 }, invoice_submit );
+	$("#id_button_void").click( { 'new_state' : 10 }, invoice_submit );
 
 
 {% endblock %}
@@ -712,11 +712,12 @@
 	<div class="button-row">
 		<div class="button-row-left">
 			<button id="id_button_save" type="button">Save as Draft</button>
+			<button id="id_button_delete" type="button">Delete</button>
 		</div>
 
 		<div class="button-row-right">
 			<button id="id_button_approve" type="button">Approve</button>
-			<button id="id_button_cancel" type="button">Cancel</button>
+			<button id="id_button_void" type="button">Void</button>
 		</div>
 
 		<div style="clear: both;">&nbsp;</div>
