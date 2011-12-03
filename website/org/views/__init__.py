@@ -7,9 +7,6 @@ from client import *
 from project import *
 from account import *
 from accounttransaction import *
-from tab import *
-from tabtransaction import *
-from reservation import *
 
 from invoice import *
 

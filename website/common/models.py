@@ -102,7 +102,6 @@ TaxRate = ChoicesEnum(
 class SystemCounter( models.Model ):
 	profile_no = models.BigIntegerField( default = 1 )
 	account_no = models.BigIntegerField( default = 1 )
-	tab_no = models.BigIntegerField( default = 1 )
 	organization_no = models.BigIntegerField( default = 1 )
 
 class Organization( models.Model ):
@@ -129,7 +128,6 @@ class OrganizationCounter( models.Model ):
 	organization = models.OneToOneField( Organization )
 	invoice_no = models.BigIntegerField( default = 1 )
 	client_no = models.BigIntegerField( default = 1 )
-	tab_no = models.BigIntegerField( default = 1 )
 	project_no = models.BigIntegerField( default = 1 )
 
 
@@ -170,9 +168,6 @@ class Client( models.Model ):
 	def get_account_list_url( self ):
 		return reverse( 'org-client-account-list', kwargs = { 'oid' : self.organization.refnum, 'cid' : self.refnum } )
 
-	def get_tab_list_url( self ):
-		return reverse( 'org-client-tab-list', kwargs = { 'oid' : self.organization.refnum, 'cid' : self.refnum } )
-	
 	
 
 class Account( models.Model ):
@@ -229,93 +224,6 @@ class AccountTransaction( models.Model ):
 
 class AccountTransactionData( models.Model ):
 	account_transaction = models.OneToOneField( AccountTransaction )
-	data = models.TextField()
-
-class Tab( models.Model ):
-	client = models.ForeignKey( Client )
-	refnum = models.BigIntegerField( unique = True )
-
-	transaction_no = models.BigIntegerField( default = 1 )
-
-	is_enabled = models.BooleanField( default = True )
-	name = models.CharField( max_length = 64 )
-	min_balance = models.BigIntegerField( default = 0 )
-
-	balance = models.BigIntegerField( default = 0 )
-	reserved = models.BigIntegerField( default = 0 )
-
-	def get_org( self ):
-		return self.client.organization
-
-	def get_client( self ):
-		return self.client
-
-	def get_single_url( self ):
-		return reverse( 'org-client-tab-single', kwargs = { 'oid' : self.get_org().refnum, 'cid' : self.get_client().refnum, 'tabid' : self.refnum } )
-
-	def get_transaction_list_url( self ):
-		return reverse( 'org-client-tab-transaction-list', kwargs = { 'oid' : self.get_org().refnum, 'cid' : self.get_client().refnum, 'tabid' : self.refnum } )
-
-	def get_reservation_list_url( self ):
-		return reverse( 'org-client-tab-reservation-list', kwargs = { 'oid' : self.get_org().refnum, 'cid' : self.get_client().refnum, 'tabid' : self.refnum } )
-
-
-
-
-class TabTransaction( models.Model ):
-	tab = models.ForeignKey( Tab )
-	refnum = models.BigIntegerField( default = 1 )
-	event_time = models.DateTimeField()
-	group = models.CharField( max_length = 32 )
-	description = models.CharField( max_length = 64 )
-	balance_before = models.BigIntegerField( default = 0 )
-	balance_reserved = models.BigIntegerField( default = 0 )
-	balance_after = models.BigIntegerField( default = 0 )
-	amount = models.BigIntegerField( default = 0 )
-
-	def get_org( self ):
-		return self.tab.client.organization
-
-	def get_client( self ):
-		return self.tab.client
-
-	def get_tab( self ):
-		return self.tab
-
-	def get_single_url( self ):
-		return reverse( 'org-client-tab-transaction-single', kwargs = { 'oid' : self.get_org().refnum, 'cid' : self.get_client().refnum, 'tabid' : self.get_tab().refnum, 'tid' : self.refnum } )
-
-
-class TabTransactionData( models.Model ):
-	tab_transaction = models.OneToOneField( TabTransaction )
-	data = models.TextField()
-
-
-class Reservation( models.Model ):
-	tab = models.ForeignKey( Tab )
-	event_time = models.DateTimeField()
-	expiry_time = models.DateTimeField()
-	expiry_action = models.CharField( choices = ExpiryAction.choices(), default = ExpiryAction.COMMIT, max_length = 16 )
-	group = models.CharField( max_length = 32 )
-	description = models.CharField( max_length = 64 )
-	uuid = models.CharField( max_length = 32, unique = True )
-	amount = models.BigIntegerField()
-
-	def get_org( self ):
-		return self.tab.client.organization
-
-	def get_client( self ):
-		return self.tab.client
-
-	def get_tab( self ):
-		return self.tab
-
-	def get_single_url( self ):
-		return reverse( 'org-client-tab-reservation-single', kwargs = { 'oid' : self.get_org().refnum, 'cid' : self.get_client().refnum, 'tabid' : self.get_tab().refnum, 'rid' : self.uuid } )
-
-
-class ReservationData( models.Model ):
-	reservation = models.OneToOneField( Reservation )
 	data = models.TextField()
 
 

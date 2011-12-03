@@ -43,22 +43,6 @@ urlpatterns = patterns('',
 	url( r'^(?P<oid>\d+)/client/(?P<cid>\d+)/account/(?P<aid>\d+)/transaction/(?P<tid>\d+)$', login_required( AccountTransactionSingle.as_view() ), name = 'org-client-account-transaction-single' ),
 
 
-# ------ CLIENTS / TABS ----------------------
-
-
-	url( r'^(?P<oid>\d+)/client/(?P<cid>\d+)/tabs$', login_required( TabList.as_view() ), name = 'org-client-tab-list' ),
-	url( r'^(?P<oid>\d+)/client/(?P<cid>\d+)/tab/(?P<tabid>\d+)$', login_required( TabSingle.as_view() ), name = 'org-client-tab-single' ),
-
-
-	url( r'^(?P<oid>\d+)/client/(?P<cid>\d+)/tab/(?P<tabid>\d+)/transactions$', login_required( TabTransactionList.as_view() ), name = 'org-client-tab-transaction-list' ),
-	url( r'^(?P<oid>\d+)/client/(?P<cid>\d+)/tab/(?P<tabid>\d+)/transaction/(?P<tid>\d+)$', login_required( TabTransactionSingle.as_view() ), name = 'org-client-tab-transaction-single' ),
-
-	url( r'^(?P<oid>\d+)/client/(?P<cid>\d+)/tab/(?P<tabid>\d+)/reservations$', login_required( ReservationList.as_view() ), name = 'org-client-tab-reservation-list' ),
-
-	url( r'^(?P<oid>\d+)/client/(?P<cid>\d+)/tab/(?P<tabid>\d+)/reservation/(?P<rid>[0-9a-fA-F]{32})$', login_required( ReservationSingle.as_view() ), name = 'org-client-tab-reservation-single' ),
-
-
-
 # ------ CLIENTS / ACCOUNT / INVOICES ------------------
 
 	url( r'^(?P<oid>\d+)/client/(?P<cid>\d+)/account/(?P<aid>\d+)/invoices$', login_required( InvoiceList.as_view() ), name = 'org-client-account-invoice-list' ),

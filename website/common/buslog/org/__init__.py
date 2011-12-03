@@ -9,7 +9,6 @@ from task import *
 
 from project import *
 from account import *
-from tab import *
 
 from invoice import *
 
