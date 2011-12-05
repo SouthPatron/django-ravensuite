@@ -4,20 +4,19 @@
 
 
 {% block str_org_name %}{{ extra.get_org.trading_name }}{% endblock %}
-{% block str_client_name %}{{ extra.get_client.trading_name }}{% endblock %}
+{% block str_client_name %}{{ extra.trading_name }}{% endblock %}
 {% block str_section_name %}Invoices{% endblock %}
 
 {% block breadcrumbs %}
 	{{ block.super }}
 	<a href="{{ extra.get_org.get_client_list_url }}">Clients</a>&gt;
-	<a href="{{ extra.get_client.get_single_url }}">{{ extra.get_client.trading_name }}</a>&gt;
-	<a href="{{ extra.get_client.get_account_list_url }}">Accounts</a>&gt;
-	<a href="{{ extra.get_single_url }}">{{ extra.name }}</a>&gt;
+	<a href="{{ extra.get_single_url }}">{{ extra.trading_name }}</a>&gt;
+	<a href="{{ extra.get_invoice_list_url }}">Invoices</a>&gt;
 {% endblock %}
 
 
 {% block page_functions %}
-{% include 'page_functions/org/account_level.html' with instance=extra %}
+{% include 'page_functions/org/client_level.html' with instance=extra %}
 {% endblock %}
 
 {% block head_includes %}
@@ -29,9 +28,9 @@
 
 {% block onready %}
 
-	$( "#account-invoice-create" ).click(function() {
+	$( "#invoice-create" ).click(function() {
 
-		invoice_list_url = '/org/{0}/client/{1}/account/{2}/invoices?format=json'.format( {{ extra.get_org.refnum }}, {{ extra.get_client.refnum }}, {{ extra.refnum }} );
+		invoice_list_url = '/org/{0}/client/{1}/invoices?format=json'.format( {{ extra.get_org.refnum }}, {{ extra.refnum }} );
 
 		$.post( invoice_list_url, function( data ) {
 				window.location.replace( data[ 'url' ] );
@@ -53,7 +52,7 @@
 
 {% block content_menu_right %}
 <ul>
-	<li><a href="#" id="account-invoice-create">New Invoice</a></li>
+	<li><a href="#" id="invoice-create">New Invoice</a></li>
 </ul>
 {% endblock %}
 
@@ -66,6 +65,7 @@
 <thead>
 	<tr>
 		<th>Ref</th>
+		<th>Client</th>
 		<th>Invoice Date</th>
 		<th>Due Date</th>
 		<th>Amount</th>
@@ -76,6 +76,7 @@
 
 	<tr>
 		<td><a href='{{ obj.get_single_url }}'>{{ obj.refnum }}</a></td>
+		<td><a href='{{ obj.get_single_url }}'>{{ obj.client.trading_name }}</a></td>
 		<td><a href='{{ obj.get_single_url }}'>{{ obj.invoice_date }}</a></td>
 		<td><a href='{{ obj.get_single_url }}'>{{ obj.due_date }}</a></td>
 		<td><a href='{{ obj.get_single_url }}'>{{ obj.total|decshift|floatformat:2 }}</a></td>

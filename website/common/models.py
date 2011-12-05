@@ -101,7 +101,6 @@ TaxRate = ChoicesEnum(
 
 class SystemCounter( models.Model ):
 	profile_no = models.BigIntegerField( default = 1 )
-	account_no = models.BigIntegerField( default = 1 )
 	organization_no = models.BigIntegerField( default = 1 )
 
 class Organization( models.Model ):
@@ -165,20 +164,17 @@ class Client( models.Model ):
 	def get_project_list_url( self ):
 		return reverse( 'org-client-project-list', kwargs = { 'oid' : self.organization.refnum, 'cid' : self.refnum } )
 	
-	def get_account_list_url( self ):
-		return reverse( 'org-client-account-list', kwargs = { 'oid' : self.organization.refnum, 'cid' : self.refnum } )
+	def get_account_single_url( self ):
+		return reverse( 'org-client-account-single', kwargs = { 'oid' : self.organization.refnum, 'cid' : self.refnum } )
 
-	
+	def get_invoice_list_url( self ):
+		return reverse( 'org-client-invoice-list', kwargs = { 'oid' : self.organization.refnum, 'cid' : self.refnum } )
+
+
 
 class Account( models.Model ):
-	client = models.ForeignKey( Client )
-	refnum = models.BigIntegerField( unique = True )
-
+	client = models.OneToOneField( Client )
 	transaction_no = models.BigIntegerField( default = 1 )
-
-	is_enabled = models.BooleanField( default = True )
-	name = models.CharField( max_length = 64 )
-	min_balance = models.BigIntegerField( default = 0 )
 	balance = models.BigIntegerField( default = 0 )
 
 	def get_org( self ):
@@ -188,14 +184,10 @@ class Account( models.Model ):
 		return self.client
 
 	def get_single_url( self ):
-		return reverse( 'org-client-account-single', kwargs = { 'oid' : self.client.organization.refnum, 'cid' : self.client.refnum, 'aid' : self.refnum } )
+		return reverse( 'org-client-account-single', kwargs = { 'oid' : self.client.organization.refnum, 'cid' : self.client.refnum } )
 	
 	def get_transaction_list_url( self ):
-		return reverse( 'org-client-account-transaction-list', kwargs = { 'oid' : self.client.organization.refnum, 'cid' : self.client.refnum, 'aid' : self.refnum } )
-
-	def get_invoice_list_url( self ):
-		return reverse( 'org-client-account-invoice-list', kwargs = { 'oid' : self.client.organization.refnum, 'cid' : self.client.refnum, 'aid' : self.refnum } )
-
+		return reverse( 'org-client-account-transaction-list', kwargs = { 'oid' : self.client.organization.refnum, 'cid' : self.client.refnum } )
 
 	
 
@@ -228,7 +220,7 @@ class AccountTransactionData( models.Model ):
 
 
 class Invoice( models.Model ):
-	account = models.ForeignKey( Account )
+	client = models.ForeignKey( Client )
 	refnum = models.BigIntegerField()
 	creation_time = models.DateTimeField()
 	invoice_date = models.DateField()
@@ -244,16 +236,13 @@ class Invoice( models.Model ):
 	state = models.IntegerField( choices = InvoiceState.choices(), default = InvoiceState.DRAFT )
 
 	def get_org( self ):
-		return self.account.client.organization
+		return self.client.organization
 
 	def get_client( self ):
-		return self.account.client
-
-	def get_account( self ):
-		return self.account
+		return self.client
 
 	def get_single_url( self ):
-		return reverse( 'org-client-account-invoice-single', kwargs = { 'oid' : self.get_org().refnum, 'cid' : self.get_client().refnum, 'aid' : self.get_account().refnum, 'iid' : self.refnum } )
+		return reverse( 'org-client-invoice-single', kwargs = { 'oid' : self.get_org().refnum, 'cid' : self.get_client().refnum, 'iid' : self.refnum } )
 
 
 class InvoiceLine( models.Model ):

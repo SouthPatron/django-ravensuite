@@ -10,9 +10,8 @@
 	{{ block.super }}
 	<a href="{{ instance.get_org.get_client_list_url }}">Clients</a>&gt;
 	<a href="{{ instance.get_client.get_single_url }}">{{ instance.get_client.trading_name }}</a>&gt;
-	<a href="{{ instance.get_client.get_account_list_url }}">Accounts</a>&gt;
-	<a href="{{ instance.get_account.get_single_url }}">{{ instance.get_account.name }}</a>&gt;
-	<a href="{{ instance.get_account.get_invoice_list_url }}">Invoices</a>&gt;
+	<a href="{{ instance.get_client.get_invoice_list_url }}">Invoices</a>&gt;
+	<a href="{{ instance.get_single_url }}">{{ instance.refnum }}</a>&gt;
 {% endblock %}
 
 

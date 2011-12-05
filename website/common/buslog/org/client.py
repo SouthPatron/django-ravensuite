@@ -35,5 +35,11 @@ class ClientBusLog( object ):
 		newclient.trading_name = trading_name
 		newclient.save()
 
+		account = Account()
+		account.client = newclient
+		account.balance = 0
+		account.transaction_no = 1
+		account.save()
+
 		return newclient
 

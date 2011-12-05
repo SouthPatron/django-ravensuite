@@ -5,7 +5,6 @@ ID Mappings
 oid = Organization ID  (refnum)
 cid = Client ID  (refnum)
 pid = Project ID (refnum)
-aid = Account ID  (refnum)
 tid = Transaction ID  (refnum)
 iid = Invoice ID  (refnum)
 

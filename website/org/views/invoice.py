@@ -17,31 +17,31 @@ class InvoiceList( ListView ):
 	template_name = 'pages/org/invoice/index'
 
 	def get_extra( self, request, obj_list, fmt, *args, **kwargs ):
-		return Account.objects.get( refnum = self.url_kwargs.aid, client__refnum = self.url_kwargs.cid, client__organization__refnum = self.url_kwargs.oid )
+		return Client.objects.get( refnum = self.url_kwargs.cid, organization__refnum = self.url_kwargs.oid )
 
 	def get_object_list( self, request, *args, **kwargs ):
-		mid = self._extract_ids( [ 'oid', 'cid', 'aid' ], **kwargs )
+		mid = self._extract_ids( [ 'oid', 'cid' ], **kwargs )
 
-		obj_list = Invoice.objects.filter( account__refnum = mid.aid, account__client__refnum = mid.cid, account__client__organization__refnum = mid.oid )
+		obj_list = Invoice.objects.filter( client__refnum = mid.cid, client__organization__refnum = mid.oid )
 		return obj_list
 
 	def _create_object( self, request, data, *args, **kwargs ):
-		mid = self._extract_ids( [ 'oid', 'cid', 'aid' ], **kwargs )
-		account = Account.objects.get( refnum = mid.aid, client__refnum = mid.cid, client__organization__refnum = mid.oid )
-		newo = InvoiceBusLog.create( account )
+		mid = self._extract_ids( [ 'oid', 'cid' ], **kwargs )
+		client = Client.objects.get( refnum = mid.cid, organization__refnum = mid.oid )
+		newo = InvoiceBusLog.create( client )
 		return newo
 		
 	
 	def create_object_html( self, request, data, *args, **kwargs ):
 
-		mid = self._extract_ids( [ 'oid', 'cid', 'aid' ], **kwargs )
-		account = Account.objects.get( refnum = mid.aid, client__refnum = mid.cid, client__organization__refnum = mid.oid )
+		mid = self._extract_ids( [ 'oid', 'cid' ], **kwargs )
+		client = Client.objects.get( refnum = mid.cid, organization__refnum = mid.oid )
 
 		try:
 			newo = self._create_object( request, data, *args, **kwargs )
 		except BusLogError, berror:
 			messages.error( request, berror.message )
-			return redirect( account.get_invoice_list_url() )
+			return redirect( client.get_invoice_list_url() )
 
 		return redirect( newo.get_single_url() )
 
@@ -56,8 +56,8 @@ class InvoiceSingle( SingleObjectView ):
 	template_name = 'pages/org/invoice/single'
 
 	def get_object( self, request, *args, **kwargs ):
-		mid = self._extract_ids( [ 'oid', 'cid', 'aid', 'iid' ], **kwargs )
-		return get_object_or_404( Invoice, refnum = mid.iid, account__refnum = mid.aid, account__client__refnum = mid.cid, account__client__organization__refnum = mid.oid )
+		mid = self._extract_ids( [ 'oid', 'cid', 'iid' ], **kwargs )
+		return get_object_or_404( Invoice, refnum = mid.iid, client__refnum = mid.cid, client__organization__refnum = mid.oid )
 
 	def delete_object( self, request, ob, *args, **kwargs ):
 		InvoiceBusLog.delete( ob )

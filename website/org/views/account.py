@@ -12,73 +12,13 @@ from common.exceptions import *
 
 from ..forms import account as forms
 
-class AccountList( ListView ):
-	template_name = 'pages/org/account/index'
-
-	def get_extra( self, request, obj_list, fmt, *args, **kwargs ):
-		return Client.objects.get( refnum = self.url_kwargs.cid, organization__refnum = self.url_kwargs.oid )
-
-	def get_object_list( self, request, *args, **kwargs ):
-		mid = self._extract_ids( [ 'oid', 'cid' ], **kwargs )
-		obj_list = Account.objects.filter( client__refnum = mid.cid, client__organization__refnum = mid.oid )
-		return obj_list
-	
-	def _create_object( self, request, data, *args, **kwargs ):
-		mid = self._extract_ids( [ 'oid', 'cid' ], **kwargs )
-
-		client = Client.objects.get( refnum = mid.cid, organization__refnum = mid.oid )
-
-		newacc = AccountBusLog.create(
-					client,
-					data.get( 'name' ),
-					data.get( 'min_balance', 0 ),
-				)
-
-		return newacc
-
-
-	def create_object_json( self, request, data, *args, **kwargs ):
-		newo = self._create_object( self, request, data, *args, **kwargs )
-		resp = { 'url' : newo.get_single_url() }
-		return self.api_resp( resp )
-
-	def create_object_html( self, request, data, *args, **kwargs ):
-		form = forms.CreateAccount( data or None )
-		if form.is_valid() is False:
-			return redirect( 'org-client-account-list', oid = self.url_kwargs.oid, cid = self.url_kwargs.cid )
-
-		try:
-			newo = self._create_object( request, form.cleaned_data, *args, **kwargs )
-		except BusLogError, berror:
-			messages.error( request, berror.message )
-			return redirect( 'org-client-account-list', oid = self.url_kwargs.oid, cid = self.url_kwargs.cid )
-
-		messages.success( request, 'Account <a href="{}">{}</a> was successfully created.'.format( newo.get_single_url(), newo.name ) )
-		return redirect( 'org-client-account-list', oid = self.url_kwargs.oid, cid = self.url_kwargs.cid )
-
-
-
-
-
 
 class AccountSingle( SingleObjectView ):
 	template_name = 'pages/org/account/single'
 
 	def get_object( self, request, *args, **kwargs ):
-		mid = self._extract_ids( [ 'oid', 'cid', 'aid' ], **kwargs )
-
-		return get_object_or_404( Account, refnum = mid.aid, client__refnum = mid.cid, client__organization__refnum = mid.oid )
-
-	def delete_object( self, request, ob, *args, **kwargs ):
-		ob.delete()
-		return redirect( 'org-client-account-list', cid = ob.client.refnum, oid = ob.client.organization.refnum )
-
-	def update_object_json( self, request, obj, data, *args, **kwargs ):
-		obj.name = data.get( 'name', obj.name )
-		obj.is_enabled = data.get( 'is_enabled', obj.is_enabled )
-		obj.min_balance = data.get( 'min_balance', obj.min_balance )
-		obj.save()
-		return redirect( 'org-client-account-single', oid = obj.client.organization.refnum, cid = obj.client.refnum, aid = obj.refnum )
+		mid = self._extract_ids( [ 'oid', 'cid' ], **kwargs )
+		return get_object_or_404( Account, client__refnum = mid.cid, client__organization__refnum = mid.oid )
 
 
 

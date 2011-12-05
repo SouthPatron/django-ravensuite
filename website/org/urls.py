@@ -11,7 +11,7 @@ urlpatterns = patterns('',
 	url( r'^(?P<oid>\d+)$', login_required( OrgSingle.as_view() ), name = 'org-single' ),
 
 
-# ------ CLIENTS -----------------------------
+# ------ USERS -------------------------------
 
 
 	url( r'^(?P<oid>\d+)/users$', login_required( UserList.as_view() ), name = 'org-user-list' ),
@@ -35,18 +35,17 @@ urlpatterns = patterns('',
 
 # ------ CLIENTS / ACCOUNTS ------------------
 
-	url( r'^(?P<oid>\d+)/client/(?P<cid>\d+)/accounts$', login_required( AccountList.as_view() ), name = 'org-client-account-list' ),
-	url( r'^(?P<oid>\d+)/client/(?P<cid>\d+)/account/(?P<aid>\d+)$', login_required( AccountSingle.as_view() ), name = 'org-client-account-single' ),
+	url( r'^(?P<oid>\d+)/client/(?P<cid>\d+)/account$', login_required( AccountSingle.as_view() ), name = 'org-client-account-single' ),
 
 
-	url( r'^(?P<oid>\d+)/client/(?P<cid>\d+)/account/(?P<aid>\d+)/transactions$', login_required( AccountTransactionList.as_view() ), name = 'org-client-account-transaction-list' ),
-	url( r'^(?P<oid>\d+)/client/(?P<cid>\d+)/account/(?P<aid>\d+)/transaction/(?P<tid>\d+)$', login_required( AccountTransactionSingle.as_view() ), name = 'org-client-account-transaction-single' ),
+	url( r'^(?P<oid>\d+)/client/(?P<cid>\d+)/account/transactions$', login_required( AccountTransactionList.as_view() ), name = 'org-client-account-transaction-list' ),
+	url( r'^(?P<oid>\d+)/client/(?P<cid>\d+)/account/transaction/(?P<tid>\d+)$', login_required( AccountTransactionSingle.as_view() ), name = 'org-client-account-transaction-single' ),
 
 
-# ------ CLIENTS / ACCOUNT / INVOICES ------------------
+# ------ CLIENTS / INVOICES ------------------
 
-	url( r'^(?P<oid>\d+)/client/(?P<cid>\d+)/account/(?P<aid>\d+)/invoices$', login_required( InvoiceList.as_view() ), name = 'org-client-account-invoice-list' ),
-	url( r'^(?P<oid>\d+)/client/(?P<cid>\d+)/account/(?P<aid>\d+)/invoice/(?P<iid>\d+)$', login_required( InvoiceSingle.as_view() ), name = 'org-client-account-invoice-single' ),
+	url( r'^(?P<oid>\d+)/client/(?P<cid>\d+)/invoices$', login_required( InvoiceList.as_view() ), name = 'org-client-invoice-list' ),
+	url( r'^(?P<oid>\d+)/client/(?P<cid>\d+)/invoice/(?P<iid>\d+)$', login_required( InvoiceSingle.as_view() ), name = 'org-client-invoice-single' ),
 
 
 # ------ ACTIVITIES -----------------------------

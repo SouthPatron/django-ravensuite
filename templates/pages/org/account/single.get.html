@@ -1,37 +1,68 @@
 {% extends 'layouts/org/member.html' %}
 
+{% load decshift %}
+
 {% block str_org_name %}{{ instance.get_org.trading_name }}{% endblock %}
 {% block str_client_name %}{{ instance.get_client.trading_name }}{% endblock %}
-{% block str_section_name %}Dashboard{% endblock %}
+{% block str_section_name %}Account{% endblock %}
 
 {% block breadcrumbs %}
 	{{ block.super }}
 	<a href="{{ instance.get_org.get_client_list_url }}">Clients</a>&gt;
 	<a href="{{ instance.get_client.get_single_url }}">{{ instance.get_client.trading_name }}</a>&gt;
-	<a href="{{ instance.get_client.get_account_list_url }}">Accounts</a>&gt;
-	<a href="{{ instance.get_single_url }}">{{ instance.name }}</a>&gt;
+	<a href="{{ instance.get_client.get_account_single_url }}">Account</a>&gt;
 {% endblock %}
 
 
 {% block page_functions %}
-{% include 'page_functions/org/account_level.html' with instance=instance %}
+{% include 'page_functions/org/client_level.html' with instance=instance.get_client %}
 {% endblock %}
+
+
+{% block onready %}
+
+	$('#account_list_table').dataTable( {
+		"iDisplayLength" : 25,
+		"bFilter" : false,
+		"bSort" : false,
+		"sPaginationType" : "full_numbers",
+		"aaSortingFixed" : [[ 0, "asc" ]],
+		"sDom" : 't<"bottom"ip><"clear">'
+	});
+
+
+{% endblock %}
+
 
 {% block content %}
 
-<table>
-<tr>
-	<td>Reference Number:</td>
-	<td>{{ instance.refnum }}</td>
-</tr>
+<table
+	id="account_list_table"
+	style=' text-align: left; '
+	>
+<thead>
+	<tr>
+		<th>Ref</th>
+		<th>Time</th>
+		<th>Description</th>
+		<th>Amount</th>
+		<th>Balance</th>
+	</tr>
+</thead>
+<tbody>
+{% for obj in instance.acccounttransaction_set.all %}
 
-<tr>
-	<td>Name:</td>
-	<td>{{ instance.name }}</td>
-</tr>
+	<tr>
+		<td><a href='{{ obj.get_single_url }}'>{{ obj.refnum }}</a></td>
+		<td><a href='{{ obj.get_single_url }}'>{{ obj.event_time }}</a></td>
+		<td><a href='{{ obj.get_single_url }}'>{{ obj.description }}</a></td>
+		<td><a href='{{ obj.get_single_url }}'>{{ obj.amount|decshift }}</a></td>
+		<td><a href='{{ obj.get_single_url }}'>{{ obj.balance_after|decshift|floatformat:2 }}</a></td>
+	</tr>
+{% endfor %}
+</tbody>
 </table>
 
 {% endblock %}
-
 
 

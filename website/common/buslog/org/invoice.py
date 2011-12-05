@@ -22,7 +22,7 @@ class InvoiceBusLog( object ):
 
 
 	@staticmethod
-	def create( account ):
+	def create( client ):
 
 		if ( account.is_enabled is False ):
 			raise BusLogError( 'The account against which the invoice is being raised is not enabled.' )
