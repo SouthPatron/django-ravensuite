@@ -9,6 +9,7 @@ from account import *
 from accounttransaction import *
 
 from invoice import *
+from payment import *
 
 
 from activity import *

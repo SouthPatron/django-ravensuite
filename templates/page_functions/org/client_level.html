@@ -3,7 +3,6 @@
 <ul>
 	<li class="{% active request '\/client\/\d+$' %}"><a href="{{ instance.get_single_url }}">Dashboard</a></li>
 	<li class="{% active request '\/projects$' %}"><a href="{{ instance.get_project_list_url }}">Projects</a></li>
-	<li class="{% active request '\/invoices$' %}"><a href="{{ instance.get_invoice_list_url }}">Invoices</a></li>
 	<li class="{% active request '\/account$' %}"><a href="{{ instance.get_account_single_url }}">Account</a></li>
 </ul>
 

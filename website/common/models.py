@@ -60,6 +60,12 @@ InvoiceState = ChoicesEnum(
 	VOID = ( 10, 'Void' ),
 )
 
+PaymentState = ChoicesEnum(
+	ACTIVE = ( 5, 'Active' ),
+	VOID = ( 10, 'Reversed' ),
+)
+
+
 ExpiryAction = ChoicesEnum(
 	COMMIT = ( 'commit', 'Commit' ),
 	ROLLBACK = ( 'rollback', 'Rollback' ),
@@ -126,6 +132,7 @@ class OrganizationAccount( models.Model ):
 class OrganizationCounter( models.Model ):
 	organization = models.OneToOneField( Organization )
 	invoice_no = models.BigIntegerField( default = 1 )
+	payment_no = models.BigIntegerField( default = 1 )
 	client_no = models.BigIntegerField( default = 1 )
 	project_no = models.BigIntegerField( default = 1 )
 
@@ -168,7 +175,7 @@ class Client( models.Model ):
 		return reverse( 'org-client-account-single', kwargs = { 'oid' : self.organization.refnum, 'cid' : self.refnum } )
 
 	def get_invoice_list_url( self ):
-		return reverse( 'org-client-invoice-list', kwargs = { 'oid' : self.organization.refnum, 'cid' : self.refnum } )
+		return reverse( 'org-client-account-invoice-list', kwargs = { 'oid' : self.organization.refnum, 'cid' : self.refnum } )
 
 
 
@@ -211,7 +218,10 @@ class AccountTransaction( models.Model ):
 		return self.account
 
 	def get_single_url( self ):
-		return reverse( 'org-client-account-transaction-single', kwargs = { 'oid' : self.get_org().refnum, 'cid' : self.get_client().refnum } )
+		return reverse( 'org-client-account-transaction-single', kwargs = { 'oid' : self.get_org().refnum, 'cid' : self.get_client().refnum, 'tid' : self.refnum } )
+
+	class Meta:
+		ordering = [ '-event_time' ]
 
 
 class AccountTransactionData( models.Model ):
@@ -242,7 +252,11 @@ class Invoice( models.Model ):
 		return self.client
 
 	def get_single_url( self ):
-		return reverse( 'org-client-invoice-single', kwargs = { 'oid' : self.get_org().refnum, 'cid' : self.get_client().refnum, 'iid' : self.refnum } )
+		return reverse( 'org-client-account-invoice-single', kwargs = { 'oid' : self.get_org().refnum, 'cid' : self.get_client().refnum, 'iid' : self.refnum } )
+
+
+	class Meta:
+		ordering = [ '-invoice_date' ]
 
 
 class InvoiceLine( models.Model ):
@@ -254,24 +268,30 @@ class InvoiceLine( models.Model ):
 	total = models.BigIntegerField( default = 0 )
 
 class Payment( models.Model ):
-	invoice = models.ForeignKey( Invoice )
-	transaction = models.ForeignKey( AccountTransaction )
-	
-	
-class Subscription( models.Model ):
-	account = models.ForeignKey( Account )
-
-	interval_unit = models.IntegerField( choices = Interval.choices(), default = Interval.MONTH )
-	interval_count = models.IntegerField( default = 1 )
-
-	generate_invoice = models.BooleanField()
-	generate_statement = models.BooleanField()
-
-	group = models.CharField( max_length = 32 )
-	is_grouped = models.BooleanField()
-	description = models.CharField( max_length = 64 )
-
+	client = models.ForeignKey( Client )
+	refnum = models.BigIntegerField()
+	creation_time = models.DateTimeField()
+	payment_date = models.DateField()
 	amount = models.BigIntegerField( default = 0 )
+
+	comment = models.CharField( max_length = 255 )
+
+	is_allocated = models.BooleanField( default = False )
+
+	state = models.IntegerField( choices = PaymentState.choices(), default = PaymentState.ACTIVE )
+
+	def get_org( self ):
+		return self.client.organization
+
+	def get_client( self ):
+		return self.client
+
+	def get_single_url( self ):
+		return reverse( 'org-client-account-payment-single', kwargs = { 'oid' : self.get_org().refnum, 'cid' : self.get_client().refnum, 'payid' : self.refnum } )
+
+	class Meta:
+		ordering = [ '-payment_date' ]
+
 
 
 class Activity( models.Model ):
@@ -348,6 +368,10 @@ class TimesheetEntry( models.Model ):
 		return self.task.activity
 
 
+	class Meta:
+		ordering = [ '-start_time' ]
+
+
 class TimesheetTimer( models.Model ):
 	user = models.ForeignKey( User )
 	project = models.ForeignKey( Project )
@@ -368,7 +392,7 @@ class TimesheetTimer( models.Model ):
 		return reverse( 'timesheet-timer-single', kwargs = { 'timerid' : self.id } )
 
 
-
-
+	class Meta:
+		ordering = [ '-start_time' ]
 
 

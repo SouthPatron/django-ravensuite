@@ -33,7 +33,7 @@ urlpatterns = patterns('',
 
 
 
-# ------ CLIENTS / ACCOUNTS ------------------
+# ------ CLIENTS / ACCOUNT ------------------
 
 	url( r'^(?P<oid>\d+)/client/(?P<cid>\d+)/account$', login_required( AccountSingle.as_view() ), name = 'org-client-account-single' ),
 
@@ -42,10 +42,17 @@ urlpatterns = patterns('',
 	url( r'^(?P<oid>\d+)/client/(?P<cid>\d+)/account/transaction/(?P<tid>\d+)$', login_required( AccountTransactionSingle.as_view() ), name = 'org-client-account-transaction-single' ),
 
 
-# ------ CLIENTS / INVOICES ------------------
+# ------ CLIENTS / ACCOUNT / INVOICES ------------------
 
-	url( r'^(?P<oid>\d+)/client/(?P<cid>\d+)/invoices$', login_required( InvoiceList.as_view() ), name = 'org-client-invoice-list' ),
-	url( r'^(?P<oid>\d+)/client/(?P<cid>\d+)/invoice/(?P<iid>\d+)$', login_required( InvoiceSingle.as_view() ), name = 'org-client-invoice-single' ),
+	url( r'^(?P<oid>\d+)/client/(?P<cid>\d+)/account/invoices$', login_required( InvoiceList.as_view() ), name = 'org-client-account-invoice-list' ),
+	url( r'^(?P<oid>\d+)/client/(?P<cid>\d+)/account/invoice/(?P<iid>\d+)$', login_required( InvoiceSingle.as_view() ), name = 'org-client-account-invoice-single' ),
+
+
+# ------ CLIENTS / ACCOUNT / PAYMENT ------------------
+
+	url( r'^(?P<oid>\d+)/client/(?P<cid>\d+)/account/payments$', login_required( PaymentList.as_view() ), name = 'org-client-account-payment-list' ),
+	url( r'^(?P<oid>\d+)/client/(?P<cid>\d+)/account/payment/(?P<payid>\d+)$', login_required( PaymentSingle.as_view() ), name = 'org-client-account-payment-single' ),
+
 
 
 # ------ ACTIVITIES -----------------------------
