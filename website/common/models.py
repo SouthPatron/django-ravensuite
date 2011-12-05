@@ -210,6 +210,9 @@ class AccountTransaction( models.Model ):
 	balance_after = models.BigIntegerField( default = 0 )
 	amount = models.BigIntegerField( default = 0 )
 
+	originating_route = models.CharField( max_length = 255 )
+
+
 	def get_org( self ):
 		return self.account.client.organization
 

@@ -156,8 +156,8 @@ Current Balance: {{ instance.balance|decshift|floatformat:2 }}
 		<th>Ref</th>
 		<th>Time</th>
 		<th>Description</th>
-		<th>Amount</th>
 		<th>Balance</th>
+		<th>Amount</th>
 	</tr>
 </thead>
 <tbody>
@@ -167,8 +167,8 @@ Current Balance: {{ instance.balance|decshift|floatformat:2 }}
 		<td><a href='{{ obj.get_single_url }}'>{{ obj.refnum }}</a></td>
 		<td><a href='{{ obj.get_single_url }}'>{{ obj.event_time }}</a></td>
 		<td><a href='{{ obj.get_single_url }}'>{{ obj.description }}</a></td>
-		<td><a href='{{ obj.get_single_url }}'>{{ obj.amount|decshift }}</a></td>
 		<td><a href='{{ obj.get_single_url }}'>{{ obj.balance_after|decshift|floatformat:2 }}</a></td>
+		<td><a href='{{ obj.get_single_url }}'>{{ obj.amount|decshift }}</a></td>
 	</tr>
 {% endfor %}
 </tbody>

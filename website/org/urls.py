@@ -39,7 +39,7 @@ urlpatterns = patterns('',
 
 
 	url( r'^(?P<oid>\d+)/client/(?P<cid>\d+)/account/transactions$', login_required( AccountTransactionList.as_view() ), name = 'org-client-account-transaction-list' ),
-	url( r'^(?P<oid>\d+)/client/(?P<cid>\d+)/account/transaction/(?P<tid>\d+)$', login_required( AccountTransactionSingle.as_view() ), name = 'org-client-account-transaction-single' ),
+	url( r'^(?P<oid>\d+)/client/(?P<cid>\d+)/account/transaction/(?P<tid>\d+)$', login_required( account_transaction_router ), name = 'org-client-account-transaction-single' ),
 
 
 # ------ CLIENTS / ACCOUNT / INVOICES ------------------

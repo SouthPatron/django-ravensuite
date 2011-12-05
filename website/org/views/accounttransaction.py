@@ -8,6 +8,8 @@ from common.views.listview import ListView
 
 from common.models import *
 from common.utils.dbgdatetime import datetime
+from common.utils.objroute import ObjRoute
+
 
 class AccountTransactionList( ListView ):
 	template_name = 'pages/org/account_transaction/index'
@@ -22,13 +24,9 @@ class AccountTransactionList( ListView ):
 		return obj_list
 
 
-class AccountTransactionSingle( SingleObjectView ):
-	template_name = 'pages/org/account_transaction/single'
 
-	def get_object( self, request, *args, **kwargs ):
-		mid = self._extract_ids( [ 'oid', 'cid', 'tid' ], **kwargs )
-		return get_object_or_404( AccountTransaction, refnum = mid.tid, account__client__refnum = mid.cid, account__client__organization__refnum = mid.oid )
-
-
-
+def account_transaction_router( request, oid, cid, tid ):
+	actrans = AccountTransaction.objects.get( refnum = tid, account__client__refnum = cid, account__client__organization__refnum = oid )
+	newobj = ObjRoute.get( actrans.originating_route )
+	return redirect( newobj.get_single_url() )
 
