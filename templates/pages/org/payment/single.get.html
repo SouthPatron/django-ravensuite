@@ -30,8 +30,6 @@
 	<button id="reverse-payment" type="button">Reverse Payment</button>
 </div>
 
-
-
 <div style="
 		font-size: 2em;
 		margin: 20px 0px;
@@ -41,6 +39,33 @@
 <div>Amount: {{ instance.amount|decshift|floatformat:2 }}</div>
 <div>Comment: {{ instance.comment }} </div>
 </div>
+
+<div style="
+		font-size: 2em;
+	">
+	Allocated to:
+</div>
+
+<div style="
+	">
+	{% for obj in instance.paymentallocation_set.all %}
+		<div> To Invoice: {{ obj.invoice.refnum }} of {{ obj.invoice.total }}, {{ obj.invoice_date }}, {{ obj.due_date }}. Paid {{ obj.amount }}.</div>
+	{% endfor %}
+</div>
+
+<div style="
+		font-size: 2em;
+	">
+	Unpaid invoices:
+</div>
+
+<div style="
+	">
+	{% for obj in instance.get_client.get_unpaid_invoice_list %}
+		<div>{{ obj.refnum }}, {{ obj.total }}, {{ obj.invoice_date }}, {{ obj.due_date }}</div>
+	{% endfor %}
+</div>
+
 
 
 {% endblock %}

@@ -177,6 +177,8 @@ class Client( models.Model ):
 	def get_invoice_list_url( self ):
 		return reverse( 'org-client-account-invoice-list', kwargs = { 'oid' : self.organization.refnum, 'cid' : self.refnum } )
 
+	def get_unpaid_invoice_list( self ):
+		return Invoice.objects.filter( client = self, is_paid = False, state = InvoiceState.FINAL )
 
 
 class Account( models.Model ):
@@ -291,6 +293,12 @@ class Payment( models.Model ):
 
 	class Meta:
 		ordering = [ '-payment_date' ]
+
+class PaymentAllocation( models.Model ):
+	payment = models.ForeignKey( Payment )
+	invoice = models.ForeignKey( Invoice )
+	amount = models.BigIntegerField( default = 0 )
+
 
 
 
