@@ -23,13 +23,9 @@ class InvoiceBusLog( object ):
 
 	@staticmethod
 	def create( client ):
-
-		if ( account.is_enabled is False ):
-			raise BusLogError( 'The account against which the invoice is being raised is not enabled.' )
-
 		newt = Invoice()
-		newt.account = account
-		newt.refnum = InvoiceBusLog.get_next_refnum( account.get_org() )
+		newt.client = client
+		newt.refnum = InvoiceBusLog.get_next_refnum( client.get_org() )
 		newt.creation_time = datetime.datetime.now()
 		newt.invoice_date = datetime.date.today()
 		newt.due_date = datetime.date.today() + datetime.timedelta( weeks = 4 )
@@ -188,7 +184,7 @@ class InvoiceBusLog( object ):
 	@staticmethod
 	def _update_finalize_invoice( invoice ):
 		transaction = AccountBusLog.adjust(
-				invoice.account,
+				invoice.client.account,
 				'INVOICE',
 				'Invoice {}'.format( invoice.refnum ),
 				float(0)-invoice.total,
@@ -199,7 +195,7 @@ class InvoiceBusLog( object ):
 	@staticmethod
 	def _update_void_invoice( invoice ):
 		transaction = AccountBusLog.adjust(
-				invoice.account,
+				invoice.client.account,
 				'VOID',
 				'Void of Invoice {}'.format( invoice.refnum ),
 				invoice.total,

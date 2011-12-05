@@ -61,7 +61,7 @@ class InvoiceSingle( SingleObjectView ):
 
 	def delete_object( self, request, ob, *args, **kwargs ):
 		InvoiceBusLog.delete( ob )
-		return redirect( ob.get_account().get_invoice_list_url() )
+		return redirect( ob.get_client().get_invoice_list_url() )
 
 
 	def update_object_html( self, request, obj, data, *args, **kwargs ):
@@ -92,7 +92,7 @@ class InvoiceSingle( SingleObjectView ):
 			messages.error( request, berror.message )
 			return redirect( obj.get_single_url() )
 	
-		return redirect( obj.get_account().get_invoice_list_url() )
+		return redirect( obj.get_client().get_invoice_list_url() )
 
 
 	def update_object_json( self, request, obj, data, *args, **kwargs ):

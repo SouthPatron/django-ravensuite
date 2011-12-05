@@ -211,7 +211,7 @@ class AccountTransaction( models.Model ):
 		return self.account
 
 	def get_single_url( self ):
-		return reverse( 'org-client-account-transaction-single', kwargs = { 'oid' : self.get_org().refnum, 'cid' : self.get_client().refnum, 'aid' : self.get_account().refnum } )
+		return reverse( 'org-client-account-transaction-single', kwargs = { 'oid' : self.get_org().refnum, 'cid' : self.get_client().refnum } )
 
 
 class AccountTransactionData( models.Model ):
