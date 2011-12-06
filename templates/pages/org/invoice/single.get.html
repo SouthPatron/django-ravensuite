@@ -643,6 +643,7 @@
 					</tr>
 				{% endfor %}
 
+				{% if instance.state == 0 %}
 				<tr>
 					<td class="item-description"><span>&nbsp;</span><input type="hidden" name="description" value="" /></td>
 					<td class="item-qty"><span>&nbsp;</span><input type="hidden" name="units" value="" /></td>
@@ -651,6 +652,7 @@
 					<td class="item-amount"><span>&nbsp;</span><input type="hidden" name="amount" value="" /></td>
 					<td class="item-delete"><img class="item-delete-link" src="{{ STATIC_URL }}images/icons/line_delete_grey.png" /></td>
 				</tr>
+				{% endif %}
 			</tbody>
 		</table>
 	</div>
