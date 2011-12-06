@@ -1,0 +1,264 @@
+.invoice
+{
+	margin: 10px 10px;
+	background-color: #f2f2f2;
+	border: 1px solid #a2a2a2;
+	box-shadow: 1px 1px 2px #cccccc;
+}
+
+.invoice .invoice-header
+{
+	border-bottom: 1px solid #e2e2e2;
+	padding: 0px 0px 20px 0px;
+	margin: 15px 15px;
+}
+
+.invoice .invoice-dates
+{
+	float: left;
+}
+
+.invoice .invoice-status
+{
+	float: right;
+	padding-right: 20px;
+	padding-top: 5px;
+}
+
+.invoice .invoice-status-label
+{
+	font-size: 2em;
+}
+
+.invoice .invoice-header input
+{
+	padding-left: 5px;
+}
+
+
+
+.invoice .tax-row
+{
+	padding: 0px 15px;
+}
+
+.invoice .item-list
+{
+	padding: 0px 15px;
+}
+
+.invoice .item-list table
+{
+	width: 100%;
+}
+
+.invoice .item-list thead tr
+{
+	border-bottom: 1px solid #707070;
+}
+
+.invoice .item-list thead th
+{
+	text-align: left;
+	padding: 5px 5px;
+	background-color: #ffffff;
+}
+
+.invoice .item-list thead .head-description { width: 235px; }
+.invoice .item-list thead .head-qty { width: 123px; }
+.invoice .item-list thead .head-unit-price { width: 147px; }
+.invoice .item-list thead .head-tax-rate { width: 195px; }
+.invoice .item-list thead .head-amount { width: 158px; }
+.invoice .item-list thead .head-delete { width: 20px; }
+
+
+.invoice .item-list tbody tr
+{
+	border-left: 1px solid #d8d8d8;
+}
+
+.invoice .item-list tbody td
+{
+	text-align: left;
+	padding: 5px 5px;
+	background-color: #ffffff;
+	border-right: 1px solid #d8d8d8;
+	border-bottom: 1px solid #c8c8c8;
+	overflow: hidden;
+}
+
+.invoice .item-list tbody input
+{
+	border: 0px;
+	background-color: #f0f0f0;
+	width: 100%;
+}
+
+
+
+.invoice .item-list tbody td.item-qty
+{
+	text-align: right;
+	padding-right: 8px;
+}
+
+.invoice .item-list tbody td.item-qty input
+{
+	text-align: right;
+}
+
+.invoice .item-list tbody td.item-unit-price
+{
+	text-align: right;
+	padding-right: 8px;
+}
+
+.invoice .item-list tbody td.item-unit-price input
+{
+	text-align: right;
+}
+
+.invoice .item-list tbody td.item-tax-rate select
+{
+	width: 100%;
+}
+
+
+
+.invoice .item-list tbody td.item-amount
+{
+	text-align: right;
+	padding-right: 8px;
+}
+
+
+
+
+.invoice .item-list tbody td.item-delete
+{
+	background-color: inherit;
+}
+
+
+.invoice .summary-row
+{
+	margin: 20px 20px;
+}
+
+
+.invoice .summary-row .add-row-portion
+{
+	float: left;
+	max-width: 440px;
+}
+
+.invoice .summary-row .add-row-portion .comment-title
+{
+	margin-top: 10px;
+	margin-bottom: 5px;
+	font-size: 1em;
+	color: #525252;
+}
+
+.invoice .summary-row .add-row-portion .comment-block
+{
+}
+
+.invoice .summary-row .add-row-portion .comment-block textarea
+{
+	width: 430px;
+	height: 60px;
+	border: 1px solid #e2e2e2;
+	resize: none;
+}
+
+.invoice .summary-row .summary-portion
+{
+	float: right;
+	width: 350px;
+	padding: 0px 30px;
+}
+
+.invoice .summary-row .summary-portion .inner-amount
+{
+	border-bottom: 1px solid black;
+	height: 30px;
+	padding: 5px;
+}
+
+.invoice .summary-row .summary-portion .inner-amount .inner-amount-label
+{
+	float: left;
+	width: 130px;
+}
+
+.invoice .summary-row .summary-portion .inner-amount .inner-amount-amount
+{
+	float: right;
+	width: 200px;
+	text-align: right;
+}
+
+
+.invoice .summary-row .summary-portion .inner-tax
+{
+	border-bottom: 1px solid black;
+	height: 30px;
+	padding: 5px;
+	margin-top: 10px;
+}
+
+.invoice .summary-row .summary-portion .inner-tax .inner-tax-label
+{
+	float: left;
+	width: 130px;
+}
+
+.invoice .summary-row .summary-portion .inner-tax .inner-tax-amount
+{
+	float: right;
+	width: 200px;
+	text-align: right;
+}
+
+.invoice .summary-row .summary-portion .inner-total
+{
+	height: 30px;
+	padding: 5px;
+	margin-top: 10px;
+	font-size: 1.3em;
+}
+
+.invoice .summary-row .summary-portion .inner-total .inner-total-label
+{
+	float: left;
+	width: 130px;
+}
+
+.invoice .summary-row .summary-portion .inner-total .inner-total-amount
+{
+	float: right;
+	width: 200px;
+	text-align: right;
+}
+
+
+	
+
+.invoice .button-row
+{
+	background-color: #a2a2a8;
+	padding: 10px;
+}
+
+.invoice .button-row .button-row-left
+{
+	float: left;
+}
+
+.invoice .button-row .button-row-right
+{
+	float: right;
+}
+
+

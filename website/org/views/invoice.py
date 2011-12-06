@@ -52,6 +52,20 @@ class InvoiceList( ListView ):
 		return self.api_resp( resp )
 
 
+class InvoiceDraftList( ListView ):
+	template_name = 'pages/org/invoice/draft-index'
+
+	def get_extra( self, request, obj_list, fmt, *args, **kwargs ):
+		return Client.objects.get( refnum = self.url_kwargs.cid, organization__refnum = self.url_kwargs.oid )
+
+	def get_object_list( self, request, *args, **kwargs ):
+		mid = self._extract_ids( [ 'oid', 'cid' ], **kwargs )
+		obj_list = Invoice.objects.filter( client__refnum = mid.cid, client__organization__refnum = mid.oid, state = InvoiceState.DRAFT )
+		return obj_list
+
+
+
+
 class InvoiceSingle( SingleObjectView ):
 	template_name = 'pages/org/invoice/single'
 
@@ -68,13 +82,19 @@ class InvoiceSingle( SingleObjectView ):
 
 		invoice_data = {}
 
+		invoice_data[ 'state' ] = data.get( 'invoice_state' )
+
+		if long(invoice_data['state']) == InvoiceState.DELETE:
+			rc = self.delete_object( request, obj, *args, **kwargs )
+			messages.info( request, 'The draft invoice has been deleted' )
+			return redirect( obj.get_client().get_draft_invoice_list_url() )
+
 		invoice_data[ 'invoice_date' ] = data.get( 'invoice_date' )
 		invoice_data[ 'due_date' ] = data.get( 'due_date' )
 		invoice_data[ 'tax' ] = data.get( 'invoice_tax' )
 		invoice_data[ 'amount' ] = data.get( 'invoice_amount' )
 		invoice_data[ 'total' ] = data.get( 'invoice_total' )
 		invoice_data[ 'comment' ] = data.get( 'invoice_comment', "" )
-		invoice_data[ 'state' ] = data.get( 'invoice_state' )
 		invoice_data[ 'items' ] = []
 		
 		for pos in range( len(data.getlist( 'description' )) ):
@@ -92,7 +112,7 @@ class InvoiceSingle( SingleObjectView ):
 			messages.error( request, berror.message )
 			return redirect( obj.get_single_url() )
 	
-		return redirect( obj.get_client().get_invoice_list_url() )
+		return redirect( obj.get_client().get_draft_invoice_list_url() )
 
 
 	def update_object_json( self, request, obj, data, *args, **kwargs ):

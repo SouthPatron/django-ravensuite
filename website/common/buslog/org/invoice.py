@@ -202,6 +202,8 @@ class InvoiceBusLog( object ):
 				''
 			)
 
+
+
 	@staticmethod
 	def _update_handle_state_change( invoice, new_data ):
 		ns = new_data['state']

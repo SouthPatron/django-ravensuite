@@ -116,6 +116,12 @@
 
 {% block content %}
 
+
+<div class="subsection-links">
+	<a href="{% url org-client-account-invoice-draft-list instance.get_org.refnum instance.get_client.refnum %}">Draft Invoices{% if instance.get_client.get_draft_invoice_list.count > 0 %} <strong>({{ instance.get_client.get_draft_invoice_list.count }} draft{{ instance.get_client.get_draft_invoice_list.count|pluralize }})</strong>{% endif %}</a>
+</div>
+
+
 <div style="
 	">
 	<button id="invoice-create" type="button">New Invoice</button>
@@ -139,11 +145,12 @@
 
 
 
+
 <div style="
 		font-size: 2em;
 		margin: 20px 0px;
 	">
-Current Balance: {{ instance.balance|decshift|floatformat:2 }}
+Current Balance: {{ instance.balance|decsplay }}
 </div>
 
 
@@ -167,8 +174,8 @@ Current Balance: {{ instance.balance|decshift|floatformat:2 }}
 		<td><a href='{{ obj.get_single_url }}'>{{ obj.refnum }}</a></td>
 		<td><a href='{{ obj.get_single_url }}'>{{ obj.event_time }}</a></td>
 		<td><a href='{{ obj.get_single_url }}'>{{ obj.description }}</a></td>
-		<td><a href='{{ obj.get_single_url }}'>{{ obj.balance_after|decshift|floatformat:2 }}</a></td>
-		<td><a href='{{ obj.get_single_url }}'>{{ obj.amount|decshift }}</a></td>
+		<td><a href='{{ obj.get_single_url }}'>{{ obj.balance_after|decsplay }}</a></td>
+		<td><a href='{{ obj.get_single_url }}'>{{ obj.amount|decsplay }}</a></td>
 	</tr>
 {% endfor %}
 </tbody>

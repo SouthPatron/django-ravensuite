@@ -58,6 +58,7 @@ InvoiceState = ChoicesEnum(
 	DRAFT = ( 0, 'Draft' ),
 	FINAL = ( 5, 'Final' ),
 	VOID = ( 10, 'Void' ),
+	DELETE = ( 99, 'Delete' ),
 )
 
 PaymentState = ChoicesEnum(
@@ -180,6 +181,13 @@ class Client( models.Model ):
 	def get_unpaid_invoice_list( self ):
 		return Invoice.objects.filter( client = self, is_paid = False, state = InvoiceState.FINAL )
 
+	def get_draft_invoice_list( self ):
+		return Invoice.objects.filter( client = self, state = InvoiceState.DRAFT )
+
+	def get_draft_invoice_list_url( self ):
+		return reverse( 'org-client-account-invoice-draft-list', kwargs = { 'oid' : self.organization.refnum, 'cid' : self.refnum } )
+
+
 
 class Account( models.Model ):
 	client = models.OneToOneField( Client )
@@ -259,6 +267,15 @@ class Invoice( models.Model ):
 	def get_single_url( self ):
 		return reverse( 'org-client-account-invoice-single', kwargs = { 'oid' : self.get_org().refnum, 'cid' : self.get_client().refnum, 'iid' : self.refnum } )
 
+
+	def is_draft( self ):
+		return self.state == InvoiceState.DRAFT
+
+	def is_final( self ):
+		return self.state == InvoiceState.FINAL
+
+	def is_void( self ):
+		return self.state == InvoiceState.VOID
 
 	class Meta:
 		ordering = [ '-invoice_date' ]

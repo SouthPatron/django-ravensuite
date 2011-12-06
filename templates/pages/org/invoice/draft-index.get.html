@@ -5,7 +5,7 @@
 
 {% block str_org_name %}{{ extra.get_org.trading_name }}{% endblock %}
 {% block str_client_name %}{{ extra.trading_name }}{% endblock %}
-{% block str_section_name %}Invoices{% endblock %}
+{% block str_section_name %}Draft Invoices{% endblock %}
 
 {% block breadcrumbs %}
 	{{ block.super }}
@@ -19,24 +19,8 @@
 {% include 'page_functions/org/client_level.html' with instance=extra %}
 {% endblock %}
 
-{% block head_includes %}
-	<script type="text/javascript" src="{{ STATIC_URL }}js/smk.js"></script>
-{% endblock %}
-
-
-
 
 {% block onready %}
-
-	$( "#invoice-create" ).click(function() {
-
-		invoice_list_url = '/org/{0}/client/{1}/invoices?format=json'.format( {{ extra.get_org.refnum }}, {{ extra.refnum }} );
-
-		$.post( invoice_list_url, function( data ) {
-				window.location.replace( data[ 'url' ] );
-			}
-		);
-	});
 
 	$('#invoice_list_table').dataTable( {
 		"iDisplayLength" : 25,
@@ -50,13 +34,15 @@
 {% endblock %}
 
 
-{% block content_menu_right %}
-<ul>
-	<li><a href="#" id="invoice-create">New Invoice</a></li>
-</ul>
-{% endblock %}
-
 {% block content %}
+
+<div class="subsection-links">
+	<a href="{{ extra.account.get_single_url }}">&lt;&lt; Back to Account</a>
+</div>
+
+<div class="minor-page-title">
+Draft Invoices
+</div>
 
 <table
 	id="invoice_list_table"
@@ -65,7 +51,6 @@
 <thead>
 	<tr>
 		<th>Ref</th>
-		<th>Client</th>
 		<th>Invoice Date</th>
 		<th>Due Date</th>
 		<th>Amount</th>
@@ -76,7 +61,6 @@
 
 	<tr>
 		<td><a href='{{ obj.get_single_url }}'>{{ obj.refnum }}</a></td>
-		<td><a href='{{ obj.get_single_url }}'>{{ obj.client.trading_name }}</a></td>
 		<td><a href='{{ obj.get_single_url }}'>{{ obj.invoice_date }}</a></td>
 		<td><a href='{{ obj.get_single_url }}'>{{ obj.due_date }}</a></td>
 		<td><a href='{{ obj.get_single_url }}'>{{ obj.total|decsplay }}</a></td>

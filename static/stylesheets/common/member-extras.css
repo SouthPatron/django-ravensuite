@@ -1,0 +1,25 @@
+/* ----- EXTRAS ------------------------------------ */
+
+.subsection-links
+{
+	margin: 20px 0px;
+}
+
+.subsection-links a,
+.subsection-links a:visited
+{
+	color: blue;
+}
+
+.subsection-links a strong
+{
+	font-weight: bold;
+}
+
+
+
+.minor-page-title {
+	font-size: 2.3em;
+	margin: 20px 0px;
+}
+
