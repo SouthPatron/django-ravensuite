@@ -5,6 +5,7 @@ from django.conf import settings
 
 from views import *
 
+
 urlpatterns = patterns('',
 
 	url( r'^$', login_required( OrgList.as_view() ), name = 'org-list' ),
@@ -36,6 +37,17 @@ urlpatterns = patterns('',
 # ------ CLIENTS / ACCOUNT ------------------
 
 	url( r'^(?P<oid>\d+)/client/(?P<cid>\d+)/account$', login_required( AccountSingle.as_view() ), name = 'org-client-account-single' ),
+
+
+	url( 
+			r'^(?P<oid>\d+)/client/(?P<cid>\d+)/account.page_component$',
+			login_required(
+				AccountComponents.as_view(
+					template_name = 'page_components/org/account/testme'
+				)
+			),
+			name = 'org-client-account-single'
+		),
 
 
 	url( r'^(?P<oid>\d+)/client/(?P<cid>\d+)/account/transactions$', login_required( AccountTransactionList.as_view() ), name = 'org-client-account-transaction-list' ),

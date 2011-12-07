@@ -4,7 +4,7 @@ from django.shortcuts import get_object_or_404, redirect
 from django.contrib import messages
 
 from common.views.singleobjectview import SingleObjectView
-from common.views.listview import ListView
+from common.views.pagecomponent import PageComponentView
 
 from common.models import *
 from common.buslog.org import *
@@ -21,4 +21,13 @@ class AccountSingle( SingleObjectView ):
 		return get_object_or_404( Account, client__refnum = mid.cid, client__organization__refnum = mid.oid )
 
 
+
+class AccountComponents( PageComponentView ):
+
+	def get_object( self, request, *args, **kwargs ):
+		return get_object_or_404(
+					Account,
+					client__refnum = self.url_kwargs.cid,
+					client__organization__refnum = self.url_kwargs.oid
+				)
 

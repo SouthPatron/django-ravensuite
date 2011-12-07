@@ -1,0 +1,97 @@
+
+
+The list of views here:
+
+Base
+
+	This is reponsible for:
+
+		. Turning on or off CSRF protection if the format is HTML or not.
+		. Extracting all possible kwargs retrieved from the URL parsing
+			into self.url_kwargs.
+		. Keeps a list of supported formats and their mime types.
+		. Provides a simple JSON response method to encode a data structure.
+		. Keeps the template name to be used.
+
+	Notable methods:
+
+		. dispatch() - Override of the normal view dispatch.
+		. not_found() - Simple 404 response.
+		. get_template_name() - Returns the template name
+		. api_resp() - Responds with an API response.
+	
+	Notable members:
+
+		. template_name - Name of of the template file to use.
+		. url_kwargs - Extracted dynamically from URL.
+		. supported_formats - Map of formats to mime types.
+
+
+ListView (Derived from Base)
+
+	This is reponsible for:
+
+		. Implementing the POST and GET method hooks.
+		. Has overriding methods to retrieve the object list and
+			any relevant extra data required for the template.
+		. Allows for the creation of objects with the POST method. For this
+			the inheritting classes must override a create method:
+				
+				create_object_<format>( self, request, data, *args, **kwargs )
+
+			eg:
+				create_object_html( self, request, data, *args, **kwargs )
+
+	Objects available to template:
+
+		. extra - as defined by get_extra()
+		. object_list - as defined by get_object_list()
+		. kwargs - as extracted from URL parser.
+
+	Notable methods:
+
+		. get_extra() - to be overridden by inheritting classes.
+		. get_object_list() - to be overriden by inheritting classes.
+		. create_object_<format>() - called if a POST is received.
+
+
+SingleObjectView (Derived from Base)
+
+	This is reponsible for:
+
+		. Handles the GET, POST, PUT and DELETE on a single object.
+		. GET - Read
+		. PUT - Update
+		. POST - Only if request is in HTML format does this get routed to
+			the PUT handler.
+		. DELETE - Delete the object
+		. Handles updating of the object if the overridden method of the
+			form is present:
+
+				update_object_<format>( self, request, obj, data, *args, **kwargs )
+			eg:
+				update_object_json( self, request, obj, data, *args, **kwargs )
+
+
+	Objects available to template: (get)
+
+		. instance - the object as returned by get_object()
+		. extra - as returned by get_extra()
+		. kwargs - as extracted from URL parser
+	
+	Notable methods:
+
+		. get_extra()
+		. get_object()
+		. delete_object()
+		. update_object_<format>( self, request, obj, data, *args, **kwargs )
+
+
+PageComponentView (Derived from Base)
+
+	This is reponsible for:
+
+		. Serving a page component for display on a webpage. This
+			includes: the javascript, html and stylesheet portions.
+
+
