@@ -43,10 +43,10 @@ urlpatterns = patterns('',
 			r'^(?P<oid>\d+)/client/(?P<cid>\d+)/account.page_component$',
 			login_required(
 				AccountComponents.as_view(
-					template_name = 'page_components/org/account/testme'
+					template_name = 'page_components/org/account/receive_payment'
 				)
 			),
-			name = 'org-client-account-single'
+			name = 'org-client-account-single-component'
 		),
 
 

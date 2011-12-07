@@ -59,44 +59,6 @@
 		);
 	});
 
-	$(function() {
-		
-		var payment_date = $( "#id_payment_date" ),
-			amount = $( "#id_amount" ),
-			allFields = $( [] ).add( payment_date ).add( amount ),
-			tips = $( ".validateTips" );
-
-		$( "#dialog-form" ).dialog({
-			autoOpen: false,
-			height: 400,
-			width: 550,
-			modal: true,
-			buttons: {
-				"Record Payment": function() {
-					var bValid = true;
-					allFields.removeClass( "ui-state-error" );
-
-					// bValid = bValid && validation.length( tips, trading_name, "Trading Name", 3, 192 );
-
-					if ( bValid ) {
-						$( "#create-new-form" ).submit();
-					}
-				},
-				Cancel: function() {
-					$( this ).dialog( "close" );
-				}
-			},
-			close: function() {
-				allFields.val( "" ).removeClass( "ui-state-error" );
-			}
-		});
-
-		$( "#payment-create" )
-			.click(function() {
-				$( "#dialog-form" ).dialog( "open" );
-			});
-	});
-
 
 	datesettings = {
 		dateFormat: 'd M yy',
@@ -110,7 +72,11 @@
 	}
 
 	$('#id_payment_date').datepicker( datesettings );
-	
+
+	$( '#payment-create' ).smkTools(
+			'load_modal',
+			'/org/{{ kwargs.oid }}/client/{{ kwargs.cid }}/account.page_component'
+		);
 
 {% endblock %}
 
@@ -128,23 +94,6 @@
 	<button id="invoice-create" type="button">New Invoice</button>
 	<button id="payment-create" type="button">Receive Payment</button>
 </div>
-
-<div id="dialog-form" title="Record Payment">
-	<p class="validateTips">All form fields are required</p>
-	<form id="create-new-form" method="POST" action="{% url org-client-account-payment-list instance.get_org.refnum instance.get_client.refnum %}">
-		{% csrf_token %}
-		<fieldset>
-
-			<label for="name">Payment Date</label>
-			<input type="text" name="payment_date" id="id_payment_date" class="text ui-widget-content ui-corner-all" />
-
-			<label for="amount">Amount</label>
-			<input type="text" name="amount" id="id_amount" class="text ui-widget-content ui-corner-all" />
-		</fieldset>
-	</form>
-</div>
-
-
 
 
 <div style="

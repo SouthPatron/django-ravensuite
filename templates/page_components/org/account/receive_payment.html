@@ -1,0 +1,14 @@
+<div id="dialog-form" title="Record Payment">
+	<p class="validateTips">All form fields are required</p>
+	<form id="create-new-form" method="POST" action="{% url org-client-account-payment-list instance.get_org.refnum instance.get_client.refnum %}">
+		{% csrf_token %}
+		<fieldset>
+
+			<label for="name">Payment Date</label>
+			<input type="text" name="payment_date" id="id_payment_date" class="text ui-widget-content ui-corner-all" />
+
+			<label for="amount">Amount</label>
+			<input type="text" name="amount" id="id_amount" class="text ui-widget-content ui-corner-all" />
+		</fieldset>
+	</form>
+</div>
