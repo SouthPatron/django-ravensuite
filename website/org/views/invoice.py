@@ -64,6 +64,30 @@ class InvoiceDraftList( ListView ):
 		return obj_list
 
 
+class InvoiceUnpaidList( ListView ):
+	template_name = 'pages/org/invoice/unpaid-index'
+
+	def get_extra( self, request, obj_list, fmt, *args, **kwargs ):
+		return Client.objects.get( refnum = self.url_kwargs.cid, organization__refnum = self.url_kwargs.oid )
+
+	def get_object_list( self, request, *args, **kwargs ):
+		mid = self._extract_ids( [ 'oid', 'cid' ], **kwargs )
+		obj_list = Invoice.objects.filter( client__refnum = mid.cid, client__organization__refnum = mid.oid, state = InvoiceState.FINAL, is_paid = False )
+		return obj_list
+
+class InvoicePaymentList( ListView ):
+	template_name = 'pages/org/invoice/payment-index'
+
+	def get_extra( self, request, obj_list, fmt, *args, **kwargs ):
+		return Invoice.objects.get( refnum = self.url_kwargs.iid, client__refnum = self.url_kwargs.cid, client__organization__refnum = self.url_kwargs.oid )
+
+	def get_object_list( self, request, *args, **kwargs ):
+		mid = self._extract_ids( [ 'oid', 'cid', 'iid' ], **kwargs )
+		obj_list = PaymentAllocation.objects.filter( invoice__refnum = mid.iid, invoice__client__refnum = mid.cid, invoice__client__organization__refnum = mid.oid )
+		return obj_list
+
+
+
 
 
 class InvoiceSingle( SingleObjectView ):

@@ -267,6 +267,9 @@ class Invoice( models.Model ):
 	def get_single_url( self ):
 		return reverse( 'org-client-account-invoice-single', kwargs = { 'oid' : self.get_org().refnum, 'cid' : self.get_client().refnum, 'iid' : self.refnum } )
 
+	def get_payment_list_url( self ):
+		return reverse( 'org-client-account-invoice-payment-list', kwargs = { 'oid' : self.get_org().refnum, 'cid' : self.get_client().refnum, 'iid' : self.refnum } )
+
 
 	def is_draft( self ):
 		return self.state == InvoiceState.DRAFT
