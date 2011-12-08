@@ -24,6 +24,13 @@ class AccountSingle( SingleObjectView ):
 
 class AccountComponents( PageComponentView ):
 
+	def get_extra( self, request, *args, **kwargs ):
+		return get_object_or_404(
+					Client,
+					refnum = self.url_kwargs.cid,
+					organization__refnum = self.url_kwargs.oid
+				)
+
 	def get_object( self, request, *args, **kwargs ):
 		return get_object_or_404(
 					Account,

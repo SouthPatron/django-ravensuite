@@ -1,10 +1,14 @@
 
 
-
 (function( $ ){
 
 var settings = {
 }
+
+function load_external( )
+{
+}
+
 
 
 var methods = {
@@ -16,19 +20,71 @@ var methods = {
 		return this;
 	},
 
+	load_component : function( url ) {
+
+		id = $(this).attr("id");
+
+		divname = 'smktools-component-' + id;
+		classname = '.' +divname;
+
+		this.empty();
+		$( classname ).remove();
+
+
+		// ---- Load stylesheet
+		var link = $("<link>");
+		link.attr({
+			type : 'text/css',
+			rel : 'stylesheet',
+			media : 'screen',
+			href : url + '?part=stylesheet',
+			class : divname
+		});
+		$( "head" ).append( link );
+
+		// ---- Load HTML
+		this.load( url + '?part=html', function (){
+				// ---- Load JavaScript
+				$.getScript( url + '?part=javascript' );
+			}
+		);
+
+		return this;
+	},
+
 	load_modal : function( url ) {
 
 		this.click( function() {
-			$.getJSON( url, function( data ) {
-					$("#smktools-div").empty();
 
-					for ( var i = 0; i < data['html'].length; i++ )
-						$("#smktools-div").append( data['html'][i] );
+			id = $(this).attr("id");
 
-					for ( var i = 0; i < data['javascript'].length; i++ )
-						$.globalEval( data['javascript'][i] );
-				}
-			);
+			divname = 'smktools-modal-' + id;
+			refname = '#' + divname;
+			classname = '.' +divname;
+
+			// ---- Clear the older version
+			$( refname ).remove();
+			$( "body" ).first().append( '<div id="' + divname + '" class="smktools-hidden">&nbsp;</div>' );
+			$( classname ).remove();
+
+			// ---- Load stylesheet
+			var link = $("<link>");
+			link.attr({
+				type : 'text/css',
+				rel : 'stylesheet',
+				media : 'screen',
+				href : url + '?part=stylesheet',
+				class : divname
+			});
+			$( "head" ).append( link );
+
+			// ---- Load HTML
+			$( refname ).load( url + '?part=html', function (){
+						// ---- Load JavaScript
+						$.getScript( url + '?part=javascript' );
+					}
+				);
+
 		});
 
 		return this;
@@ -48,7 +104,4 @@ $.fn.smkTools = function( method ) {
 })( jQuery );
 
 
-$(document).ready( function() {
-	$( "body" ).append( '<div id="smktools-div">&nbsp;</div>' );
-});
 

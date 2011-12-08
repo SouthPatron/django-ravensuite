@@ -40,13 +40,13 @@ urlpatterns = patterns('',
 
 
 	url( 
-			r'^(?P<oid>\d+)/client/(?P<cid>\d+)/account.page_component$',
+			r'^(?P<oid>\d+)/client/(?P<cid>\d+)/account.pc.receive-payment$',
 			login_required(
 				AccountComponents.as_view(
 					template_name = 'page_components/org/account/receive_payment'
 				)
 			),
-			name = 'org-client-account-single-component'
+			name = 'org-client-account-component-receive-payment'
 		),
 
 

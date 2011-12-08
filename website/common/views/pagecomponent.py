@@ -1,16 +1,22 @@
 from __future__ import unicode_literals
 
-from django.http import HttpResponseForbidden
-from django.template import loader, RequestContext
+from django.http import HttpResponse, HttpResponseForbidden
+from django.template import loader, TemplateDoesNotExist, RequestContext
 from base import Base
+
+import mimetypes
 
 class PageComponentView( Base ):
 
-	# ************** Probably want to override
+	# ************** Mapping
 
-	javascript = None
-	stylesheet = None
-	html = None
+	part_mapping = {
+			'javascript' : 'js',
+			'stylesheet' : 'css',
+			'html' : 'html',
+		}
+
+	# ************** Probably want to override
 
 	def get_extra( self, request, *args, **kwargs ):
 		return None
@@ -21,38 +27,28 @@ class PageComponentView( Base ):
 
 	# ************** Support methods
 
-	def _get_dc( self, suffix, attr ):
-		if attr is not None:
-			return attr
-
-		if self.template_name is None:
-			return None
-
-		return [ '{}.{}'.format( self.template_name, suffix ) ]
-
-
-	def _process_dc( self, flist, context  ):
-		tresponse = []
-		for fname in flist:
+	def _process_dc( self, fname, context ):
+		try:
 			t = loader.get_template( fname )
-			tresponse.append( t.render( context ) )
-		return tresponse
+			return t.render( context )
+		except TemplateDoesNotExist:
+			return ''
 
 
-	def get_delivery_components( self, context, *args, **kwargs ):
-		dcfiles = { 
-			'javascript' : self._get_dc( 'js', self.javascript ),
-			'stylesheet' : self._get_dc( 'css', self.stylesheet ),
-			'html' : self._get_dc( 'html', self.html ),
-		}
+	def get_delivery_name( self, request ):
+		part = request.GET.get( 'part', 'html' )
+		suffix = self.part_mapping[ part ]
+		return '{}.{}'.format( self.template_name, suffix )
+		
 
-		dc = {
-			'javascript' : self._process_dc( dcfiles['javascript'], context ),
-			'stylesheet' : self._process_dc( dcfiles['stylesheet'], context ),
-			'html' : self._process_dc( dcfiles['html'], context ),
-		}
-		return dc
-
+	def get_delivery_component( self, request, context ):
+		fname = self.get_delivery_name( request )
+		response = HttpResponse(
+						self._process_dc( fname, context ),
+						mimetype = mimetypes.guess_type( fname )[0]
+					)
+		return response
+		
 		
 
 	# ************** HTTP Operations
@@ -76,7 +72,6 @@ class PageComponentView( Base ):
 							}
 						)
 
-		components = self.get_delivery_components( context )
-		return self.api_resp( components, form = 'json' )
+		return self.get_delivery_component( request, context )
 
 
