@@ -51,7 +51,11 @@
 
 	$( "#invoice-create" ).click(function() {
 
-		invoice_list_url = '/org/{0}/client/{1}/account/invoices?format=json'.format( {{ instance.get_org.refnum }}, {{ instance.get_client.refnum }} );
+		invoice_list_url = OOD.URL.Invoices( 
+							{{ instance.get_org.refnum }}, 
+							{{ instance.get_client.refnum }}
+						)
+						+ '?format=json';
 
 		$.post( invoice_list_url, function( data ) {
 				window.location.href = data[ 'url' ];
@@ -81,13 +85,6 @@
 			)
 		);
 	
-	$( '#bob' ).smkTools( 'load_component',
-			OOD.URL.Component(
-				OOD.URL.Account( {{ kwargs.oid }}, {{ kwargs.cid }} ),
-				'receive-payment'
-			)
-		);
-
 
 {% endblock %}
 

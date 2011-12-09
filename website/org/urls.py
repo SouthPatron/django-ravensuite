@@ -24,6 +24,20 @@ urlpatterns = patterns('',
 
 
 	url( r'^(?P<oid>\d+)/clients$', login_required( ClientList.as_view() ), name = 'org-client-list' ),
+
+
+	url(
+			r'^(?P<oid>\d+)/clients.pc.add_new_client$',
+			login_required(
+				ClientListComponents.as_view(
+					template_name = 'page_components/org/client/add_new_client'
+				)
+			),
+			name = 'org-client-component-add-new-client'
+		),
+
+
+
 	url( r'^(?P<oid>\d+)/client/(?P<cid>\d+)$', login_required( ClientSingle.as_view() ), name = 'org-client-single' ),
 
 

@@ -5,6 +5,7 @@ from django.contrib import messages
 
 from common.views.singleobjectview import SingleObjectView
 from common.views.listview import ListView
+from common.views.pagecomponent import PageComponentView
 
 from common.models import *
 from common.buslog.org.client import ClientBusLog
@@ -67,4 +68,13 @@ class ClientSingle( SingleObjectView ):
 		obj.save()
 		return redirect( 'org-client-single', oid = obj.organization.refnum, cid = obj.refnum )
 
+
+
+class ClientListComponents( PageComponentView ):
+
+	def get_object( self, request, *args, **kwargs ):
+		return get_object_or_404(
+					Organization,
+					refnum = self.url_kwargs.oid,
+				)
 

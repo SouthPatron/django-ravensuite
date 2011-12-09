@@ -1,0 +1,12 @@
+<div id="dialog-form" title="Add a new client">
+	<p class="validateTips">All form fields are required</p>
+	<form id="create-new-form" method="POST" action="">
+		{% csrf_token %}
+		<fieldset>
+			<label for="trading_name">Trading Name</label>
+			<input type="text" name="trading_name" id="id_trading_name" class="text ui-widget-content ui-corner-all" />
+		</fieldset>
+	</form>
+</div>
+
+

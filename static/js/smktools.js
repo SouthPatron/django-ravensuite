@@ -30,7 +30,6 @@ var methods = {
 		this.empty();
 		$( classname ).remove();
 
-
 		// ---- Load stylesheet
 		var link = $("<link>");
 		link.attr({
