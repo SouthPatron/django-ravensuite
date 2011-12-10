@@ -8,8 +8,22 @@ from views import *
 
 urlpatterns = patterns('',
 
+# ------- ORGANIZATION -------------------------
+
 	url( r'^$', login_required( OrgList.as_view() ), name = 'org-list' ),
 	url( r'^(?P<oid>\d+)$', login_required( OrgSingle.as_view() ), name = 'org-single' ),
+
+
+	url(
+			r'^(?P<oid>\d+)/clients.pc.add_new_client$',
+			login_required(
+				OrgComponents.as_view(
+					template_name = 'page_components/org/client/add_new_client'
+				)
+			),
+			name = 'org-component-add-new-client'
+		),
+
 
 
 # ------ USERS -------------------------------
@@ -26,18 +40,6 @@ urlpatterns = patterns('',
 	url( r'^(?P<oid>\d+)/clients$', login_required( ClientList.as_view() ), name = 'org-client-list' ),
 
 
-	url(
-			r'^(?P<oid>\d+)/clients.pc.add_new_client$',
-			login_required(
-				ClientListComponents.as_view(
-					template_name = 'page_components/org/client/add_new_client'
-				)
-			),
-			name = 'org-client-component-add-new-client'
-		),
-
-
-
 	url( r'^(?P<oid>\d+)/client/(?P<cid>\d+)$', login_required( ClientSingle.as_view() ), name = 'org-client-single' ),
 
 
@@ -45,7 +47,6 @@ urlpatterns = patterns('',
 
 	url( r'^(?P<oid>\d+)/client/(?P<cid>\d+)/projects$', login_required( ProjectList.as_view() ), name = 'org-client-project-list' ),
 	url( r'^(?P<oid>\d+)/client/(?P<cid>\d+)/project/(?P<pid>\d+)$', login_required( ProjectSingle.as_view() ), name = 'org-client-project-single' ),
-
 
 
 # ------ CLIENTS / ACCOUNT ------------------

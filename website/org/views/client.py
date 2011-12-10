@@ -70,11 +70,12 @@ class ClientSingle( SingleObjectView ):
 
 
 
-class ClientListComponents( PageComponentView ):
+class ClientComponents( PageComponentView ):
 
 	def get_object( self, request, *args, **kwargs ):
 		return get_object_or_404(
-					Organization,
-					refnum = self.url_kwargs.oid,
+					Client,
+					refnum = self.url_kwargs.cid,
+					organization__refnum = self.url_kwargs.oid,
 				)
 

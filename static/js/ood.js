@@ -3,6 +3,13 @@ var OOD = new function() {
 
 	this.URL = new function() {
 
+		this.Organizations = function() {
+			return '/org/';
+		};
+
+		this.Organization = function( oid ) {
+			return '/org/' + oid;
+		};
 
 		this.Clients = function( oid ) {
 			return '/org/' + oid + '/clients';

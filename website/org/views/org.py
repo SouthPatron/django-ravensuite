@@ -9,6 +9,7 @@ from django.http import HttpResponseForbidden
 
 from common.views.singleobjectview import SingleObjectView
 from common.views.listview import ListView
+from common.views.pagecomponent import PageComponentView
 
 from common.models import *
 
@@ -85,4 +86,14 @@ class OrgSingle( SingleObjectView ):
 	def _update_object( self, request, obj, data, *args, **kwargs ):
 		obj.trading_name = data.get( 'trading_name', obj.trading_name )
 		obj.save()
+
+
+
+class OrgComponents( PageComponentView ):
+
+	def get_object( self, request, *args, **kwargs ):
+		return get_object_or_404(
+					Organization,
+					refnum = self.url_kwargs.oid,
+				)
 
