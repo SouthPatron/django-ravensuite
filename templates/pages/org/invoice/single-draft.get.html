@@ -1,0 +1,251 @@
+{% extends 'layouts/org/member.html' %}
+
+{% load decshift %}
+
+{% block str_org_name %}{{ instance.get_org.trading_name }}{% endblock %}
+{% block str_client_name %}{{ instance.get_client.trading_name }}{% endblock %}
+{% block str_section_name %}Invoice {{ instance.refnum }}{% endblock %}
+
+{% block breadcrumbs %}
+	{{ block.super }}
+	<a href="{{ instance.get_org.get_client_list_url }}">Clients</a>&gt;
+	<a href="{{ instance.get_client.get_single_url }}">{{ instance.get_client.trading_name }}</a>&gt;
+	<a href="{{ instance.get_client.get_invoice_list_url }}">Invoices</a>&gt;
+	<a href="{{ instance.get_single_url }}">{{ instance.refnum }}</a>&gt;
+{% endblock %}
+
+
+{% block page_functions %}
+{% include 'page_functions/org/invoice_level.html' with instance=instance %}
+{% endblock  %}
+
+{% block head_includes %}
+	<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}stylesheets/common/member-invoice.css" media="screen" />
+
+	<script type="text/javascript" src="{{ STATIC_URL }}js/smk.js"></script>
+	<script type="text/javascript" src="{{ STATIC_URL }}js/validations.js"></script>
+	<script type="text/javascript" src="{{ STATIC_URL }}js/date.js"></script>
+	<script type="text/javascript" src="{{ STATIC_URL }}js/invoice.js"></script>
+
+
+<style>
+	#dialog-form label, #dialog-form input { display:block; }
+	#dialog-form input.text { margin-bottom:12px; width:95%; padding: .4em; }
+	#dialog-form fieldset { padding:0; border:0; margin-top:25px; }
+	#dialog-form .ui-dialog .ui-state-error { padding: .3em; }
+	#dialog-form .validateTips { border: 1px solid transparent; padding: 0.3em; }
+</style>
+
+{% endblock %}
+
+
+{% block onready %}
+
+	$(".invoice").jInvoice( 
+		"invoicify",
+		{
+			'delete-icon' : '{{ STATIC_URL }}images/icons/line_delete_grey.png',
+			{% if instance.state == 0 %}
+			'editable' : true
+			{% else %}
+			'editable' : false
+			{% endif %}
+		}
+	);
+
+
+	$(function() {
+		
+		var payment_date = $( "#id_payment_date" ),
+			amount = $( "#id_amount" ),
+			allFields = $( [] ).add( payment_date ).add( amount ),
+			tips = $( ".validateTips" );
+
+		$( "#dialog-form" ).dialog({
+			autoOpen: false,
+			height: 400,
+			width: 550,
+			modal: true,
+			buttons: {
+				"Record Payment": function() {
+					var bValid = true;
+					allFields.removeClass( "ui-state-error" );
+
+					// bValid = bValid && validation.length( tips, trading_name, "Trading Name", 3, 192 );
+
+					if ( bValid ) {
+						$( "#allocate-new-form" ).submit();
+					}
+				},
+				Cancel: function() {
+					$( this ).dialog( "close" );
+				}
+			},
+			close: function() {
+				allFields.val( "" ).removeClass( "ui-state-error" );
+			}
+		});
+
+		$( "#payment-allocate" )
+			.click(function() {
+				$( "#dialog-form" ).dialog( "open" );
+			});
+	});
+
+
+
+{% endblock %}
+
+
+
+{% block content %}
+
+<div class="invoice">
+
+	<form method="POST" id="id_invoice_form">
+	{% csrf_token %}
+
+	<div class="invoice-header">
+		<div class="invoice-dates">
+			<fieldset>
+				<label for="name">Invoice Date</label>
+				<input type="text" name="invoice_date" id="id_invoice_date" class="text ui-widget-content ui-corner-all" value="{{ instance.invoice_date|date:"j M Y" }}" />
+				<label for="name">Due Date</label>
+				<input type="text" name="due_date" id="id_due_date" class="text ui-widget-content ui-corner-all" value="{{ instance.due_date|date:"j M Y" }}" />
+			</fieldset>
+		</div>
+
+		<div class="invoice-status">
+		{% include 'pages/org/invoice/status-label.html' with instance=instance %}
+		</div>
+		<div style="clear: both;">&nbsp;</div>
+	</div>
+
+
+	<div class="tax-row">
+		<div style="float: right;">
+			<label for="name">Amounts are</label>
+			<select name="default_tax" id="id_default_tax">
+				<option value="No Tax">No Tax</option>
+				<option value="Tax Inclusive" SELECTED="1">Tax Inclusive</option>
+				<option value="Tax Exclusive">Tax Exclusive</option>
+				<option value="Tax Exempt">Tax Exempt</option>
+			</select>
+		</div>
+		<div style="clear: both;">&nbsp;</div>
+	</div>
+
+	<div class="item-list">
+		<table>
+			<thead>
+				<tr>
+					<th class="head-description">Description</th>
+					<th class="head-qty">Qty</th>
+					<th class="head-unit-price">Unit Price</th>
+					<th class="head-tax-rate">Tax Rate</th>
+					<th class="head-amount">Amount</th>
+					<th class="head-delete">&nbsp;</th>
+				</tr>
+			</thead>
+			<tbody>
+				{% for li in instance.invoiceline_set.all %}
+					<tr>
+						<td class="item-description"><span>{{ li.description }}</span><input type="hidden" name="description" value="{{ li.description }}" /></td>
+						<td class="item-qty"><span>{{ li.units|decsplay }}</span><input type="hidden" name="units" value="{{ li.units|decshow }}" /></td>
+						<td class="item-unit-price"><span>{{ li.perunit|decsplay }}</span><input type="hidden" name="perunit" value="{{ li.perunit|decshow }}" /></td>
+						<td class="item-tax-rate"><span>{{ li.get_tax_rate_display }}</span><input type="hidden" name="tax_rate" value="{{ li.get_tax_rate_display }}" /></td>
+						<td class="item-amount"><span>{{ li.total|decsplay }}</span><input type="hidden" name="amount" value="{{ li.total|decshow }}" /></td>
+
+						<td class="item-delete"><img class="item-delete-link" src='{{ STATIC_URL }}images/icons/line_delete_grey.png' /></td>
+					</tr>
+				{% endfor %}
+
+				<tr>
+					<td class="item-description"><span>&nbsp;</span><input type="hidden" name="description" value="" /></td>
+					<td class="item-qty"><span>&nbsp;</span><input type="hidden" name="units" value="" /></td>
+					<td class="item-unit-price"><span>&nbsp;</span><input type="hidden" name="perunit" value="" /></td>
+					<td class="item-tax-rate"><span>&nbsp;</span><input type="hidden" name="tax_rate" value="" /></td>
+					<td class="item-amount"><span>&nbsp;</span><input type="hidden" name="amount" value="" /></td>
+					<td class="item-delete"><img class="item-delete-link" src="{{ STATIC_URL }}images/icons/line_delete_grey.png" /></td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+
+	<div class="summary-row">
+
+		<div class="add-row-portion">
+			<div>
+				<button id="id_invoice_add_item_row" type="button">Add a new line</button>
+			</div>
+
+			<div>
+				<div class="comment-title">
+					<span>Comments:</span>
+				</div>
+				<div class="comment-block">
+					<textarea maxlength="255" name="invoice_comment">{{ instance.comment }}</textarea>
+				</div>
+			</div>
+		</div>
+
+		<div class="summary-portion">
+
+			<div class="inner-amount">
+				<div class="inner-amount-label">
+					Amount
+				</div>
+				<div class="inner-amount-amount">
+					<span id="summary_amount">{{ instance.amount|decsplay }}</span>
+					<input type="hidden" id="id_invoice_amount" name="invoice_amount" value="{{ instance.amount|decshow }}" />
+				</div>
+			</div>
+
+			<div class="inner-tax">
+				<div class="inner-tax-label">
+					Sales Tax
+				</div>
+				<div class="inner-tax-amount">
+					<span id="summary_tax">{{ instance.tax|decsplay }}</span>
+					<input type="hidden" id="id_invoice_tax" name="invoice_tax" value="{{ instance.tax|decshow }}" />
+				</div>
+			</div>
+
+			<div class="inner-total">
+				<div class="inner-total-label">
+					Total
+				</div>
+				<div class="inner-total-amount">
+					<span id="summary_total">{{ instance.total|decsplay }}</span>
+					<input type="hidden" id="id_invoice_total" name="invoice_total" value="{{ instance.total|decshow }}" />
+				</div>
+			</div>
+		</div>
+
+		<div style="clear: both;">&nbsp;</div>
+	</div>
+
+	<div class="button-row">
+		<div class="button-row-left">
+			<button id="id_button_save" type="button">Save</button>
+			<button id="id_button_delete" type="button">Delete</button>
+		</div>
+
+		<div class="button-row-right">
+			<button id="id_button_approve" type="button">Approve</button>
+		</div>
+
+		<div style="clear: both;">&nbsp;</div>
+	</div>
+
+	<input type="hidden" id="id_invoice_state" name="invoice_state" value="{{ instance.state }}" />
+	</form>
+
+</div>
+
+
+
+{% endblock %}
+
+
+

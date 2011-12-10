@@ -75,19 +75,6 @@ class InvoiceUnpaidList( ListView ):
 		obj_list = Invoice.objects.filter( client__refnum = mid.cid, client__organization__refnum = mid.oid, state = InvoiceState.FINAL, is_paid = False )
 		return obj_list
 
-class InvoicePaymentList( ListView ):
-	template_name = 'pages/org/invoice/payment-index'
-
-	def get_extra( self, request, obj_list, fmt, *args, **kwargs ):
-		return Invoice.objects.get( refnum = self.url_kwargs.iid, client__refnum = self.url_kwargs.cid, client__organization__refnum = self.url_kwargs.oid )
-
-	def get_object_list( self, request, *args, **kwargs ):
-		mid = self._extract_ids( [ 'oid', 'cid', 'iid' ], **kwargs )
-		obj_list = PaymentAllocation.objects.filter( invoice__refnum = mid.iid, invoice__client__refnum = mid.cid, invoice__client__organization__refnum = mid.oid )
-		return obj_list
-
-
-
 
 
 class InvoiceSingle( SingleObjectView ):
@@ -95,7 +82,16 @@ class InvoiceSingle( SingleObjectView ):
 
 	def get_object( self, request, *args, **kwargs ):
 		mid = self._extract_ids( [ 'oid', 'cid', 'iid' ], **kwargs )
-		return get_object_or_404( Invoice, refnum = mid.iid, client__refnum = mid.cid, client__organization__refnum = mid.oid )
+		obj = get_object_or_404( Invoice, refnum = mid.iid, client__refnum = mid.cid, client__organization__refnum = mid.oid )
+
+		if obj.state == InvoiceState.DRAFT:
+			self.template_name = 'pages/org/invoice/single-draft'
+		elif obj.state == InvoiceState.FINAL:
+			self.template_name = 'pages/org/invoice/single-final'
+		elif obj.state == InvoiceState.VOID:
+			self.template_name = 'pages/org/invoice/single-void'
+
+		return obj
 
 	def delete_object( self, request, ob, *args, **kwargs ):
 		InvoiceBusLog.delete( ob )

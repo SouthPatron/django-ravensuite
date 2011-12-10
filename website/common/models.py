@@ -267,8 +267,15 @@ class Invoice( models.Model ):
 	def get_single_url( self ):
 		return reverse( 'org-client-account-invoice-single', kwargs = { 'oid' : self.get_org().refnum, 'cid' : self.get_client().refnum, 'iid' : self.refnum } )
 
-	def get_payment_list_url( self ):
-		return reverse( 'org-client-account-invoice-payment-list', kwargs = { 'oid' : self.get_org().refnum, 'cid' : self.get_client().refnum, 'iid' : self.refnum } )
+	def get_amount_outstanding( self ):
+		return ( self.total - self.get_amount_paid() )
+
+	def get_amount_paid( self ):
+		q = PaymentAllocation.objects.filter( invoice = self ).aggregate( allocated = models.Sum( 'amount' ) )
+		allocated = q[ 'allocated' ]
+		if allocated is None:
+			return 0
+		return allocated
 
 
 	def is_draft( self ):

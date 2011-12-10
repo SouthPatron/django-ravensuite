@@ -243,6 +243,53 @@
 }
 
 
+
+.invoice .summary-row .summary-portion .inner-paid
+{
+	border-bottom: 1px solid black;
+	height: 30px;
+	padding: 5px;
+	margin-top: 10px;
+}
+
+.invoice .summary-row .summary-portion .inner-paid .inner-paid-label
+{
+	float: left;
+	width: 130px;
+}
+
+.invoice .summary-row .summary-portion .inner-paid .inner-paid-amount
+{
+	float: right;
+	width: 200px;
+	text-align: right;
+}
+
+
+
+
+.invoice .summary-row .summary-portion .inner-outstanding
+{
+	height: 30px;
+	padding: 5px;
+	margin-top: 10px;
+	font-size: 1.3em;
+}
+
+.invoice .summary-row .summary-portion .inner-outstanding .inner-outstanding-label
+{
+	float: left;
+	width: 130px;
+}
+
+.invoice .summary-row .summary-portion .inner-outstanding .inner-outstanding-amount
+{
+	float: right;
+	width: 200px;
+	text-align: right;
+}
+
+
 	
 
 .invoice .button-row
