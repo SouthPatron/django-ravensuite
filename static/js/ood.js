@@ -27,6 +27,10 @@ var OOD = new function() {
 			return '/org/' + oid + '/client/' + cid + '/account/invoices';
 		};
 
+		this.Invoice = function( oid, cid, iid ) {
+			return '/org/' + oid + '/client/' + cid + '/account/invoice/' + iid;
+		};
+
 		this.Component = function( base, name ) {
 			return base + '.pc.' + name;
 		};

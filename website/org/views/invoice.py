@@ -6,6 +6,7 @@ from django.contrib import messages
 
 from common.views.singleobjectview import SingleObjectView
 from common.views.listview import ListView
+from common.views.pagecomponent import PageComponentView 
 
 from common.buslog.org import InvoiceBusLog
 
@@ -157,4 +158,23 @@ class InvoiceSingle( SingleObjectView ):
 			return HttpResponseServerError()
 
 		return update_invoice( request, obj, data, *args, **kwargs )
+
+
+
+class InvoiceComponents( PageComponentView ):
+
+	def get_extra( self, request, *args, **kwargs ):
+		return get_object_or_404(
+					Account,
+					client__refnum = self.url_kwargs.cid,
+					client__organization__refnum = self.url_kwargs.oid
+				)
+
+	def get_object( self, request, *args, **kwargs ):
+		return get_object_or_404(
+					Invoice,
+					refnum = self.url_kwargs.iid,
+					client__refnum = self.url_kwargs.cid,
+					client__organization__refnum = self.url_kwargs.oid
+				)
 

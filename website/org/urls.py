@@ -74,6 +74,18 @@ urlpatterns = patterns('',
 	url( r'^(?P<oid>\d+)/client/(?P<cid>\d+)/account/invoices$', login_required( InvoiceList.as_view() ), name = 'org-client-account-invoice-list' ),
 	url( r'^(?P<oid>\d+)/client/(?P<cid>\d+)/account/invoice/(?P<iid>\d+)$', login_required( InvoiceSingle.as_view() ), name = 'org-client-account-invoice-single' ),
 
+	url( 
+			r'^(?P<oid>\d+)/client/(?P<cid>\d+)/account/invoice/(?P<iid>\d+).pc.allocate-payment$',
+			login_required(
+				InvoiceComponents.as_view(
+					template_name = 'page_components/org/invoice/allocate_payment'
+				)
+			),
+			name = 'org-client-account-invoice-component-allocate-payment'
+		),
+
+
+
 	url( r'^(?P<oid>\d+)/client/(?P<cid>\d+)/account/invoices/draft$', login_required( InvoiceDraftList.as_view() ), name = 'org-client-account-invoice-draft-list' ),
 	url( r'^(?P<oid>\d+)/client/(?P<cid>\d+)/account/invoices/unpaid$', login_required( InvoiceUnpaidList.as_view() ), name = 'org-client-account-invoice-unpaid-list' ),
 
