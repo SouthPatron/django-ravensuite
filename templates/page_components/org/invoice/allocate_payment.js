@@ -8,11 +8,11 @@ $(function() {
 
 	$( "#dialog-form" ).dialog({
 		autoOpen: false,
-		height: 400,
-		width: 550,
+		height: 700,
+		width: 600,
 		modal: true,
 		buttons: {
-			"Record Payment": function() {
+			"Finished": function() {
 				var bValid = true;
 				allFields.removeClass( "ui-state-error" );
 

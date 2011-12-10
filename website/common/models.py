@@ -323,6 +323,15 @@ class Payment( models.Model ):
 
 	def get_single_url( self ):
 		return reverse( 'org-client-account-payment-single', kwargs = { 'oid' : self.get_org().refnum, 'cid' : self.get_client().refnum, 'payid' : self.refnum } )
+	def get_amount_free( self ):
+		return ( self.amount - self.get_amount_allocated() )
+
+	def get_amount_allocated( self ):
+		q = PaymentAllocation.objects.filter( payment = self ).aggregate( allocated = models.Sum( 'amount' ) )
+		allocated = q['allocated']
+		if allocated is None:
+			return 0
+		return allocated
 
 	class Meta:
 		ordering = [ '-payment_date' ]

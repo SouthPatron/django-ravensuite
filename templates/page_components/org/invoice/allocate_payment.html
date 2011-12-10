@@ -1,10 +1,12 @@
+{% load decshift %}
 <div id="dialog-form" title="Allocate Payment">
 	<p class="validateTips">All form fields are required</p>
 	<form id="allocate-new-form" method="POST" action="{% url org-client-account-payment-list instance.get_org.refnum instance.get_client.refnum %}">
 		{% csrf_token %}
+		<div>List of unallocated payments:</div>
 		<fieldset>
 			{% for obj in instance.client.get_unallocated_payments %}
-				<p>Hola</p>
+				<p>Payment {{ obj.refnum }}.  Total {{ obj.amount|decsplay }}. Allocated {{ obj.get_amount_allocated|decsplay }}. Free {{ obj.get_amount_free|decsplay }}</p>
 			{% endfor %}
 		</fieldset>
 	</form>
