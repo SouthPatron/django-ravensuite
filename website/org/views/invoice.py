@@ -163,13 +163,6 @@ class InvoiceSingle( SingleObjectView ):
 
 class InvoiceComponents( ComponentView ):
 
-	def get_extra( self, request, *args, **kwargs ):
-		return get_object_or_404(
-					Account,
-					client__refnum = self.url_kwargs.cid,
-					client__organization__refnum = self.url_kwargs.oid
-				)
-
 	def get_object( self, request, *args, **kwargs ):
 		return get_object_or_404(
 					Invoice,
@@ -203,6 +196,28 @@ class IcAllocatePayment( InvoiceComponents ):
 
 		return redirect( obj.get_single_url() )
 
+
+class IcDeallocatePayment( InvoiceComponents ):
+	template_name = 'components/org/invoice/deallocate_payment'
+
+	def get_object( self, request, *args, **kwargs ):
+		return get_object_or_404(
+					PaymentAllocation,
+					id = request.GET[ 'payid' ],
+					invoice__refnum = self.url_kwargs.iid
+				)
+
+
+	def post_html( self, request, obj, data, *args, **kwargs ):
+
+		try:
+			PaymentBusLog.deallocate( obj )
+		except BusLogError, berror:
+			messages.error( request, berror.message )
+			return redirect( obj.invoice.get_single_url() )
+
+		messages.success( request, 'Successfully deallocated.' )
+		return redirect( obj.invoice.get_single_url() )
 
 
 

@@ -51,43 +51,48 @@ var methods = {
 		return this;
 	},
 
-	load_modal : function( url ) {
+	load_modal : function( id, url ) {
+
+		divname = 'smktools-modal-' + id;
+		refname = '#' + divname;
+		classname = '.' +divname;
+
+		// ---- Clear the older version
+		$( refname ).remove();
+		$( "body" ).first().append( '<div id="' + divname + '" class="smktools-hidden">&nbsp;</div>' );
+		$( classname ).remove();
+
+		// ---- Load stylesheet
+		var link = $("<link>");
+		link.attr({
+			type : 'text/css',
+			rel : 'stylesheet',
+			media : 'screen',
+			href : url + '&part=stylesheet',
+			class : divname
+		});
+		$( "head" ).append( link );
+
+		// ---- Load HTML
+		$( refname ).load( url + '&part=html', function (){
+					// ---- Load JavaScript
+					$.getScript( url + '&part=javascript' );
+				}
+			);
+
+		return this;
+	},
+
+	click_modal : function( url ) {
 
 		this.click( function() {
-
 			id = $(this).attr("id");
-
-			divname = 'smktools-modal-' + id;
-			refname = '#' + divname;
-			classname = '.' +divname;
-
-			// ---- Clear the older version
-			$( refname ).remove();
-			$( "body" ).first().append( '<div id="' + divname + '" class="smktools-hidden">&nbsp;</div>' );
-			$( classname ).remove();
-
-			// ---- Load stylesheet
-			var link = $("<link>");
-			link.attr({
-				type : 'text/css',
-				rel : 'stylesheet',
-				media : 'screen',
-				href : url + '?part=stylesheet',
-				class : divname
-			});
-			$( "head" ).append( link );
-
-			// ---- Load HTML
-			$( refname ).load( url + '?part=html', function (){
-						// ---- Load JavaScript
-						$.getScript( url + '?part=javascript' );
-					}
-				);
-
+			methods.load_modal( id, url );
 		});
 
 		return this;
 	}
+
 }
 
 

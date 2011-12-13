@@ -54,12 +54,28 @@
 	);
 
 	$( '#payment-allocate' ).smkTools(
-			'load_modal',
+			'click_modal',
 			OOD.URL.Component(
 				OOD.URL.Invoice( {{ kwargs.oid }}, {{ kwargs.cid }}, {{ kwargs.iid }} ),
 				'allocate-payment'
 			)
 		);
+
+
+	$( '.deallocate-payment' ).click( function() {
+
+		allocref = $(this).attr( "value" );
+
+		$(document).smkTools(
+			'load_modal',
+			'deallocate-payment',
+			OOD.URL.Component(
+				OOD.URL.Invoice( {{ kwargs.oid }}, {{ kwargs.cid }}, {{ kwargs.iid }} ),
+				'deallocate-payment'
+			)
+			+ '&payid=' + allocref
+		);
+	});
 
 
 {% endblock %}
@@ -220,9 +236,19 @@
 {% endif %}
 
 <div>
-	{% for pmt in instance.paymentallocation_set.all %}
-		<p>Payment allocated for {{ pmt.amount }} on the {{ pmt.payment.payment_date }}.</p>
-	{% endfor %}
+	<table class="invoice-payment-table">
+		<tbody>
+		{% for pmt in instance.paymentallocation_set.all %}
+			<tr>
+				<td>Payment allocated:</td>
+				<td>{{ pmt.refnum }}</td>
+				<td>{{ pmt.amount|decsplay }}</td>
+				<td>{{ pmt.payment.payment_date|date:"j M Y" }}</td>
+				<td><input class="deallocate-payment" type="image" src='{{ STATIC_URL }}images/icons/line_delete_grey.png' value="{{ pmt.id }}"/></td>
+			</tr>
+		{% endfor %}
+		</tbody>
+	</table>
 </div>
 
 {% endblock %}

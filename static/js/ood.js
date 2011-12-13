@@ -32,7 +32,7 @@ var OOD = new function() {
 		};
 
 		this.Component = function( base, name ) {
-			return base + '.pc.' + name;
+			return base + '.pc.' + name + '?q=';
 		};
 	};
 };

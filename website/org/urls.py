@@ -80,6 +80,12 @@ urlpatterns = patterns('',
 			name = 'org-client-account-invoice-component-allocate-payment'
 		),
 
+	url( 
+			r'^(?P<oid>\d+)/client/(?P<cid>\d+)/account/invoice/(?P<iid>\d+).pc.deallocate-payment$',
+			login_required( IcDeallocatePayment.as_view() ),
+			name = 'org-client-account-invoice-component-deallocate-payment'
+		),
+
 
 
 	url( r'^(?P<oid>\d+)/client/(?P<cid>\d+)/account/invoices/draft$', login_required( InvoiceDraftList.as_view() ), name = 'org-client-account-invoice-draft-list' ),

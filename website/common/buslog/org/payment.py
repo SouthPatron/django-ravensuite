@@ -140,4 +140,19 @@ class PaymentBusLog( object ):
 
 
 
+	@staticmethod
+	def deallocate( payment_allocation ):
+		
+		payment = payment_allocation.payment
+		invoice = payment_allocation.invoice
+
+		if payment.is_allocated is True:
+			payment.is_allocated = False
+			payment.save()
+
+		if invoice.is_paid is True:
+			invoice.is_paid = False
+			invoice.save()
+
+		payment_allocation.delete()
 

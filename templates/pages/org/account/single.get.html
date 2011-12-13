@@ -78,7 +78,7 @@
 	$('#id_payment_date').datepicker( datesettings );
 
 	$( '#payment-create' ).smkTools(
-			'load_modal',
+			'click_modal',
 			OOD.URL.Component(
 				OOD.URL.Account( {{ kwargs.oid }}, {{ kwargs.cid }} ),
 				'receive-payment'
