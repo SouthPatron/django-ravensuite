@@ -1,6 +1,7 @@
 from __future__ import unicode_literals
 
 from math import *
+from copy import deepcopy
 
 from common.models import *
 from common.exceptions import *
@@ -48,14 +49,20 @@ class InvoiceBusLog( object ):
 
 
 	@staticmethod
-	def _update_sanitize_dates( new_data ):
+	def _update_sanitize_dates( invoice, new_data ):
 		try:
-			new_data[ 'invoice_date' ] = datetime.datetime.strptime( new_data[ 'invoice_date' ], '%d %b %Y' )
+			if new_data[ 'invoice_date' ] is not None:
+				new_data[ 'invoice_date' ] = datetime.datetime.strptime( new_data[ 'invoice_date' ], '%d %b %Y' )
+			else:
+				new_data[ 'invoice_date' ] = invoice.invoice_date
 		except ValueError:
 			raise BusLogError( 'The invoice date is invalid' )
 
 		try:
-			new_data[ 'due_date' ] = datetime.datetime.strptime( new_data[ 'due_date' ], '%d %b %Y' )
+			if new_data[ 'due_date' ] is not None:
+				new_data[ 'due_date' ] = datetime.datetime.strptime( new_data[ 'due_date' ], '%d %b %Y' )
+			else:
+				new_data[ 'due_date' ] = invoice.due_date
 		except ValueError:
 			raise BusLogError( 'The due date is invalid' )
 
@@ -63,8 +70,12 @@ class InvoiceBusLog( object ):
 			raise BusLogError( 'The due date is before the invoice date' )
 
 	@staticmethod
-	def _update_sanitize_state( new_data ):
-		new_data['state'] = int(new_data['state'])
+	def _update_sanitize_state( invoice, new_data ):
+		if new_data[ 'state' ] is not None:
+			new_data['state'] = int(new_data.get( 'state' ) )
+		else:
+			new_data[ 'state' ] = invoice.state
+
 		if InvoiceState.get( new_data['state'] ) is None:
 			raise BusLogError( 'Unknown new state requested for invoice.' )
 
@@ -77,7 +88,7 @@ class InvoiceBusLog( object ):
 		return val[0]
 
 	@staticmethod
-	def _update_sanitize_items( new_data ):
+	def _update_sanitize_items( invoice, new_data ):
 		new_items = []
 		for row in new_data[ 'items' ]:
 			if len( row[0] ) > 0:
@@ -95,13 +106,24 @@ class InvoiceBusLog( object ):
 	
 
 	@staticmethod
-	def _update_sanitize_major_numbers( new_data ):
-		new_data[ 'tax' ] = long(float(new_data['tax']) * 100)
-		new_data[ 'amount' ] = long(float(new_data['amount']) * 100)
-		new_data[ 'total' ] = long(float(new_data['total']) * 100)
+	def _update_sanitize_major_numbers( invoice, new_data ):
+		try:
+			new_data[ 'tax' ] = long(float(new_data['tax']) * 100)
+		except:
+			new_data[ 'tax' ] = invoice.tax
+
+		try:
+			new_data[ 'amount' ] = long(float(new_data['amount']) * 100)
+		except:
+			new_data[ 'amount' ] = invoice.amount
+
+		try:
+			new_data[ 'total' ] = long(float(new_data['total']) * 100)
+		except:
+			new_data[ 'total' ] = invoice.total
 
 	@staticmethod
-	def _update_sanitize_item_numbers( new_data ):
+	def _update_sanitize_item_numbers( invoice, new_data ):
 
 		for pos, row in enumerate( new_data[ 'items' ] ):
 
@@ -112,7 +134,7 @@ class InvoiceBusLog( object ):
 				raise BusLogError( 'Item row {} calculations did not stand up to scrutiny.'.format( pos ) )
 
 	@staticmethod
-	def _update_sanitize_tax_amounts( new_data ):
+	def _update_sanitize_tax_amounts( invoice, new_data ):
 
 		sum_amount = 0
 		sum_tax = 0
@@ -153,15 +175,15 @@ class InvoiceBusLog( object ):
 
 
 	@staticmethod
-	def _update_sanitize( new_data ):
-		InvoiceBusLog._update_sanitize_dates( new_data )
-		InvoiceBusLog._update_sanitize_state( new_data )
-		InvoiceBusLog._update_sanitize_items( new_data )
-		InvoiceBusLog._update_sanitize_major_numbers( new_data )
-		InvoiceBusLog._update_sanitize_item_numbers( new_data )
-		InvoiceBusLog._update_sanitize_tax_amounts( new_data )
+	def _update_sanitize( invoice, new_data ):
+		InvoiceBusLog._update_sanitize_dates( invoice, new_data )
+		InvoiceBusLog._update_sanitize_state( invoice, new_data )
+		InvoiceBusLog._update_sanitize_items( invoice, new_data )
+		InvoiceBusLog._update_sanitize_major_numbers( invoice, new_data )
+		InvoiceBusLog._update_sanitize_item_numbers( invoice, new_data )
+		InvoiceBusLog._update_sanitize_tax_amounts( invoice, new_data )
 
-		new_data["comment"] = new_data["comment"][:255]
+		new_data["comment"] = new_data.get( "comment", invoice.comment )[:255]
 
 
 	@staticmethod
@@ -238,9 +260,12 @@ class InvoiceBusLog( object ):
 
 	@staticmethod
 	def update( invoice, new_data ):
-		InvoiceBusLog._update_sanitize( new_data )
-		InvoiceBusLog._update_perform_update( invoice, new_data )
-		InvoiceBusLog._update_handle_state_change( invoice, new_data )
+		
+		my_new_data = deepcopy( new_data )
+
+		InvoiceBusLog._update_sanitize( invoice, my_new_data )
+		InvoiceBusLog._update_perform_update( invoice, my_new_data )
+		InvoiceBusLog._update_handle_state_change( invoice, my_new_data )
 		invoice.save()
 
 

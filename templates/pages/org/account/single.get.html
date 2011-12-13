@@ -104,11 +104,12 @@
 </div>
 
 
-<div style="
-		font-size: 2em;
-		margin: 20px 0px;
-	">
+<div style=" font-size: 2em; margin: 20px 0px; ">
 Current Balance: {{ instance.balance|decsplay }}
+</div>
+
+<div style=" font-size: 2em; margin: 20px 0px; ">
+Unallocated Funds: {{ instance.get_client.get_unallocated_payment_amount|decsplay }}
 </div>
 
 

@@ -6,12 +6,9 @@
 {% block str_client_name %}{{ instance.get_client.trading_name }}{% endblock %}
 {% block str_section_name %}Invoice {{ instance.refnum }}{% endblock %}
 
+
 {% block breadcrumbs %}
-	{{ block.super }}
-	<a href="{{ instance.get_org.get_client_list_url }}">Clients</a>&gt;
-	<a href="{{ instance.get_client.get_single_url }}">{{ instance.get_client.trading_name }}</a>&gt;
-	<a href="{{ instance.get_client.get_invoice_list_url }}">Invoices</a>&gt;
-	<a href="{{ instance.get_single_url }}">{{ instance.refnum }}</a>&gt;
+{% include 'pages/org/invoice/invoice-breadcrumbs.html' with instance=instance %}
 {% endblock %}
 
 

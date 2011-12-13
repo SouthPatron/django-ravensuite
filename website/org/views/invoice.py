@@ -105,7 +105,7 @@ class InvoiceSingle( SingleObjectView ):
 
 		invoice_data[ 'state' ] = data.get( 'invoice_state' )
 
-		if long(invoice_data['state']) == InvoiceState.DELETE:
+		if invoice_data[ 'state' ] is not None and long(invoice_data['state']) == InvoiceState.DELETE:
 			rc = self.delete_object( request, obj, *args, **kwargs )
 			messages.info( request, 'The draft invoice has been deleted' )
 			return redirect( obj.get_client().get_draft_invoice_list_url() )
@@ -132,8 +132,11 @@ class InvoiceSingle( SingleObjectView ):
 		except BusLogError, berror:
 			messages.error( request, berror.message )
 			return redirect( obj.get_single_url() )
+
+		if obj.state == InvoiceState.DRAFT:
+			return redirect( obj.get_client().get_draft_invoice_list_url() )
 	
-		return redirect( obj.get_client().get_draft_invoice_list_url() )
+		return redirect( obj.get_client().get_account_single_url() )
 
 
 	def update_object_json( self, request, obj, data, *args, **kwargs ):

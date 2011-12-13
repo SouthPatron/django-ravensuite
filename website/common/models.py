@@ -190,6 +190,13 @@ class Client( models.Model ):
 	def get_unallocated_payments( self ):
 		return Payment.objects.filter( client = self, is_allocated = False, state = PaymentState.ACTIVE )
 
+	def get_unallocated_payment_amount( self ):
+		total_amount = 0
+		for pmt in Payment.objects.filter( client = self, is_allocated = False, state = PaymentState.ACTIVE ):
+			total_amount += pmt.get_amount_free()
+		return total_amount
+
+
 
 
 class Account( models.Model ):
@@ -209,7 +216,6 @@ class Account( models.Model ):
 	def get_transaction_list_url( self ):
 		return reverse( 'org-client-account-transaction-list', kwargs = { 'oid' : self.client.organization.refnum, 'cid' : self.client.refnum } )
 
-	
 
 class AccountTransaction( models.Model ):
 	account = models.ForeignKey( Account )
