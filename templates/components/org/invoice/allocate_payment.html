@@ -1,0 +1,99 @@
+{% load decshift %}
+<div id="dialog-form" title="Allocate Payment">
+	<p class="validateTips">All form fields are required</p>
+	<form id="allocate-new-form" method="POST" action="{% url org-client-account-invoice-component-allocate-payment kwargs.oid kwargs.cid kwargs.iid %}">
+		{% csrf_token %}
+
+		<div id="dialog-text">&nbsp;</div>
+
+
+		<input type="hidden" name="payment-refnum" id="id-payment-refnum" value="-1"/>
+		<input type="hidden" id="id-payment-total" value="0"/>
+		<input type="hidden" id="id-payment-free" value="0"/>
+		<input type="hidden" id="id-payment-date" value="Today"/>
+		<input type="hidden" id="id-payment-date" value="Today"/>
+	</form>
+</div>
+
+<div id="dialog-form-one">
+	<div>List of unallocated payments:</div>
+
+	<fieldset>
+
+	<table class="payment-table-list">
+		<thead>
+			<tr>
+				<th>Payment Date</th>
+				<th class="numeric">Total</th>
+				<th class="numeric">Unallocated</th>
+			</tr>
+		</thead>
+		<tbody>
+			{% for obj in instance.client.get_unallocated_payments %}
+			<tr class="payment-line">
+				<td class="first">{{ obj.payment_date }}</td>
+				<td class="numeric">{{ obj.amount|decsplay }}</td>
+				<td class="numeric">{{ obj.get_amount_free|decsplay }}</td>
+				<input class="total" type="hidden" value="{{ obj.amount|decsplay }}"/>
+				<input class="free" type="hidden" value="{{ obj.get_amount_free|decsplay }}"/>
+				<input class="refnum" type="hidden" value="{{ obj.refnum }}"/>
+				<input class="date" type="hidden" value="{{ obj.payment_date|date:"j M Y" }}"/>
+			</tr>
+			{% endfor %}
+		</tbody>
+	</table>
+	</fieldset>
+</div>
+	
+
+<div id="dialog-form-two">
+	<div class="payment-amount-selection">
+	<fieldset>
+
+		<table>
+			<tbody>
+
+
+				<tr class="reference-row">
+					<td class="col1">Reference:</td>
+					<td class="col2"><span id="id-text-refnum">0</span></td>
+				</tr>
+
+				<tr class="date-row">
+					<td class="col1">Date Paid:</td>
+					<td class="col2"><span id="id-text-date">Today</span></td>
+				</tr>
+
+				<tr class="amount-row">
+					<td class="col1">Amount:</td>
+					<td class="col2"><span id="id-text-total">0.00</span>
+</td>
+				</tr>
+
+				<tr class="oustanding-row">
+					<td class="col1">Outstanding Invoice Amount:</td>
+					<td class="col2"><span id="id-text-outstanding">{{ instance.get_amount_outstanding|decsplay }}</span>
+</td>
+				</tr>
+
+				<tr class="available-row">
+					<td class="col1">Available to Allocate:</td>
+					<td class="col2"><span id="id-text-free">0.00</span>
+</td>
+				</tr>
+
+				<tr class="allocate-row">
+					<td class="col1">How much do you want to allocate?</td>
+					<td class="col2">
+						<input type="text" name="payment-amount" id="id-payment-amount" value="-1"/>
+					</td>
+				</tr>
+
+			</tbody>
+		</table>
+
+	</fieldset>
+	</div>
+</div>
+
+

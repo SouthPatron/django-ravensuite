@@ -4,7 +4,7 @@ from django.shortcuts import get_object_or_404, redirect
 from django.contrib import messages
 
 from common.views.singleobjectview import SingleObjectView
-from common.views.pagecomponent import PageComponentView
+from common.views.component import ComponentView
 
 from common.models import *
 from common.buslog.org import *
@@ -22,7 +22,7 @@ class AccountSingle( SingleObjectView ):
 
 
 
-class AccountComponents( PageComponentView ):
+class AccountComponents( ComponentView ):
 
 	def get_extra( self, request, *args, **kwargs ):
 		return get_object_or_404(

@@ -18,7 +18,7 @@ urlpatterns = patterns('',
 			r'^(?P<oid>\d+)/clients.pc.add_new_client$',
 			login_required(
 				OrgComponents.as_view(
-					template_name = 'page_components/org/client/add_new_client'
+					template_name = 'components/org/client/add_new_client'
 				)
 			),
 			name = 'org-component-add-new-client'
@@ -58,7 +58,7 @@ urlpatterns = patterns('',
 			r'^(?P<oid>\d+)/client/(?P<cid>\d+)/account.pc.receive-payment$',
 			login_required(
 				AccountComponents.as_view(
-					template_name = 'page_components/org/account/receive_payment'
+					template_name = 'components/org/account/receive_payment'
 				)
 			),
 			name = 'org-client-account-component-receive-payment'
@@ -76,11 +76,7 @@ urlpatterns = patterns('',
 
 	url( 
 			r'^(?P<oid>\d+)/client/(?P<cid>\d+)/account/invoice/(?P<iid>\d+).pc.allocate-payment$',
-			login_required(
-				InvoiceComponents.as_view(
-					template_name = 'page_components/org/invoice/allocate_payment'
-				)
-			),
+			login_required( IcAllocatePayment.as_view() ),
 			name = 'org-client-account-invoice-component-allocate-payment'
 		),
 

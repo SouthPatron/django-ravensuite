@@ -6,7 +6,7 @@ from base import Base
 
 import mimetypes
 
-class PageComponentView( Base ):
+class ComponentView( Base ):
 
 	# ************** Mapping
 
@@ -74,4 +74,20 @@ class PageComponentView( Base ):
 
 		return self.get_delivery_component( request, context )
 
+
+	def post( self, request, *args, **kwargs ):
+		fmt = self._parse_format( request )
+		if fmt is None: return HttpResponseForbidden()
+
+		ob = self.get_object( request, *args, **kwargs )
+		if ob is None:
+			self.not_found()
+
+		data = self._get_body_data( request, fmt )
+
+		handler = getattr( self, 'post_{}'.format( fmt ), None )
+		if handler is None:
+			return HttpResponseForbidden()
+
+		return handler( request, ob, data, *args, **kwargs )
 

@@ -19,7 +19,7 @@ Available classes:
 
 	. ListView	- Display a list of objects
 	. SingleObjectView - Display a single object
-	. PageComponentView - Retrieve a particular component from the
+	. ComponentView - Retrieve a particular component from the
 		system for display purposes on a page.
 
 """

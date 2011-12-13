@@ -66,6 +66,12 @@ class PaymentBusLog( object ):
 				'PAYMENT',
 				'Payment {} Received'.format( newt.refnum ),
 				newt.amount,
+				'org.client.payment {} {} {}'.format(
+						newt.get_org().refnum,
+						newt.get_client().refnum,
+						newt.refnum
+					),
+
 				''
 			)
 
@@ -79,6 +85,59 @@ class PaymentBusLog( object ):
 				'VOID',
 				'Void of Payment {}'.format( payment.refnum ),
 				float(0) - payment.total,
+				'org.client.payment {} {} {}'.format(
+						newt.get_org().refnum,
+						newt.get_client().refnum,
+						newt.refnum
+					),
 				''
 			)
+
+
+	@staticmethod
+	def allocate( payment, invoice, amount ):
+
+		ca = long(float(amount) * 100)
+
+		# Payment Checks
+
+		if payment.state != PaymentState.ACTIVE:
+			raise BusLogError( 'This payment is not active. You can\'t use any funds from it.' )
+
+		pmf = payment.get_amount_free()
+
+		if pmf < ca:
+			raise BusLogError( 'The allocation amount has exceeded the free amount of funds from this payment.' )
+
+		# Invoice Checks
+
+		if invoice.state != InvoiceState.FINAL:
+			raise BusLogError( 'The invoice is not able to accept payment allocated to it.' )
+
+		amo = invoice.get_amount_outstanding()
+
+		if amo <= 0:
+			raise BusLogError( 'The invoice is already fully paid up.' )
+		
+		if amo < ca:
+			raise BusLogError( 'The amount allocated exceeds the outstanding amount on the invoice.' )
+
+
+		alloc = PaymentAllocation( payment = payment, invoice = invoice, amount = ca )
+		alloc.save()
+
+		# Is the invoice paid up now?
+
+		if ca == amo:
+			invoice.is_paid = True
+			invoice.save()
+	
+		# Is the payment fully allocated?
+
+		if ca == pmf:
+			payment.is_allocated = True
+			payment.save()
+
+
+
 

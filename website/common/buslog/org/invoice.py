@@ -188,6 +188,11 @@ class InvoiceBusLog( object ):
 				'INVOICE',
 				'Invoice {}'.format( invoice.refnum ),
 				float(0)-invoice.total,
+				'org.client.invoice {} {} {}'.format(
+						invoice.get_org().refnum,
+						invoice.get_client().refnum,
+						invoice.refnum
+					),
 				''
 			)
 
@@ -199,6 +204,11 @@ class InvoiceBusLog( object ):
 				'VOID',
 				'Void of Invoice {}'.format( invoice.refnum ),
 				invoice.total,
+				'org.client.invoice {} {} {}'.format(
+						invoice.get_org().refnum,
+						invoice.get_client().refnum,
+						invoice.refnum
+					),
 				''
 			)
 

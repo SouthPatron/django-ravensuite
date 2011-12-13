@@ -28,5 +28,9 @@ class AccountTransactionList( ListView ):
 def account_transaction_router( request, oid, cid, tid ):
 	actrans = AccountTransaction.objects.get( refnum = tid, account__client__refnum = cid, account__client__organization__refnum = oid )
 	newobj = ObjRoute.get( actrans.originating_route )
+
+	if newobj is None:
+		raise RuntimeError( actrans.originating_route )
+
 	return redirect( newobj.get_single_url() )
 

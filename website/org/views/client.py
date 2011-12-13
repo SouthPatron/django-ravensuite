@@ -5,7 +5,7 @@ from django.contrib import messages
 
 from common.views.singleobjectview import SingleObjectView
 from common.views.listview import ListView
-from common.views.pagecomponent import PageComponentView
+from common.views.component import ComponentView
 
 from common.models import *
 from common.buslog.org.client import ClientBusLog
@@ -70,7 +70,7 @@ class ClientSingle( SingleObjectView ):
 
 
 
-class ClientComponents( PageComponentView ):
+class ClientComponents( ComponentView ):
 
 	def get_object( self, request, *args, **kwargs ):
 		return get_object_or_404(

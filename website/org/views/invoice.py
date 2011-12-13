@@ -6,9 +6,9 @@ from django.contrib import messages
 
 from common.views.singleobjectview import SingleObjectView
 from common.views.listview import ListView
-from common.views.pagecomponent import PageComponentView 
+from common.views.component import ComponentView 
 
-from common.buslog.org import InvoiceBusLog
+from common.buslog.org import InvoiceBusLog, PaymentBusLog
 
 from common.exceptions import *
 from common.models import *
@@ -161,7 +161,7 @@ class InvoiceSingle( SingleObjectView ):
 
 
 
-class InvoiceComponents( PageComponentView ):
+class InvoiceComponents( ComponentView ):
 
 	def get_extra( self, request, *args, **kwargs ):
 		return get_object_or_404(
@@ -177,4 +177,34 @@ class InvoiceComponents( PageComponentView ):
 					client__refnum = self.url_kwargs.cid,
 					client__organization__refnum = self.url_kwargs.oid
 				)
+
+class IcAllocatePayment( InvoiceComponents ):
+	template_name = 'components/org/invoice/allocate_payment'
+
+	def post_html( self, request, obj, data, *args, **kwargs ):
+
+		payment_refnum = data.get( "payment-refnum" )
+		payment_amount = data.get( "payment-amount" )
+
+		# TODO: Select for update somehow
+		payment = get_object_or_404(
+						Payment,
+						refnum = payment_refnum,
+						client__refnum = obj.get_client().refnum
+					)
+
+		try:
+			PaymentBusLog.allocate( payment, obj, payment_amount )
+		except BusLogError, berror:
+			messages.error( request, berror.message )
+			return redirect( obj.get_single_url() )
+
+		messages.success( request, 'Successfully allocated.' )
+
+		return redirect( obj.get_single_url() )
+
+
+
+
+
 

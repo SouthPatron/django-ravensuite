@@ -9,7 +9,7 @@ from common.utils.dbgdatetime import datetime
 class AccountBusLog( object ):
 
 	@staticmethod
-	def adjust( account, group, description, amount, data ):
+	def adjust( account, group, description, amount, originator, data ):
 
 		# TODO: account should be locked whilst adjusting and reading
 
@@ -24,6 +24,7 @@ class AccountBusLog( object ):
 		transaction.balance_before = account.balance
 		transaction.balance_after = new_balance
 		transaction.amount = amount
+		transaction.originating_route = originator
 		transaction.save()
 
 		tdata = AccountTransactionData()

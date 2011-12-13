@@ -87,11 +87,31 @@ SingleObjectView (Derived from Base)
 		. update_object_<format>( self, request, obj, data, *args, **kwargs )
 
 
-PageComponentView (Derived from Base)
+ComponentView (Derived from Base)
 
 	This is reponsible for:
 
-		. Serving a page component for display on a webpage. This
+		. Serving a component for display on a webpage. This
 			includes: the javascript, html and stylesheet portions.
+		. Handles the receiving of POST data via overridden methods:
+
+			post_<format>( self, request, obj, data, *args, **kwargs )
+
+		eg:
+			post_html( self, request, obj, data, *args, **kwargs )
+
+	Objects available to template:
+
+		. instance - the object returned by get_object()
+		. extra - the object returned by get_extra()
+		. kwargs - as extracted from URL parser
+
+	Notable methods:
+
+		. get_extra()
+		. get_object()
+		. post_<format>( self, request, obj, data, *args, **kwargs )
+
+
 
 
