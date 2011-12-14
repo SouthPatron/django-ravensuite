@@ -9,6 +9,7 @@
 {% captureas str_client_name %}{% block str_client_name %}{% endblock %}{% endcaptureas %}
 {% captureas str_section_name %}{% block str_section_name %}{% endblock %}{% endcaptureas %}
 {% captureas page_functions_content %}{% block page_functions %}{% endblock %}{% endcaptureas %}
+{% captureas subsection_functions_content %}{% block subsection_functions %}{% endblock %}{% endcaptureas %}
 
 {% captureas breadcrumbs %}{% block breadcrumbs %}{% endblock %}{% endcaptureas %}
 
@@ -172,6 +173,16 @@ $(document).ready(function(){
 {{ page_functions_content }}
 </div> <!-- page-functions-proper -->
 </div> <!-- page-functions-div -->
+
+<!-- SUBSECTION FUNCTIONS ------------------------------------- -->
+{% if subsection_functions_content %}
+<div id="subsection-functions-div">
+<div id="subsection-functions-proper">
+{{ subsection_functions_content }}
+</div> <!-- subsection-functions-proper -->
+</div> <!-- subsection-functions-div -->
+{% endif %}
+
 
 
 <div id="content-wrap">

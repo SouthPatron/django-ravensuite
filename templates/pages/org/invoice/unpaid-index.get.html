@@ -20,6 +20,11 @@
 {% endblock %}
 
 
+{% block subsection_functions %}
+{% include 'subsection_functions/org/account_subsections.html' with instance=extra.get_account %}
+{% endblock %}
+
+
 {% block onready %}
 
 	$('#invoice_list_table').dataTable( {
@@ -36,7 +41,6 @@
 
 {% block content %}
 
-{% include 'pages/org/account/account_menu.html' with instance=extra.get_account %}
 
 <table
 	id="invoice_list_table"

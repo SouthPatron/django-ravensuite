@@ -1,9 +1,0 @@
-{% load active %}
-<div class="subsection-links">
-	<a class="{% active request '\/account$' %}" href="{% url org-client-account-single instance.get_org.refnum instance.get_client.refnum %}">Account</a>
-	<a class="{% active request '\/account\/transactions$' %}" href="{% url org-client-account-transaction-list instance.get_org.refnum instance.get_client.refnum %}">Transactions</a>
-	<a class="{% active request '\/account\/invoices\/draft$' %}" href="{% url org-client-account-invoice-draft-list instance.get_org.refnum instance.get_client.refnum %}">Draft Invoices{% if instance.get_client.get_draft_invoice_list.count > 0 %} <strong>({{ instance.get_client.get_draft_invoice_list.count }} draft{{ instance.get_client.get_draft_invoice_list.count|pluralize }})</strong>{% endif %}</a>
-	<a class="{% active request '\/account\/invoices/unpaid$' %}" href="{% url org-client-account-invoice-unpaid-list instance.get_org.refnum instance.get_client.refnum %}">Unpaid Invoices{% if instance.get_client.get_unpaid_invoice_list.count > 0 %} <strong>({{ instance.get_client.get_unpaid_invoice_list.count }} unpaid)</strong>{% endif %}</a>
-</div>
-
-

@@ -18,6 +18,10 @@
 {% include 'page_functions/org/client_level.html' with instance=extra.get_client %}
 {% endblock %}
 
+{% block subsection_functions %}
+{% include 'subsection_functions/org/account_subsections.html' with instance=extra %}
+{% endblock %}
+
 {% block head_includes %}
 	<script type="text/javascript" src="{{ STATIC_URL }}js/smk.js"></script>
 {% endblock %}
@@ -38,8 +42,6 @@
 
 {% block content %}
 
-
-{% include 'pages/org/account/account_menu.html' with instance=extra %}
 
 
 <table

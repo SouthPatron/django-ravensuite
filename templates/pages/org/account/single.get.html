@@ -18,6 +18,10 @@
 {% include 'page_functions/org/client_level.html' with instance=instance.get_client %}
 {% endblock %}
 
+{% block subsection_functions %}
+{% include 'subsection_functions/org/account_subsections.html' with instance=instance %}
+{% endblock %}
+
 {% block head_includes %}
 	<script type="text/javascript" src="{{ STATIC_URL }}js/smk.js"></script>
 	<script type="text/javascript" src="{{ STATIC_URL }}js/validations.js"></script>
@@ -97,9 +101,8 @@
 
 {% endblock %}
 
-{% block content %}
 
-{% include 'pages/org/account/account_menu.html' with instance=instance %}
+{% block content %}
 
 
 <div style=" font-size: 2em; margin: 20px 0px; ">
