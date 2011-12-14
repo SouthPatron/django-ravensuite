@@ -53,20 +53,6 @@
 	{% endfor %}
 </div>
 
-<div style="
-		font-size: 2em;
-	">
-	Unpaid invoices:
-</div>
-
-<div style="
-	">
-	{% for obj in instance.get_client.get_unpaid_invoice_list %}
-		<div>{{ obj.refnum }}, {{ obj.total }}, {{ obj.invoice_date }}, {{ obj.due_date }}</div>
-	{% endfor %}
-</div>
-
-
 
 {% endblock %}
 

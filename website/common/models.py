@@ -181,6 +181,12 @@ class Client( models.Model ):
 	def get_unpaid_invoice_list( self ):
 		return Invoice.objects.filter( client = self, is_paid = False, state = InvoiceState.FINAL )
 
+	def get_unpaid_invoice_list_url( self ):
+		return reverse( 'org-client-account-invoice-unpaid-list', kwargs = { 'oid' : self.organization.refnum, 'cid' : self.refnum } )
+	
+	def get_account( self ):
+		return Account.objects.get( client = self )
+
 	def get_draft_invoice_list( self ):
 		return Invoice.objects.filter( client = self, state = InvoiceState.DRAFT )
 

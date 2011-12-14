@@ -11,7 +11,8 @@
 	{{ block.super }}
 	<a href="{{ extra.get_org.get_client_list_url }}">Clients</a>&gt;
 	<a href="{{ extra.get_single_url }}">{{ extra.trading_name }}</a>&gt;
-	<a href="{{ extra.get_invoice_list_url }}">Invoices</a>&gt;
+	<a href="{{ extra.get_account_single_url }}">Account</a>&gt;
+	<a href="{{ extra.get_unpaid_invoice_list_url }}">Unpaid Invoices</a>&gt;
 {% endblock %}
 
 
@@ -36,9 +37,7 @@
 
 {% block content %}
 
-<div class="subsection-links">
-	<a href="{{ extra.account.get_single_url }}">&lt;&lt; Back to Account</a>
-</div>
+{% include 'pages/org/account/account_menu.html' with instance=extra.get_account %}
 
 <div class="minor-page-title">
 Unpaid Invoices

@@ -18,9 +18,7 @@ class AccountTransactionList( ListView ):
 		return Account.objects.get( client__organization__refnum = self.url_kwargs.oid, client__refnum = self.url_kwargs.cid )
 
 	def get_object_list( self, request, *args, **kwargs ):
-		mid = self._extract_ids( [ 'oid', 'cid' ], **kwargs )
-
-		obj_list = AccountTransaction.objects.filter( account__client__refnum = mid.cid, account__client__organization__refnum = mid.oid )
+		obj_list = AccountTransaction.objects.filter( account__client__refnum = self.url_kwargs.cid, account__client__organization__refnum = self.url_kwargs.oid )
 		return obj_list
 
 

@@ -88,20 +88,18 @@
 
 {% endblock %}
 
+{% block content_menu_right %}
+
+<ul>
+	<li><a href="#" id="invoice-create">New Invoice</a></li>
+	<li><a href="#" id="payment-create">Receive Payment</a></li>
+</ul>
+
+{% endblock %}
+
 {% block content %}
 
-
-<div class="subsection-links">
-	<a href="{% url org-client-account-invoice-draft-list instance.get_org.refnum instance.get_client.refnum %}">Draft Invoices{% if instance.get_client.get_draft_invoice_list.count > 0 %} <strong>({{ instance.get_client.get_draft_invoice_list.count }} draft{{ instance.get_client.get_draft_invoice_list.count|pluralize }})</strong>{% endif %}</a>
-	<a href="{% url org-client-account-invoice-unpaid-list instance.get_org.refnum instance.get_client.refnum %}">Unpaid Invoices{% if instance.get_client.get_unpaid_invoice_list.count > 0 %} <strong>({{ instance.get_client.get_unpaid_invoice_list.count }} unpaid)</strong>{% endif %}</a>
-</div>
-
-
-<div style="
-	">
-	<button id="invoice-create" type="button">New Invoice</button>
-	<button id="payment-create" type="button">Receive Payment</button>
-</div>
+{% include 'pages/org/account/account_menu.html' with instance=instance %}
 
 
 <div style=" font-size: 2em; margin: 20px 0px; ">
@@ -112,36 +110,6 @@ Current Balance: {{ instance.balance|decsplay }}
 Unallocated Funds: {{ instance.get_client.get_unallocated_payment_amount|decsplay }}
 </div>
 
-
-<table
-	id="account_list_table"
-	style=' text-align: left; '
-	>
-<thead>
-	<tr>
-		<th>Ref</th>
-		<th>Time</th>
-		<th>Description</th>
-		<th>Balance</th>
-		<th>Amount</th>
-	</tr>
-</thead>
-<tbody>
-{% for obj in instance.accounttransaction_set.all %}
-
-	<tr>
-		<td><a href='{{ obj.get_single_url }}'>{{ obj.refnum }}</a></td>
-		<td><a href='{{ obj.get_single_url }}'>{{ obj.event_time }}</a></td>
-		<td><a href='{{ obj.get_single_url }}'>{{ obj.description }}</a></td>
-		<td><a href='{{ obj.get_single_url }}'>{{ obj.balance_after|decsplay }}</a></td>
-		<td><a href='{{ obj.get_single_url }}'>{{ obj.amount|decsplay }}</a></td>
-	</tr>
-{% endfor %}
-</tbody>
-</table>
-
-<div id="bob">
-</div>
 
 {% endblock %}
 
