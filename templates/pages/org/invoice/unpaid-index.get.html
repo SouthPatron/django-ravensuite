@@ -5,14 +5,13 @@
 
 {% block str_org_name %}{{ extra.get_org.trading_name }}{% endblock %}
 {% block str_client_name %}{{ extra.trading_name }}{% endblock %}
-{% block str_section_name %}Draft Invoices{% endblock %}
+{% block str_section_name %}Account{% endblock %}
 
 {% block breadcrumbs %}
 	{{ block.super }}
 	<a href="{{ extra.get_org.get_client_list_url }}">Clients</a>&gt;
 	<a href="{{ extra.get_single_url }}">{{ extra.trading_name }}</a>&gt;
 	<a href="{{ extra.get_account_single_url }}">Account</a>&gt;
-	<a href="{{ extra.get_unpaid_invoice_list_url }}">Unpaid Invoices</a>&gt;
 {% endblock %}
 
 
@@ -38,10 +37,6 @@
 {% block content %}
 
 {% include 'pages/org/account/account_menu.html' with instance=extra.get_account %}
-
-<div class="minor-page-title">
-Unpaid Invoices
-</div>
 
 <table
 	id="invoice_list_table"
