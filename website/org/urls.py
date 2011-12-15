@@ -53,7 +53,6 @@ urlpatterns = patterns('',
 
 	url( r'^(?P<oid>\d+)/client/(?P<cid>\d+)/account$', login_required( AccountSingle.as_view() ), name = 'org-client-account-single' ),
 
-
 	url( 
 			r'^(?P<oid>\d+)/client/(?P<cid>\d+)/account.pc.receive-payment$',
 			login_required(
@@ -62,6 +61,16 @@ urlpatterns = patterns('',
 				)
 			),
 			name = 'org-client-account-component-receive-payment'
+		),
+
+	url( 
+			r'^(?P<oid>\d+)/client/(?P<cid>\d+)/account.pc.refund$',
+			login_required(
+				AccountComponents.as_view(
+					template_name = 'components/org/account/refund'
+				)
+			),
+			name = 'org-client-account-component-refund'
 		),
 
 
@@ -97,6 +106,11 @@ urlpatterns = patterns('',
 	url( r'^(?P<oid>\d+)/client/(?P<cid>\d+)/account/payments$', login_required( PaymentList.as_view() ), name = 'org-client-account-payment-list' ),
 	url( r'^(?P<oid>\d+)/client/(?P<cid>\d+)/account/payment/(?P<payid>\d+)$', login_required( PaymentSingle.as_view() ), name = 'org-client-account-payment-single' ),
 
+
+# ------ CLIENTS / ACCOUNT / REFUNDS ------------------
+
+	url( r'^(?P<oid>\d+)/client/(?P<cid>\d+)/account/refunds$', login_required( RefundList.as_view() ), name = 'org-client-account-refund-list' ),
+	url( r'^(?P<oid>\d+)/client/(?P<cid>\d+)/account/refund/(?P<refid>\d+)$', login_required( RefundSingle.as_view() ), name = 'org-client-account-refund-single' ),
 
 
 # ------ ACTIVITIES -----------------------------

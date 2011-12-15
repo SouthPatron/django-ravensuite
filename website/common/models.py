@@ -66,6 +66,11 @@ PaymentState = ChoicesEnum(
 	VOID = ( 10, 'Reversed' ),
 )
 
+RefundState = ChoicesEnum(
+	ACTIVE = ( 5, 'Active' ),
+	VOID = ( 10, 'Reversed' ),
+)
+
 
 ExpiryAction = ChoicesEnum(
 	COMMIT = ( 'commit', 'Commit' ),
@@ -134,6 +139,7 @@ class OrganizationCounter( models.Model ):
 	organization = models.OneToOneField( Organization )
 	invoice_no = models.BigIntegerField( default = 1 )
 	payment_no = models.BigIntegerField( default = 1 )
+	refund_no = models.BigIntegerField( default = 1 )
 	client_no = models.BigIntegerField( default = 1 )
 	project_no = models.BigIntegerField( default = 1 )
 
@@ -352,6 +358,27 @@ class PaymentAllocation( models.Model ):
 	payment = models.ForeignKey( Payment )
 	invoice = models.ForeignKey( Invoice )
 	amount = models.BigIntegerField( default = 0 )
+
+
+class Refund( models.Model ):
+	client = models.ForeignKey( Client )
+	refnum = models.BigIntegerField()
+	creation_time = models.DateTimeField()
+	refund_date = models.DateField()
+	amount = models.BigIntegerField( default = 0 )
+	comment = models.CharField( max_length = 255 )
+	state = models.IntegerField( choices = PaymentState.choices(), default = RefundState.ACTIVE )
+
+	def get_org( self ):
+		return self.client.organization
+
+	def get_client( self ):
+		return self.client
+
+	def get_single_url( self ):
+		return reverse( 'org-client-account-refund-single', kwargs = { 'oid' : self.get_org().refnum, 'cid' : self.get_client().refnum, 'refid' : self.refnum } )
+	class Meta:
+		ordering = [ '-refund_date' ]
 
 
 

@@ -7,25 +7,25 @@ from django.contrib import messages
 from common.views.singleobjectview import SingleObjectView
 from common.views.listview import ListView
 
-from common.buslog.org import PaymentBusLog
+from common.buslog.org import RefundBusLog
 
 from common.exceptions import *
 from common.models import *
 
 
-class PaymentList( ListView ):
-	template_name = 'pages/org/payment/index'
+class RefundList( ListView ):
+	template_name = 'pages/org/refund/index'
 
 	def get_extra( self, request, obj_list, fmt, *args, **kwargs ):
 		return Client.objects.get( refnum = self.url_kwargs.cid, organization__refnum = self.url_kwargs.oid )
 
 	def get_object_list( self, request, *args, **kwargs ):
-		obj_list = Payment.objects.filter( client__refnum = self.url_kwargs.cid, client__organization__refnum = self.url_kwargs.oid )
+		obj_list = Refund.objects.filter( client__refnum = self.url_kwargs.cid, client__organization__refnum = self.url_kwargs.oid )
 		return obj_list
 
 	def _create_object( self, request, data, *args, **kwargs ):
 		client = Client.objects.get( refnum = self.url_kwargs.cid, organization__refnum = self.url_kwargs.oid )
-		newo = PaymentBusLog.create( client, data )
+		newo = RefundBusLog.create( client, data )
 		return newo
 		
 	
@@ -36,7 +36,7 @@ class PaymentList( ListView ):
 			newo = self._create_object( request, data, *args, **kwargs )
 		except BusLogError, berror:
 			messages.error( request, berror.message )
-			return redirect( client.get_payment_list_url() )
+			return redirect( client.get_refund_list_url() )
 
 		return redirect( newo.get_single_url() )
 
@@ -47,11 +47,11 @@ class PaymentList( ListView ):
 		return self.api_resp( resp )
 
 
-class PaymentSingle( SingleObjectView ):
-	template_name = 'pages/org/payment/single'
+class RefundSingle( SingleObjectView ):
+	template_name = 'pages/org/refund/single'
 
 	def get_object( self, request, *args, **kwargs ):
-		return get_object_or_404( Payment, refnum = self.url_kwargs.payid, client__refnum = self.url_kwargs.cid, client__organization__refnum = self.url_kwargs.oid )
+		return get_object_or_404( Refund, refnum = self.url_kwargs.refid, client__refnum = self.url_kwargs.cid, client__organization__refnum = self.url_kwargs.oid )
 
 
 

@@ -54,25 +54,20 @@
 		);
 	});
 
-
-	datesettings = {
-		dateFormat: 'd M yy',
-		onClose: function( theDate ) {
-			requested_date = Date.parse( theDate );
-			if ( requested_date != null )
-				$(this).val( $.datepicker.formatDate( 'd M yy', requested_date ) );
-			else
-				$(this).val( $.datepicker.formatDate( 'd M yy', Date.today() ) );
-		}
-	}
-
-	$('#id_payment_date').datepicker( datesettings );
-
 	$( '#payment-create' ).smkTools(
 			'click_modal',
 			OOD.URL.Component(
 				OOD.URL.Account( {{ kwargs.oid }}, {{ kwargs.cid }} ),
 				'receive-payment'
+			)
+		);
+	
+
+	$( '#refund-create' ).smkTools(
+			'click_modal',
+			OOD.URL.Component(
+				OOD.URL.Account( {{ kwargs.oid }}, {{ kwargs.cid }} ),
+				'refund'
 			)
 		);
 	
@@ -84,6 +79,7 @@
 <ul>
 	<li><a href="#" id="invoice-create">New Invoice</a></li>
 	<li><a href="#" id="payment-create">Receive Payment</a></li>
+	<li><a href="#" id="refund-create">Refund</a></li>
 </ul>
 
 {% endblock %}

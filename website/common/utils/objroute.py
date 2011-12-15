@@ -15,6 +15,10 @@ class ObjRoute( object ):
 	def _get_payment( blocks ):
 		return Payment.objects.get( client__organization__refnum = blocks[0], client__refnum = blocks[1], refnum = blocks[2] )
 
+	@staticmethod
+	def _get_refund( blocks ):
+		return Refund.objects.get( client__organization__refnum = blocks[0], client__refnum = blocks[1], refnum = blocks[2] )
+
 
 	@staticmethod
 	def get( route ):
@@ -26,6 +30,9 @@ class ObjRoute( object ):
 
 			if blocks[0] == 'org.client.payment':
 				return ObjRoute._get_payment( blocks[1:] )
+
+			if blocks[0] == 'org.client.refund':
+				return ObjRoute._get_refund( blocks[1:] )
 
 		except:
 			return None

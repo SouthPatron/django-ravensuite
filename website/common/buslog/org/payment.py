@@ -84,7 +84,7 @@ class PaymentBusLog( object ):
 				payment.client.account,
 				'VOID',
 				'Void of Payment {}'.format( payment.refnum ),
-				float(0) - payment.total,
+				float(0) - payment.amount,
 				'org.client.payment {} {} {}'.format(
 						newt.get_org().refnum,
 						newt.get_client().refnum,
@@ -92,6 +92,18 @@ class PaymentBusLog( object ):
 					),
 				''
 			)
+
+		# Deallocate any allocations
+		for linkup in PaymentAllocation.objects.filter( payment = payment ):
+			inv = linkup.invoice
+			if inv.is_paid is True:
+				inv.is_paid = False
+				inv.save()
+			linkup.delete()
+
+		payment.state = PaymentState.VOID
+		payment.is_allocated = False
+		payment.save()
 
 
 	@staticmethod

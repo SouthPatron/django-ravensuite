@@ -1,0 +1,45 @@
+{% extends 'layouts/org/member.html' %}
+
+{% load decshift %}
+
+{% block str_org_name %}{{ instance.get_org.trading_name }}{% endblock %}
+{% block str_client_name %}{{ instance.get_client.trading_name }}{% endblock %}
+{% block str_section_name %}Refund{% endblock %}
+
+{% block breadcrumbs %}
+	{{ block.super }}
+	<a href="{{ instance.get_org.get_client_list_url }}">Clients</a>&gt;
+	<a href="{{ instance.get_client.get_single_url }}">{{ instance.get_client.trading_name }}</a>&gt;
+	<a href="{{ instance.get_client.get_account_single_url }}">Account</a>&gt;
+{% endblock %}
+
+
+{% block page_functions %}
+{% include 'menus/org/client_top.html' with instance=instance.get_client %}
+{% endblock %}
+
+{% block head_includes %}
+	<script type="text/javascript" src="{{ STATIC_URL }}js/smk.js"></script>
+{% endblock %}
+
+
+{% block content %}
+
+<div style="
+	">
+	<button id="reverse-refund" type="button">Reverse Refund</button>
+</div>
+
+<div style="
+		font-size: 2em;
+		margin: 20px 0px;
+	">
+<div>Refund: {{ instance.refnum }}</div>
+<div>Received: {{ instance.refund_date|date:"j M Y" }}</div>
+<div>Amount: {{ instance.amount|decsplay }}</div>
+<div>Comment: {{ instance.comment }} </div>
+</div>
+
+{% endblock %}
+
+
