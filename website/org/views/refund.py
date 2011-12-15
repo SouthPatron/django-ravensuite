@@ -36,7 +36,7 @@ class RefundList( ListView ):
 			newo = self._create_object( request, data, *args, **kwargs )
 		except BusLogError, berror:
 			messages.error( request, berror.message )
-			return redirect( client.get_refund_list_url() )
+			return redirect( client.get_account_single_url() )
 
 		return redirect( newo.get_single_url() )
 

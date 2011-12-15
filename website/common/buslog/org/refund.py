@@ -45,16 +45,24 @@ class RefundBusLog( object ):
 	@staticmethod
 	def create( client, data ):
 
+		# TODO: Lock account balance while busy
+
 		new_data = deepcopy( data )
 
 		RefundBusLog._create_sanitize( new_data )
+
+		amt = new_data[ 'amount' ]
+
+		if client.account.balance - amt < 0:
+			raise BusLogError( 'That refund would put the account into the negative. Please raise a credit note for the difference and try again.' )
+
 
 		newt = Refund()
 		newt.client = client
 		newt.refnum = RefundBusLog.get_next_refnum( client.get_org() )
 		newt.creation_time = datetime.datetime.now()
 		newt.refund_date = new_data[ 'refund_date' ]
-		newt.amount = new_data[ 'amount' ]
+		newt.amount = amt
 		newt.comment = new_data.get( 'comment', '' )
 		newt.state = RefundState.ACTIVE
 		newt.save()
