@@ -15,11 +15,11 @@
 
 
 {% block page_functions %}
-{% include 'page_functions/org/client_level.html' with instance=extra.get_client %}
+{% include 'menus/org/client_top.html' with instance=extra.get_client %}
 {% endblock %}
 
 {% block subsection_functions %}
-{% include 'subsection_functions/org/account_subsections.html' with instance=extra %}
+{% include 'menus/org/account_sub.html' with instance=extra %}
 {% endblock %}
 
 {% block head_includes %}
