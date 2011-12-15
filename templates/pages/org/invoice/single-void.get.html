@@ -1,33 +1,6 @@
-{% extends 'layouts/org/member.html' %}
-
-{% load decshift %}
-
-{% block str_org_name %}{{ instance.get_org.trading_name }}{% endblock %}
-{% block str_client_name %}{{ instance.get_client.trading_name }}{% endblock %}
-{% block str_section_name %}Invoice {{ instance.refnum }}{% endblock %}
-
-
-{% block breadcrumbs %}
-{% include 'pages/org/invoice/invoice-breadcrumbs.html' with instance=instance %}
-{% endblock %}
-
-
-{% block page_functions %}
-{% include 'page_functions/org/invoice_level.html' with instance=instance %}
-{% endblock  %}
-
-{% block head_includes %}
-	<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}stylesheets/common/member-invoice.css" media="screen" />
-
-	<script type="text/javascript" src="{{ STATIC_URL }}js/smk.js"></script>
-	<script type="text/javascript" src="{{ STATIC_URL }}js/date.js"></script>
-	<script type="text/javascript" src="{{ STATIC_URL }}js/invoice.js"></script>
-
-{% endblock %}
-
+{% extends 'pages/org/invoice/single-final.get.html' %}
 
 {% block onready %}
-
 	$(".invoice").jInvoice( 
 		"invoicify",
 		{
@@ -36,132 +9,20 @@
 		}
 	);
 
-{% endblock %}
-
-
-
-{% block content %}
-
-<div class="invoice">
-
-	<form method="POST" id="id_invoice_form">
-	{% csrf_token %}
-
-	<div class="invoice-header">
-		<div class="invoice-dates">
-			<fieldset>
-				<label for="name">Invoice Date</label>
-				<input type="text" name="invoice_date" id="id_invoice_date" class="text ui-widget-content ui-corner-all" value="{{ instance.invoice_date|date:"j M Y" }}" />
-				<label for="name">Due Date</label>
-				<input type="text" name="due_date" id="id_due_date" class="text ui-widget-content ui-corner-all" value="{{ instance.due_date|date:"j M Y" }}" />
-			</fieldset>
-		</div>
-
-		<div class="invoice-status">
-		{% include 'pages/org/invoice/status-label.html' with instance=instance %}
-		</div>
-		<div style="clear: both;">&nbsp;</div>
-	</div>
-
-
-	<div class="tax-row">&nbsp;</div>
-
-	<div class="item-list">
-		<table>
-			<thead>
-				<tr>
-					<th class="head-description">Description</th>
-					<th class="head-qty">Qty</th>
-					<th class="head-unit-price">Unit Price</th>
-					<th class="head-tax-rate">Tax Rate</th>
-					<th class="head-amount">Amount</th>
-				</tr>
-			</thead>
-			<tbody>
-				{% for li in instance.invoiceline_set.all %}
-					<tr>
-						<td class="item-description"><span>{{ li.description }}</span></td>
-						<td class="item-qty"><span>{{ li.units|decsplay }}</span></td>
-						<td class="item-unit-price"><span>{{ li.perunit|decsplay }}</span></td>
-						<td class="item-tax-rate"><span>{{ li.get_tax_rate_display }}</span></td>
-						<td class="item-amount"><span>{{ li.total|decsplay }}</span></td>
-
-						
-						{% if instance.state == 0 %}
-						<td class="item-delete"><img class="item-delete-link" src='{{ STATIC_URL }}images/icons/line_delete_grey.png' /></td>
-						{% endif %}
-					</tr>
-				{% endfor %}
-			</tbody>
-		</table>
-	</div>
-
-	<div class="summary-row">
-
-		<div class="add-row-portion">
-			<div>&nbsp;</div>
-
-			<div>
-				<div class="comment-title">
-					<span>Comments:</span>
-				</div>
-				<div class="comment-block">
-					<textarea maxlength="255" name="invoice_comment">{{ instance.comment }}</textarea>
-				</div>
-			</div>
-		</div>
-
-		<div class="summary-portion">
-
-			<div class="inner-amount">
-				<div class="inner-amount-label">
-					Amount
-				</div>
-				<div class="inner-amount-amount">
-					<span id="summary_amount">{{ instance.amount|decsplay }}</span>
-				</div>
-			</div>
-
-			<div class="inner-tax">
-				<div class="inner-tax-label">
-					Sales Tax
-				</div>
-				<div class="inner-tax-amount">
-					<span id="summary_tax">{{ instance.tax|decsplay }}</span>
-				</div>
-			</div>
-
-			<div class="inner-total">
-				<div class="inner-total-label">
-					Total
-				</div>
-				<div class="inner-total-amount">
-					<span id="summary_total">{{ instance.total|decsplay }}</span>
-				</div>
-			</div>
-		</div>
-
-		<div style="clear: both;">&nbsp;</div>
-	</div>
-
-	<div class="button-row">
-		<div class="button-row-left">
-		</div>
-
-		<div class="button-row-right">
-			<button id="id_button_save" type="button">Save</button>
-		</div>
-
-		<div style="clear: both;">&nbsp;</div>
-	</div>
-
-	</form>
-
-</div>
-
-
 
 {% endblock %}
 
+
+{% block document_payment_status %}{% endblock %}
+
+
+{% block document_button_row_left %}{% endblock %}
+
+{% block document_button_row_right %}
+		<button id="id_button_save" type="button">Save</button>
+{% endblock %}
+
+
+{% block document_addendum %}{% endblock %}
 
 

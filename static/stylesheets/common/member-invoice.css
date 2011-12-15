@@ -8,6 +8,27 @@
 
 .invoice .invoice-header
 {
+	padding: 0px 0px 20px 0px;
+	margin: 15px 15px;
+}
+
+.invoice .invoice-type
+{
+	float: left;
+	font-size: 2.3em;
+}
+
+.invoice .invoice-type-status
+{
+	float: right;
+	padding-right: 20px;
+	padding-top: 5px;
+}
+
+
+
+.invoice .invoice-status
+{
 	border-bottom: 1px solid #e2e2e2;
 	padding: 0px 0px 20px 0px;
 	margin: 15px 15px;
@@ -18,12 +39,31 @@
 	float: left;
 }
 
-.invoice .invoice-status
+.invoice .invoice-payment-status
 {
 	float: right;
 	padding-right: 20px;
 	padding-top: 5px;
 }
+
+
+.invoice .invoice-payment-label
+{
+	font-size: 2em;
+}
+
+
+.invoice .invoice-payment-label .paid
+{
+	color: green;
+}
+
+.invoice .invoice-payment-label .unpaid
+{
+	color: red;
+}
+
+
 
 .invoice .invoice-status-label
 {

@@ -1,136 +1,35 @@
-{% extends 'layouts/org/member.html' %}
+{% extends 'pages/org/invoice/single-final.get.html' %}
 
 {% load decshift %}
 
-{% block str_org_name %}{{ instance.get_org.trading_name }}{% endblock %}
-{% block str_client_name %}{{ instance.get_client.trading_name }}{% endblock %}
-{% block str_section_name %}Invoice {{ instance.refnum }}{% endblock %}
-
-
-{% block breadcrumbs %}
-{% include 'pages/org/invoice/invoice-breadcrumbs.html' with instance=instance %}
-{% endblock %}
-
-
-{% block page_functions %}
-{% include 'page_functions/org/invoice_level.html' with instance=instance %}
-{% endblock  %}
-
-{% block head_includes %}
-	<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}stylesheets/common/member-invoice.css" media="screen" />
-
-	<script type="text/javascript" src="{{ STATIC_URL }}js/smk.js"></script>
-	<script type="text/javascript" src="{{ STATIC_URL }}js/validations.js"></script>
-	<script type="text/javascript" src="{{ STATIC_URL }}js/date.js"></script>
-	<script type="text/javascript" src="{{ STATIC_URL }}js/invoice.js"></script>
-
-
-<style>
-	#dialog-form label, #dialog-form input { display:block; }
-	#dialog-form input.text { margin-bottom:12px; width:95%; padding: .4em; }
-	#dialog-form fieldset { padding:0; border:0; margin-top:25px; }
-	#dialog-form .ui-dialog .ui-state-error { padding: .3em; }
-	#dialog-form .validateTips { border: 1px solid transparent; padding: 0.3em; }
-</style>
-
-{% endblock %}
-
-
 {% block onready %}
-
 	$(".invoice").jInvoice( 
 		"invoicify",
 		{
 			'delete-icon' : '{{ STATIC_URL }}images/icons/line_delete_grey.png',
-			{% if instance.state == 0 %}
 			'editable' : true
-			{% else %}
-			'editable' : false
-			{% endif %}
 		}
 	);
-
-
-	$(function() {
-		
-		var payment_date = $( "#id_payment_date" ),
-			amount = $( "#id_amount" ),
-			allFields = $( [] ).add( payment_date ).add( amount ),
-			tips = $( ".validateTips" );
-
-		$( "#dialog-form" ).dialog({
-			autoOpen: false,
-			height: 400,
-			width: 550,
-			modal: true,
-			buttons: {
-				"Record Payment": function() {
-					var bValid = true;
-					allFields.removeClass( "ui-state-error" );
-
-					// bValid = bValid && validation.length( tips, trading_name, "Trading Name", 3, 192 );
-
-					if ( bValid ) {
-						$( "#allocate-new-form" ).submit();
-					}
-				},
-				Cancel: function() {
-					$( this ).dialog( "close" );
-				}
-			},
-			close: function() {
-				allFields.val( "" ).removeClass( "ui-state-error" );
-			}
-		});
-
-		$( "#payment-allocate" )
-			.click(function() {
-				$( "#dialog-form" ).dialog( "open" );
-			});
-	});
-
-
-
 {% endblock %}
 
 
+{% block document_payment_status %}{% endblock %}
 
-{% block content %}
-
-<div class="invoice">
-
-	<form method="POST" id="id_invoice_form">
-	{% csrf_token %}
-
-	<div class="invoice-header">
-		<div class="invoice-dates">
-			<fieldset>
-				<label for="name">Invoice Date</label>
-				<input type="text" name="invoice_date" id="id_invoice_date" class="text ui-widget-content ui-corner-all" value="{{ instance.invoice_date|date:"j M Y" }}" />
-				<label for="name">Due Date</label>
-				<input type="text" name="due_date" id="id_due_date" class="text ui-widget-content ui-corner-all" value="{{ instance.due_date|date:"j M Y" }}" />
-			</fieldset>
-		</div>
-
-		<div class="invoice-status">
-		{% include 'pages/org/invoice/status-label.html' with instance=instance %}
-		</div>
-		<div style="clear: both;">&nbsp;</div>
+{% block document_rax_row %}
+	<div style="float: right;">
+		<label for="name">Amounts are</label>
+		<select name="default_tax" id="id_default_tax">
+			<option value="No Tax">No Tax</option>
+			<option value="Tax Inclusive" SELECTED="1">Tax Inclusive</option>
+			<option value="Tax Exclusive">Tax Exclusive</option>
+			<option value="Tax Exempt">Tax Exempt</option>
+		</select>
 	</div>
+	<div style="clear: both;">&nbsp;</div>
+{% endblock %}
 
 
-	<div class="tax-row">
-		<div style="float: right;">
-			<label for="name">Amounts are</label>
-			<select name="default_tax" id="id_default_tax">
-				<option value="No Tax">No Tax</option>
-				<option value="Tax Inclusive" SELECTED="1">Tax Inclusive</option>
-				<option value="Tax Exclusive">Tax Exclusive</option>
-				<option value="Tax Exempt">Tax Exempt</option>
-			</select>
-		</div>
-		<div style="clear: both;">&nbsp;</div>
-	</div>
+{% block document_body %}
 
 	<div class="item-list">
 		<table>
@@ -221,28 +120,19 @@
 
 		<div style="clear: both;">&nbsp;</div>
 	</div>
-
-	<div class="button-row">
-		<div class="button-row-left">
-			<button id="id_button_save" type="button">Save</button>
-			<button id="id_button_delete" type="button">Delete</button>
-		</div>
-
-		<div class="button-row-right">
-			<button id="id_button_approve" type="button">Approve</button>
-		</div>
-
-		<div style="clear: both;">&nbsp;</div>
-	</div>
-
-	<input type="hidden" id="id_invoice_state" name="invoice_state" value="{{ instance.state }}" />
-	</form>
-
-</div>
-
-
-
 {% endblock %}
 
 
+{% block document_button_row_left %}
+	<button id="id_button_save" type="button">Save</button>
+	<button id="id_button_delete" type="button">Delete</button>
+{% endblock %}
+
+{% block document_button_row_right %}
+	<button id="id_button_approve" type="button">Approve</button>
+{% endblock %}
+
+
+{% block document_addendum %}
+{% endblock %}
 

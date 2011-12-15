@@ -1,0 +1,130 @@
+{% extends 'layouts/org/member.html' %}
+
+{% load decshift %}
+
+{% block str_org_name %}{{ instance.get_org.trading_name }}{% endblock %}
+{% block str_client_name %}{{ instance.get_client.trading_name }}{% endblock %}
+{% block str_section_name %}Invoice {{ instance.refnum }}{% endblock %}
+
+{% block breadcrumbs %}
+{% include 'pages/org/invoice/invoice-breadcrumbs.html' with instance=instance %}
+{% endblock %}
+
+
+{% block page_functions %}
+{% include 'page_functions/org/invoice_level.html' with instance=instance %}
+{% endblock  %}
+
+{% block head_includes %}
+	<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}stylesheets/common/member-invoice.css" media="screen" />
+
+	<script type="text/javascript" src="{{ STATIC_URL }}js/smk.js"></script>
+	<script type="text/javascript" src="{{ STATIC_URL }}js/validations.js"></script>
+	<script type="text/javascript" src="{{ STATIC_URL }}js/date.js"></script>
+	<script type="text/javascript" src="{{ STATIC_URL }}js/invoice.js"></script>
+
+{% endblock %}
+
+
+{% block onready %}
+
+	$(".invoice").jInvoice( 
+		"invoicify",
+		{
+			'delete-icon' : '{{ STATIC_URL }}images/icons/line_delete_grey.png',
+			{% if instance.state == 0 %}
+			'editable' : true
+			{% else %}
+			'editable' : false
+			{% endif %}
+		}
+	);
+
+	$( '#payment-allocate' ).smkTools(
+			'click_modal',
+			OOD.URL.Component(
+				OOD.URL.Invoice( {{ kwargs.oid }}, {{ kwargs.cid }}, {{ kwargs.iid }} ),
+				'allocate-payment'
+			)
+		);
+
+
+	$( '.deallocate-payment' ).click( function() {
+
+		allocref = $(this).attr( "value" );
+
+		$(document).smkTools(
+			'load_modal',
+			'deallocate-payment',
+			OOD.URL.Component(
+				OOD.URL.Invoice( {{ kwargs.oid }}, {{ kwargs.cid }}, {{ kwargs.iid }} ),
+				'deallocate-payment'
+			)
+			+ '&payid=' + allocref
+		);
+	});
+
+
+{% endblock %}
+
+
+
+{% block content %}
+
+
+<div class="invoice">
+
+	<form method="POST" id="id_invoice_form">
+	{% csrf_token %}
+
+	<div class="invoice-header">
+		<div class="invoice-type">{% block document_type %}{% endblock %}</div>
+
+		<div class="invoice-type-status">
+		{% block document_status %}{% endblock %}
+		</div>
+		<div style="clear: both;">&nbsp;</div>
+	</div>
+
+	<div class="invoice-status">
+		<div class="invoice-dates">
+			{% block document_dates %}{% endblock %}
+		</div>
+
+		<div class="invoice-payment-status">
+			{% block document_payment_status %}{% endblock %}
+		</div>
+		<div style="clear: both;">&nbsp;</div>
+	</div>
+
+	<div class="tax-row">
+		{% block document_tax_row %}{% endblock %}
+	</div>
+
+	{% block document_body %}{% endblock %}
+
+
+	<div class="button-row">
+		<div class="button-row-left">
+			{% block document_button_row_left %}{% endblock %}
+		</div>
+
+		<div class="button-row-right">
+			{% block document_button_row_right %}{% endblock %}
+		</div>
+
+		<div style="clear: both;">&nbsp;</div>
+	</div>
+
+	<input type="hidden" id="id_invoice_state" name="invoice_state" value="{{ instance.state }}" />
+	</form>
+
+</div>
+
+
+{% block document_addendum %}{% endblock %}
+
+{% endblock %}
+
+
+
