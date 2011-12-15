@@ -12,8 +12,15 @@
 
 
 {% block page_functions %}
-{% include 'menus/org/invoice_top.html' with instance=instance %}
+{% include 'menus/org/client_top.html' with instance=instance %}
 {% endblock  %}
+
+{% block subsection_functions %}
+{% include 'menus/org/account_sub.html' with instance=instance %}
+{% endblock %}
+
+
+
 
 {% block head_includes %}
 	<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}stylesheets/common/member-invoice.css" media="screen" />

@@ -23,6 +23,10 @@
 {% include 'menus/org/account_sub.html' with instance=extra.get_account %}
 {% endblock %}
 
+{% block filter_functions %}
+{% include 'menus/org/invoice_filter.html' with instance=extra.get_account %}
+{% endblock %}
+
 {% block onready %}
 
 	$('#invoice_list_table').dataTable( {

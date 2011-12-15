@@ -10,6 +10,7 @@
 {% captureas str_section_name %}{% block str_section_name %}{% endblock %}{% endcaptureas %}
 {% captureas page_functions_content %}{% block page_functions %}{% endblock %}{% endcaptureas %}
 {% captureas subsection_functions_content %}{% block subsection_functions %}{% endblock %}{% endcaptureas %}
+{% captureas filter_functions_content %}{% block filter_functions %}{% endblock %}{% endcaptureas %}
 
 {% captureas breadcrumbs %}{% block breadcrumbs %}{% endblock %}{% endcaptureas %}
 
@@ -30,7 +31,8 @@
 	<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}stylesheets/common/member-layout.css" media="screen" />
 	<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}stylesheets/common/member-content-menu.css" media="screen" />
 	<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}stylesheets/common/member-page-functions.css" media="screen" />
-	<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}stylesheets/common/member-subsection-links.css" media="screen" />
+	<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}stylesheets/common/member-subsection-functions.css" media="screen" />
+	<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}stylesheets/common/member-filter-functions.css" media="screen" />
 	<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}stylesheets/common/member-message-notices.css" media="screen" />
 	<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}stylesheets/common/member-timer-block.css" media="screen" />
 	<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}stylesheets/common/member-extras.css" media="screen" />
@@ -183,6 +185,16 @@ $(document).ready(function(){
 </div> <!-- subsection-functions-proper -->
 </div> <!-- subsection-functions-div -->
 {% endif %}
+
+<!-- FILTER FUNCTIONS ------------------------------------- -->
+{% if filter_functions_content %}
+<div id="filter-functions-div">
+<div id="filter-functions-proper">
+{{ filter_functions_content }}
+</div> <!-- filter-functions-proper -->
+</div> <!-- filter-functions-div -->
+{% endif %}
+
 
 
 

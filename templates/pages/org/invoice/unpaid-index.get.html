@@ -19,11 +19,13 @@
 {% include 'menus/org/client_top.html' with instance=extra %}
 {% endblock %}
 
-
 {% block subsection_functions %}
 {% include 'menus/org/account_sub.html' with instance=extra.get_account %}
 {% endblock %}
 
+{% block filter_functions %}
+{% include 'menus/org/invoice_filter.html' with instance=extra.get_account %}
+{% endblock %}
 
 {% block onready %}
 
@@ -52,6 +54,7 @@
 		<th>Invoice Date</th>
 		<th>Due Date</th>
 		<th>Amount</th>
+		<th>Outstanding</th>
 	</tr>
 </thead>
 <tbody>
@@ -62,6 +65,7 @@
 		<td><a href='{{ obj.get_single_url }}'>{{ obj.invoice_date }}</a></td>
 		<td><a href='{{ obj.get_single_url }}'>{{ obj.due_date }}</a></td>
 		<td><a href='{{ obj.get_single_url }}'>{{ obj.total|decsplay }}</a></td>
+		<td><a href='{{ obj.get_single_url }}'>{{ obj.get_amount_outstanding|decsplay }}</a></td>
 	</tr>
 {% endfor %}
 </tbody>
