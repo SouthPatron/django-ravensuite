@@ -29,6 +29,7 @@ function apply_edit_hooks() {
 
 	$('.invoice .item-list table .item-delete-link').click( function() {
 		$(this).parents( "tr" ).remove();
+		update_totals();
 	});
 };
 
