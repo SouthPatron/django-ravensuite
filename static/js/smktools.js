@@ -57,8 +57,6 @@ var methods = {
 		refname = '#' + divname;
 		classname = '.' +divname;
 
-		alert( 'URL = [' + url + ']' );
-
 		// ---- Clear the older version
 		$( refname ).remove();
 		$( "body" ).first().append( '<div id="' + divname + '" class="smktools-hidden">&nbsp;</div>' );
