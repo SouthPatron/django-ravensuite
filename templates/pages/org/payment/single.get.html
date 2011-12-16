@@ -1,59 +1,142 @@
-{% extends 'layouts/org/member.html' %}
+{% extends 'pages/org/invoice/basic.html' %}
 
 {% load decshift %}
 
-{% block str_org_name %}{{ instance.get_org.trading_name }}{% endblock %}
-{% block str_client_name %}{{ instance.get_client.trading_name }}{% endblock %}
 {% block str_section_name %}Payment{% endblock %}
 
-{% block breadcrumbs %}
-	{{ block.super }}
-	<a href="{{ instance.get_org.get_client_list_url }}">Clients</a>&gt;
-	<a href="{{ instance.get_client.get_single_url }}">{{ instance.get_client.trading_name }}</a>&gt;
-	<a href="{{ instance.get_client.get_account_single_url }}">Account</a>&gt;
-{% endblock %}
 
+{% block onready %}
 
-{% block page_functions %}
-{% include 'menus/org/client_top.html' with instance=instance.get_client %}
-{% endblock %}
+	$( '.deallocate-payment' ).click( function() {
 
-{% block head_includes %}
-	<script type="text/javascript" src="{{ STATIC_URL }}js/smk.js"></script>
-{% endblock %}
+		allocref = $(this).attr( "value" ).split( ',' );
 
+		iid = allocref[0];
+		payid = allocref[1];
 
-{% block content %}
+		$(document).smkTools(
+			'load_modal',
+			'deallocate-payment',
+			OOD.URL.Component(
+				OOD.URL.Invoice( {{ kwargs.oid }}, {{ kwargs.cid }}, iid ),
+				'deallocate-payment'
+			)
+			+ '&payid=' + payid
+		);
 
-<div style="
-	">
-	<button id="reverse-payment" type="button">Reverse Payment</button>
-</div>
-
-<div style="
-		font-size: 2em;
-		margin: 20px 0px;
-	">
-<div>Payment {{ instance.refnum }}</div>
-<div>Received: {{ instance.payment_date|date:"j M Y" }}</div>
-<div>Amount: {{ instance.amount|decsplay }}</div>
-<div>Comment: {{ instance.comment }} </div>
-</div>
-
-<div style="
-		font-size: 2em;
-	">
-	Allocated to:
-</div>
-
-<div style="
-	">
-	{% for obj in instance.paymentallocation_set.all %}
-		<div> To Invoice: {{ obj.invoice.refnum }} of {{ obj.invoice.total }}, {{ obj.invoice_date }}, {{ obj.due_date }}. Paid {{ obj.amount }}.</div>
-	{% endfor %}
-</div>
+		return false;
+	});
 
 
 {% endblock %}
+
+
+
+{% block document_type %}Payment{% endblock %}
+
+{% block document_status %}
+{{ instance.get_state_display }}
+{% endblock %}
+
+{% block document_dates %}
+Payment received {{ instance.payment_date|date:"j M Y" }}
+{% endblock %}
+
+
+{% block document_payment_status %}
+{% if instance.is_allocated %}
+<div class="paid">Fully Allocated</div>
+{% else %}
+<div class="unpaid">Not Allocated</div>
+{% endif %}
+{% endblock %}
+
+
+
+{% block document_body %}
+
+
+<style>
+.invoice-payment-table.allocation th {
+	text-align: left;
+	font-weight: bold;
+	padding-bottom: 20px;
+}
+	
+</style>
+
+
+<div class="summary-row">
+	<div class="summary-portion">
+
+		<div class="inner-amount">
+			<div class="inner-amount-label">
+				Total
+			</div>
+			<div class="inner-amount-amount">
+				<span id="summary_amount">{{ instance.amount|decsplay }}</span>
+			</div>
+		</div>
+
+		<div class="inner-tax">
+			<div class="inner-tax-label">
+				Allocated Amount
+			</div>
+			<div class="inner-tax-amount">
+				<span id="summary_tax">{{ instance.get_amount_allocated|decsplay }}</span>
+			</div>
+		</div>
+
+		<div class="inner-outstanding">
+			<div class="inner-outstanding-label">
+				Unallocated Amount
+			</div>
+			<div class="inner-outstanding-amount">
+				<span id="summary_outstanding">{{ instance.get_amount_free|decsplay }}</span>
+			</div>
+		</div>
+
+	</div>
+
+	<div style="clear: both;">&nbsp;</div>
+</div>
+
+{% if instance.paymentallocation_set.count > 0 %}
+
+<div style=" padding: 0px 20px 20px 20px; ">
+
+	<div style="font-size: 1.3em; margin: 20px 0px;">Allocated to:</div>
+
+	<table class="invoice-payment-table allocation">
+		<thead>
+			<tr>
+				<th>Invoice</th>
+				<th>Invoice Total</th>
+				<th>Allocated Amount</th>
+				<th>Deallocate</th>
+			</tr>
+		</thead>
+		<tbody>
+		{% for pmt in instance.paymentallocation_set.all %}
+			<tr>
+				<td>Invoice {{ pmt.invoice.refnum }}</td>
+				<td>{{ pmt.invoice.total|decsplay }}</td>
+				<td>{{ pmt.amount|decsplay }}</td>
+				<td><input class="deallocate-payment" type="image" src='{{ STATIC_URL }}images/icons/line_delete_grey.png' value="{{ pmt.invoice.refnum }},{{ pmt.id }}"/></td>
+			</tr>
+		{% endfor %}
+		</tbody>
+	</table>
+</div>
+
+{% endif %}
+
+
+{% endblock %}
+
+{% block document_button_row_left %}
+	<button type="button">Reverse Payment</button>
+{% endblock %}
+
 
 
