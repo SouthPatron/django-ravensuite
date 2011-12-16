@@ -29,7 +29,7 @@
 			</tr>
 		</thead>
 		<tbody>
-			{% for obj in instance.client.get_unallocated_payments %}
+			{% for obj in instance.client.get_unallocated_payment_list %}
 			<tr class="payment-line">
 				<td class="first">{{ obj.payment_date }}</td>
 				<td class="numeric">{{ obj.amount|decsplay }}</td>

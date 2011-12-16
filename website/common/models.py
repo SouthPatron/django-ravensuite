@@ -199,7 +199,7 @@ class Client( models.Model ):
 	def get_draft_invoice_list_url( self ):
 		return reverse( 'org-client-account-invoice-draft-list', kwargs = { 'oid' : self.organization.refnum, 'cid' : self.refnum } )
 
-	def get_unallocated_payments( self ):
+	def get_unallocated_payment_list( self ):
 		return Payment.objects.filter( client = self, is_allocated = False, state = PaymentState.ACTIVE )
 
 	def get_unallocated_payment_amount( self ):

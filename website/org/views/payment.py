@@ -47,6 +47,16 @@ class PaymentList( ListView ):
 		return self.api_resp( resp )
 
 
+class PaymentUnallocatedList( PaymentList ):
+	template_name = 'pages/org/payment/index'
+
+	def get_object_list( self, request, *args, **kwargs ):
+		obj_list = Payment.objects.filter( client__refnum = self.url_kwargs.cid, client__organization__refnum = self.url_kwargs.oid, is_allocated = False )
+		return obj_list
+
+
+
+
 class PaymentSingle( SingleObjectView ):
 	template_name = 'pages/org/payment/single'
 
