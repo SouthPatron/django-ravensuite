@@ -27,6 +27,14 @@
 		return false;
 	});
 
+	$( '#id_allocate_to_invoice' ).smkTools(
+		'click_modal',
+			OOD.URL.Component(
+				OOD.URL.Payment( {{ kwargs.oid }}, {{ kwargs.cid }}, {{ kwargs.payid }} ),
+				'allocate-payment'
+			)
+	);
+
 
 {% endblock %}
 
@@ -135,8 +143,15 @@ Payment received {{ instance.payment_date|date:"j M Y" }}
 {% endblock %}
 
 {% block document_button_row_left %}
-	<button type="button">Reverse Payment</button>
+	<button id="id_reverse_payment" type="button">Reverse Payment</button>
 {% endblock %}
+
+{% block document_button_row_right %}
+{% if not instance.is_allocated %}
+	<button id="id_allocate_to_invoice" type="button">Allocate to an Invoice</button>
+{% endif %}
+{% endblock %}
+
 
 
 

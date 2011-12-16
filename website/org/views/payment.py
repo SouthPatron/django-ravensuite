@@ -6,6 +6,7 @@ from django.contrib import messages
 
 from common.views.singleobjectview import SingleObjectView
 from common.views.listview import ListView
+from common.views.component import ComponentView
 
 from common.buslog.org import PaymentBusLog
 
@@ -53,6 +54,44 @@ class PaymentUnallocatedList( PaymentList ):
 	def get_object_list( self, request, *args, **kwargs ):
 		obj_list = Payment.objects.filter( client__refnum = self.url_kwargs.cid, client__organization__refnum = self.url_kwargs.oid, is_allocated = False )
 		return obj_list
+
+
+class PaymentComponents( ComponentView ):
+
+	def get_object( self, request, *args, **kwargs ):
+		return get_object_or_404(
+					Payment,
+					refnum = self.url_kwargs.payid,
+					client__refnum = self.url_kwargs.cid,
+					client__organization__refnum = self.url_kwargs.oid
+				)
+
+
+
+class PcAllocatePayment( PaymentComponents ):
+	template_name = 'components/org/payment/allocate_payment'
+
+	def post_html( self, request, obj, data, *args, **kwargs ):
+
+		invoice_refnum = data.get( "invoice-refnum" )
+		payment_amount = data.get( "payment-amount" )
+
+		# TODO: Select for update somehow
+		invoice = get_object_or_404(
+						Invoice,
+						refnum = invoice_refnum,
+						client__refnum = obj.get_client().refnum
+					)
+
+		try:
+			PaymentBusLog.allocate( obj, invoice, payment_amount )
+		except BusLogError, berror:
+			messages.error( request, berror.message )
+			return redirect( obj.get_single_url() )
+
+		messages.success( request, 'Successfully allocated.' )
+
+		return redirect( obj.get_single_url() )
 
 
 

@@ -109,6 +109,12 @@ urlpatterns = patterns('',
 
 	url( r'^(?P<oid>\d+)/client/(?P<cid>\d+)/account/payment/(?P<payid>\d+)$', login_required( PaymentSingle.as_view() ), name = 'org-client-account-payment-single' ),
 
+	url( 
+			r'^(?P<oid>\d+)/client/(?P<cid>\d+)/account/payment/(?P<payid>\d+).pc.allocate-payment$',
+			login_required( PcAllocatePayment.as_view() ),
+			name = 'org-client-account-payment-component-allocate-payment'
+		),
+
 
 # ------ CLIENTS / ACCOUNT / REFUNDS ------------------
 
