@@ -352,15 +352,21 @@ var methods = {
 		return this;
 	},
 
-	prepareTextInput : function( settings ) {
+/*
+ * behaviour
+ *		next - string or function
+ *
+ * hooks
+ *		onFocus( event, value )
+ *		onChange( event, oldVal, newVal )
+ *		onEnter( event )
+ *		onCancel( event )
+ *		onNext( event )
+ *		onFocusOut( event, val )
+ *
+ */
 
-		// Next
-		// onFocus
-		// onChange
-		// onEnter
-		// onCancel
-		// onNext
-		// onFocusOut
+	prepareTextInput : function( settings ) {
 
 		incoming = function( event ) {
 			dsval = $(this).parent().find( 'input' ).attr( 'value' );
@@ -408,7 +414,18 @@ var methods = {
 
 		proceed = function( event ) {
 			if ( settings && settings.behaviour && settings.behaviour.next )
-				$( "#" + settings.behaviour.next ).click();
+			{
+				if ( typeof(settings.behaviour.next) === 'function' )
+				{
+					rc = settings.behaviour.next.call( this, event );
+					if ( typeof( rc ) === 'string' )
+						$( rc ).click();
+				}
+				else
+				{
+					$( settings.behaviour.next ).click();
+				}
+			}
 		}
 
 		outgoing = function( event ) {
@@ -456,6 +473,125 @@ var methods = {
 		$(this).one( 'click', { 'settings' : settings }, incoming );
 		return methods;
 	},
+
+
+	prepareCurrencyInput : function( settings ) {
+
+		numberize = function( val ) {
+			if ( isNaN( val ) ) return (new Number( '0.00')).toFixed(2);
+			return (new Number(val)).toFixed(2);
+		},
+
+		incoming = function( event ) {
+			dsval = numberize( $(this).parent().find( 'input' ).attr( 'value' ) );
+
+			settings = event.data['settings'];
+
+			if ( settings && settings.hooks && settings.hooks.onFocus )
+			{
+				if ( settings.hooks.onFocus.call( $(this), event, dsval ) === false )
+				{
+					$(this).one( 'click', { 'settings' : settings }, incoming );
+					return false;
+				}
+			}
+
+			sam = $(this).empty().append( '<input type="text" value="' + dsval + '" />' );
+			inval = $(this).find( "input" ).focus().focusout( { 'settings' : settings }, outgoing ).keydown( { 'settings' : settings }, keystroke );
+			return false;
+		};
+
+		restore = function( event ) {
+			oldVal = numberize( $(this).parent().parent().find( 'input' ).not(this).first().attr( 'value' ) );
+
+			newVal = $(this).val();
+
+			if ( isNaN( newVal ) ) newVal = oldVal;
+			else newVal = numberize( newVal );
+
+			settings = event.data['settings'];
+
+			if ( oldVal != newVal )
+			{
+				if ( settings && settings.hooks && settings.hooks.onChange )
+					if ( settings.hooks.onChange.call( $(this), event, oldVal, newVal ) === false )
+						return false;
+			}
+
+			par = $(this).parent();
+			par.parent().find( 'input' ).not(this).first().attr( 'value', newVal);
+			par.empty().append( newVal );
+			par.one( 'click', { 'settings' : settings }, incoming );
+
+			if ( settings && settings.hooks && settings.hooks.onFocusOut )
+				if ( settings.hooks.onFocusOut.call( $(this), event, newVal ) === false )
+					return false;
+
+			return true;
+		}
+
+		proceed = function( event ) {
+			if ( settings && settings.behaviour && settings.behaviour.next )
+			{
+				if ( typeof(settings.behaviour.next) === 'function' )
+				{
+					rc = settings.behaviour.next.call( this, event );
+					if ( typeof( rc ) === 'string' )
+						$( rc ).click();
+				}
+				else
+				{
+					$( settings.behaviour.next ).click();
+				}
+			}
+		}
+
+		outgoing = function( event ) {
+			if ( restore.call( this, event ) == false ) return false;
+			return false;
+		};
+
+		keystroke = function( event ) {
+			if ( event.keyCode == '13') {
+				event.preventDefault();
+
+				settings = event.data['settings'];
+				if ( settings && settings.hooks && settings.hooks.onEnter )
+					if ( settings.hooks.onEnter.call( $(this), event ) === false )
+						return false;
+
+				if ( restore.call( this, event ) === false ) return false;
+				proceed.call( this, event );
+			}
+			if ( event.keyCode == '9') {
+				event.preventDefault();
+
+				settings = event.data['settings'];
+				if ( settings && settings.hooks && settings.hooks.onNext )
+					if ( settings.hooks.onNext.call( $(this), event ) === false )
+						return false;
+
+				if ( restore.call( this, event ) === false ) return false;
+				proceed.call( this, event );
+			}
+			if ( event.keyCode == '27') {
+				event.preventDefault();
+
+				settings = event.data['settings'];
+				if ( settings && settings.hooks && settings.hooks.onCancel )
+					if ( settings.hooks.onCancel.call( $(this), event ) === false )
+						return false;
+
+				$(this).val( $(this).parent().parent().find( 'input' ).not(this).first().attr( 'value' ) );
+
+				if ( restore.call( this, event ) === false ) return false;
+			}
+		};
+
+		$(this).one( 'click', { 'settings' : settings }, incoming );
+		return methods;
+	}
+
 };
 
 $.fn.jItol = function( method ) {
@@ -470,7 +606,4 @@ $.fn.jItol = function( method ) {
 };
 })( jQuery );
 
-
-
-//@ sourceURL=itemized-total.js
 

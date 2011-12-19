@@ -38,9 +38,10 @@
 		);
 	});
 
-	function alert( doug )
+	function alert() 
 	{
 	}
+
 
 	myhooks = {
 			onFocus : function( event, val ) {
@@ -72,7 +73,7 @@
 	$( "#id_myspan" ).jItol(
 			'prepareTextInput',
 			{
-				behaviour : { next : 'id_myspan_two' },
+				behaviour : { next : function() { alert('next was called'); return '#id_myspan_two'; } },
 				hooks : myhooks
 			}
 		);
@@ -80,10 +81,19 @@
 	$( "#id_myspan_two" ).jItol(
 			'prepareTextInput',
 			{
-				behaviour : { next : 'id_myspan' },
+				behaviour : { next : '#id_myspan_three' },
 				hooks : myhooks
 			}
 		);
+
+	$( "#id_myspan_three" ).jItol(
+			'prepareCurrencyInput',
+			{
+				behaviour : { next : '#id_myspan' },
+				hooks : myhooks
+			}
+		);
+
 
 
 {% endblock %}
@@ -120,6 +130,11 @@
 		<div>
 			<div id="id_myspan_two">Red Green</div>
 			<input type="hidden" name="myspan_two" value="Red Green" />
+		</div>
+
+		<div>
+			<div id="id_myspan_three">5.00</div>
+			<input type="hidden" name="myspan_three" value="2.75" />
 		</div>
 
 	</div>
