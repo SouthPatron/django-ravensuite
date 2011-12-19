@@ -1,9 +1,9 @@
-{% extends 'pages/org/invoice/basic.html' %}
+{% extends 'blocks/org/itemized_total.html' %}
 
 {% load decshift %}
 
 {% block onready %}
-	$(".invoice").jInvoice( 
+	$(".itol").jInvoice( 
 		"invoicify",
 		{
 			'delete-icon' : '{{ STATIC_URL }}images/icons/line_delete_grey.png',
@@ -45,7 +45,7 @@
 {% block document_dates %}
 <fieldset>
 	<label for="name">Invoice Date</label>
-	<input type="text" name="invoice_date" id="id_invoice_date" class="text ui-widget-content ui-corner-all" value="{{ instance.invoice_date|date:"j M Y" }}" />
+	<input type="text" name="invoice_date" id="id_itol_date" class="text ui-widget-content ui-corner-all" value="{{ instance.invoice_date|date:"j M Y" }}" />
 	<label for="name">Due Date</label>
 	<input type="text" name="due_date" id="id_due_date" class="text ui-widget-content ui-corner-all" value="{{ instance.due_date|date:"j M Y" }}" />
 </fieldset>
@@ -110,7 +110,7 @@
 				</div>
 				<div class="inner-amount-amount">
 					<span id="summary_amount">{{ instance.amount|decsplay }}</span>
-					<input type="hidden" id="id_invoice_amount" name="invoice_amount" value="{{ instance.amount|decshow }}" />
+					<input type="hidden" id="id_itol_amount" name="invoice_amount" value="{{ instance.amount|decshow }}" />
 				</div>
 			</div>
 
@@ -120,7 +120,7 @@
 				</div>
 				<div class="inner-tax-amount">
 					<span id="summary_tax">{{ instance.tax|decsplay }}</span>
-					<input type="hidden" id="id_invoice_tax" name="invoice_tax" value="{{ instance.tax|decshow }}" />
+					<input type="hidden" id="id_itol_tax" name="invoice_tax" value="{{ instance.tax|decshow }}" />
 				</div>
 			</div>
 
@@ -130,7 +130,7 @@
 				</div>
 				<div class="inner-total-amount">
 					<span id="summary_total">{{ instance.total|decsplay }}</span>
-					<input type="hidden" id="id_invoice_total" name="invoice_total" value="{{ instance.total|decshow }}" />
+					<input type="hidden" id="id_itol_total" name="invoice_total" value="{{ instance.total|decshow }}" />
 				</div>
 			</div>
 
@@ -179,7 +179,7 @@
 {% endif %}
 
 <div>
-	<table class="invoice-payment-table">
+	<table class="itol-payment-table">
 		<tbody>
 		{% for pmt in instance.paymentallocation_set.all %}
 			<tr>

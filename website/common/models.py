@@ -354,11 +354,6 @@ class Payment( models.Model ):
 	class Meta:
 		ordering = [ '-payment_date' ]
 
-class PaymentAllocation( models.Model ):
-	payment = models.ForeignKey( Payment )
-	invoice = models.ForeignKey( Invoice )
-	amount = models.BigIntegerField( default = 0 )
-
 
 class Refund( models.Model ):
 	client = models.ForeignKey( Client )
@@ -381,6 +376,10 @@ class Refund( models.Model ):
 		ordering = [ '-refund_date' ]
 
 
+class PaymentAllocation( models.Model ):
+	payment = models.ForeignKey( Payment )
+	invoice = models.ForeignKey( Invoice )
+	amount = models.BigIntegerField( default = 0 )
 
 
 class Activity( models.Model ):

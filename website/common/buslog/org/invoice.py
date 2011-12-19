@@ -8,6 +8,7 @@ from common.exceptions import *
 from common.buslog.org import AccountBusLog
 from common.moe import MarginsOfError
 from common.utils.dbgdatetime import datetime
+from common.utils.objroute import *
 
 
 class InvoiceBusLog( object ):
@@ -210,11 +211,7 @@ class InvoiceBusLog( object ):
 				'INVOICE',
 				'Invoice {}'.format( invoice.refnum ),
 				float(0)-invoice.total,
-				'org.client.invoice {} {} {}'.format(
-						invoice.get_org().refnum,
-						invoice.get_client().refnum,
-						invoice.refnum
-					),
+				ObjRoute.gen( invoice ),
 				''
 			)
 
@@ -226,11 +223,7 @@ class InvoiceBusLog( object ):
 				'VOID',
 				'Void of Invoice {}'.format( invoice.refnum ),
 				invoice.total,
-				'org.client.invoice {} {} {}'.format(
-						invoice.get_org().refnum,
-						invoice.get_client().refnum,
-						invoice.refnum
-					),
+				ObjRoute.gen( invoice ),
 				''
 			)
 

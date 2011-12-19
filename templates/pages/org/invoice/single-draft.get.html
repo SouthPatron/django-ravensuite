@@ -3,7 +3,7 @@
 {% load decshift %}
 
 {% block onready %}
-	$(".invoice").jInvoice( 
+	$(".itol").jInvoice( 
 		"invoicify",
 		{
 			'delete-icon' : '{{ STATIC_URL }}images/icons/line_delete_grey.png',
@@ -72,7 +72,7 @@
 
 		<div class="add-row-portion">
 			<div>
-				<button id="id_invoice_add_item_row" type="button">Add a new line</button>
+				<button id="id_itol_add_item_row" type="button">Add a new line</button>
 			</div>
 
 			<div>
@@ -93,7 +93,7 @@
 				</div>
 				<div class="inner-amount-amount">
 					<span id="summary_amount">{{ instance.amount|decsplay }}</span>
-					<input type="hidden" id="id_invoice_amount" name="invoice_amount" value="{{ instance.amount|decshow }}" />
+					<input type="hidden" id="id_itol_amount" name="invoice_amount" value="{{ instance.amount|decshow }}" />
 				</div>
 			</div>
 
@@ -103,7 +103,7 @@
 				</div>
 				<div class="inner-tax-amount">
 					<span id="summary_tax">{{ instance.tax|decsplay }}</span>
-					<input type="hidden" id="id_invoice_tax" name="invoice_tax" value="{{ instance.tax|decshow }}" />
+					<input type="hidden" id="id_itol_tax" name="invoice_tax" value="{{ instance.tax|decshow }}" />
 				</div>
 			</div>
 
@@ -113,7 +113,7 @@
 				</div>
 				<div class="inner-total-amount">
 					<span id="summary_total">{{ instance.total|decsplay }}</span>
-					<input type="hidden" id="id_invoice_total" name="invoice_total" value="{{ instance.total|decshow }}" />
+					<input type="hidden" id="id_itol_total" name="invoice_total" value="{{ instance.total|decshow }}" />
 				</div>
 			</div>
 		</div>

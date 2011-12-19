@@ -7,6 +7,7 @@ from common.models import *
 from common.exceptions import *
 from common.buslog.org import AccountBusLog
 from common.utils.dbgdatetime import datetime
+from common.utils.objroute import ObjRoute
 
 
 class RefundBusLog( object ):
@@ -72,12 +73,7 @@ class RefundBusLog( object ):
 				'REFUND',
 				'Refund {} Given'.format( newt.refnum ),
 				float(0) - newt.amount,
-				'org.client.refund {} {} {}'.format(
-						newt.get_org().refnum,
-						newt.get_client().refnum,
-						newt.refnum
-					),
-
+				ObjRoute.gen( newt ),
 				''
 			)
 
@@ -91,11 +87,7 @@ class RefundBusLog( object ):
 				'VOID',
 				'Void of Refund {}'.format( refund.refnum ),
 				refund.amount,
-				'org.client.refund {} {} {}'.format(
-						newt.get_org().refnum,
-						newt.get_client().refnum,
-						newt.refnum
-					),
+				ObjRoute.gen( refund ),
 				''
 			)
 

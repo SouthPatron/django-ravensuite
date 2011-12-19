@@ -8,6 +8,7 @@ from common.exceptions import *
 from common.buslog.org import AccountBusLog
 from common.moe import MarginsOfError
 from common.utils.dbgdatetime import datetime
+from common.utils.objroute import *
 
 
 class PaymentBusLog( object ):
@@ -66,12 +67,7 @@ class PaymentBusLog( object ):
 				'PAYMENT',
 				'Payment {} Received'.format( newt.refnum ),
 				newt.amount,
-				'org.client.payment {} {} {}'.format(
-						newt.get_org().refnum,
-						newt.get_client().refnum,
-						newt.refnum
-					),
-
+				ObjRoute.gen( newt ),
 				''
 			)
 
@@ -85,11 +81,7 @@ class PaymentBusLog( object ):
 				'VOID',
 				'Void of Payment {}'.format( payment.refnum ),
 				float(0) - payment.amount,
-				'org.client.payment {} {} {}'.format(
-						newt.get_org().refnum,
-						newt.get_client().refnum,
-						newt.refnum
-					),
+				ObjRoute.gen( payment ),
 				''
 			)
 

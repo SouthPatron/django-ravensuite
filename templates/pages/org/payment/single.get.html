@@ -1,4 +1,4 @@
-{% extends 'pages/org/invoice/basic.html' %}
+{% extends 'blocks/org/itemized_total.html' %}
 
 {% load decshift %}
 
@@ -65,7 +65,7 @@ Payment received {{ instance.payment_date|date:"j M Y" }}
 
 
 <style>
-.invoice-payment-table.allocation th {
+.itol-payment-table.allocation th {
 	text-align: left;
 	font-weight: bold;
 	padding-bottom: 20px;
@@ -115,7 +115,7 @@ Payment received {{ instance.payment_date|date:"j M Y" }}
 
 	<div style="font-size: 1.3em; margin: 20px 0px;">Allocated to:</div>
 
-	<table class="invoice-payment-table allocation">
+	<table class="itol-payment-table allocation">
 		<thead>
 			<tr>
 				<th>Invoice</th>
