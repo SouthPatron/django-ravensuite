@@ -1,15 +1,18 @@
-{% extends 'blocks/org/itemized_total.html' %}
+{% extends 'layouts/org/itemized_total.html' %}
 
 {% load decshift %}
 
 {% block onready %}
-	$(".itol").jInvoice( 
-		"invoicify",
-		{
-			'delete-icon' : '{{ STATIC_URL }}images/icons/line_delete_grey.png',
-			'editable' : false
-		}
-	);
+
+
+/*
+	$(".itol").jItol()
+		.addDate( "#id_itol_date" )
+		.addDate( "#id_due_date" )
+		.prepare()
+		.allowEdit()
+	;
+*/
 
 	$( '#payment-allocate' ).smkTools(
 			'click_modal',
@@ -34,6 +37,55 @@
 			+ '&payid=' + allocref
 		);
 	});
+
+	function alert( doug )
+	{
+	}
+
+	myhooks = {
+			onFocus : function( event, val ) {
+				alert( 'onFocus' );
+				return true;
+			},
+			onChange : function( event, oldVal, newVal ) {
+				alert( 'onChange' );
+				return true;
+			},
+			onEnter : function( event ) {
+				alert( 'onEnter' );
+				return true;
+			},
+			onCancel : function( event ) {
+				alert( 'onCancel' );
+				return true;
+			},
+			onNext : function( event ) {
+				alert( 'onNext' );
+				return true;
+			},
+			onFocusOut : function( event, val ) {
+				alert( 'onFocusOut' );
+			}
+	};
+
+
+	$( "#id_myspan" ).jItol(
+			'prepareTextInput',
+			{
+				behaviour : { next : 'id_myspan_two' },
+				hooks : myhooks
+			}
+		);
+
+	$( "#id_myspan_two" ).jItol(
+			'prepareTextInput',
+			{
+				behaviour : { next : 'id_myspan' },
+				hooks : myhooks
+			}
+		);
+
+
 {% endblock %}
 
 
@@ -57,6 +109,22 @@
 
 
 {% block document_body %}
+
+	<div>
+		<h3>Hola</h3>
+		<div>
+			<div id="id_myspan">This is it, Yo!</div>
+			<input type="hidden" name="myspan" value="This is it, Yo!" />
+		</div>
+
+		<div>
+			<div id="id_myspan_two">Red Green</div>
+			<input type="hidden" name="myspan_two" value="Red Green" />
+		</div>
+
+	</div>
+
+
 
 	<div class="item-list">
 		<table>

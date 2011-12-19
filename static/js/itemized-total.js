@@ -316,16 +316,13 @@ var methods = {
 		return this;
 	},
 
-	invoicify : function() {
+	prepare : function() {
 
 		$('#id_itol_date').datepicker( datesettings );
 		$('#id_due_date').datepicker( datesettings );
 
 		if ( settings[ 'editable' ] == true )
 		{
-			apply_edit_hooks();
-			$('#id_itol_add_item_row').click( add_item_line );
-
 		}
 
 		$("#id_button_save").click( itol_submit );
@@ -334,15 +331,134 @@ var methods = {
 		$("#id_button_void").click( { 'new_state' : 10 }, itol_submit );
 
 		return this;
-	}
+	},
+
+	allowEdit : function() {
+		apply_edit_hooks();
+		$('#id_itol_add_item_row').click( add_item_line );
+		return this;
+	},
+
+	setColumns : function() {
+		// Title
+		// Name
+		// Type
+		// Editable
+		// Next
+	},
+
+	addDate : function( itid ) {
+		$( itid ).datepicker( datesettings );
+		return this;
+	},
+
+	prepareTextInput : function( settings ) {
+
+		// Next
+		// onFocus
+		// onChange
+		// onEnter
+		// onCancel
+		// onNext
+		// onFocusOut
+
+		incoming = function( event ) {
+			dsval = $(this).parent().find( 'input' ).attr( 'value' );
+
+			settings = event.data['settings'];
+
+			if ( settings && settings.hooks && settings.hooks.onFocus )
+			{
+				if ( settings.hooks.onFocus.call( $(this), event, dsval ) === false )
+				{
+					$(this).one( 'click', { 'settings' : settings }, incoming );
+					return false;
+				}
+			}
+
+			sam = $(this).empty().append( '<input type="text" value="' + dsval + '" />' );
+			inval = $(this).find( "input" ).focus().focusout( { 'settings' : settings }, outgoing ).keydown( { 'settings' : settings }, keystroke );
+			return false;
+		};
+
+		restore = function( event ) {
+			oldVal = $(this).parent().parent().find( 'input' ).not(this).first().attr( 'value' );
+			newVal = $(this).val();
+
+			settings = event.data['settings'];
+
+			if ( oldVal != newVal )
+			{
+				if ( settings && settings.hooks && settings.hooks.onChange )
+					if ( settings.hooks.onChange.call( $(this), event, oldVal, newVal ) === false )
+						return false;
+			}
+
+			par = $(this).parent();
+			par.parent().find( 'input' ).not(this).first().attr( 'value', newVal);
+			par.empty().append( newVal );
+			par.one( 'click', { 'settings' : settings }, incoming );
+
+			if ( settings && settings.hooks && settings.hooks.onFocusOut )
+				if ( settings.hooks.onFocusOut.call( $(this), event, newVal ) === false )
+					return false;
+
+			return true;
+		}
+
+		proceed = function( event ) {
+			if ( settings && settings.behaviour && settings.behaviour.next )
+				$( "#" + settings.behaviour.next ).click();
+		}
+
+		outgoing = function( event ) {
+			if ( restore.call( this, event ) == false ) return false;
+			return false;
+		};
+
+		keystroke = function( event ) {
+			if ( event.keyCode == '13') {
+				event.preventDefault();
+
+				settings = event.data['settings'];
+				if ( settings && settings.hooks && settings.hooks.onEnter )
+					if ( settings.hooks.onEnter.call( $(this), event ) === false )
+						return false;
+
+				if ( restore.call( this, event ) === false ) return false;
+				proceed.call( this, event );
+			}
+			if ( event.keyCode == '9') {
+				event.preventDefault();
+
+				settings = event.data['settings'];
+				if ( settings && settings.hooks && settings.hooks.onNext )
+					if ( settings.hooks.onNext.call( $(this), event ) === false )
+						return false;
+
+				if ( restore.call( this, event ) === false ) return false;
+				proceed.call( this, event );
+			}
+			if ( event.keyCode == '27') {
+				event.preventDefault();
+
+				settings = event.data['settings'];
+				if ( settings && settings.hooks && settings.hooks.onCancel )
+					if ( settings.hooks.onCancel.call( $(this), event ) === false )
+						return false;
+
+				$(this).val( $(this).parent().parent().find( 'input' ).not(this).first().attr( 'value' ) );
+
+				if ( restore.call( this, event ) === false ) return false;
+			}
+		};
+
+		$(this).one( 'click', { 'settings' : settings }, incoming );
+		return methods;
+	},
 };
 
-$.fn.jInvoice = function( method, new_settings ) {
-
-	settings[ 'delete-icon' ] = new_settings[ 'delete-icon' ]
-	settings[ 'editable' ] = new_settings[ 'editable' ]
-	
-
+$.fn.jItol = function( method ) {
 
 	if ( methods[method] ) {
 		return methods[ method ].apply( this, Array.prototype.slice.call( arguments, 1 ));
@@ -350,8 +466,11 @@ $.fn.jInvoice = function( method, new_settings ) {
 		return methods.init.apply( this, arguments );
 	} else {
 		$.error( 'Method ' +  method + ' does not exist on jQuery.jInvoice' );
-	}    
-
+	}
 };
 })( jQuery );
+
+
+
+//@ sourceURL=itemized-total.js
 
