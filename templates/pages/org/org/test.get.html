@@ -49,10 +49,27 @@
 		$( "#id_myspan_two" ),
 		{
 			behaviour : {
-				next : '#id_myspan',
+				next : '#id_myspan_three',
 				form_update: '#id_two'
 			},
 			callbacks : myhooks
+		}
+	);
+
+	afes.selectInput(
+		$( "#id_myspan_three" ),
+		{
+			behaviour : {
+				next : '#id_myspan',
+				form_update: '#id_three',
+			},
+			callbacks : myhooks,
+			options : {
+				'One' : 1,
+				'Two' : 2,
+				'Three' : 3,
+				'Four' : 4
+			}
 		}
 	);
 
@@ -64,30 +81,22 @@
 
 {% block content %}
 
-<fieldset>
-	<label for="name">Invoice Date</label>
-	<input type="text" name="invoice_date" id="id_itol_date" class="text ui-widget-content ui-corner-all" value="{{ instance.invoice_date|date:"j M Y" }}" />
-	<label for="name">Due Date</label>
-	<input type="text" name="due_date" id="id_due_date" class="text ui-widget-content ui-corner-all" value="{{ instance.due_date|date:"j M Y" }}" />
-</fieldset>
-
-	<div>
-		<h3>Hola</h3>
-		<div style="font-size: 3em;">
+	<div style='font-size: 3em;'>
+		<div>
 			<div id="id_myspan">This is it, Yo!</div>
-
 			<input id="id_one" type="text" value="bubba" />
 		</div>
 
-		<div style="font-size: 3em;">
+		<div>
 			<div id="id_myspan_two">500.00</div>
-
-
 			<input id="id_two" type="text" value="bubba" />
 		</div>
 
+		<div>
+			<div id="id_myspan_three">Three</div>
+			<input id="id_three" type="text" value="3" />
+		</div>
 	</div>
-
 
 {% endblock %}
 

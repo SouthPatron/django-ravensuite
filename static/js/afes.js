@@ -19,6 +19,8 @@
  *		next - string or function
  *		form_update - update a field in a form with the selector
  *
+ *	options	- array or object (kvp) with selections
+ *
  *	hooks
  *		onFocus( event, value )
  *		onChange( event, oldVal, newVal )
@@ -36,6 +38,7 @@
  *
  *  currencyInput( elem, settings );
  *  textInput( elem, settings );
+ *  selectInput( elem, settings, options );
  *
  *
  */
@@ -78,9 +81,11 @@ var afes = new function() {
 		if ( ! opset.settings ) opset.settings = {};
 		if ( ! opset.settings.behaviour ) opset.settings.behaviour = {};
 		if ( ! opset.settings.callbacks ) opset.settings.callbacks = {};
+		if ( ! opset.settings.options ) opset.settings.options = {};
 
 		if ( ! opset.scratchpad ) opset.scratchpad = {};
 		if ( ! opset.scratchpad.original_value ) opset.scratchpad.original_value = "";
+
 		return opset
 	}
 
@@ -110,6 +115,9 @@ var afes = new function() {
 
 
 	this.ih = function() {}
+
+
+	//						TEXT ------------------------------------------
 
 	this.ih.text = function() {}
 	
@@ -272,6 +280,9 @@ var afes = new function() {
 	}
 
 
+	//						CURRENCY --------------------------------------
+
+
 	this.ih.currency = function() {}
 	
 	this.ih.currency.activate = function( elem, event, opset ) {
@@ -285,6 +296,90 @@ var afes = new function() {
 		$(elem).val( dsval );
 		return afes.ih.text.update( elem, event, opset );
 	}
+
+
+	//						SELECT BOX ------------------------------------
+
+
+	this.ih.select = function() {}
+	
+	this.ih.select.activate = function( elem, event, opset ) {
+		var dsval = $(elem).html();
+		opset.scratchpad.original_value = dsval;
+
+		var callbacks = opset.settings.callbacks;
+
+		if ( callbacks.onFocus )
+		{
+			if ( callbacks.onFocus.call( elem, event, dsval ) === false )
+			{
+				$(elem).one(
+					'click',
+					{ 'opset' : opset },
+					opset.functional.activate
+				);
+				return false;
+			}
+		}
+
+		var sam = $( "<select/>" );
+
+		for ( key in opset.settings.options )
+		{
+			var opsie = $( "<option/>", { value : opset.settings.options[key] } );
+
+			if ( dsval == key )
+				opsie.attr( 'selected', 1 );
+
+			opsie.html( key );
+			sam.append( opsie );
+		}
+
+		$(elem).empty().append( sam );
+
+		sam.focus()
+			.focusout( { 'opset' : opset }, afes.stubs.ih.update )
+			.keydown( { 'opset' : opset }, afes.stubs.ih.keystroke );
+
+		return false;
+	}
+
+
+	this.ih.select.update = function( elem, event, opset ) {
+		var dsval = $(elem).val();
+		var callbacks = opset.settings.callbacks;
+
+		if ( callbacks.onChange )
+		{
+			var rc = callbacks.onChange.call( elem, event, dsval );
+
+			if ( rc === false )
+			{
+				$(elem).one( 'click', { 'opset' : opset }, afes.stubs.ih.activate);
+				return false;
+			}
+
+			if ( rc && rc !== true ) dsval = rc;
+		}
+
+		// Update forms entries, if specified.
+		if ( opset.settings.behaviour.form_update )
+			$( opset.settings.behaviour.form_update ).val( dsval );
+
+		var par = $(elem).parent();
+		var text = $(elem).find(":selected").html();
+
+		par
+			.empty()
+			.html( text )
+			.one( 'click', { 'opset' : opset }, afes.stubs.ih.activate );
+
+		if ( callbacks.onFocusOut )
+			callbacks.onFocusOut.call( elem, event, dsval );
+
+		return false;
+	}
+
 
 
 	// ----------------- Methods ----------------------------------------
@@ -312,6 +407,22 @@ var afes = new function() {
 			functional : {
 				activate : afes.ih.currency.activate,
 				update : afes.ih.currency.update,
+				cancel : afes.ih.text.cancel,
+				keystroke : afes.ih.text.keystroke
+			},
+			settings : thesettings
+		};
+
+		$( elem ).one( 'click', { 'opset' : opset }, afes.stubs.ih.activate );
+		return afes;
+	}
+
+	this.selectInput = function( elem, thesettings ) {
+
+		var opset = {
+			functional : {
+				activate : afes.ih.select.activate,
+				update : afes.ih.select.update,
 				cancel : afes.ih.text.cancel,
 				keystroke : afes.ih.text.keystroke
 			},
