@@ -18,7 +18,11 @@
 			onFocus : function( event, val ) {
 				return true;
 			},
+			onUpdate : function( event, val ) {
+				return true;
+			},
 			onChange : function( event, val ) {
+				$( "#id_douggie" ).empty().html( val );
 				return true;
 			},
 			onEnter : function( event ) {
@@ -96,6 +100,10 @@
 			<div id="id_myspan_three">Three</div>
 			<input id="id_three" type="text" value="3" />
 		</div>
+
+
+
+		<div id="id_douggie"></div>
 	</div>
 
 {% endblock %}

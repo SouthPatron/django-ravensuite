@@ -23,7 +23,8 @@
  *
  *	hooks
  *		onFocus( event, value )
- *		onChange( event, oldVal, newVal )
+ *		onUpdate( event, oldVal, newVal )
+ *		onChange( event )
  *		onEnter( event )
  *		onCancel( event )
  *		onNext( event )
@@ -146,7 +147,7 @@ var afes = new function() {
 
 		sam.focus()
 			.focusout( { 'opset' : opset }, afes.stubs.ih.update )
-			.keydown( { 'opset' : opset }, afes.stubs.ih.keystroke );
+			.keyup( { 'opset' : opset }, afes.stubs.ih.keystroke );
 
 		return false;
 	}
@@ -156,9 +157,9 @@ var afes = new function() {
 		var dsval = $(elem).val();
 		var callbacks = opset.settings.callbacks;
 
-		if ( callbacks.onChange )
+		if ( callbacks.onUpdate )
 		{
-			var rc = callbacks.onChange.call( elem, event, dsval );
+			var rc = callbacks.onUpdate.call( elem, event, dsval );
 
 			if ( rc === false )
 			{
@@ -224,6 +225,7 @@ var afes = new function() {
 
 		var callbacks = opset.settings.callbacks;
 		var next = opset.settings.behaviour.next;
+		var original_value = opset.scratchpad.original_value;
 
 		// KEY: Enter
 
@@ -277,6 +279,12 @@ var afes = new function() {
 			return opset.functional.cancel( elem, event, opset );
 		}
 
+
+		if ( callbacks.onChange ) {
+			var newval = elem.val();
+			if ( newval != original_value )
+				callbacks.onChange.call( elem, event, newval );
+		}
 	}
 
 
@@ -339,7 +347,7 @@ var afes = new function() {
 
 		sam.focus()
 			.focusout( { 'opset' : opset }, afes.stubs.ih.update )
-			.keydown( { 'opset' : opset }, afes.stubs.ih.keystroke );
+			.keyup( { 'opset' : opset }, afes.stubs.ih.keystroke );
 
 		return false;
 	}
@@ -349,9 +357,9 @@ var afes = new function() {
 		var dsval = $(elem).val();
 		var callbacks = opset.settings.callbacks;
 
-		if ( callbacks.onChange )
+		if ( callbacks.onUpdate )
 		{
-			var rc = callbacks.onChange.call( elem, event, dsval );
+			var rc = callbacks.onUpdate.call( elem, event, dsval );
 
 			if ( rc === false )
 			{
