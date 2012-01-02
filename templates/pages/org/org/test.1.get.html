@@ -9,7 +9,6 @@
 	<script type="text/javascript" src="{{ STATIC_URL }}js/validations.js"></script>
 	<script type="text/javascript" src="{{ STATIC_URL }}js/date.js"></script>
 	<script type="text/javascript" src="{{ STATIC_URL }}js/afes.js"></script>
-	<script type="text/javascript" src="{{ STATIC_URL }}js/afes-table.js"></script>
 
 {% endblock %}
 
@@ -39,43 +38,45 @@
 			}
 	};
 
-
-	afes.ex.table.init(
-		$( "#id_table" ),
+	afes.textInput(
+		$( "#id_myspan" ),
 		{
-			initialRows : 5,
-
-			columns : [
-
-				{
-					type: "text",
-					default: ""
-				},
-
-				{
-					type: "currency",
-					default: "0.00"
-				},
-
-				{
-					type: "currency",
-					default: "0.00"
-				},
-
-				{
-					type: "select",
-					options : {
-						"No Tax" : 0,
-						"Tax Inclusive" : 1,
-						"Tax Exclusive" : 2,
-						"Tax Exempt" : 3,
-					},
-					default: "No Tax"
-				}
-
-			]
+			behaviour : {
+				next : '#id_myspan_two',
+				form_update: '#id_one'
+			},
+			callbacks : myhooks
 		}
 	);
+
+	afes.currencyInput(
+		$( "#id_myspan_two" ),
+		{
+			behaviour : {
+				next : '#id_myspan_three',
+				form_update: '#id_two'
+			},
+			callbacks : myhooks
+		}
+	);
+
+	afes.selectInput(
+		$( "#id_myspan_three" ),
+		{
+			behaviour : {
+				next : '#id_myspan',
+				form_update: '#id_three',
+			},
+			callbacks : myhooks,
+			options : {
+				'One' : 1,
+				'Two' : 2,
+				'Three' : 3,
+				'Four' : 4
+			}
+		}
+	);
+
 
 
 
@@ -84,16 +85,26 @@
 
 {% block content %}
 
-<table id="id_table">
-<thead>
-	<th>Col1</th>
-	<th>Col2</th>
-	<th>Col3</th>
-	<th>Col4</th>
-</thead>
-<tbody>
-</tbody>
-</table>
+	<div style='font-size: 3em;'>
+		<div>
+			<div id="id_myspan">This is it, Yo!</div>
+			<input id="id_one" type="text" value="bubba" />
+		</div>
+
+		<div>
+			<div id="id_myspan_two">500.00</div>
+			<input id="id_two" type="text" value="bubba" />
+		</div>
+
+		<div>
+			<div id="id_myspan_three">Three</div>
+			<input id="id_three" type="text" value="3" />
+		</div>
+
+
+
+		<div id="id_douggie"></div>
+	</div>
 
 {% endblock %}
 
