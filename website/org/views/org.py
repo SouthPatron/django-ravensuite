@@ -88,6 +88,14 @@ class OrgSingle( SingleObjectView ):
 		obj.save()
 
 
+class OrgTestSingle( SingleObjectView ):
+	template_name = 'pages/org/org/test'
+
+	def get_object( self, request, *args, **kwargs ):
+		return { 'hello' : True }
+
+
+
 
 class OrgComponents( ComponentView ):
 

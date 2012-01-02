@@ -483,7 +483,7 @@ var methods = {
 		},
 
 		incoming = function( event ) {
-			dsval = numberize( $(this).parent().find( 'input' ).attr( 'value' ) );
+			dsval = this.numberize( $(this).parent().find( 'input' ).attr( 'value' ) );
 
 			settings = event.data['settings'];
 
@@ -491,7 +491,7 @@ var methods = {
 			{
 				if ( settings.hooks.onFocus.call( $(this), event, dsval ) === false )
 				{
-					$(this).one( 'click', { 'settings' : settings }, incoming );
+					$(this).one( 'click', { 'settings' : settings }, this.incoming );
 					return false;
 				}
 			}

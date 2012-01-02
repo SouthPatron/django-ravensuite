@@ -1,0 +1,82 @@
+{% extends 'layouts/org/member.html' %}
+
+{% block str_section_name %}Choose an Organization{% endblock %}
+
+{% block head_includes %}
+	<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}stylesheets/common/member-itemized-total.css" media="screen" />
+
+	<script type="text/javascript" src="{{ STATIC_URL }}js/smk.js"></script>
+	<script type="text/javascript" src="{{ STATIC_URL }}js/validations.js"></script>
+	<script type="text/javascript" src="{{ STATIC_URL }}js/date.js"></script>
+	<script type="text/javascript" src="{{ STATIC_URL }}js/afes.js"></script>
+
+{% endblock %}
+
+{% block onready %}
+
+	myhooks = {
+			onFocus : function( event, val ) {
+				return true;
+			},
+			onChange : function( event, val ) {
+				return true;
+			},
+			onEnter : function( event ) {
+				return true;
+			},
+			onCancel : function( event ) {
+				return true;
+			},
+			onNext : function( event ) {
+				return true;
+			},
+			onFocusOut : function( event, val ) {
+			}
+	};
+
+	afes.textInput(
+		$( "#id_myspan" ),
+		{
+			behaviour : { next : '#id_myspan_two' },
+			callbacks : myhooks
+		}
+	);
+
+	afes.currencyInput(
+		$( "#id_myspan_two" ),
+		{
+			behaviour : { next : '#id_myspan' },
+			callbacks : myhooks
+		}
+	);
+
+
+
+
+{% endblock %}
+
+
+{% block content %}
+
+<fieldset>
+	<label for="name">Invoice Date</label>
+	<input type="text" name="invoice_date" id="id_itol_date" class="text ui-widget-content ui-corner-all" value="{{ instance.invoice_date|date:"j M Y" }}" />
+	<label for="name">Due Date</label>
+	<input type="text" name="due_date" id="id_due_date" class="text ui-widget-content ui-corner-all" value="{{ instance.due_date|date:"j M Y" }}" />
+</fieldset>
+
+	<div>
+		<h3>Hola</h3>
+		<div style="font-size: 3em;">
+			<div id="id_myspan">This is it, Yo!</div>
+		</div>
+
+		<div style="font-size: 3em;">
+			<div id="id_myspan_two">500.00</div>
+		</div>
+
+	</div>
+
+
+{% endblock %}
+

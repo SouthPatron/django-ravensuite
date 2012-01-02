@@ -26,6 +26,8 @@ urlpatterns = patterns('',
 
 
 
+	url( r'^(?P<oid>\d+)/test$', login_required( OrgTestSingle.as_view() ), name = 'org-test-single' ),
+
 # ------ USERS -------------------------------
 
 
