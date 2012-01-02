@@ -17,6 +17,7 @@
  *
  * 	behaviour
  *		next - string or function
+ *		form_update - update a field in a form with the selector
  *
  *	hooks
  *		onFocus( event, value )
@@ -28,6 +29,16 @@
  *
  */
 
+
+/*
+ * Methods
+ *
+ *
+ *  currencyInput( elem, settings );
+ *  textInput( elem, settings );
+ *
+ *
+ */
 
 
 
@@ -55,40 +66,13 @@ var afes = new function() {
 		return (new Number(val)).toFixed(2);
 	}
 
-		restore = function( event ) {
-			oldVal = afes.numberize( $(this).parent().parent().find( 'input' ).not(this).first().attr( 'value' ) );
-
-			newVal = $(this).val();
-
-			if ( isNaN( newVal ) ) newVal = oldVal;
-			else newVal = afes.numberize( newVal );
-
-			settings = event.data['settings'];
-
-			if ( oldVal != newVal )
-			{
-				if ( settings && settings.hooks && settings.hooks.onChange )
-					if ( settings.hooks.onChange.call( $(this), event, oldVal, newVal ) === false )
-						return false;
-			}
-
-			par = $(this).parent();
-			par.parent().find( 'input' ).not(this).first().attr( 'value', newVal);
-			par.empty().append( newVal );
-			par.one( 'click', { 'settings' : settings }, afes._hook_prepare_incomingCurrency );
-
-			if ( settings && settings.hooks && settings.hooks.onFocusOut )
-				if ( settings.hooks.onFocusOut.call( $(this), event, newVal ) === false )
-					return false;
-
-			return true;
-		}
+	// ----------------- Stubs ------------------------------------------
 
 
-	this.ih = function() {}
-	this.ih.stubs = function() {}
+	this.stubs = function() {}
+	this.stubs.ih = function() {}
 
-	this.ih.stubs._cleanOpset = function( opset ) {
+	this.stubs.ih._cleanOpset = function( opset ) {
 		if ( ! opset ) opset = {};
 		if ( ! opset.functional ) opset.functional = {};
 		if ( ! opset.settings ) opset.settings = {};
@@ -100,27 +84,32 @@ var afes = new function() {
 		return opset
 	}
 
-	this.ih.stubs.activate = function( event ) {
-		var opset = afes.ih.stubs._cleanOpset( event.data[ 'opset' ] );
+	this.stubs.ih.activate = function( event ) {
+		var opset = afes.stubs.ih._cleanOpset( event.data[ 'opset' ] );
 		return opset.functional.activate( $(this), event, opset );
 	}
 
-	this.ih.stubs.update = function( event ) {
-		var opset = afes.ih.stubs._cleanOpset( event.data[ 'opset' ] );
+	this.stubs.ih.update = function( event ) {
+		var opset = afes.stubs.ih._cleanOpset( event.data[ 'opset' ] );
 		return opset.functional.update( $(this), event, opset );
 	}
 
-	this.ih.stubs.cancel = function( event ) {
-		var opset = afes.ih.stubs._cleanOpset( event.data[ 'opset' ] );
+	this.stubs.ih.cancel = function( event ) {
+		var opset = afes.stubs.ih._cleanOpset( event.data[ 'opset' ] );
 		return opset.functional.cancel( $(this), event, opset );
 	}
 
-	this.ih.stubs.keystroke = function( event ) {
-		var opset = afes.ih.stubs._cleanOpset( event.data[ 'opset' ] );
+	this.stubs.ih.keystroke = function( event ) {
+		var opset = afes.stubs.ih._cleanOpset( event.data[ 'opset' ] );
 		return opset.functional.keystroke( $(this), event, opset );
 	}
 
 
+
+	// ----------------- Interface Human ------------------------------------
+
+
+	this.ih = function() {}
 
 	this.ih.text = function() {}
 	
@@ -148,8 +137,8 @@ var afes = new function() {
 		$(elem).empty().append( sam );
 
 		sam.focus()
-			.focusout( { 'opset' : opset }, afes.ih.stubs.update )
-			.keydown( { 'opset' : opset }, afes.ih.stubs.keystroke );
+			.focusout( { 'opset' : opset }, afes.stubs.ih.update )
+			.keydown( { 'opset' : opset }, afes.stubs.ih.keystroke );
 
 		return false;
 	}
@@ -165,19 +154,23 @@ var afes = new function() {
 
 			if ( rc === false )
 			{
-				$(elem).one( 'click', { 'opset' : opset }, afes.ih.stubs.activate);
+				$(elem).one( 'click', { 'opset' : opset }, afes.stubs.ih.activate);
 				return false;
 			}
 
 			if ( rc && rc !== true ) dsval = rc;
 		}
 
+		// Update forms entries, if specified.
+		if ( opset.settings.behaviour.form_update )
+			$( opset.settings.behaviour.form_update ).val( dsval );
+
 		var par = $(elem).parent();
 
 		par
 			.empty()
 			.html( dsval )
-			.one( 'click', { 'opset' : opset }, afes.ih.stubs.activate );
+			.one( 'click', { 'opset' : opset }, afes.stubs.ih.activate );
 
 		if ( callbacks.onFocusOut )
 			callbacks.onFocusOut.call( elem, event, dsval );
@@ -195,7 +188,7 @@ var afes = new function() {
 
 			if ( rc === false )
 			{
-				$(elem).one( 'click', { 'opset' : opset }, afes.ih.stubs.activate);
+				$(elem).one( 'click', { 'opset' : opset }, afes.stubs.ih.activate);
 				return false;
 			}
 		}
@@ -205,7 +198,7 @@ var afes = new function() {
 		par
 			.empty()
 			.html( opset.scratchpad.original_value )
-			.one( 'click', { 'opset' : opset }, afes.ih.stubs.activate );
+			.one( 'click', { 'opset' : opset }, afes.stubs.ih.activate );
 
 
 		if ( callbacks.onFocusOut )
@@ -294,6 +287,8 @@ var afes = new function() {
 	}
 
 
+	// ----------------- Methods ----------------------------------------
+
 
 	this.textInput = function( elem, thesettings ) {
 
@@ -307,7 +302,7 @@ var afes = new function() {
 			settings : thesettings
 		};
 
-		$( elem ).one( 'click', { 'opset' : opset }, afes.ih.stubs.activate );
+		$( elem ).one( 'click', { 'opset' : opset }, afes.stubs.ih.activate );
 		return afes;
 	}
 
@@ -323,7 +318,7 @@ var afes = new function() {
 			settings : thesettings
 		};
 
-		$( elem ).one( 'click', { 'opset' : opset }, afes.ih.stubs.activate );
+		$( elem ).one( 'click', { 'opset' : opset }, afes.stubs.ih.activate );
 		return afes;
 	}
 

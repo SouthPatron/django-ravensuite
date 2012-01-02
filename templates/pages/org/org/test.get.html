@@ -37,7 +37,10 @@
 	afes.textInput(
 		$( "#id_myspan" ),
 		{
-			behaviour : { next : '#id_myspan_two' },
+			behaviour : {
+				next : '#id_myspan_two',
+				form_update: '#id_one'
+			},
 			callbacks : myhooks
 		}
 	);
@@ -45,7 +48,10 @@
 	afes.currencyInput(
 		$( "#id_myspan_two" ),
 		{
-			behaviour : { next : '#id_myspan' },
+			behaviour : {
+				next : '#id_myspan',
+				form_update: '#id_two'
+			},
 			callbacks : myhooks
 		}
 	);
@@ -69,10 +75,15 @@
 		<h3>Hola</h3>
 		<div style="font-size: 3em;">
 			<div id="id_myspan">This is it, Yo!</div>
+
+			<input id="id_one" type="text" value="bubba" />
 		</div>
 
 		<div style="font-size: 3em;">
 			<div id="id_myspan_two">500.00</div>
+
+
+			<input id="id_two" type="text" value="bubba" />
 		</div>
 
 	</div>
