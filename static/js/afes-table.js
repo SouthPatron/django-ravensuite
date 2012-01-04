@@ -35,9 +35,9 @@
  * 			editable : true/false (can edit)
  * 			
  * 			callbacks
- *				onFocus( event, value )
+ *				onFocus( event, val )
  *				onUpdate( event, oldVal, newVal )
- *				onChange( event )
+ *				onChange( event, val )
  *				onEnter( event )
  *				onCancel( event )
  *				onNext( event )
@@ -88,7 +88,12 @@ if ( ! afes.ex.table._stubs ) afes.ex.table._stubs = {}
 afes.ex.table.get_data = function( elem ) {
 	var id = $( elem ).attr( "id" );
 
-	if ( ! id ) alert( "afes.ex.table.get_data on element without id attribute" );
+	if ( ! id )
+	{
+		alert( "afes.ex.table.get_data on element without id attribute" );
+		return null;
+	}
+	
 
 	if ( ! afes.ex.table._data[ id ] )
 	{
@@ -263,13 +268,12 @@ afes.ex.table.appendRow = function( elem, values ) {
 /*               STUBS FOR CALLBACKS                             */
 
 
-afes.ex.table._stubs.onUpdate = function( event, oldVal, newVal )
+afes.ex.table._stubs.common = function( target )
 {
-	var elem = $( event.target ).parents( ".afes-table" ).first();
+	var elem = $( target ).parents( ".afes-table" ).first();
 	var data = afes.ex.table.get_data( elem );
-	var ds = data.settings;
 
-	var target = $( event.target ).parents( "td" ).first();
+	var target = $( target ).parents( "td" ).first();
 
 	var classes = ("" + target.attr( "class" )).split( /\s+/ );
 
@@ -279,31 +283,71 @@ afes.ex.table._stubs.onUpdate = function( event, oldVal, newVal )
 
 		if ( matches )
 		{
-			col = matches[1];
-			if ( ds.columns[ col ].callbacks )
-			{
-				callbacks = ds.columns[ col ].callbacks;
-				if ( callbacks.onUpdate )
-					return callbacks.onUpdate( event, oldVal, newVal );
-			}
+			col = matches[ 1 ];
+			if ( data.settings.columns[ col ].callbacks )
+				return data.settings.columns[ col ].callbacks;
+			else
+				return false;
 		}
 	}
 
+	return false;
+}
+
+afes.ex.table._stubs.onFocus = function( event, val )
+{
+	var rc = afes.ex.table._stubs.common( $(this) );
+	if ( rc !== false && rc.onFocus )
+			return rc.onFocus.call( $(this), event, val );
 	return true;
 }
 
+afes.ex.table._stubs.onUpdate = function( event, oldVal, newVal )
+{
+	var rc = afes.ex.table._stubs.common( $(this) );
+	if ( rc !== false && rc.onUpdate )
+			return rc.onUpdate.call( $(this),  event, oldVal, newVal );
+	return true;
+}
 
+afes.ex.table._stubs.onChange = function( event, val )
+{
+	var rc = afes.ex.table._stubs.common( $(this) );
+	if ( rc !== false && rc.onChange )
+			return rc.onChange.call( $(this),  event, val );
+	return true;
+}
 
-/*		onFocus( event, value )
- *		onUpdate( event, oldVal, newVal )
- *		onChange( event )
- *		onEnter( event )
- *		onCancel( event )
- *		onNext( event )
- *		onFocusOut( event, val )
- *
- */
+afes.ex.table._stubs.onEnter = function( event )
+{
+	var rc = afes.ex.table._stubs.common( $(this) );
+	if ( rc !== false && rc.onEnter )
+			return rc.onEnter.call( $(this),  event );
+	return true;
+}
 
+afes.ex.table._stubs.onCancel = function( event )
+{
+	var rc = afes.ex.table._stubs.common( $(this) );
+	if ( rc !== false && rc.onCancel )
+			return rc.onCancel.call( $(this),  event );
+	return true;
+}
 
+afes.ex.table._stubs.onNext = function( event )
+{
+	var rc = afes.ex.table._stubs.common( $(this) );
+	if ( rc !== false && rc.onNext )
+			return rc.onNext.call( $(this),  event );
+	return true;
+}
+
+afes.ex.table._stubs.onFocusOut = function( event, val )
+{
+	var rc = afes.ex.table._stubs.common( $(this) );
+	if ( rc !== false && rc.onFocusOut )
+			return rc.onFocusOut.call( $(this),  event, val );
+	return true;
+}
 
 

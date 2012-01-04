@@ -82,7 +82,24 @@
 
 	myhooks = {
 		onUpdate : function( event, oldVal, newVal ) {
-			return false;
+			var amount = $(this).parents( ".afes-table-body-row" ).first().find( ".amount" );
+			var qty = $(this).parents( ".afes-table-body-row" ).first().find( ".qty" );
+			var price = $(this).parents( ".afes-table-body-row" ).first().find( ".unit-price" );
+
+
+			var nqt = ( new Number( newVal ) );
+			if ( ! isNaN( qty.text() ) )
+				nqt = ( new Number( qty.text() ) );
+
+			var npr = ( new Number( newVal ) );
+			if ( ! isNaN( price.text() ) )
+				npr = ( new Number( price.text() ) );
+			
+			var amt = nqt * npr;
+
+			amount.html( amt.toFixed(2) );
+
+			return true;
 		}
 	};
 

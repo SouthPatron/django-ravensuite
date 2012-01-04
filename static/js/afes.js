@@ -24,7 +24,7 @@
  *	callbacks
  *		onFocus( event, val )
  *		onUpdate( event, oldVal, newVal )
- *		onChange( event )
+ *		onChange( event, val )
  *		onEnter( event )
  *		onCancel( event )
  *		onNext( event )
@@ -188,7 +188,7 @@ var afes = new function() {
 			.one( 'click', { 'opset' : opset }, afes.stubs.ih.activate );
 
 		if ( callbacks.onFocusOut )
-			callbacks.onFocusOut.call( elem, event, dsval );
+			callbacks.onFocusOut.call( par, event, dsval );
 
 		return false;
 	}
@@ -199,7 +199,7 @@ var afes = new function() {
 
 		if ( callbacks.onCancel )
 		{
-			var rc = callbacks.onCancel.call( elem, event, dsval );
+			var rc = callbacks.onCancel.call( elem, event );
 
 			if ( rc === false )
 			{
@@ -218,7 +218,7 @@ var afes = new function() {
 
 		if ( callbacks.onFocusOut )
 			callbacks.onFocusOut.call(
-				elem,
+				par,
 				event,
 				opset.scratchpad.original_value
 			);
@@ -395,7 +395,7 @@ var afes = new function() {
 			.one( 'click', { 'opset' : opset }, afes.stubs.ih.activate );
 
 		if ( callbacks.onFocusOut )
-			callbacks.onFocusOut.call( elem, event, dsval );
+			callbacks.onFocusOut.call( par, event, dsval );
 
 		return false;
 	}
