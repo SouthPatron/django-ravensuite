@@ -147,7 +147,8 @@ var afes = new function() {
 
 		sam.focus()
 			.focusout( { 'opset' : opset }, afes.stubs.ih.update )
-			.keydown( { 'opset' : opset }, afes.stubs.ih.keystroke );
+			.keydown( { 'opset' : opset }, afes.stubs.ih.keystroke )
+			.select();
 
 		return false;
 	}
