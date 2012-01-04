@@ -11,32 +11,79 @@
 	<script type="text/javascript" src="{{ STATIC_URL }}js/afes.js"></script>
 	<script type="text/javascript" src="{{ STATIC_URL }}js/afes-table.js"></script>
 
+	<style>
+
+
+.afes-table
+{
+	width: 100%;
+}
+
+.afes-table thead
+{
+	border-bottom: 1px solid #707070;
+}
+
+.afes-table-head-cell
+{
+	text-align: left;
+	padding: 5px 5px;
+	background-color: #ffffff;
+}
+
+.afes-table-body-row
+{
+	border-left: 1px solid #d8d8d8;
+}
+
+.afes-table-body-cell
+{
+	text-align: left;
+	padding: 5px 5px;
+	background-color: #ffffff;
+	border-right: 1px solid #d8d8d8;
+	border-bottom: 1px solid #c8c8c8;
+	overflow: hidden;
+}
+
+.afes-table-body-cell input
+{
+	border: 0px;
+	background-color: #f0f0f0;
+	width: 100%;
+}
+
+.afes-table-body-cell-currency,
+.afes-table-body-cell-currency input
+{
+	text-align: right;
+	padding-right: 8px;
+}
+
+.afes-table-body-cell-select select
+{
+	width: 100%;
+}
+
+
+#id_table thead .head-description { width: 235px; }
+#id_table thead .head-qty { width: 123px; }
+#id_table thead .head-unit-price { width: 147px; }
+#id_table thead .head-tax-rate { width: 195px; }
+#id_table thead .head-amount { width: 158px; }
+#id_table thead .head-delete { width: 20px; }
+
+
+	</style>
+
 {% endblock %}
 
 {% block onready %}
 
 	myhooks = {
-			onFocus : function( event, val ) {
-				return true;
-			},
-			onUpdate : function( event, val ) {
-				return true;
-			},
-			onChange : function( event, val ) {
-				$( "#id_douggie" ).empty().html( val );
-				return true;
-			},
-			onEnter : function( event ) {
-				return true;
-			},
-			onCancel : function( event ) {
-				return true;
-			},
-			onNext : function( event ) {
-				return true;
-			},
-			onFocusOut : function( event, val ) {
-			}
+		onUpdate : function( event, oldVal, newVal ) {
+			return false;
+		}
 	};
 
 
@@ -49,17 +96,21 @@
 
 				{
 					type: "text",
-					default: ""
+					default: "",
+					class: "description"
 				},
 
 				{
 					type: "currency",
-					default: "0.00"
+					default: "0.00",
+					class: "qty",
+					callbacks : myhooks
 				},
 
 				{
 					type: "currency",
-					default: "0.00"
+					default: "0.00",
+					class: "unit-price"
 				},
 
 				{
@@ -70,8 +121,23 @@
 						"Tax Exclusive" : 2,
 						"Tax Exempt" : 3,
 					},
-					default: "No Tax"
+					default: "No Tax",
+					class: "tax-rate"
+				},
+
+				{
+					type: "currency",
+					default: "0.00",
+					class: "amount",
+					editable : false
+				},
+
+				{
+					type: "currency",
+					default: "0.00",
+					class: "delete"
 				}
+
 
 			]
 		}
@@ -84,16 +150,20 @@
 
 {% block content %}
 
+
 <table id="id_table">
 <thead>
-	<th>Col1</th>
-	<th>Col2</th>
-	<th>Col3</th>
-	<th>Col4</th>
+	<th class="head-description">Description</th>
+	<th class="head-qty">Qty</th>
+	<th class="head-unit-price">Unit Price</th>
+	<th class="head-tax-rate">Tax Rate</th>
+	<th class="head-amount">Amount</th>
+	<th class="head-delete">Delete</th>
 </thead>
 <tbody>
 </tbody>
 </table>
+
 
 {% endblock %}
 

@@ -3,9 +3,46 @@
  *
  * Namespaces:
  *
- * 	afes.ex				- External stuff
- * 	afes.ex.table		- The table methods
- * 	afes.ex.table._data	- Data associated with the tables
+ * 	afes.ex				 - External stuff
+ * 	afes.ex.table		 - The table methods
+ * 	afes.ex.table._data	 - Data associated with the tables
+ * 	afes.ex.table._stubs - Stubs for the callbacks
+ *
+ * 	Methods:
+ *
+ *
+ * 		afes.ex.table.init( elem, settings )
+ *		afes.ex.table.get_data( elem )
+ *		afes.ex.table.appendDefaultRow( elem )
+ *		afes.ex.table.appendRow( elem, values )
+ *
+ * 
+ *
+ * Data structure kept in afes.ex.table._data
+ *
+ * 	row_counter
+ * 	settings  ( any part can be overridden by init method settings param )
+ *	 	min_rows
+ * 		max_rows
+ * 		initial_rows
+ * 		columns
+ * 			type : text/currency/select
+ * 			default : default (text)
+ * 			options
+ * 				"key" : "value"
+ * 				...
+ * 			class : "" (space separated list of additional classes)
+ * 			editable : true/false (can edit)
+ * 			
+ * 			callbacks
+ *				onFocus( event, value )
+ *				onUpdate( event, oldVal, newVal )
+ *				onChange( event )
+ *				onEnter( event )
+ *				onCancel( event )
+ *				onNext( event )
+ *				onFocusOut( event, val )
+ *
  *
  *
  * CSS classes:
@@ -27,6 +64,8 @@
  * 	afes-table-body-cell
  * 	afes-table-body-cell-first
  * 	afes-table-body-cell-last
+ * 	afes-table-body-cell-#	( where # is the column number )
+ *
  * 	afes-table-body-cell-currency
  * 	afes-table-body-cell-text
  * 	afes-table-body-cell-select
@@ -42,28 +81,8 @@
 if ( ! afes.ex ) afes.ex = {}
 if ( ! afes.ex.table ) afes.ex.table = {}
 if ( ! afes.ex.table._data ) afes.ex.table._data = {}
+if ( ! afes.ex.table._stubs ) afes.ex.table._stubs = {}
 
-
-/*
- *
- * Data:
- *
- * 	row_counter
- * 	settings
- *	 	min_rows
- * 		max_rows
- * 		initial_rows
- * 		columns
- * 			type : text/currency/select
- * 			default : default (text)
- * 			options
- * 				"key" : "value"
- * 				...
- *
- *
- *
- *
- */
 
 
 afes.ex.table.get_data = function( elem ) {
@@ -99,6 +118,8 @@ afes.ex.table.init = function( elem, settings ) {
 		afes.ex.table.appendDefaultRow( elem );
 
 	// CSS Classes
+
+	$( elem ).addClass( "afes-table" );
 
 	$( elem ).find( "thead tr" ).first().addClass( "afes-table-head-row-first" );
 	$( elem ).find( "thead tr" ).last().addClass( "afes-table-head-row-last" );
@@ -156,39 +177,69 @@ afes.ex.table.appendRow = function( elem, values ) {
 
 		row.append( cell );
 
+		var canEdit = true;
+		if ( typeof( cinfo.editable ) !== "undefined" )
+			canEdit = ( cinfo.editable === true );
+
+
 		if ( cinfo.type == "text" )
 		{
-			afes.textInput( cell,
-				{
-					behaviour: {
-						next : "#" + nextid
-					},
-				}
-			);
+			if ( canEdit )
+			{
+				afes.textInput( cell,
+					{
+						behaviour: {
+							next : "#" + nextid
+						},
+						callbacks : afes.ex.table._stubs
+					}
+				);
+			}
+
+			$( cell ).addClass( "afes-table-body-cell-text" );
 		}
 
 		if ( cinfo.type == "currency" )
 		{
-			afes.currencyInput( cell,
-				{
-					behaviour: {
-						next : "#" + nextid
+			if ( canEdit )
+			{
+				afes.currencyInput( cell,
+					{
+						behaviour: {
+							next : "#" + nextid
+						},
+						callbacks : afes.ex.table._stubs
 					}
-				}
-			);
+				);
+			}
+			
+			$( cell ).addClass( "afes-table-body-cell-currency" );
 		}
 
 		if ( cinfo.type == "select" )
 		{
-			afes.selectInput( cell,
-				{
-					behaviour: {
-						next : "#" + nextid
-					},
-					options : cinfo.options
-				}
-			);
+			if ( canEdit )
+			{
+				afes.selectInput( cell,
+					{
+						behaviour: {
+							next : "#" + nextid
+						},
+						options : cinfo.options,
+						callbacks : afes.ex.table._stubs
+					}
+				);
+			}
+
+			$( cell ).addClass( "afes-table-body-cell-select" );
 		}
+
+		// Add column number to class
+		$( cell ).addClass( "afes-table-body-cell-" + col );
+
+		// Add user requested class to column
+		if ( cinfo.class )
+			$( cell ).addClass( cinfo.class );
 
 	}
 
@@ -206,5 +257,53 @@ afes.ex.table.appendRow = function( elem, values ) {
 	$( row ).find("td").addClass( "afes-table-body-cell" );
 
 }
+
+
+
+/*               STUBS FOR CALLBACKS                             */
+
+
+afes.ex.table._stubs.onUpdate = function( event, oldVal, newVal )
+{
+	var elem = $( event.target ).parents( ".afes-table" ).first();
+	var data = afes.ex.table.get_data( elem );
+	var ds = data.settings;
+
+	var target = $( event.target ).parents( "td" ).first();
+
+	var classes = ("" + target.attr( "class" )).split( /\s+/ );
+
+	for ( var i = 0; i < classes.length; i++ )
+	{
+		var matches = classes[i].match( /afes\-table\-body\-cell\-(\d+)/ );
+
+		if ( matches )
+		{
+			col = matches[1];
+			if ( ds.columns[ col ].callbacks )
+			{
+				callbacks = ds.columns[ col ].callbacks;
+				if ( callbacks.onUpdate )
+					return callbacks.onUpdate( event, oldVal, newVal );
+			}
+		}
+	}
+
+	return true;
+}
+
+
+
+/*		onFocus( event, value )
+ *		onUpdate( event, oldVal, newVal )
+ *		onChange( event )
+ *		onEnter( event )
+ *		onCancel( event )
+ *		onNext( event )
+ *		onFocusOut( event, val )
+ *
+ */
+
+
 
 

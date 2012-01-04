@@ -21,8 +21,8 @@
  *
  *	options	- array or object (kvp) with selections
  *
- *	hooks
- *		onFocus( event, value )
+ *	callbacks
+ *		onFocus( event, val )
  *		onUpdate( event, oldVal, newVal )
  *		onChange( event )
  *		onEnter( event )
@@ -160,7 +160,12 @@ var afes = new function() {
 
 		if ( callbacks.onUpdate )
 		{
-			var rc = callbacks.onUpdate.call( elem, event, dsval );
+			var rc = callbacks.onUpdate.call(
+						elem,
+						event,
+						opset.scratchpad.original_value,
+						dsval
+					);
 
 			if ( rc === false )
 			{
@@ -360,7 +365,13 @@ var afes = new function() {
 
 		if ( callbacks.onUpdate )
 		{
-			var rc = callbacks.onUpdate.call( elem, event, dsval );
+			var rc = callbacks.onUpdate.call(
+						elem,
+						event,
+						opset.scratchpad.original_value,
+						dsval
+					);
+
 
 			if ( rc === false )
 			{
