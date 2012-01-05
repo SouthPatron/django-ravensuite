@@ -126,14 +126,16 @@
 					type: "currency",
 					default: "0.00",
 					class: "qty",
-					callbacks : myhooks
+					callbacks : myhooks,
+					form_name : "qty"
 				},
 
 				{
 					type: "currency",
 					default: "0.00",
 					class: "unit-price",
-					callbacks : myhooks
+					callbacks : myhooks,
+					form_name : "price"
 				},
 
 				{
@@ -144,15 +146,17 @@
 						"Tax Exclusive" : 2,
 						"Tax Exempt" : 3,
 					},
-					default: "No Tax",
-					class: "tax-rate"
+					default: "Tax Exclusive",
+					class: "tax-rate",
+					form_name : "tax-rate"
 				},
 
 				{
 					type: "currency",
 					default: "0.00",
 					class: "amount",
-					editable : false
+					editable : false,
+					form_name : "amount"
 				},
 
 				{

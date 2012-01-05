@@ -291,6 +291,20 @@ afes.ex.table.newFormField = function( settings ) {
 	var def = settings.default;
 	if ( ! def ) def = "";
 
+	// Find the select value
+	if ( settings.type == "select" )
+	{
+		for ( var key in settings.options )
+		{
+			if ( def == key )
+			{
+				def = settings.options[ key ];
+				break;
+			}
+		}
+	}
+
+
 	var field = $( "<div />",
 				{
 					class : "afes-table-body-cell-div-form",
@@ -441,65 +455,92 @@ afes.ex.table._stubs.common = function( target )
 
 	var col = afes.ex.table.getCellNum( targ );
 
-	if ( data.settings.columns[ col ].callbacks )
-		return data.settings.columns[ col ].callbacks;
-	
-	return false;
+	if ( col < 0 || col >= data.settings.columns.length )
+		throw "Column number exceeded configured column amount";
+
+	return data.settings.columns[ col ];
 }
 
 afes.ex.table._stubs.onFocus = function( event, val )
 {
 	var rc = afes.ex.table._stubs.common( $(this) );
-	if ( rc !== false && rc.onFocus )
-		return rc.onFocus.call( $(this), event, val );
+	if ( rc.callbacks && rc.callbacks.onFocus )
+		return rc.callbacks.onFocus.call( $(this), event, val );
 	return true;
 }
 
 afes.ex.table._stubs.onUpdate = function( event, oldVal, newVal )
 {
 	var rc = afes.ex.table._stubs.common( $(this) );
-	if ( rc !== false && rc.onUpdate )
-		return rc.onUpdate.call( $(this),  event, oldVal, newVal );
+
+	if ( rc !== false )
+	{
+		var nuwe = newVal;
+
+		if ( rc.callbacks && rc.callbacks.onUpdate )
+			nuwe = rc.callbacks.onUpdate.call( $(this), event, oldVal, newVal );
+	
+		if ( nuwe !== false )
+		{
+			var toBe = nuwe;
+
+			if ( toBe === true ) toBe = newVal;
+
+			// Update the form field, if present
+			if ( rc.form_name )
+			{
+				var ffield = $( event.target ).parents( "td" ).first().next();
+
+				if ( ! ffield.is( "div" ) )
+					throw "Form field was not found correctly. It should be next.";
+
+				ffield.find( "input" ).val( toBe );
+			}
+		}
+
+		return nuwe;
+	}
+
 	return true;
 }
 
 afes.ex.table._stubs.onChange = function( event, val )
 {
 	var rc = afes.ex.table._stubs.common( $(this) );
-	if ( rc !== false && rc.onChange )
-		return rc.onChange.call( $(this),  event, val );
+	if ( rc.callbacks && rc.callbacks.onChange )
+		return rc.callbacks.onChange.call( $(this), event, val );
 	return true;
 }
 
 afes.ex.table._stubs.onEnter = function( event )
 {
 	var rc = afes.ex.table._stubs.common( $(this) );
-	if ( rc !== false && rc.onEnter )
-		return rc.onEnter.call( $(this),  event );
+	if ( rc.callbacks && rc.callbacks.onEnter )
+		return rc.callbacks.onEnter.call( $(this), event );
 	return true;
 }
 
 afes.ex.table._stubs.onCancel = function( event )
 {
 	var rc = afes.ex.table._stubs.common( $(this) );
-	if ( rc !== false && rc.onCancel )
-		return rc.onCancel.call( $(this),  event );
+	if ( rc.callbacks && rc.callbacks.onCancel )
+		return rc.callbacks.onCancel.call( $(this), event );
 	return true;
 }
 
 afes.ex.table._stubs.onNext = function( event )
 {
 	var rc = afes.ex.table._stubs.common( $(this) );
-	if ( rc !== false && rc.onNext )
-		return rc.onNext.call( $(this),  event );
+	if ( rc.callbacks && rc.callbacks.onNext )
+		return rc.callbacks.onNext.call( $(this), event );
 	return true;
 }
 
 afes.ex.table._stubs.onFocusOut = function( event, val )
 {
 	var rc = afes.ex.table._stubs.common( $(this) );
-	if ( rc !== false && rc.onFocusOut )
-		return rc.onFocusOut.call( $(this),  event, val );
+	if ( rc.callbacks && rc.callbacks.onFocusOut )
+		return rc.callbacks.onFocusOut.call( $(this), event, val );
 	return true;
 }
 
