@@ -86,7 +86,6 @@
 
 	myhooks = {
 		onUpdate : function( event, oldVal, newVal ) {
-			var amount = $(this).parents( ".afes-table-body-row" ).first().find( ".amount" );
 			var qty = $(this).parents( ".afes-table-body-row" ).first().find( ".qty" );
 			var price = $(this).parents( ".afes-table-body-row" ).first().find( ".unit-price" );
 
@@ -101,7 +100,9 @@
 			
 			var amt = nqt * npr;
 
-			amount.html( amt.toFixed(2) );
+
+			$(this).parents( ".afes-table-body-row" ).first().find( "td.amount" ).html( amt.toFixed(2) );
+			$(this).parents( ".afes-table-body-row" ).first().find( "div.amount input" ).val( amt.toFixed(2) );
 
 			return true;
 		}

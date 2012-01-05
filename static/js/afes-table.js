@@ -63,7 +63,6 @@
  * 	afes-table-body-row
  * 	afes-table-body-row-first
  * 	afes-table-body-row-last
- * 	afes-table-body-row-num-#
  *
  * 	afes-table-body-cell
  * 	afes-table-body-cell-first
@@ -258,22 +257,6 @@ afes.ex.table.getNextEditableCellCallback = function( event ) {
 }
 
 
-afes.ex.table.setCell = function( cell, settings, val ) {
-
-	cell
-		.empty()
-		.html( val );
-
-	if ( settings.form_name )
-	{
-		cell
-			.find( ".afes-table-body-cell-div-form" )
-			.val( val );
-	}
-
-	return cell;
-}
-
 afes.ex.table.newCell = function( settings ) {
 
 	var cell = $( "<td></td>" );
@@ -383,18 +366,13 @@ afes.ex.table.appendRow = function( elem, values ) {
 
 	var rownum = data.row_counter++;	// Increment data.row_counter
 
-	var cur_rowclass = "afes-table-body-row-num-" + rownum;
-
-	var row = $( "<tr />", { class : cur_rowclass } );
+	var row = $( "<tr />" );
 
 	$( elem ).find( "tbody" ).append( row );
 
 	for ( var col = 0; col < column_count; col++ )
 	{
 		var cinfo = ds.columns[ col ];
-
-		var cellid = cur_rowclass + "-col-" + col;
-
 		var cell = afes.ex.table.newCell( cinfo );
 
 		row.append( cell );
@@ -473,35 +451,30 @@ afes.ex.table._stubs.onUpdate = function( event, oldVal, newVal )
 {
 	var rc = afes.ex.table._stubs.common( $(this) );
 
-	if ( rc !== false )
+	var nuwe = true;
+
+	if ( rc.callbacks && rc.callbacks.onUpdate )
+		nuwe = rc.callbacks.onUpdate.call( $(this), event, oldVal, newVal );
+
+	if ( nuwe !== false )
 	{
-		var nuwe = newVal;
+		var toBe = nuwe;
 
-		if ( rc.callbacks && rc.callbacks.onUpdate )
-			nuwe = rc.callbacks.onUpdate.call( $(this), event, oldVal, newVal );
-	
-		if ( nuwe !== false )
+		if ( toBe === true ) toBe = newVal;
+
+		// Update the form field, if present
+		if ( rc.form_name )
 		{
-			var toBe = nuwe;
+			var ffield = $( event.target ).parents( "td" ).first().next();
 
-			if ( toBe === true ) toBe = newVal;
+			if ( ! ffield.is( "div" ) )
+				throw "Form field was not found correctly. It should be next.";
 
-			// Update the form field, if present
-			if ( rc.form_name )
-			{
-				var ffield = $( event.target ).parents( "td" ).first().next();
-
-				if ( ! ffield.is( "div" ) )
-					throw "Form field was not found correctly. It should be next.";
-
-				ffield.find( "input" ).val( toBe );
-			}
+			ffield.find( "input" ).val( toBe );
 		}
-
-		return nuwe;
 	}
 
-	return true;
+	return nuwe;
 }
 
 afes.ex.table._stubs.onChange = function( event, val )
