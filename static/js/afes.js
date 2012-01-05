@@ -16,14 +16,25 @@
  * Settings Object passed to thingies
  *
  * 	behaviour
- *		next - string or function
+ *		next - string or function. Function looks like:
+ *				function (event)
+ *					this = elem container
  *		form_update - update a field in a form with the selector
  *
  *	options	- array or object (kvp) with selections
  *
  *	callbacks
  *		onFocus( event, val )
+ *				return:
+ *					true - proceed with value
+ *					false - do not allow focus
+ *					<string> - value to replace val
+ *
  *		onUpdate( event, oldVal, newVal )
+ *				return:
+ *					true - proceed with new value
+ *					false - do not allow update
+ *					<string> - value to replace new value
  *		onChange( event, val )
  *		onEnter( event )
  *		onCancel( event )
@@ -130,7 +141,9 @@ var afes = new function() {
 
 		if ( callbacks.onFocus )
 		{
-			if ( callbacks.onFocus.call( elem, event, dsval ) === false )
+			var rc = callbacks.onFocus.call( elem, event, dsval );
+			
+			if ( rc === false )
 			{
 				$(elem).one(
 					'click',
@@ -139,6 +152,8 @@ var afes = new function() {
 				);
 				return false;
 			}
+
+			if ( rc !== true ) dsval = rc;
 		}
 
 		var sam = $( "<input/>", { text: "text", value: dsval } );
@@ -254,20 +269,20 @@ var afes = new function() {
 				if ( callbacks.onNext.call( elem, event ) === false )
 					return false;
 
+			var par = elem.parent();
+
 			var dc = opset.functional.update( elem, event, opset );
 
 			if ( opset.settings.behaviour.next )
 			{
+				var rc = opset.settings.behaviour.next;
+
 				if ( typeof( opset.settings.behaviour.next ) === 'function' )
 				{
-					var rc = opset.settings.behaviour.next.call( this, event );
-					if ( typeof( rc ) === 'string' )
-						$( rc ).click();
+					rc = opset.settings.behaviour.next.call( par, event );
 				}
-				else
-				{
-					$( opset.settings.behaviour.next ).click();
-				}
+
+				if ( rc !== false ) $( rc ).click();
 			}
 
 			return dc;
@@ -325,7 +340,9 @@ var afes = new function() {
 
 		if ( callbacks.onFocus )
 		{
-			if ( callbacks.onFocus.call( elem, event, dsval ) === false )
+			var rc = callbacks.onFocus.call( elem, event, dsval );
+
+			if ( rc === false )
 			{
 				$(elem).one(
 					'click',
@@ -334,6 +351,8 @@ var afes = new function() {
 				);
 				return false;
 			}
+
+			if ( rc !== true ) dsval = rc;
 		}
 
 		var sam = $( "<select/>" );

@@ -13,6 +13,9 @@
  *
  * 		afes.ex.table.init( elem, settings )
  *		afes.ex.table.get_data( elem )
+ *		afes.ex.table.newCell( settings )
+ *		afes.ex.table.newFormField( settings )
+ *		afes.ex.table.appendDefaultRow( elem )
  *		afes.ex.table.appendDefaultRow( elem )
  *		afes.ex.table.appendRow( elem, values )
  *
@@ -60,15 +63,21 @@
  * 	afes-table-body-row
  * 	afes-table-body-row-first
  * 	afes-table-body-row-last
+ * 	afes-table-body-row-num-#
  *
  * 	afes-table-body-cell
  * 	afes-table-body-cell-first
  * 	afes-table-body-cell-last
- * 	afes-table-body-cell-#	( where # is the column number )
+ * 	afes-table-body-cell-num-#	( where # is the column number )
  *
- * 	afes-table-body-cell-currency
- * 	afes-table-body-cell-text
- * 	afes-table-body-cell-select
+ * 	afes-table-body-cell-div-form
+ *
+ * 	afes-table-body-cell-edit-true
+ * 	afes-table-body-cell-edit-false
+ *
+ * 	afes-table-body-cell-type-currency
+ * 	afes-table-body-cell-type-text
+ * 	afes-table-body-cell-type-select
  *
  *
  * Requires:
@@ -151,6 +160,207 @@ afes.ex.table.appendDefaultRow = function( elem ) {
 }
 
 
+afes.ex.table.getCellNum = function( cell )
+{
+	var classes = ("" + cell.attr( "class" )).split( /\s+/ );
+
+	for ( var i = 0; i < classes.length; i++ )
+	{
+		var matches = classes[i].match( /afes\-table\-body\-cell\-num\-(\d+)/ );
+		if ( matches ) return parseInt( matches[1] );
+	}
+
+	return false;
+}
+
+afes.ex.table.getRowNum = function( row )
+{
+	var classes = ("" + row.attr( "class" )).split( /\s+/ );
+
+	for ( var i = 0; i < classes.length; i++ )
+	{
+		var matches = classes[i].match( /afes\-table\-body\-row\-num\-(\d+)/ );
+		if ( matches ) return parseInt( matches[1] );
+	}
+
+	return false;
+}
+
+
+afes.ex.table.getNextCell = function( elem, editable ) {
+
+	var tafel = $( elem ).parents( ".afes-table" ).first();
+	var data = afes.ex.table.get_data( tafel );
+
+	var cell = elem;
+
+	if ( $( cell ).is( "td" ) == false )
+		cell = $(cell).parents( "td" ).first();
+
+	if ( ! cell )
+		throw "Unable to get parent cell";
+
+	var row = $( cell ).parents( "tr" ).first();
+
+	if ( ! row )
+		throw "Unable to get parent row";
+
+	var body = $( row ).parents( "tbody" ).first();
+
+	if ( ! body )
+		throw "Unable to get table tbody";
+
+	var cellNum = afes.ex.table.getCellNum( cell );
+	var rowNum = row.prevAll( "tr" ).length;
+
+	if ( (cellNum === false) || (rowNum === false) )
+		throw "Cell row+col was not identifiable.";
+
+	var ds = data.settings;
+
+	var max_rows = body.find( "tr" ).length;
+	var max_cols = ds.columns.length;
+
+	var my_col = cellNum + 1;
+	var my_row = rowNum;
+
+	while ( my_row < max_rows )
+	{
+		while ( my_col < max_cols )
+		{
+			var cinfo = ds.columns[ my_col ];
+
+			if ( ! editable )
+			{
+				return ($((body.children( "tr" ))[ my_row ]).children("td"))[ my_col ];
+			}
+
+			var canEdit = true;
+			if ( typeof( cinfo.editable ) != "undefined" ) canEdit = cinfo.editable;
+
+			if ( editable == canEdit )
+			{
+				return ($((body.children( "tr" ))[ my_row ]).children("td"))[ my_col ];
+			}
+
+			my_col += 1;
+		}
+
+		my_col = 0;
+		my_row += 1;
+	}
+
+	return false;
+}
+
+afes.ex.table.getNextEditableCellCallback = function( event ) {
+	return afes.ex.table.getNextCell( $(this), true );
+}
+
+
+afes.ex.table.setCell = function( cell, settings, val ) {
+
+	cell
+		.empty()
+		.html( val );
+
+	if ( settings.form_name )
+	{
+		cell
+			.find( ".afes-table-body-cell-div-form" )
+			.val( val );
+	}
+
+	return cell;
+}
+
+afes.ex.table.newCell = function( settings ) {
+
+	var cell = $( "<td></td>" );
+
+	var def = settings.default;
+	if ( ! def ) def = "";
+
+	cell.html( def );
+
+	return cell;
+}
+
+afes.ex.table.newFormField = function( settings ) {
+
+	var def = settings.default;
+	if ( ! def ) def = "";
+
+	var field = $( "<div />",
+				{
+					class : "afes-table-body-cell-div-form",
+					style : "display : none; visibility : hidden "
+				}
+			);
+	var field_hidden = $( "<input />",
+						{
+							type : "hidden",
+							value : def,
+							name : settings.form_name
+						}
+					);
+	field.append( field_hidden );
+	return field;
+}
+
+afes.ex.table.setEditingState = function( cell, settings ) {
+
+	var canEdit = true;
+	if ( typeof( settings.editable ) !== "undefined" )
+		canEdit = ( settings.editable === true );
+
+	if ( ! canEdit )
+	{
+		$( cell ).addClass( "afes-table-body-cell-no-edit" );
+		return;
+	}
+
+	var behav = {
+		next : afes.ex.table.getNextEditableCellCallback
+	}
+
+	$( cell ).addClass( "afes-table-body-cell-can-edit" );
+
+	if ( settings.type == "text" )
+	{
+		afes.textInput( cell,
+			{
+				behaviour: behav,
+				callbacks : afes.ex.table._stubs
+			}
+		);
+		return;
+	}
+
+	if ( settings.type == "currency" )
+	{
+		afes.currencyInput( cell,
+			{
+				behaviour: behav,
+				callbacks : afes.ex.table._stubs
+			}
+		);
+		return;
+	}
+
+	if ( settings.type == "select" )
+	{
+		afes.selectInput( cell,
+			{
+				behaviour: behav,
+				options : settings.options,
+				callbacks : afes.ex.table._stubs
+			}
+		);
+		return;
+	}
+}
+
 afes.ex.table.appendRow = function( elem, values ) {
 
 	var data = afes.ex.table.get_data( elem );
@@ -159,9 +369,9 @@ afes.ex.table.appendRow = function( elem, values ) {
 
 	var rownum = data.row_counter++;	// Increment data.row_counter
 
-	var cur_rowid = "afes-table-" + $(elem).attr("id") + "-r" + rownum;
+	var cur_rowclass = "afes-table-body-row-num-" + rownum;
 
-	var row = $( "<tr />", { id : cur_rowid } );
+	var row = $( "<tr />", { class : cur_rowclass } );
 
 	$( elem ).find( "tbody" ).append( row );
 
@@ -169,78 +379,29 @@ afes.ex.table.appendRow = function( elem, values ) {
 	{
 		var cinfo = ds.columns[ col ];
 
-		var cellid = cur_rowid + "c" + col;
-		var nextid = false;
+		var cellid = cur_rowclass + "-col-" + col;
 
-		if ( col < (column_count-1) )
-			nextid = cur_rowid + "c" + (col+1);
-
-		var cell = $( "<td />", { id : cellid } );
-
-		var def = cinfo.default;
-		if ( def ) cell.html( def );
+		var cell = afes.ex.table.newCell( cinfo );
 
 		row.append( cell );
 
-		var canEdit = true;
-		if ( typeof( cinfo.editable ) !== "undefined" )
-			canEdit = ( cinfo.editable === true );
-
-
-		if ( cinfo.type == "text" )
+		if ( cinfo.form_name )
 		{
-			if ( canEdit )
-			{
-				afes.textInput( cell,
-					{
-						behaviour: {
-							next : "#" + nextid
-						},
-						callbacks : afes.ex.table._stubs
-					}
-				);
-			}
+			ffield = afes.ex.table.newFormField( cinfo );
 
-			$( cell ).addClass( "afes-table-body-cell-text" );
+			if ( cinfo.class )
+				$( ffield ).addClass( cinfo.class );
+
+			row.append( ffield );
 		}
 
-		if ( cinfo.type == "currency" )
-		{
-			if ( canEdit )
-			{
-				afes.currencyInput( cell,
-					{
-						behaviour: {
-							next : "#" + nextid
-						},
-						callbacks : afes.ex.table._stubs
-					}
-				);
-			}
-			
-			$( cell ).addClass( "afes-table-body-cell-currency" );
-		}
+		afes.ex.table.setEditingState( cell, cinfo );
 
-		if ( cinfo.type == "select" )
-		{
-			if ( canEdit )
-			{
-				afes.selectInput( cell,
-					{
-						behaviour: {
-							next : "#" + nextid
-						},
-						options : cinfo.options,
-						callbacks : afes.ex.table._stubs
-					}
-				);
-			}
-
-			$( cell ).addClass( "afes-table-body-cell-select" );
-		}
+		// Add cell type
+		$( cell ).addClass( "afes-table-body-cell-type-" + cinfo.type );
 
 		// Add column number to class
-		$( cell ).addClass( "afes-table-body-cell-" + col );
+		$( cell ).addClass( "afes-table-body-cell-num-" + col );
 
 		// Add user requested class to column
 		if ( cinfo.class )
@@ -273,24 +434,16 @@ afes.ex.table._stubs.common = function( target )
 	var elem = $( target ).parents( ".afes-table" ).first();
 	var data = afes.ex.table.get_data( elem );
 
-	var target = $( target ).parents( "td" ).first();
+	var targ = target;
+	
+	if ( ! targ.is( "td" ) )
+		targ = $( target ).parents( "td" ).first();
 
-	var classes = ("" + target.attr( "class" )).split( /\s+/ );
+	var col = afes.ex.table.getCellNum( targ );
 
-	for ( var i = 0; i < classes.length; i++ )
-	{
-		var matches = classes[i].match( /afes\-table\-body\-cell\-(\d+)/ );
-
-		if ( matches )
-		{
-			col = matches[ 1 ];
-			if ( data.settings.columns[ col ].callbacks )
-				return data.settings.columns[ col ].callbacks;
-			else
-				return false;
-		}
-	}
-
+	if ( data.settings.columns[ col ].callbacks )
+		return data.settings.columns[ col ].callbacks;
+	
 	return false;
 }
 
@@ -298,7 +451,7 @@ afes.ex.table._stubs.onFocus = function( event, val )
 {
 	var rc = afes.ex.table._stubs.common( $(this) );
 	if ( rc !== false && rc.onFocus )
-			return rc.onFocus.call( $(this), event, val );
+		return rc.onFocus.call( $(this), event, val );
 	return true;
 }
 
@@ -306,7 +459,7 @@ afes.ex.table._stubs.onUpdate = function( event, oldVal, newVal )
 {
 	var rc = afes.ex.table._stubs.common( $(this) );
 	if ( rc !== false && rc.onUpdate )
-			return rc.onUpdate.call( $(this),  event, oldVal, newVal );
+		return rc.onUpdate.call( $(this),  event, oldVal, newVal );
 	return true;
 }
 
@@ -314,7 +467,7 @@ afes.ex.table._stubs.onChange = function( event, val )
 {
 	var rc = afes.ex.table._stubs.common( $(this) );
 	if ( rc !== false && rc.onChange )
-			return rc.onChange.call( $(this),  event, val );
+		return rc.onChange.call( $(this),  event, val );
 	return true;
 }
 
@@ -322,7 +475,7 @@ afes.ex.table._stubs.onEnter = function( event )
 {
 	var rc = afes.ex.table._stubs.common( $(this) );
 	if ( rc !== false && rc.onEnter )
-			return rc.onEnter.call( $(this),  event );
+		return rc.onEnter.call( $(this),  event );
 	return true;
 }
 
@@ -330,7 +483,7 @@ afes.ex.table._stubs.onCancel = function( event )
 {
 	var rc = afes.ex.table._stubs.common( $(this) );
 	if ( rc !== false && rc.onCancel )
-			return rc.onCancel.call( $(this),  event );
+		return rc.onCancel.call( $(this),  event );
 	return true;
 }
 
@@ -338,7 +491,7 @@ afes.ex.table._stubs.onNext = function( event )
 {
 	var rc = afes.ex.table._stubs.common( $(this) );
 	if ( rc !== false && rc.onNext )
-			return rc.onNext.call( $(this),  event );
+		return rc.onNext.call( $(this),  event );
 	return true;
 }
 
@@ -346,7 +499,7 @@ afes.ex.table._stubs.onFocusOut = function( event, val )
 {
 	var rc = afes.ex.table._stubs.common( $(this) );
 	if ( rc !== false && rc.onFocusOut )
-			return rc.onFocusOut.call( $(this),  event, val );
+		return rc.onFocusOut.call( $(this),  event, val );
 	return true;
 }
 
