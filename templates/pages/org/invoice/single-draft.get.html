@@ -1,19 +1,312 @@
-{% extends 'pages/org/invoice/single-final.get.html' %}
+{% extends 'layouts/org/itemized_total.html' %}
 
 {% load decshift %}
 
+
+{% block head_includes %}
+
+	<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}stylesheets/common/member-itemized-total.css" media="screen" />
+
+	<script type="text/javascript" src="{{ STATIC_URL }}js/smk.js"></script>
+	<script type="text/javascript" src="{{ STATIC_URL }}js/validations.js"></script>
+	<script type="text/javascript" src="{{ STATIC_URL }}js/date.js"></script>
+	<script type="text/javascript" src="{{ STATIC_URL }}js/afes.js"></script>
+	<script type="text/javascript" src="{{ STATIC_URL }}js/afes-table.js"></script>
+
+	<style>
+
+
+.afes-table
+{
+	width: 100%;
+}
+
+.afes-table thead
+{
+	border-bottom: 1px solid #707070;
+}
+
+.afes-table-head-cell
+{
+	text-align: left;
+	padding: 5px 5px;
+	background-color: #ffffff;
+}
+
+.afes-table-body-row
+{
+	border-left: 1px solid #d8d8d8;
+}
+
+.afes-table-body-cell
+{
+	text-align: left;
+	padding: 5px 5px;
+	background-color: #ffffff;
+	border-right: 1px solid #d8d8d8;
+	border-bottom: 1px solid #c8c8c8;
+	overflow: hidden;
+}
+
+.afes-table-body-cell input
+{
+	border: 0px;
+	background-color: #f0f0f0;
+	width: 100%;
+}
+
+.afes-table-body-cell-type-currency,
+.afes-table-body-cell-type-currency input
+{
+	text-align: right;
+	padding-right: 8px;
+}
+
+.afes-table-body-cell-type-select select
+{
+	width: 100%;
+}
+
+#id_table thead .head-description { width: 235px; }
+#id_table thead .head-qty { width: 123px; }
+#id_table thead .head-unit-price { width: 147px; }
+#id_table thead .head-tax-rate { width: 195px; }
+#id_table thead .head-amount { width: 158px; }
+#id_table thead .head-delete { width: 20px; }
+
+
+	</style>
+
+{% endblock %}
+
 {% block onready %}
-	$(".itol").jInvoice( 
-		"invoicify",
+
+	function update_totals()
+	{
+		var values = new Array();
+
+		$( "#id_table tbody tr" ).each( function() {
+			var my_value = [];
+
+			my_value[0] = $(this).find( "div.qty input" ).attr( "value" );
+			my_value[1] = $(this).find( "div.unit-price input" ).attr( "value" );
+			my_value[2] = $(this).find( "div.tax-rate input" ).attr( "value" );
+
+			if ( (isNaN( my_value[0] )) || (isNaN( my_value[1])) || (isNaN( my_value[2] )) )
+				return;
+
+			my_value[5] = ((new Number( my_value[0] )) * (new Number( my_value[1] )) );
+
+			var rate = ( new Number( "0.14" ) );
+
+			if ( my_value[2] == 1 )
+			{
+				my_value[3] = (new Number(my_value[5] / (rate + 1))).toFixed(2);
+				my_value[4] = (new Number(my_value[5])) - (new Number(my_value[3]));
+			}
+			else
+			{
+				if ( my_value[2] == 2 )
+				{
+					my_value[3] = my_value[5];
+					my_value[4] = (new Number(my_value[3] * rate)).toFixed(2);
+					my_value[5] = ((new Number(my_value[3])) + (new Number(my_value[4])));
+				}
+				else
+				{
+					my_value[3] = my_value[5];
+					my_value[4] = 0;
+				}
+			}
+			values.push( my_value );
+		});
+
+		total_amount = new Number( 0 );
+		total_tax = new Number( 0 );
+		total_total = new Number( 0 );
+
+		for ( var i = 0; i < values.length; i++ )
 		{
-			'delete-icon' : '{{ STATIC_URL }}images/icons/line_delete_grey.png',
-			'editable' : true
+			total_amount += (new Number(values[i][3]));
+			total_tax += (new Number(values[i][4]));
+			total_total += (new Number(values[i][5]));
+		}
+
+
+		$( "#summary_amount" ).empty().append( total_amount.toFixed(2) );
+		$( "#summary_tax" ).empty().append( total_tax.toFixed(2) );
+		$( "#summary_total" ).empty().append( total_total.toFixed(2) );
+
+		$( "#id_itol_amount" ).val( total_amount.toFixed(2) );
+		$( "#id_itol_tax" ).val( total_tax.toFixed(2) );
+		$( "#id_itol_total" ).val( total_total.toFixed(2) );
+	}
+
+	var qtyHooks = {
+		onUpdate : function( event, oldVal, newVal ) {
+
+			var priceElem = $(this).parents( ".afes-table-body-row" ).first().find( "td.unit-price" );
+
+			var amountTd = $(this).parents( ".afes-table-body-row" ).first().find( "td.amount" );
+			var amountInput = $(this).parents( ".afes-table-body-row" ).first().find( "div.amount input" );
+
+			var qty = new Number( newVal );
+			var price = new Number( priceElem.text() );
+
+			var amt = qty * price;
+
+			amountTd.html( amt.toFixed(2) );
+			amountInput.val( amt.toFixed(2) );
+			return true;
+		},
+		onFocusOut : function( event, val ) {
+			update_totals();
+		}
+	};
+
+	var perUnitHooks = {
+		onUpdate : function( event, oldVal, newVal ) {
+
+			var qtyElem = $(this).parents( ".afes-table-body-row" ).first().find( "td.qty" );
+
+			var amountTd = $(this).parents( ".afes-table-body-row" ).first().find( "td.amount" );
+			var amountInput = $(this).parents( ".afes-table-body-row" ).first().find( "div.amount input" );
+
+			var qty = new Number( qtyElem.text() );
+			var price = new Number( newVal );
+
+			var amt = qty * price;
+
+			amountTd.html( amt.toFixed(2) );
+			amountInput.val( amt.toFixed(2) );
+			return true;
+		},
+		onFocusOut : function( event, val ) {
+			update_totals();
+		}
+	};
+
+	var taxRateHooks = {
+		onFocusOut : function( event, val ) {
+			update_totals();
+		}
+	};
+
+
+	afes.ex.table.init(
+		$( "#id_table" ),
+		{
+			initial_rows : ({{ instance.invoiceline_set.count }} + 1),
+			max_rows : 100,
+			action_on_final_next : "extend",
+
+			columns : [
+
+				{
+					type: "text",
+					initial: "",
+					class: "description",
+					form_name : "description"
+				},
+
+				{
+					type: "currency",
+					initial: "0.00",
+					class: "qty",
+					callbacks : qtyHooks,
+					form_name : "units"
+				},
+
+				{
+					type: "currency",
+					initial: "0.00",
+					class: "unit-price",
+					callbacks : perUnitHooks,
+					form_name : "perunit"
+				},
+
+				{
+					type: "select",
+					options : {
+						"No Tax" : 0,
+						"Tax Inclusive" : 1,
+						"Tax Exclusive" : 2,
+						"Tax Exempt" : 3,
+					},
+					initial: "Tax Inclusive",
+					class: "tax-rate",
+					callbacks : taxRateHooks,
+					form_name : "tax_rate"
+				},
+
+				{
+					type: "currency",
+					initial: "0.00",
+					class: "amount",
+					editable : false,
+					form_name : "amount"
+				},
+
+				{
+					type: "text",
+					initial: $( "#click_me_div" ).html(),
+					class: "delete",
+					editable : false
+				}
+
+
+			]
 		}
 	);
+
+
+	{% for li in instance.invoiceline_set.all %}
+		afes.ex.table.appendRow(
+			"#id_table",
+			[
+				"{{ li.description|escapejs }}",
+				"{{ li.units|decsplay }}",
+				"{{ li.perunit|decsplay }}",
+				"{{ li.get_tax_rate_display|escapejs }}",
+				"{{ li.total|decsplay }}",
+				$( "#click_me_div" ).html(),
+			]
+		);
+	{% endfor %}
+
+
+	function installDeleteHooks()
+	{
+		$( ".item-delete-link" ).click( function(){
+			$( this ).parents("tr").first().remove();
+		});
+	}
+
+
+	$( "#id_itol_add_item_row" ).click( function(){
+		afes.ex.table.appendDefaultRow( "#id_table" );
+		installDeleteHooks();
+	});
+
+
+	installDeleteHooks();
+
 {% endblock %}
 
 
-{% block document_payment_status %}{% endblock %}
+{% block document_type %}TAX INVOICE{% endblock %}
+{% block document_status %}
+{% include 'pages/org/invoice/status-label.html' with instance=instance %}
+{% endblock %}
+
+{% block document_dates %}
+<fieldset>
+	<label for="name">Invoice Date</label>
+	<input type="text" name="invoice_date" id="id_itol_date" class="text ui-widget-content ui-corner-all" value="{{ instance.invoice_date|date:"j M Y" }}" />
+	<label for="name">Due Date</label>
+	<input type="text" name="due_date" id="id_due_date" class="text ui-widget-content ui-corner-all" value="{{ instance.due_date|date:"j M Y" }}" />
+</fieldset>
+{% endblock %}
 
 {% block document_tax_row %}
 	<div style="float: right;">
@@ -29,44 +322,31 @@
 {% endblock %}
 
 
+
+
 {% block document_body %}
 
-	<div class="item-list">
-		<table>
-			<thead>
-				<tr>
-					<th class="head-description">Description</th>
-					<th class="head-qty">Qty</th>
-					<th class="head-unit-price">Unit Price</th>
-					<th class="head-tax-rate">Tax Rate</th>
-					<th class="head-amount">Amount</th>
-					<th class="head-delete">&nbsp;</th>
-				</tr>
-			</thead>
-			<tbody>
-				{% for li in instance.invoiceline_set.all %}
-					<tr>
-						<td class="item-description"><span>{{ li.description }}</span><input type="hidden" name="description" value="{{ li.description }}" /></td>
-						<td class="item-qty"><span>{{ li.units|decsplay }}</span><input type="hidden" name="units" value="{{ li.units|decshow }}" /></td>
-						<td class="item-unit-price"><span>{{ li.perunit|decsplay }}</span><input type="hidden" name="perunit" value="{{ li.perunit|decshow }}" /></td>
-						<td class="item-tax-rate"><span>{{ li.get_tax_rate_display }}</span><input type="hidden" name="tax_rate" value="{{ li.get_tax_rate_display }}" /></td>
-						<td class="item-amount"><span>{{ li.total|decsplay }}</span><input type="hidden" name="amount" value="{{ li.total|decshow }}" /></td>
+<div id="click_me_div" style=" visible: hidden; display: none; ">
+<img class="item-delete-link" src='{{ STATIC_URL }}images/icons/line_delete_grey.png' />
+</div>
 
-						<td class="item-delete"><img class="item-delete-link" src='{{ STATIC_URL }}images/icons/line_delete_grey.png' /></td>
-					</tr>
-				{% endfor %}
 
-				<tr>
-					<td class="item-description"><span>&nbsp;</span><input type="hidden" name="description" value="" /></td>
-					<td class="item-qty"><span>&nbsp;</span><input type="hidden" name="units" value="" /></td>
-					<td class="item-unit-price"><span>&nbsp;</span><input type="hidden" name="perunit" value="" /></td>
-					<td class="item-tax-rate"><span>&nbsp;</span><input type="hidden" name="tax_rate" value="" /></td>
-					<td class="item-amount"><span>&nbsp;</span><input type="hidden" name="amount" value="" /></td>
-					<td class="item-delete"><img class="item-delete-link" src="{{ STATIC_URL }}images/icons/line_delete_grey.png" /></td>
-				</tr>
-			</tbody>
-		</table>
-	</div>
+
+<div class="item-list">
+<table id="id_table">
+<thead>
+	<th class="head-description">Description</th>
+	<th class="head-qty">Qty</th>
+	<th class="head-unit-price">Unit Price</th>
+	<th class="head-tax-rate">Tax Rate</th>
+	<th class="head-amount">Amount</th>
+	<th class="head-delete">&nbsp;</th>
+</thead>
+<tbody>
+</tbody>
+</table>
+</div>
+
 
 	<div class="summary-row">
 
@@ -132,7 +412,4 @@
 	<button id="id_button_approve" type="button">Approve</button>
 {% endblock %}
 
-
-{% block document_addendum %}
-{% endblock %}
 
