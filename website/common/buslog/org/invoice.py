@@ -83,7 +83,7 @@ class InvoiceBusLog( object ):
 
 	@staticmethod
 	def _update_get_tax_rate( mystr ):
-		val = TaxRate.get_by_display( mystr )
+		val = TaxRate.get( long(mystr) )
 		if val is None:
 			raise BusLogError( 'The tax rate specified appears to be invalid' )
 		return val[0]

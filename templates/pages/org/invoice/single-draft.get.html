@@ -196,7 +196,7 @@
 	afes.ex.table.init(
 		$( "#id_table" ),
 		{
-			initial_rows : ({{ instance.invoiceline_set.count }} + 1),
+			initial_rows : (0),
 			max_rows : 100,
 			action_on_final_next : "extend",
 
@@ -290,6 +290,12 @@
 
 
 	installDeleteHooks();
+
+	$( "#id_button_save" ).click( function() {
+		$( "#id_invoice_form" ).submit();
+	});
+
+	afes.ex.table.appendDefaultRow( "#id_table" );
 
 {% endblock %}
 
