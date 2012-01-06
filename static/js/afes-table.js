@@ -43,6 +43,7 @@
  *	 	min_rows
  * 		max_rows
  * 		initial_rows
+ * 		action_on_final_next : "nothing,extend,loop"
  * 		columns
  * 			type : text/currency/select
  * 			initial : initial (text)
@@ -121,7 +122,8 @@ afes.ex.table.get_data = function( elem ) {
 			settings : {
 				min_rows: 0,
 				max_rows : -1,
-				initial_rows : 1
+				initial_rows : 1,
+				action_on_final_next : "loop"
 			}
 		};
 	}
@@ -223,30 +225,63 @@ afes.ex.table.getNextCell = function( elem, editable ) {
 	var my_col = cellNum + 1;
 	var my_row = rowNum;
 
-	while ( my_row < max_rows )
+	var looped_around = 0;
+
+	while ( looped_around < 2 )
 	{
-		while ( my_col < max_cols )
+		looped_around += 1;
+
+		while ( my_row < max_rows )
 		{
-			var cinfo = ds.columns[ my_col ];
-
-			if ( ! editable )
+			while ( my_col < max_cols )
 			{
-				return ($((body.children( "tr" ))[ my_row ]).children("td"))[ my_col ];
+				var cinfo = ds.columns[ my_col ];
+
+				if ( ! editable )
+				{
+					return ($((body.children( "tr" ))[ my_row ]).children("td"))[ my_col ];
+				}
+
+				var canEdit = true;
+				if ( typeof( cinfo.editable ) != "undefined" ) canEdit = cinfo.editable;
+
+				if ( editable == canEdit )
+				{
+					return ($((body.children( "tr" ))[ my_row ]).children("td"))[ my_col ];
+				}
+
+				my_col += 1;
 			}
 
-			var canEdit = true;
-			if ( typeof( cinfo.editable ) != "undefined" ) canEdit = cinfo.editable;
-
-			if ( editable == canEdit )
-			{
-				return ($((body.children( "tr" ))[ my_row ]).children("td"))[ my_col ];
-			}
-
-			my_col += 1;
+			my_col = 0;
+			my_row += 1;
 		}
 
-		my_col = 0;
-		my_row += 1;
+
+		// Handle the run-out
+
+		if ( ds.action_on_final_next == "loop" )
+		{
+			my_row = 0;
+			my_col = 0;
+		}
+		else if ( ds.action_on_final_next == "extend" )
+		{
+			if ( afes.ex.table.appendDefaultRow( tafel ) == false )
+			{
+				// If we can't extend, loop.
+				my_row = 0;
+				my_col = 0;
+			}
+			else
+			{
+				max_rows += 1;
+			}
+		}
+		else	// nothing, so break;
+		{
+			break;
+		}
 	}
 
 	return false;

@@ -104,6 +104,9 @@
 			$(this).parents( ".afes-table-body-row" ).first().find( "td.amount" ).html( amt.toFixed(2) );
 			$(this).parents( ".afes-table-body-row" ).first().find( "div.amount input" ).val( amt.toFixed(2) );
 
+
+			/*
+
 			afes.ex.table.insertRow( "#id_table", 
 						[ 
 							"description",
@@ -152,7 +155,7 @@
 						-100
 					);
 
-
+*/
 
 
 			return true;
@@ -164,6 +167,8 @@
 		$( "#id_table" ),
 		{
 			initial_rows : 10,
+			max_rows : 15,
+			action_on_final_next : "extend",
 
 			columns : [
 
