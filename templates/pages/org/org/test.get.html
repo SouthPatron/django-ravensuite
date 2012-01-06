@@ -212,9 +212,10 @@
 				},
 
 				{
-					type: "currency",
-					initial: "0.00",
-					class: "delete"
+					type: "text",
+					initial: $( "#click_me_div" ).html(),
+					class: "delete",
+					editable : false
 				}
 
 
@@ -223,11 +224,19 @@
 	);
 
 
+	$( ".delete-me-click" ).click( function(){
+		$( this ).parents("tr").first().remove();
+	});
+
 
 {% endblock %}
 
 
 {% block content %}
+
+<div id="click_me_div" style=" visible: hidden; display: none; ">
+<a class='delete-me-click' href='#'>X</a>
+</div>
 
 
 <table id="id_table">
