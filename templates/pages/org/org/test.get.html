@@ -104,6 +104,57 @@
 			$(this).parents( ".afes-table-body-row" ).first().find( "td.amount" ).html( amt.toFixed(2) );
 			$(this).parents( ".afes-table-body-row" ).first().find( "div.amount input" ).val( amt.toFixed(2) );
 
+			afes.ex.table.insertRow( "#id_table", 
+						[ 
+							"description",
+							"60.00",
+							"100.00",
+							"Tax Exempt",
+							"6000.00",
+							"0.00"
+						],
+						2
+					);
+
+			afes.ex.table.insertRow( "#id_table", 
+						[ 
+							"description one",
+							"60.00",
+							"100.00",
+							"Tax Exempt",
+							"6000.00",
+							"0.00"
+						],
+						0
+					);
+
+			afes.ex.table.insertRow( "#id_table", 
+						[ 
+							"description two",
+							"60.00",
+							"100.00",
+							"Tax Exempt",
+							"6000.00",
+							"0.00"
+						],
+						200
+					);
+
+			afes.ex.table.insertRow( "#id_table", 
+						[ 
+							"description three",
+							"60.00",
+							"100.00",
+							"Tax Exempt",
+							"6000.00",
+							"0.00"
+						],
+						-100
+					);
+
+
+
+
 			return true;
 		}
 	};
@@ -118,14 +169,14 @@
 
 				{
 					type: "text",
-					default: "",
+					initial: "",
 					class: "description",
 					form_name : "description"
 				},
 
 				{
 					type: "currency",
-					default: "0.00",
+					initial: "0.00",
 					class: "qty",
 					callbacks : myhooks,
 					form_name : "qty"
@@ -133,7 +184,7 @@
 
 				{
 					type: "currency",
-					default: "0.00",
+					initial: "0.00",
 					class: "unit-price",
 					callbacks : myhooks,
 					form_name : "price"
@@ -147,14 +198,14 @@
 						"Tax Exclusive" : 2,
 						"Tax Exempt" : 3,
 					},
-					default: "Tax Exclusive",
+					initial: "Tax Exclusive",
 					class: "tax-rate",
 					form_name : "tax-rate"
 				},
 
 				{
 					type: "currency",
-					default: "0.00",
+					initial: "0.00",
 					class: "amount",
 					editable : false,
 					form_name : "amount"
@@ -162,7 +213,7 @@
 
 				{
 					type: "currency",
-					default: "0.00",
+					initial: "0.00",
 					class: "delete"
 				}
 

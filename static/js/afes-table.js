@@ -13,24 +13,39 @@
  *
  * 		afes.ex.table.init( elem, settings )
  *		afes.ex.table.get_data( elem )
+ *		afes.ex.table.getCellNum( cell )
+ *		afes.ex.table.getRowNum( row )
+ *		afes.ex.table.getNextCell( elem, editable )
+ *		afes.ex.table.getNextEditableCell( event )
  *		afes.ex.table.newCell( settings )
  *		afes.ex.table.newFormField( settings )
- *		afes.ex.table.appendDefaultRow( elem )
- *		afes.ex.table.appendDefaultRow( elem )
+ *		afes.ex.table.setEditingState( cell, settings )
+ *		afes.ex.table.getRowCount( elem )
  *		afes.ex.table.appendRow( elem, values )
+ *		afes.ex.table.appendDefaultRow( elem )
+ *		afes.ex.table.insertRow( elem, values )
+ *		afes.ex.table.deleteMyRow( elem )
+ *		afes.ex.table.deleteRow( elem, num )
  *
+ *		afes.ex.table._stubs.common( target )
+ *		afes.ex.table._stubs.onFocus( event, val )
+ *		afes.ex.table._stubs.onUpdate( event, oldVal, newVal )
+ *		afes.ex.table._stubs.onChange( event, val )
+ *		afes.ex.table._stubs.onEnter( event )
+ *		afes.ex.table._stubs.onCancel( event )
+ *		afes.ex.table._stubs.onNext( event )
+ *		afes.ex.table._stubs.onFocusOut( event, val )
  * 
  *
  * Data structure kept in afes.ex.table._data
  *
- * 	row_counter
  * 	settings  ( any part can be overridden by init method settings param )
  *	 	min_rows
  * 		max_rows
  * 		initial_rows
  * 		columns
  * 			type : text/currency/select
- * 			default : default (text)
+ * 			initial : initial (text)
  * 			options
  * 				"key" : "value"
  * 				...
@@ -97,16 +112,12 @@ afes.ex.table.get_data = function( elem ) {
 	var id = $( elem ).attr( "id" );
 
 	if ( ! id )
-	{
-		alert( "afes.ex.table.get_data on element without id attribute" );
-		return null;
-	}
+		throw "afes.ex.table.get_data on element without id attribute";
 	
 
 	if ( ! afes.ex.table._data[ id ] )
 	{
 		afes.ex.table._data[ id ] = {
-			row_counter : 0,
 			settings : {
 				min_rows: 0,
 				max_rows : -1,
@@ -124,12 +135,6 @@ afes.ex.table.init = function( elem, settings ) {
 
 	data.settings = $.extend( true, data.settings, settings );	// deep copy
 
-	var ds = data.settings;
-	var initial_rows = ds.initial_rows;
-
-	for ( var i = 0; i < initial_rows; i++ )
-		afes.ex.table.appendDefaultRow( elem );
-
 	// CSS Classes
 
 	$( elem ).addClass( "afes-table" );
@@ -142,21 +147,16 @@ afes.ex.table.init = function( elem, settings ) {
 	$( elem ).find( "thead tr td, thead tr th" ).last().addClass( "afes-table-head-cell-last" );
 	$( elem ).find( "thead tr td, thead tr th" ).addClass( "afes-table-head-cell" );
 
-}
+	// Set up the initial rows
 
-
-afes.ex.table.appendDefaultRow = function( elem ) {
-	var data = afes.ex.table.get_data( elem );
 	var ds = data.settings;
-	var column_count = ds.columns.length;
+	var initial_rows = ds.initial_rows;
 
-	var new_data = [];
+	for ( var i = 0; i < initial_rows; i++ )
+		afes.ex.table.appendDefaultRow( elem );
 
-	for ( var i = 0; i < column_count; i++ )
-		new_data.push( ds.columns.default );
-
-	afes.ex.table.appendRow( elem, new_data );
 }
+
 
 
 afes.ex.table.getCellNum = function( cell )
@@ -257,11 +257,11 @@ afes.ex.table.getNextEditableCellCallback = function( event ) {
 }
 
 
-afes.ex.table.newCell = function( settings ) {
+afes.ex.table.newCell = function( settings, ival ) {
 
 	var cell = $( "<td></td>" );
 
-	var def = settings.default;
+	var def = ival;
 	if ( ! def ) def = "";
 
 	cell.html( def );
@@ -269,9 +269,9 @@ afes.ex.table.newCell = function( settings ) {
 	return cell;
 }
 
-afes.ex.table.newFormField = function( settings ) {
+afes.ex.table.newFormField = function( settings, ival ) {
 
-	var def = settings.default;
+	var def = ival
 	if ( ! def ) def = "";
 
 	// Find the select value
@@ -358,28 +358,80 @@ afes.ex.table.setEditingState = function( cell, settings ) {
 	}
 }
 
+afes.ex.table.getRowCount = function( elem ) {
+	
+	var myelem = elem;
+
+	if ( ! $( myelem ).hasClass( "afes-table" ) )
+		myelem = $( myelem ).parents( ".afes-table" ).first();
+
+	if ( ! myelem )
+		throw "getRowCount called on non-table element";
+
+	return $( myelem ).find( "tbody" ).find( "tr" ).length;
+}
+
 afes.ex.table.appendRow = function( elem, values ) {
+	return afes.ex.table.insertRow( elem, values );
+}
+
+afes.ex.table.appendDefaultRow = function( elem ) {
+	var data = afes.ex.table.get_data( elem );
+	var ds = data.settings;
+	var column_count = ds.columns.length;
+
+	var new_data = new Array();
+
+	for ( var i = 0; i < column_count; i++ )
+		new_data.push( ds.columns[i].initial );
+
+	return afes.ex.table.appendRow( elem, new_data );
+}
+
+
+
+afes.ex.table.insertRow = function( elem, values, pos ) {
 
 	var data = afes.ex.table.get_data( elem );
 	var ds = data.settings;
 	var column_count = ds.columns.length;
 
-	var rownum = data.row_counter++;	// Increment data.row_counter
+	// Enough room for another one?
+	var row_count = afes.ex.table.getRowCount( elem );
+	if ( ds.max_rows && ds.max_rows >= 0 )
+		if ( row_count >= ds.max_rows )
+			return false;
 
+
+	// Insert into the correct location
 	var row = $( "<tr />" );
 
-	$( elem ).find( "tbody" ).append( row );
+	if ( (typeof( pos ) == "undefined") || (pos >= row_count) )
+	{
+		$( elem ).find( "tbody" ).append( row );
+	}
+	else if ( pos < 0 )
+	{
+		$( elem ).find( "tbody" ).prepend( row );
+	}
+	else
+	{
+		$( $( elem ).find( "tbody" ).find( "tr" ).get( pos ) ).before( row );
+	}
+
+
+	// Build row
 
 	for ( var col = 0; col < column_count; col++ )
 	{
 		var cinfo = ds.columns[ col ];
-		var cell = afes.ex.table.newCell( cinfo );
+		var cell = afes.ex.table.newCell( cinfo, values[ col ] );
 
 		row.append( cell );
 
 		if ( cinfo.form_name )
 		{
-			ffield = afes.ex.table.newFormField( cinfo );
+			ffield = afes.ex.table.newFormField( cinfo, values[ col ] );
 
 			if ( cinfo.class )
 				$( ffield ).addClass( cinfo.class );
@@ -414,7 +466,33 @@ afes.ex.table.appendRow = function( elem, values ) {
 	$( row ).find("td").last().addClass( "afes-table-body-cell-last" );
 	$( row ).find("td").addClass( "afes-table-body-cell" );
 
+	return true;
 }
+
+
+
+afes.ex.table.deleteMyRow = function( elem ) {
+
+	var myelem = elem;
+
+	if ( ! $( myelem ).hasClass( "afes-table-body-row" ) )
+		myelem = $( myelem ).parents( ".afes-table-body-row" ).first();
+
+
+	if ( $( myelem ).hasClass( "afes-table-body-row" ) )
+	{
+		myelem.remove();
+		return true;
+	}
+
+	return false;
+}
+
+afes.ex.table.deleteRow = function( elem, num ) {
+	$( $( elem ).find( "tbody" ).find( "tr" ).get( num ) ).remove();
+	return true;
+}
+
 
 
 
@@ -516,5 +594,6 @@ afes.ex.table._stubs.onFocusOut = function( event, val )
 		return rc.callbacks.onFocusOut.call( $(this), event, val );
 	return true;
 }
+
 
 
