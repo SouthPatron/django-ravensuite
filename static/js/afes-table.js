@@ -358,7 +358,10 @@ afes.ex.table.setEditingState = function( cell, settings ) {
 
 	$( cell ).addClass( "afes-table-body-cell-can-edit" );
 
-	if ( settings.type == "text" )
+	var the_type = "text";
+	if ( settings.type ) the_type = settings.type;
+
+	if ( the_type == "text" )
 	{
 		afes.textInput( cell,
 			{
@@ -369,7 +372,7 @@ afes.ex.table.setEditingState = function( cell, settings ) {
 		return;
 	}
 
-	if ( settings.type == "currency" )
+	if ( the_type == "currency" )
 	{
 		afes.currencyInput( cell,
 			{
@@ -380,7 +383,7 @@ afes.ex.table.setEditingState = function( cell, settings ) {
 		return;
 	}
 
-	if ( settings.type == "select" )
+	if ( the_type == "select" )
 	{
 		afes.selectInput( cell,
 			{
@@ -477,7 +480,10 @@ afes.ex.table.insertRow = function( elem, values, pos ) {
 		afes.ex.table.setEditingState( cell, cinfo );
 
 		// Add cell type
-		$( cell ).addClass( "afes-table-body-cell-type-" + cinfo.type );
+		if ( cinfo.type )
+			$( cell ).addClass( "afes-table-body-cell-type-" + cinfo.type );
+		else
+			$( cell ).addClass( "afes-table-body-cell-type-text" );
 
 		// Add column number to class
 		$( cell ).addClass( "afes-table-body-cell-num-" + col );

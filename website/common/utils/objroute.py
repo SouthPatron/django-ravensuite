@@ -40,28 +40,30 @@ class ObjRoute( object ):
 	@staticmethod
 	def gen( obj ):
 
-		if type( obj ) == 'common.models.Invoice':
+		mytype = '{}.{}'.format( obj.__module__, obj.__class__.__name__ )
+
+		if mytype == 'common.models.Invoice':
 			return 'org.client.invoice {} {} {}'.format(
 						obj.get_org().refnum,
 						obj.get_client().refnum,
 						obj.refnum
 					)
 
-		if type( obj ) == 'common.models.Payment':
+		if mytype == 'common.models.Payment':
 			return 'org.client.payment {} {} {}'.format(
 						obj.get_org().refnum,
 						obj.get_client().refnum,
 						obj.refnum
 					)
 
-		if type( obj ) == 'common.models.Refund':
+		if mytype == 'common.models.Refund':
 			return 'org.client.refund {} {} {}'.format(
 						obj.get_org().refnum,
 						obj.get_client().refnum,
 						obj.refnum
 					)
 
-		raise RuntimeError( 'No valid route for obj [{}]'.format( type(obj) ) )
+		raise RuntimeError( 'No valid route for obj [{}]'.format( mytype ) )
 
 
 

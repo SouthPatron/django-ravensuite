@@ -28,49 +28,6 @@
 	<script type="text/javascript" src="{{ STATIC_URL }}js/smk.js"></script>
 	<script type="text/javascript" src="{{ STATIC_URL }}js/validations.js"></script>
 	<script type="text/javascript" src="{{ STATIC_URL }}js/date.js"></script>
-	<script type="text/javascript" src="{{ STATIC_URL }}js/itemized-total.js"></script>
-
-{% endblock %}
-
-
-{% block onready %}
-
-	$(".itol").jItol( 
-		"invoicify",
-		{
-			'delete-icon' : '{{ STATIC_URL }}images/icons/line_delete_grey.png',
-			{% if instance.state == 0 %}
-			'editable' : true
-			{% else %}
-			'editable' : false
-			{% endif %}
-		}
-	);
-
-	$( '#payment-allocate' ).smkTools(
-			'click_modal',
-			OOD.URL.Component(
-				OOD.URL.Invoice( {{ kwargs.oid }}, {{ kwargs.cid }}, {{ kwargs.iid }} ),
-				'allocate-payment'
-			)
-		);
-
-
-	$( '.deallocate-payment' ).click( function() {
-
-		allocref = $(this).attr( "value" );
-
-		$(document).smkTools(
-			'load_modal',
-			'deallocate-payment',
-			OOD.URL.Component(
-				OOD.URL.Invoice( {{ kwargs.oid }}, {{ kwargs.cid }}, {{ kwargs.iid }} ),
-				'deallocate-payment'
-			)
-			+ '&payid=' + allocref
-		);
-	});
-
 
 {% endblock %}
 

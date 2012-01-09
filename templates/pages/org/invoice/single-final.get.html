@@ -3,20 +3,81 @@
 {% load decshift %}
 
 
+{% block head_includes %}
+
+	<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}stylesheets/common/member-itemized-total.css" media="screen" />
+	<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}stylesheets/common/member-afes-itol.css" media="screen" />
+
+	<script type="text/javascript" src="{{ STATIC_URL }}js/smk.js"></script>
+	<script type="text/javascript" src="{{ STATIC_URL }}js/validations.js"></script>
+	<script type="text/javascript" src="{{ STATIC_URL }}js/date.js"></script>
+	<script type="text/javascript" src="{{ STATIC_URL }}js/afes.js"></script>
+	<script type="text/javascript" src="{{ STATIC_URL }}js/afes-table.js"></script>
+
+	<style>
+#id_table thead .head-description { width: 235px; }
+#id_table thead .head-qty { width: 123px; }
+#id_table thead .head-unit-price { width: 147px; }
+#id_table thead .head-tax-rate { width: 195px; }
+#id_table thead .head-amount { width: 158px; }
+	</style>
+
+{% endblock %}
+
 {% block onready %}
 
-	$( '#payment-allocate' ).smkTools(
-			'click_modal',
-			OOD.URL.Component(
-				OOD.URL.Invoice( {{ kwargs.oid }}, {{ kwargs.cid }}, {{ kwargs.iid }} ),
-				'allocate-payment'
-			)
+	afes.ex.table.init(
+		$( "#id_table" ),
+		{
+			initial_rows : 0,
+			columns : [
+				{ editable : false, class: "description" },
+				{ editable : false, class: "qty" },
+				{ editable : false, class: "unit-price" },
+				{ editable : false, class: "tax-rate" },
+				{ editable : false, class: "amount" }
+			]
+		}
+	);
+
+
+
+	{% for li in instance.invoiceline_set.all %}
+		afes.ex.table.appendRow(
+			"#id_table",
+			[
+				"{{ li.description|escapejs }}",
+				"{{ li.units|decsplay }}",
+				"{{ li.perunit|decsplay }}",
+				"{{ li.get_tax_rate_display|escapejs }}",
+				"{{ li.total|decsplay }}"
+			]
 		);
+	{% endfor %}
+
+
+	$( "#id_button_save" ).click( function() {
+		$( "#id_invoice_form" ).submit();
+	});
+
+
+	$( "#id_button_void" ).click( function() {
+		$( "#id_invoice_state" ).val( 10 );
+		$( "#id_invoice_form" ).submit();
+	});
+
+
+	$( '#payment-allocate' ).smkTools(
+		'click_modal',
+		OOD.URL.Component(
+			OOD.URL.Invoice( {{ kwargs.oid }}, {{ kwargs.cid }}, {{ kwargs.iid }} ),
+			'allocate-payment'
+		)
+	);
 
 
 	$( '.deallocate-payment' ).click( function() {
-
-		allocref = $(this).attr( "value" );
+		var allocref = $(this).attr( "value" );
 
 		$(document).smkTools(
 			'load_modal',
@@ -30,6 +91,7 @@
 	});
 
 
+
 {% endblock %}
 
 
@@ -37,6 +99,7 @@
 {% block document_status %}
 {% include 'pages/org/invoice/status-label.html' with instance=instance %}
 {% endblock %}
+
 
 {% block document_dates %}
 <fieldset>
@@ -47,53 +110,38 @@
 </fieldset>
 {% endblock %}
 
+
 {% block document_payment_status %}
 {% include 'pages/org/invoice/paid-label.html' with instance=instance %}
 {% endblock %}
 
-
 {% block document_body %}
 
-	<div class="item-list">
-		<table>
-			<thead>
-				<tr>
-					<th class="head-description">Description</th>
-					<th class="head-qty">Qty</th>
-					<th class="head-unit-price">Unit Price</th>
-					<th class="head-tax-rate">Tax Rate</th>
-					<th class="head-amount">Amount</th>
-				</tr>
-			</thead>
-			<tbody>
-				{% for li in instance.invoiceline_set.all %}
-					<tr>
-						<td class="item-description"><span>{{ li.description }}</span><input type="hidden" name="description" value="{{ li.description }}" /></td>
-						<td class="item-qty"><span>{{ li.units|decsplay }}</span><input type="hidden" name="units" value="{{ li.units|decshow }}" /></td>
-						<td class="item-unit-price"><span>{{ li.perunit|decsplay }}</span><input type="hidden" name="perunit" value="{{ li.perunit|decshow }}" /></td>
-						<td class="item-tax-rate"><span>{{ li.get_tax_rate_display }}</span><input type="hidden" name="tax_rate" value="{{ li.get_tax_rate_display }}" /></td>
-						<td class="item-amount"><span>{{ li.total|decsplay }}</span><input type="hidden" name="amount" value="{{ li.total|decshow }}" /></td>
 
-						
-					</tr>
-				{% endfor %}
+<div class="item-list">
+<table id="id_table">
+<thead>
+	<th class="head-description">Description</th>
+	<th class="head-qty">Qty</th>
+	<th class="head-unit-price">Unit Price</th>
+	<th class="head-tax-rate">Tax Rate</th>
+	<th class="head-amount">Amount</th>
+</thead>
+<tbody>
+</tbody>
+</table>
+</div>
 
-			</tbody>
-		</table>
-	</div>
 
 	<div class="summary-row">
 
 		<div class="add-row-portion">
 			<div>
-			</div>
-
-			<div>
 				<div class="comment-title">
 					<span>Comments:</span>
 				</div>
 				<div class="comment-block">
-					<textarea maxlength="255" name="invoice_comment">{{ instance.comment }}</textarea>
+					<textarea maxlength="255" name="invoice_comment">{{ instance.comment|escape }}</textarea>
 				</div>
 			</div>
 		</div>
@@ -130,6 +178,7 @@
 				</div>
 			</div>
 
+
 			<div class="inner-paid">
 				<div class="inner-paid-label">
 					Paid
@@ -165,28 +214,32 @@
 {% endblock %}
 
 
-{% block document_addendum %}
 
+{% block document_addendum %}
 {% if not instance.is_paid %}
-<div style="
-	">
+<div>
 	<button id="payment-allocate" type="button">Allocate a Payment</button>
+</div>
+{% else %}
+<div>
+	Fully Allocated
 </div>
 {% endif %}
 
+
 <div>
 	<table class="itol-payment-table">
-		<tbody>
-		{% for pmt in instance.paymentallocation_set.all %}
-			<tr>
-				<td>Payment allocated:</td>
-				<td>{{ pmt.refnum }}</td>
-				<td>{{ pmt.amount|decsplay }}</td>
-				<td>{{ pmt.payment.payment_date|date:"j M Y" }}</td>
-				<td><input class="deallocate-payment" type="image" src='{{ STATIC_URL }}images/icons/line_delete_grey.png' value="{{ pmt.id }}"/></td>
-			</tr>
-		{% endfor %}
-		</tbody>
+	<tbody>
+	{% for pmt in instance.paymentallocation_set.all %}
+		<tr>
+			<td>Payment allocated:</td>
+			<td>{{ pmt.refnum }}</td>
+			<td>{{ pmt.amount|decsplay }}</td>
+			<td>{{ pmt.payment.payment_date|date:"j M Y" }}</td>
+			<td><input class="deallocate-payment" type="image" src='{{ STATIC_URL }}images/icons/line_delete_grey.png' value="{{ pmt.id }}"/></td>
+		</tr>
+	{% endfor %}
+	</tbody>
 	</table>
 </div>
 {% endblock %}

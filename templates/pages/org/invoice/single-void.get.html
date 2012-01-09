@@ -1,28 +1,154 @@
-{% extends 'pages/org/invoice/single-final.get.html' %}
+{% extends 'layouts/org/itemized_total.html' %}
+
+{% load decshift %}
+
+
+{% block head_includes %}
+
+	<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}stylesheets/common/member-itemized-total.css" media="screen" />
+	<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}stylesheets/common/member-afes-itol.css" media="screen" />
+
+	<script type="text/javascript" src="{{ STATIC_URL }}js/smk.js"></script>
+	<script type="text/javascript" src="{{ STATIC_URL }}js/validations.js"></script>
+	<script type="text/javascript" src="{{ STATIC_URL }}js/date.js"></script>
+	<script type="text/javascript" src="{{ STATIC_URL }}js/afes.js"></script>
+	<script type="text/javascript" src="{{ STATIC_URL }}js/afes-table.js"></script>
+
+	<style>
+#id_table thead .head-description { width: 235px; }
+#id_table thead .head-qty { width: 123px; }
+#id_table thead .head-unit-price { width: 147px; }
+#id_table thead .head-tax-rate { width: 195px; }
+#id_table thead .head-amount { width: 158px; }
+	</style>
+
+{% endblock %}
 
 {% block onready %}
-	$(".invoice").jInvoice( 
-		"invoicify",
+
+	afes.ex.table.init(
+		$( "#id_table" ),
 		{
-			'delete-icon' : '{{ STATIC_URL }}images/icons/line_delete_grey.png',
-			'editable' : false
+			initial_rows : 0,
+			columns : [
+				{ editable : false, class: "description" },
+				{ editable : false, class: "qty" },
+				{ editable : false, class: "unit-price" },
+				{ editable : false, class: "tax-rate" },
+				{ editable : false, class: "amount" }
+			]
 		}
 	);
 
 
+	{% for li in instance.invoiceline_set.all %}
+		afes.ex.table.appendRow(
+			"#id_table",
+			[
+				"{{ li.description|escapejs }}",
+				"{{ li.units|decsplay }}",
+				"{{ li.perunit|decsplay }}",
+				"{{ li.get_tax_rate_display|escapejs }}",
+				"{{ li.total|decsplay }}"
+			]
+		);
+	{% endfor %}
+
+
+	$( "#id_button_save" ).click( function() {
+		$( "#id_invoice_form" ).submit();
+	});
+
+
+
 {% endblock %}
 
 
-{% block document_payment_status %}{% endblock %}
-
-
-{% block document_button_row_left %}{% endblock %}
-
-{% block document_button_row_right %}
-		<button id="id_button_save" type="button">Save</button>
+{% block document_type %}TAX INVOICE{% endblock %}
+{% block document_status %}
+{% include 'pages/org/invoice/status-label.html' with instance=instance %}
 {% endblock %}
 
 
-{% block document_addendum %}{% endblock %}
+{% block document_dates %}
+<fieldset>
+	<label for="name">Invoice Date</label>
+	<input type="text" name="invoice_date" id="id_itol_date" class="text ui-widget-content ui-corner-all" value="{{ instance.invoice_date|date:"j M Y" }}" />
+	<label for="name">Due Date</label>
+	<input type="text" name="due_date" id="id_due_date" class="text ui-widget-content ui-corner-all" value="{{ instance.due_date|date:"j M Y" }}" />
+</fieldset>
+{% endblock %}
 
+
+{% block document_body %}
+
+<div class="item-list">
+<table id="id_table">
+<thead>
+	<th class="head-description">Description</th>
+	<th class="head-qty">Qty</th>
+	<th class="head-unit-price">Unit Price</th>
+	<th class="head-tax-rate">Tax Rate</th>
+	<th class="head-amount">Amount</th>
+</thead>
+<tbody>
+</tbody>
+</table>
+</div>
+
+	<div class="summary-row">
+
+		<div class="add-row-portion">
+			<div>
+				<div class="comment-title">
+					<span>Comments:</span>
+				</div>
+				<div class="comment-block">
+					<textarea maxlength="255" name="invoice_comment">{{ instance.comment|escape }}</textarea>
+				</div>
+			</div>
+		</div>
+
+		<div class="summary-portion">
+
+			<div class="inner-amount">
+				<div class="inner-amount-label">
+					Amount
+				</div>
+				<div class="inner-amount-amount">
+					<span id="summary_amount">{{ instance.amount|decsplay }}</span>
+					<input type="hidden" id="id_itol_amount" name="invoice_amount" value="{{ instance.amount|decshow }}" />
+				</div>
+			</div>
+
+			<div class="inner-tax">
+				<div class="inner-tax-label">
+					Sales Tax
+				</div>
+				<div class="inner-tax-amount">
+					<span id="summary_tax">{{ instance.tax|decsplay }}</span>
+					<input type="hidden" id="id_itol_tax" name="invoice_tax" value="{{ instance.tax|decshow }}" />
+				</div>
+			</div>
+
+			<div class="inner-total">
+				<div class="inner-total-label">
+					Total
+				</div>
+				<div class="inner-total-amount">
+					<span id="summary_total">{{ instance.total|decsplay }}</span>
+					<input type="hidden" id="id_itol_total" name="invoice_total" value="{{ instance.total|decshow }}" />
+				</div>
+			</div>
+
+		</div>
+
+		<div style="clear: both;">&nbsp;</div>
+	</div>
+{% endblock %}
+
+
+{% block document_button_row_left %}
+	<button id="id_button_save" type="button">Save</button>
+{% endblock %}
 

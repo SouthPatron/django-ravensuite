@@ -9,6 +9,7 @@ from common.buslog.org import AccountBusLog
 from common.moe import MarginsOfError
 from common.utils.dbgdatetime import datetime
 from common.utils.objroute import *
+from common.utils.parse import *
 
 
 class InvoiceBusLog( object ):
@@ -94,32 +95,32 @@ class InvoiceBusLog( object ):
 		for row in new_data[ 'items' ]:
 			if len( row[0] ) > 0:
 				try:
-					row[1] = long(float(row[1]) * 100)
-					row[2] = long(float(row[2]) * 100)
+					row[1] = pnumparse( row[1] )
+					row[2] = pnumparse( row[2] )
 					row[3] = InvoiceBusLog._update_get_tax_rate( row[3] )
-					row[4] = long(float(row[4]) * 100)
-
+					row[4] = pnumparse( row[4] )
 					if (row[1] >= 0) and (row[2] >= 0) and (row[4] >= 0):
 						new_items.append( row )
 				except:
 					pass
+
 		new_data[ 'items' ] = new_items
 	
 
 	@staticmethod
 	def _update_sanitize_major_numbers( invoice, new_data ):
 		try:
-			new_data[ 'tax' ] = long(float(new_data['tax']) * 100)
+			new_data[ 'tax' ] = pnumparse( new_data['tax'] )
 		except:
 			new_data[ 'tax' ] = invoice.tax
 
 		try:
-			new_data[ 'amount' ] = long(float(new_data['amount']) * 100)
+			new_data[ 'amount' ] = pnumparse( new_data['amount'] )
 		except:
 			new_data[ 'amount' ] = invoice.amount
 
 		try:
-			new_data[ 'total' ] = long(float(new_data['total']) * 100)
+			new_data[ 'total' ] = pnumparse( new_data['total'] )
 		except:
 			new_data[ 'total' ] = invoice.total
 
@@ -169,6 +170,20 @@ class InvoiceBusLog( object ):
 			sum_tax += temp_tax
 			sum_total += temp_total
 
+			print ' [ {} ], [ {} ], [ {} ]'.format(
+				temp_amount,
+				temp_tax,
+				temp_total
+			)
+
+
+		print 'sum_amount = {}'.format( sum_amount )
+		print 'sum_tax = {}'.format( sum_tax )
+		print 'sum_total = {}'.format( sum_total )
+
+		print 'amount = {}'.format( new_data[ 'amount' ] )
+		print 'tax = {}'.format( new_data[ 'tax' ] )
+		print 'total = {}'.format( new_data[ 'total' ] )
 
 		if ( fabs(sum_total - new_data[ 'total' ]) > MarginsOfError.CURRENCY ) or ( fabs(sum_tax - new_data[ 'tax' ]) > MarginsOfError.CURRENCY ) or ( fabs(sum_amount - new_data[ 'amount' ]) > MarginsOfError.CURRENCY ):
 			raise BusLogError( 'There is a discrepency in the tax, amount and total calculations which were received.' )
@@ -179,10 +194,12 @@ class InvoiceBusLog( object ):
 	def _update_sanitize( invoice, new_data ):
 		InvoiceBusLog._update_sanitize_dates( invoice, new_data )
 		InvoiceBusLog._update_sanitize_state( invoice, new_data )
-		InvoiceBusLog._update_sanitize_items( invoice, new_data )
-		InvoiceBusLog._update_sanitize_major_numbers( invoice, new_data )
-		InvoiceBusLog._update_sanitize_item_numbers( invoice, new_data )
-		InvoiceBusLog._update_sanitize_tax_amounts( invoice, new_data )
+
+		if invoice.state == InvoiceState.DRAFT:
+			InvoiceBusLog._update_sanitize_items( invoice, new_data )
+			InvoiceBusLog._update_sanitize_major_numbers( invoice, new_data )
+			InvoiceBusLog._update_sanitize_item_numbers( invoice, new_data )
+			InvoiceBusLog._update_sanitize_tax_amounts( invoice, new_data )
 
 		new_data["comment"] = new_data.get( "comment", invoice.comment )[:255]
 
