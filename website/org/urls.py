@@ -83,16 +83,16 @@ urlpatterns = patterns('',
 # ------ CLIENTS / ACCOUNT / INVOICES ------------------
 
 	url( r'^(?P<oid>\d+)/client/(?P<cid>\d+)/account/invoices$', login_required( InvoiceList.as_view() ), name = 'org-client-account-invoice-list' ),
-	url( r'^(?P<oid>\d+)/client/(?P<cid>\d+)/account/invoice/(?P<iid>\d+)$', login_required( InvoiceSingle.as_view() ), name = 'org-client-account-invoice-single' ),
+	url( r'^(?P<oid>\d+)/client/(?P<cid>\d+)/account/invoice/(?P<ilid>\d+)$', login_required( InvoiceSingle.as_view() ), name = 'org-client-account-invoice-single' ),
 
 	url( 
-			r'^(?P<oid>\d+)/client/(?P<cid>\d+)/account/invoice/(?P<iid>\d+).pc.allocate-payment$',
+			r'^(?P<oid>\d+)/client/(?P<cid>\d+)/account/invoice/(?P<ilid>\d+).pc.allocate-payment$',
 			login_required( IcAllocatePayment.as_view() ),
 			name = 'org-client-account-invoice-component-allocate-payment'
 		),
 
 	url( 
-			r'^(?P<oid>\d+)/client/(?P<cid>\d+)/account/invoice/(?P<iid>\d+).pc.deallocate-payment$',
+			r'^(?P<oid>\d+)/client/(?P<cid>\d+)/account/invoice/(?P<ilid>\d+).pc.deallocate-payment$',
 			login_required( IcDeallocatePayment.as_view() ),
 			name = 'org-client-account-invoice-component-deallocate-payment'
 		),
@@ -109,10 +109,10 @@ urlpatterns = patterns('',
 
 	url( r'^(?P<oid>\d+)/client/(?P<cid>\d+)/account/payments/unallocated$', login_required( PaymentUnallocatedList.as_view() ), name = 'org-client-account-payment-unallocated-list' ),
 
-	url( r'^(?P<oid>\d+)/client/(?P<cid>\d+)/account/payment/(?P<payid>\d+)$', login_required( PaymentSingle.as_view() ), name = 'org-client-account-payment-single' ),
+	url( r'^(?P<oid>\d+)/client/(?P<cid>\d+)/account/payment/(?P<ilid>\d+)$', login_required( PaymentSingle.as_view() ), name = 'org-client-account-payment-single' ),
 
 	url( 
-			r'^(?P<oid>\d+)/client/(?P<cid>\d+)/account/payment/(?P<payid>\d+).pc.allocate-payment$',
+			r'^(?P<oid>\d+)/client/(?P<cid>\d+)/account/payment/(?P<ilid>\d+).pc.allocate-payment$',
 			login_required( PcAllocatePayment.as_view() ),
 			name = 'org-client-account-payment-component-allocate-payment'
 		),

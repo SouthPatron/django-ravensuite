@@ -6,6 +6,7 @@ from copy import deepcopy
 from common.models import *
 from common.exceptions import *
 from common.buslog.org import AccountBusLog
+from common.buslog.org import ItemListTransactionBusLog as iltb
 from common.moe import MarginsOfError
 from common.utils.dbgdatetime import datetime
 from common.utils.objroute import *
@@ -14,57 +15,44 @@ from common.utils.parse import *
 
 class InvoiceBusLog( object ):
 
-	@staticmethod
-	def get_next_refnum( org ):
-		# TODO: select_for_update()
-		sc = OrganizationCounter.objects.get( organization__refnum = org.refnum )
-		refnum = sc.invoice_no
-		sc.invoice_no += 1
-		sc.save()
-		return refnum
-
 
 	@staticmethod
 	def create( client ):
-		newt = Invoice()
-		newt.client = client
-		newt.refnum = InvoiceBusLog.get_next_refnum( client.get_org() )
-		newt.creation_time = datetime.datetime.now()
-		newt.invoice_date = datetime.date.today()
-		newt.due_date = datetime.date.today() + datetime.timedelta( weeks = 4 )
-		newt.amount = 0
-		newt.tax = 0
-		newt.total = 0
-		newt.comment = ""
-		newt.is_paid = False
-		newt.state = InvoiceState.DRAFT
+		newt = iltb.create( client, ItemListType.INVOICE, ItemListState.DRAFT )
+
+		iltb.set_meta( newt, "invoice_date", datetime.date.today() )
+		iltb.set_meta( newt, "due_date", datetime.date.today() + datetime.timedelta( weeks = 4 ) )
+		iltb.set_meta( newt, "comment", "" )
+
 		newt.save()
 		return newt
 
 	@staticmethod
 	def delete( invoice ):
-		if invoice.state == InvoiceState.FINAL:
+
+		if invoice.state == ItemListState.FINAL:
 			raise BusLogError( 'This invoice has already been finalized. Try voiding it instead.' )
-		if invoice.state == InvoiceState.VOID:
+		if invoice.state == ItemListState.VOID:
 			raise BusLogError( 'This invoice has already been voided. It can not be removed.' )
-		invoice.delete()
+
+		ItemListTransactionBusLog.delete( invoice )
 
 
 	@staticmethod
 	def _update_sanitize_dates( invoice, new_data ):
 		try:
 			if new_data[ 'invoice_date' ] is not None:
-				new_data[ 'invoice_date' ] = datetime.datetime.strptime( new_data[ 'invoice_date' ], '%d %b %Y' )
+				new_data[ 'invoice_date' ] = pdateparse( new_data[ 'invoice_date' ] )
 			else:
-				new_data[ 'invoice_date' ] = invoice.invoice_date
+				new_data[ 'invoice_date' ] = pdateparse( iltb.get_meta( invoice, 'invoice_date' ) )
 		except ValueError:
 			raise BusLogError( 'The invoice date is invalid' )
 
 		try:
 			if new_data[ 'due_date' ] is not None:
-				new_data[ 'due_date' ] = datetime.datetime.strptime( new_data[ 'due_date' ], '%d %b %Y' )
+				new_data[ 'due_date' ] = pdateparse( new_data[ 'due_date' ] )
 			else:
-				new_data[ 'due_date' ] = invoice.due_date
+				new_data[ 'due_date' ] = pdateparse( iltb.get_meta( invoice, "due_date" ) )
 		except ValueError:
 			raise BusLogError( 'The due date is invalid' )
 
@@ -74,11 +62,11 @@ class InvoiceBusLog( object ):
 	@staticmethod
 	def _update_sanitize_state( invoice, new_data ):
 		if new_data[ 'state' ] is not None:
-			new_data['state'] = int(new_data.get( 'state' ) )
+			new_data['state'] = int( new_data.get( 'state' ) )
 		else:
-			new_data[ 'state' ] = invoice.state
+			new_data[ 'state' ] = invoice.document_state
 
-		if InvoiceState.get( new_data['state'] ) is None:
+		if ItemListState.get( new_data['state'] ) is None:
 			raise BusLogError( 'Unknown new state requested for invoice.' )
 
 
@@ -170,20 +158,6 @@ class InvoiceBusLog( object ):
 			sum_tax += temp_tax
 			sum_total += temp_total
 
-			print ' [ {} ], [ {} ], [ {} ]'.format(
-				temp_amount,
-				temp_tax,
-				temp_total
-			)
-
-
-		print 'sum_amount = {}'.format( sum_amount )
-		print 'sum_tax = {}'.format( sum_tax )
-		print 'sum_total = {}'.format( sum_total )
-
-		print 'amount = {}'.format( new_data[ 'amount' ] )
-		print 'tax = {}'.format( new_data[ 'tax' ] )
-		print 'total = {}'.format( new_data[ 'total' ] )
 
 		if ( fabs(sum_total - new_data[ 'total' ]) > MarginsOfError.CURRENCY ) or ( fabs(sum_tax - new_data[ 'tax' ]) > MarginsOfError.CURRENCY ) or ( fabs(sum_amount - new_data[ 'amount' ]) > MarginsOfError.CURRENCY ):
 			raise BusLogError( 'There is a discrepency in the tax, amount and total calculations which were received.' )
@@ -195,30 +169,39 @@ class InvoiceBusLog( object ):
 		InvoiceBusLog._update_sanitize_dates( invoice, new_data )
 		InvoiceBusLog._update_sanitize_state( invoice, new_data )
 
-		if invoice.state == InvoiceState.DRAFT:
+		if invoice.document_state == ItemListState.DRAFT:
 			InvoiceBusLog._update_sanitize_items( invoice, new_data )
 			InvoiceBusLog._update_sanitize_major_numbers( invoice, new_data )
 			InvoiceBusLog._update_sanitize_item_numbers( invoice, new_data )
 			InvoiceBusLog._update_sanitize_tax_amounts( invoice, new_data )
 
-		new_data["comment"] = new_data.get( "comment", invoice.comment )[:255]
+		new_data[ 'comment' ] = new_data.get( 
+								'comment',
+								iltb.get_meta( invoice, 'comment', '' )
+							)[:255]
 
 
 	@staticmethod
 	def _update_perform_update( invoice, new_data ):
-		invoice.invoice_date = new_data[ 'invoice_date' ]
-		invoice.due_date = new_data[ 'due_date' ]
-		invoice.comment = new_data[ 'comment' ]
 
-		if invoice.state == InvoiceState.DRAFT:
-			invoice.amount = new_data[ 'amount' ]
-			invoice.tax = new_data[ 'tax' ] 
-			invoice.total = new_data[ 'total' ]
+		iltb.clear_meta( invoice )
+		
+		iltb.set_meta( invoice, 'invoice_date', pdate( new_data[ 'invoice_date' ] ) )
+		iltb.set_meta( invoice, 'due_date', pdate( new_data[ 'due_date' ] ) )
+		iltb.set_meta( invoice, 'comment', new_data[ 'comment' ] )
 
-			InvoiceLine.objects.filter( invoice = invoice ).delete()
+		if invoice.document_state == ItemListState.DRAFT:
+
+			iltb.clear_lines( invoice )
 
 			for row in new_data[ 'items' ]:
-				il = InvoiceLine.objects.create( invoice = invoice, description = row[0], units = row[1], perunit = row[2], tax_rate = row[3], total = row[4] )
+				il = iltb.add_line(
+						invoice,
+						description = row[0],
+						units = row[1],
+						perunit = row[2],
+						tax_rate = row[3]
+					)
 
 
 	@staticmethod
@@ -250,20 +233,20 @@ class InvoiceBusLog( object ):
 	def _update_handle_state_change( invoice, new_data ):
 		ns = new_data['state']
 
-		if invoice.state == ns:
+		if invoice.document_state == ns:
 			return
 
-		if invoice.state == InvoiceState.DRAFT:
-			if ns != InvoiceState.FINAL:
+		if invoice.document_state == ItemListState.DRAFT:
+			if ns != ItemListState.FINAL:
 				raise BusLogError( 'You can only finalize this invoice' )
-			invoice.state = ns
+			invoice.document_state = ns
 			InvoiceBusLog._update_finalize_invoice( invoice )
 			return
 
-		if invoice.state == InvoiceState.FINAL:
-			if ns != InvoiceState.VOID:
+		if invoice.document_state == ItemListState.FINAL:
+			if ns != ItemListState.VOID:
 				raise BusLogError( 'You can only void this invoice' )
-			invoice.state = ns
+			invoice.document_state = ns
 			InvoiceBusLog._update_void_invoice( invoice )
 			return
 

@@ -93,7 +93,9 @@ Current Balance: {{ instance.balance|decsplay }}
 </div>
 
 <div style=" font-size: 2em; margin: 20px 0px; ">
+{% comment %}
 Unallocated Funds: {{ instance.get_client.get_unallocated_payment_amount|decsplay }}
+{% endcomment %}
 </div>
 
 

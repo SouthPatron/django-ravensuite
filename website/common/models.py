@@ -54,29 +54,6 @@ Interval = ChoicesEnum(
 	YEAR = ( 5, 'Year' ),
 )
 
-InvoiceState = ChoicesEnum(
-	DRAFT = ( 0, 'Draft' ),
-	FINAL = ( 5, 'Final' ),
-	VOID = ( 10, 'Void' ),
-	DELETE = ( 99, 'Delete' ),
-)
-
-PaymentState = ChoicesEnum(
-	ACTIVE = ( 5, 'Active' ),
-	VOID = ( 10, 'Reversed' ),
-)
-
-RefundState = ChoicesEnum(
-	ACTIVE = ( 5, 'Active' ),
-	VOID = ( 10, 'Reversed' ),
-)
-
-
-ExpiryAction = ChoicesEnum(
-	COMMIT = ( 'commit', 'Commit' ),
-	ROLLBACK = ( 'rollback', 'Rollback' ),
-)
-
 UserCategory = ChoicesEnum(
 	OWNER = ( 0, 'Owner' ),
 	ADMINISTRATOR = ( 10, 'Administrator' ),
@@ -108,6 +85,20 @@ TaxRate = ChoicesEnum(
 	EXEMPT = ( 3, 'Tax Exempt' ),
 )
 
+ItemListType = ChoicesEnum(
+	INVOICE = ( 0, 'Invoice' ),
+	CREDIT_NOTE = ( 10, 'Credit Note' ),
+	REFUND = ( 20, 'Refund' ),
+	PAYMENT = ( 30, 'Payment' )
+)
+
+ItemListState = ChoicesEnum(
+	DRAFT = ( 0, 'Draft' ),
+	FINAL = ( 10, 'Final' ),
+	VOID = ( 20, 'Void' ),
+	DELETE = ( 99, 'Delete' ),
+)
+
 
 
 
@@ -137,9 +128,9 @@ class OrganizationAccount( models.Model ):
 
 class OrganizationCounter( models.Model ):
 	organization = models.OneToOneField( Organization )
-	invoice_no = models.BigIntegerField( default = 1 )
-	payment_no = models.BigIntegerField( default = 1 )
-	refund_no = models.BigIntegerField( default = 1 )
+
+	item_list_transaction_no =  models.BigIntegerField( default = 1 )
+
 	client_no = models.BigIntegerField( default = 1 )
 	project_no = models.BigIntegerField( default = 1 )
 
@@ -184,30 +175,82 @@ class Client( models.Model ):
 	def get_invoice_list_url( self ):
 		return reverse( 'org-client-account-invoice-list', kwargs = { 'oid' : self.organization.refnum, 'cid' : self.refnum } )
 
-	def get_unpaid_invoice_list( self ):
-		return Invoice.objects.filter( client = self, is_paid = False, state = InvoiceState.FINAL )
-
 	def get_unpaid_invoice_list_url( self ):
 		return reverse( 'org-client-account-invoice-unpaid-list', kwargs = { 'oid' : self.organization.refnum, 'cid' : self.refnum } )
 	
 	def get_account( self ):
 		return Account.objects.get( client = self )
 
-	def get_draft_invoice_list( self ):
-		return Invoice.objects.filter( client = self, state = InvoiceState.DRAFT )
-
 	def get_draft_invoice_list_url( self ):
 		return reverse( 'org-client-account-invoice-draft-list', kwargs = { 'oid' : self.organization.refnum, 'cid' : self.refnum } )
 
 	def get_unallocated_payment_list( self ):
-		return Payment.objects.filter( client = self, is_allocated = False, state = PaymentState.ACTIVE )
+		return ItemListTransaction.objects.filter( client = self, document_type = ItemListType.PAYMENT, document_state = ItemListState.FINAL, fully_allocated = False )
 
 	def get_unallocated_payment_amount( self ):
-		total_amount = 0
-		for pmt in Payment.objects.filter( client = self, is_allocated = False, state = PaymentState.ACTIVE ):
-			total_amount += pmt.get_amount_free()
-		return total_amount
+		return ItemListTransaction.objects.filter( client = self, document_type = ItemListType.PAYMENT, document_state = ItemListState.FINAL ).aggregate( models.Sum('allocated') )
 
+
+
+
+class ItemListTransaction( models.Model ):
+	client = models.ForeignKey( Client )
+	refnum = models.BigIntegerField()
+	creation_time = models.DateTimeField()
+
+	document_type = models.IntegerField( choices = ItemListType.choices() )
+	document_state = models.IntegerField( choices = ItemListState.choices() )
+
+	amount = models.BigIntegerField( default = 0 )
+	tax = models.BigIntegerField( default = 0 )
+	total = models.BigIntegerField( default = 0 )
+
+
+	allocated = models.BigIntegerField( default = 0 )
+
+
+	def get_org( self ):
+		return self.client.organization
+
+	def get_client( self ):
+		return self.client
+
+
+	def get_single_url( self ):
+		my_route = None
+
+		if self.document_type == ItemListType.INVOICE:
+			my_route = 'org-client-account-invoice-single'
+
+		return reverse( my_route,
+					kwargs = {
+						'oid' : self.get_org().refnum,
+						'cid' : self.get_client().refnum,
+						'ilid' : self.refnum
+					}
+				)
+
+
+class ItemListMeta( models.Model ):
+	item_list_transaction = models.ForeignKey( ItemListTransaction )
+	key = models.CharField( max_length = 255 )
+	value = models.CharField( max_length = 255 )
+	
+class ItemListLine( models.Model ):
+	item_list_transaction = models.ForeignKey( ItemListTransaction )
+
+	description = models.CharField( max_length = 64 )
+	units = models.BigIntegerField( default = 0 )
+	perunit = models.BigIntegerField( default = 0 )
+	tax_rate = models.IntegerField( choices = TaxRate.choices() ) 
+	tax_amount = models.BigIntegerField( default = 0 )
+	total = models.BigIntegerField( default = 0 )
+
+
+class ItemListAllocation( models.Model ):
+	source = models.ForeignKey( ItemListTransaction, related_name = 'source_allocation' )
+	destination = models.ForeignKey( ItemListTransaction, related_name = 'destination_allocation' )
+	amount = models.BigIntegerField( default = 0 )
 
 
 
@@ -239,7 +282,7 @@ class AccountTransaction( models.Model ):
 	balance_after = models.BigIntegerField( default = 0 )
 	amount = models.BigIntegerField( default = 0 )
 
-	originating_route = models.CharField( max_length = 255 )
+	item_list_transaction = models.ForeignKey( ItemListTransaction )
 
 
 	def get_org( self ):
@@ -263,123 +306,7 @@ class AccountTransactionData( models.Model ):
 	data = models.TextField()
 
 
-class Invoice( models.Model ):
-	client = models.ForeignKey( Client )
-	refnum = models.BigIntegerField()
-	creation_time = models.DateTimeField()
-	invoice_date = models.DateField()
-	due_date = models.DateField()
-	amount = models.BigIntegerField( default = 0 )
-	tax = models.BigIntegerField( default = 0 )
-	total = models.BigIntegerField( default = 0 )
 
-	comment = models.CharField( max_length = 255 )
-
-	is_paid = models.BooleanField( default = False )
-
-	state = models.IntegerField( choices = InvoiceState.choices(), default = InvoiceState.DRAFT )
-
-	def get_org( self ):
-		return self.client.organization
-
-	def get_client( self ):
-		return self.client
-
-	def get_single_url( self ):
-		return reverse( 'org-client-account-invoice-single', kwargs = { 'oid' : self.get_org().refnum, 'cid' : self.get_client().refnum, 'iid' : self.refnum } )
-
-	def get_amount_outstanding( self ):
-		return ( self.total - self.get_amount_paid() )
-
-	def get_amount_paid( self ):
-		q = PaymentAllocation.objects.filter( invoice = self ).aggregate( allocated = models.Sum( 'amount' ) )
-		allocated = q[ 'allocated' ]
-		if allocated is None:
-			return 0
-		return allocated
-
-
-	def is_draft( self ):
-		return self.state == InvoiceState.DRAFT
-
-	def is_final( self ):
-		return self.state == InvoiceState.FINAL
-
-	def is_void( self ):
-		return self.state == InvoiceState.VOID
-
-	class Meta:
-		ordering = [ '-invoice_date' ]
-
-
-class InvoiceLine( models.Model ):
-	invoice = models.ForeignKey( Invoice )
-	description = models.CharField( max_length = 64 )
-	units = models.BigIntegerField( default = 0 )
-	perunit = models.BigIntegerField( default = 0 )
-	tax_rate = models.IntegerField( choices = TaxRate.choices() ) 
-	total = models.BigIntegerField( default = 0 )
-
-class Payment( models.Model ):
-	client = models.ForeignKey( Client )
-	refnum = models.BigIntegerField()
-	creation_time = models.DateTimeField()
-	payment_date = models.DateField()
-	amount = models.BigIntegerField( default = 0 )
-
-	comment = models.CharField( max_length = 255 )
-
-	is_allocated = models.BooleanField( default = False )
-
-	state = models.IntegerField( choices = PaymentState.choices(), default = PaymentState.ACTIVE )
-
-	def get_org( self ):
-		return self.client.organization
-
-	def get_client( self ):
-		return self.client
-
-	def get_single_url( self ):
-		return reverse( 'org-client-account-payment-single', kwargs = { 'oid' : self.get_org().refnum, 'cid' : self.get_client().refnum, 'payid' : self.refnum } )
-	def get_amount_free( self ):
-		return ( self.amount - self.get_amount_allocated() )
-
-	def get_amount_allocated( self ):
-		q = PaymentAllocation.objects.filter( payment = self ).aggregate( allocated = models.Sum( 'amount' ) )
-		allocated = q['allocated']
-		if allocated is None:
-			return 0
-		return allocated
-
-	class Meta:
-		ordering = [ '-payment_date' ]
-
-
-class Refund( models.Model ):
-	client = models.ForeignKey( Client )
-	refnum = models.BigIntegerField()
-	creation_time = models.DateTimeField()
-	refund_date = models.DateField()
-	amount = models.BigIntegerField( default = 0 )
-	comment = models.CharField( max_length = 255 )
-	state = models.IntegerField( choices = PaymentState.choices(), default = RefundState.ACTIVE )
-
-	def get_org( self ):
-		return self.client.organization
-
-	def get_client( self ):
-		return self.client
-
-	def get_single_url( self ):
-		return reverse( 'org-client-account-refund-single', kwargs = { 'oid' : self.get_org().refnum, 'cid' : self.get_client().refnum, 'refid' : self.refnum } )
-	class Meta:
-		ordering = [ '-refund_date' ]
-
-
-class PaymentAllocation( models.Model ):
-	payment = models.ForeignKey( Payment )
-	invoice = models.ForeignKey( Invoice )
-	amount = models.BigIntegerField( default = 0 )
 
 
 class Activity( models.Model ):
@@ -441,7 +368,6 @@ class TimesheetEntry( models.Model ):
 	user = models.ForeignKey( User )
 	project = models.ForeignKey( Project )
 	task = models.ForeignKey( Task )
-	invoice = models.ForeignKey( Invoice, null = True, default = None )
 	start_time = models.DateTimeField()
 	end_time = models.DateTimeField()
 	description = models.CharField( max_length = 255, blank = True )

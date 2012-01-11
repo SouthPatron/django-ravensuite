@@ -1,5 +1,7 @@
 from __future__ import unicode_literals
 
+from django.db.models import F
+
 from django.shortcuts import get_object_or_404, redirect
 from django.http import HttpResponseForbidden, HttpResponseServerError
 from django.contrib import messages
@@ -21,28 +23,26 @@ class InvoiceList( ListView ):
 		return Client.objects.get( refnum = self.url_kwargs.cid, organization__refnum = self.url_kwargs.oid )
 
 	def get_object_list( self, request, *args, **kwargs ):
-		mid = self._extract_ids( [ 'oid', 'cid' ], **kwargs )
-
-		obj_list = Invoice.objects.filter( client__refnum = mid.cid, client__organization__refnum = mid.oid )
+		obj_list = ItemListTransaction.objects.filter( client__refnum = self.url_kwargs.cid, client__organization__refnum = self.url_kwargs.oid, document_type = ItemListType.INVOICE )
 		return obj_list
 
 	def _create_object( self, request, data, *args, **kwargs ):
-		mid = self._extract_ids( [ 'oid', 'cid' ], **kwargs )
-		client = Client.objects.get( refnum = mid.cid, organization__refnum = mid.oid )
+		client = Client.objects.get( refnum = self.url_kwargs.cid, organization__refnum = self.url_kwargs.oid )
 		newo = InvoiceBusLog.create( client )
 		return newo
 		
 	
 	def create_object_html( self, request, data, *args, **kwargs ):
 
-		mid = self._extract_ids( [ 'oid', 'cid' ], **kwargs )
-		client = Client.objects.get( refnum = mid.cid, organization__refnum = mid.oid )
+		client = Client.objects.get( refnum = self.url_kwargs.cid, organization__refnum = self.url_kwargs.oid )
 
 		try:
 			newo = self._create_object( request, data, *args, **kwargs )
 		except BusLogError, berror:
 			messages.error( request, berror.message )
 			return redirect( client.get_invoice_list_url() )
+		except Exception, error:
+			print error
 
 		return redirect( newo.get_single_url() )
 
@@ -60,8 +60,7 @@ class InvoiceDraftList( ListView ):
 		return Client.objects.get( refnum = self.url_kwargs.cid, organization__refnum = self.url_kwargs.oid )
 
 	def get_object_list( self, request, *args, **kwargs ):
-		mid = self._extract_ids( [ 'oid', 'cid' ], **kwargs )
-		obj_list = Invoice.objects.filter( client__refnum = mid.cid, client__organization__refnum = mid.oid, state = InvoiceState.DRAFT )
+		obj_list = ItemListTransaction.objects.filter( client__refnum = self.url_kwargs.cid, client__organization__refnum = self.url_kwargs.oid, document_type = ItemListType.INVOICE, document_state = ItemListState.DRAFT )
 		return obj_list
 
 
@@ -72,8 +71,7 @@ class InvoiceUnpaidList( ListView ):
 		return Client.objects.get( refnum = self.url_kwargs.cid, organization__refnum = self.url_kwargs.oid )
 
 	def get_object_list( self, request, *args, **kwargs ):
-		mid = self._extract_ids( [ 'oid', 'cid' ], **kwargs )
-		obj_list = Invoice.objects.filter( client__refnum = mid.cid, client__organization__refnum = mid.oid, state = InvoiceState.FINAL, is_paid = False )
+		obj_list = ItemListTransaction.objects.filter( client__refnum = self.url_kwargs.cid, client__organization__refnum = self.url_kwargs.oid, document_type = ItemListType.INVOICE, document_state = ItemListState.FINAL, total__gt = F('allocated') )
 		return obj_list
 
 
@@ -82,14 +80,13 @@ class InvoiceSingle( SingleObjectView ):
 	template_name = 'pages/org/invoice/single'
 
 	def get_object( self, request, *args, **kwargs ):
-		mid = self._extract_ids( [ 'oid', 'cid', 'iid' ], **kwargs )
-		obj = get_object_or_404( Invoice, refnum = mid.iid, client__refnum = mid.cid, client__organization__refnum = mid.oid )
+		obj = get_object_or_404( ItemListTransaction, refnum = self.url_kwargs.ilid, client__refnum = self.url_kwargs.cid, client__organization__refnum = self.url_kwargs.oid )
 
-		if obj.state == InvoiceState.DRAFT:
+		if obj.document_state == ItemListState.DRAFT:
 			self.template_name = 'pages/org/invoice/single-draft'
-		elif obj.state == InvoiceState.FINAL:
+		elif obj.document_state == ItemListState.FINAL:
 			self.template_name = 'pages/org/invoice/single-final'
-		elif obj.state == InvoiceState.VOID:
+		elif obj.document_state == ItemListState.VOID:
 			self.template_name = 'pages/org/invoice/single-void'
 
 		return obj
@@ -105,7 +102,7 @@ class InvoiceSingle( SingleObjectView ):
 
 		invoice_data[ 'state' ] = data.get( 'invoice_state' )
 
-		if invoice_data[ 'state' ] is not None and long(invoice_data['state']) == InvoiceState.DELETE:
+		if invoice_data[ 'state' ] is not None and long(invoice_data['state']) == ItemListState.DELETE:
 			rc = self.delete_object( request, obj, *args, **kwargs )
 			messages.info( request, 'The draft invoice has been deleted' )
 			return redirect( obj.get_client().get_draft_invoice_list_url() )
@@ -133,7 +130,7 @@ class InvoiceSingle( SingleObjectView ):
 			messages.error( request, berror.message )
 			return redirect( obj.get_single_url() )
 
-		if obj.state == InvoiceState.DRAFT:
+		if obj.document_state == ItemListState.DRAFT:
 			return redirect( obj.get_client().get_draft_invoice_list_url() )
 	
 		return redirect( obj.get_client().get_account_single_url() )
@@ -144,18 +141,18 @@ class InvoiceSingle( SingleObjectView ):
 		newstate = data.get( 'state', None )
 
 		if newstate is not None:
-			if InvoiceState.contains( newstate ) is False:
+			if ItemListState.contains( newstate ) is False:
 				return HttpResponseForbidden()
 
-			if obj.state == InvoiceState.FINAL:
-				if newstate != InvoiceState.VOID:
+			if obj.document_state == ItemListState.FINAL:
+				if newdocument_state != ItemListState.VOID:
 					return HttpResponseForbidden()
 				return void_invoice( request, obj, data, *args, **kwargs )
 
-			if newstate == InvoiceState.VOID:
+			if newdocument_state == ItemListState.VOID:
 				return delete_object( request, obj, data, *args, **kwargs )
 
-			if newstate == InvoiceState.FINAL:
+			if newdocument_state == ItemListState.FINAL:
 				return finalize_invoice( request, obj, data, *args, **kwargs )
 
 			return HttpResponseServerError()
@@ -168,8 +165,8 @@ class InvoiceComponents( ComponentView ):
 
 	def get_object( self, request, *args, **kwargs ):
 		return get_object_or_404(
-					Invoice,
-					refnum = self.url_kwargs.iid,
+					ItemListTransaction,
+					refnum = self.url_kwargs.ilid,
 					client__refnum = self.url_kwargs.cid,
 					client__organization__refnum = self.url_kwargs.oid
 				)
@@ -207,7 +204,7 @@ class IcDeallocatePayment( InvoiceComponents ):
 		return get_object_or_404(
 					PaymentAllocation,
 					id = request.GET[ 'payid' ],
-					invoice__refnum = self.url_kwargs.iid
+					invoice__refnum = self.url_kwargs.ilid
 				)
 
 
