@@ -42,12 +42,21 @@ class ItemListTransactionBusLog( object ):
 
 	@staticmethod
 	def	set_meta( obj, key, value ):
-		sam = ItemListMeta(
+
+		sam = None
+
+		rc = ItemListMeta.objects.filter(
 				item_list_transaction = obj,
-				key = key,
-				value = '{}'.format( value )
+				key = key
 			)
+		if rc.count() == 0:
+			sam = ItemListMeta( item_list_transaction = obj, key = key )
+		else:
+			sam = rc[0]
+
+		sam.value = '{}'.format( value )
 		sam.save()
+
 
 	@staticmethod
 	def get_meta( obj, key, default = None ):
@@ -55,15 +64,12 @@ class ItemListTransactionBusLog( object ):
 				item_list_transaction = obj,
 				key = key
 			)
-		if rc.count() == 0:
+		if rc.count() <= 0:
 			if default is not None:
 				return default
 			raise RuntimeError( 'No results found' )
 
-		if rc.count() > 1:
-			raise RuntimeError( 'Too many results returned' )
-
-		return rc[0]
+		return rc[0].value
 	
 	@staticmethod
 	def clear_meta( obj ):
@@ -79,32 +85,39 @@ class ItemListTransactionBusLog( object ):
 
 		my_total = 0
 		my_tax = 0
+		my_amount = 0
 		# TODO: dynamic tax rate
 		my_tax_rate = 0.14
 
 		multiple = long( units * perunit / 100 )
 
 		if tax_rate == TaxRate.NONE or tax_rate == TaxRate.EXEMPT:
-			my_total = multiple
+			my_amount = multiple
 			my_tax = 0
+			my_total = multiple
 		elif tax_rate == TaxRate.EXCLUSIVE:
-			temp_tax = long( multiple * my_tax_rate )
-			my_total = multiple + temp_tax
-			my_tax = temp_tax
+			my_tax = long( multiple * my_tax_rate )
+			my_total = multiple + my_tax
+			my_amount = multiple
 		elif tax_rate == TaxRate.INCLUSIVE:
 			my_total = multiple
 			my_tax = multiple - long(long( multiple * 100 / (1 + my_tax_rate) ) / 100)
+			my_amount = my_total - my_tax
+
 
 		sam = ItemListLine(
 				item_list_transaction = obj,
 				description = description,
 				units = units,
 				perunit = perunit,
+				amount = my_amount,
 				tax_rate = tax_rate,
 				tax_amount = my_tax,
 				total = my_total
 			)
 		sam.save()
+
+		return sam
 
 
 

@@ -13,6 +13,87 @@ from common.utils.objroute import *
 from common.utils.parse import *
 
 
+class InvoiceObj( object ):
+
+	def _create( self, client ):
+		return iltb.create( client, ItemListType.INVOICE, ItemListState.DRAFT )
+
+
+	def __init__( self, client = None, item_list_transaction = None, ilid = None ):
+
+		self.ilo = None
+
+		if item_list_transaction is not None:
+			self.ilo = item_list_transaction
+		else:
+			if client is None:
+				raise RuntimeError( 'A client is required when creating.' )
+
+			if ilid is not None:
+				self.ilo = ItemListTransaction.objects.get( refnum = ilid )
+			else:
+				self.ilo = self._create( client )
+				self.clear()
+
+
+	def clear( self ):
+		self.setInvoiceDate( datetime.date.today() )
+		self.setDueDate( datetime.date.today() + datetime.timedelta( weeks = 4 ) )
+		self.setComment( "" )
+
+		iltb.clear_lines( self.ilo )
+
+
+
+	def getInvoiceDate( self ):
+		return pdateparse( iltb.get_meta( self.ilo, "invoice_date" ) )
+
+	def setInvoiceDate( self, date ):
+		iltb.set_meta( self.ilo, "invoice_date", pdate( date ) )
+
+	def getDueDate( self ):
+		return pdateparse( iltb.get_meta( self.ilo, "due_date" ) )
+
+	def setDueDate( self, date ):
+		iltb.set_meta( self.ilo, "due_date", pdate( date ) )
+
+	def getComment( self ):
+		return iltb.get_meta( self.ilo, "comment" )
+
+	def setComment( self, comment ):
+		iltb.set_meta( self.ilo, "comment", comment[:255] )
+
+	def getAmount( self ):
+		return self.ilo.amount
+
+	def getTax( self ):
+		return self.ilo.tax
+
+	def getTotal( self ):
+		return self.ilo.total
+
+	def getLines( self ):
+		for line in iltb.get_lines( self.ilo ):
+			yield { 
+				"description" : line.description,
+				"units" : line.units,
+				"perunit" : line.perunit,
+				"amount" : line.amount,
+				"tax_rate" : TaxRate.get( line.tax_rate )[0],
+				"tax_display" : TaxRate.get( line.tax_rate )[1],
+				"tax_amount" : line.tax_amount,
+				"total" : line.total
+			}
+
+	def addLine( self, description, units, perunit, tax_rate ):
+		line = iltb.add_line( self.ilo, description, units, perunit, tax_rate )
+		self.ilo.amount += line.amount
+		self.ilo.tax += line.tax_amount
+		self.ilo.total += line.total
+		self.ilo.save()
+
+
+
 class InvoiceBusLog( object ):
 
 

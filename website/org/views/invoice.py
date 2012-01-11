@@ -10,7 +10,7 @@ from common.views.singleobjectview import SingleObjectView
 from common.views.listview import ListView
 from common.views.component import ComponentView 
 
-from common.buslog.org import InvoiceBusLog, PaymentBusLog
+from common.buslog.org import InvoiceBusLog, InvoiceObj, PaymentBusLog
 
 from common.exceptions import *
 from common.models import *
@@ -78,6 +78,10 @@ class InvoiceUnpaidList( ListView ):
 
 class InvoiceSingle( SingleObjectView ):
 	template_name = 'pages/org/invoice/single'
+
+	def get_extra( self, request, obj, fmt, *args, **kwargs ):
+		return InvoiceObj( item_list_transaction = obj )
+		
 
 	def get_object( self, request, *args, **kwargs ):
 		obj = get_object_or_404( ItemListTransaction, refnum = self.url_kwargs.ilid, client__refnum = self.url_kwargs.cid, client__organization__refnum = self.url_kwargs.oid )

@@ -15,11 +15,13 @@
 	<script type="text/javascript" src="{{ STATIC_URL }}js/afes-table.js"></script>
 
 	<style>
+#id_table tbody .afes-table-body-cell-type-currency { text-align: right; }
 #id_table thead .head-description { width: 235px; }
-#id_table thead .head-qty { width: 123px; }
+#id_table thead .head-qty { width: 103px; }
 #id_table thead .head-unit-price { width: 147px; }
-#id_table thead .head-tax-rate { width: 195px; }
-#id_table thead .head-amount { width: 158px; }
+#id_table thead .head-tax-rate { width: 165px; }
+#id_table thead .head-tax-amount { width: 80px; }
+#id_table thead .head-amount { width: 128px; }
 #id_table thead .head-delete { width: 20px; }
 	</style>
 
@@ -33,6 +35,14 @@
 
 		$( "#id_table tbody tr" ).each( function() {
 			var my_value = [];
+
+			// my_value[] = 
+			//		0 = qty
+			//		1 = unit-price
+			//		2 = tax-rate
+			//		3 = tax-amount
+			//		4 = amount
+			//		5 = total
 
 			my_value[0] = $(this).find( "div.qty input" ).attr( "value" );
 			my_value[1] = $(this).find( "div.unit-price input" ).attr( "value" );
@@ -61,10 +71,12 @@
 				else
 				{
 					my_value[3] = my_value[5];
-					my_value[4] = 0;
+					my_value[4] = "0.00";
 				}
 			}
 			values.push( my_value );
+
+			$(this).find( ".tax-amount" ).text( my_value[4] );
 		});
 
 		total_amount = new Number( 0 );
@@ -188,6 +200,14 @@
 				{
 					type: "currency",
 					initial: "0.00",
+					class: "tax-amount",
+					editable : false
+				},
+
+
+				{
+					type: "currency",
+					initial: "0.00",
 					class: "amount",
 					editable : false,
 					form_name : "amount"
@@ -206,14 +226,15 @@
 	);
 
 
-	{% for li in instance.invoiceline_set.all %}
+	{% for li in extra.getLines %}
 		afes.ex.table.appendRow(
 			"#id_table",
 			[
 				"{{ li.description|escapejs }}",
 				"{{ li.units|decsplay }}",
 				"{{ li.perunit|decsplay }}",
-				"{{ li.get_tax_rate_display|escapejs }}",
+				"{{ li.tax_display|escapejs }}",
+				"{{ li.tax_amount|decsplay }}",
 				"{{ li.total|decsplay }}",
 				$( "#click_me_div" ).html(),
 			]
@@ -267,9 +288,9 @@
 {% block document_dates %}
 <fieldset>
 	<label for="name">Invoice Date</label>
-	<input type="text" name="invoice_date" id="id_itol_date" class="text ui-widget-content ui-corner-all" value="{{ instance.invoice_date|date:"j M Y" }}" />
+	<input type="text" name="invoice_date" id="id_itol_date" class="text ui-widget-content ui-corner-all" value="{{ extra.getInvoiceDate|date:"j M Y" }}" />
 	<label for="name">Due Date</label>
-	<input type="text" name="due_date" id="id_due_date" class="text ui-widget-content ui-corner-all" value="{{ instance.due_date|date:"j M Y" }}" />
+	<input type="text" name="due_date" id="id_due_date" class="text ui-widget-content ui-corner-all" value="{{ extra.getDueDate|date:"j M Y" }}" />
 </fieldset>
 {% endblock %}
 
@@ -304,6 +325,7 @@
 	<th class="head-qty">Qty</th>
 	<th class="head-unit-price">Unit Price</th>
 	<th class="head-tax-rate">Tax Rate</th>
+	<th class="head-tax-amount">Tax</th>
 	<th class="head-amount">Amount</th>
 	<th class="head-delete">&nbsp;</th>
 </thead>
@@ -325,7 +347,7 @@
 					<span>Comments:</span>
 				</div>
 				<div class="comment-block">
-					<textarea maxlength="255" name="invoice_comment">{{ instance.comment }}</textarea>
+					<textarea maxlength="255" name="invoice_comment">{{ extra.getComment }}</textarea>
 				</div>
 			</div>
 		</div>
@@ -337,8 +359,8 @@
 					Amount
 				</div>
 				<div class="inner-amount-amount">
-					<span id="summary_amount">{{ instance.amount|decsplay }}</span>
-					<input type="hidden" id="id_itol_amount" name="invoice_amount" value="{{ instance.amount|decshow }}" />
+					<span id="summary_amount">{{ extra.getAmount|decsplay }}</span>
+					<input type="hidden" id="id_itol_amount" name="invoice_amount" value="{{ extra.getAmount|decshow }}" />
 				</div>
 			</div>
 
@@ -347,8 +369,8 @@
 					Sales Tax
 				</div>
 				<div class="inner-tax-amount">
-					<span id="summary_tax">{{ instance.tax|decsplay }}</span>
-					<input type="hidden" id="id_itol_tax" name="invoice_tax" value="{{ instance.tax|decshow }}" />
+					<span id="summary_tax">{{ extra.getTax|decsplay }}</span>
+					<input type="hidden" id="id_itol_tax" name="invoice_tax" value="{{ extra.getTax|decshow }}" />
 				</div>
 			</div>
 
@@ -357,8 +379,8 @@
 					Total
 				</div>
 				<div class="inner-total-amount">
-					<span id="summary_total">{{ instance.total|decsplay }}</span>
-					<input type="hidden" id="id_itol_total" name="invoice_total" value="{{ instance.total|decshow }}" />
+					<span id="summary_total">{{ extra.getTotal|decsplay }}</span>
+					<input type="hidden" id="id_itol_total" name="invoice_total" value="{{ extra.getTotal|decshow }}" />
 				</div>
 			</div>
 		</div>

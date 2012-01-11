@@ -242,6 +242,7 @@ class ItemListLine( models.Model ):
 	description = models.CharField( max_length = 64 )
 	units = models.BigIntegerField( default = 0 )
 	perunit = models.BigIntegerField( default = 0 )
+	amount = models.BigIntegerField( default = 0 )
 	tax_rate = models.IntegerField( choices = TaxRate.choices() ) 
 	tax_amount = models.BigIntegerField( default = 0 )
 	total = models.BigIntegerField( default = 0 )
