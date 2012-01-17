@@ -23,7 +23,7 @@ class PaymentList( ListView ):
 		return Client.objects.get( refnum = self.url_kwargs.cid, organization__refnum = self.url_kwargs.oid )
 
 	def get_object_list( self, request, *args, **kwargs ):
-		obj_list = ItemListTransaction.objects.filter( client__refnum = self.url_kwargs.cid, client__organization__refnum = self.url_kwargs.oid, document_type = ItemListType.PAYMENT )
+		obj_list = SourceDocument.objects.filter( client__refnum = self.url_kwargs.cid, client__organization__refnum = self.url_kwargs.oid, document_type = SourceDocumentType.PAYMENT )
 		return obj_list
 
 	def _create_object( self, request, data, *args, **kwargs ):
@@ -54,7 +54,7 @@ class PaymentUnallocatedList( PaymentList ):
 	template_name = 'pages/org/payment/index'
 
 	def get_object_list( self, request, *args, **kwargs ):
-		obj_list = ItemListTransaction.objects.filter( client__refnum = self.url_kwargs.cid, client__organization__refnum = self.url_kwargs.oid, total__gt = F( 'allocated' ) )
+		obj_list = SourceDocument.objects.filter( client__refnum = self.url_kwargs.cid, client__organization__refnum = self.url_kwargs.oid, total__gt = F( 'allocated' ) )
 		return obj_list
 
 
@@ -62,8 +62,8 @@ class PaymentComponents( ComponentView ):
 
 	def get_object( self, request, *args, **kwargs ):
 		return get_object_or_404(
-					ItemListType,
-					refnum = self.url_kwargs.ilid,
+					SourceDocumentType,
+					refnum = self.url_kwargs.sdid,
 					client__refnum = self.url_kwargs.cid,
 					client__organization__refnum = self.url_kwargs.oid
 				)
@@ -80,7 +80,7 @@ class PcAllocatePayment( PaymentComponents ):
 
 		# TODO: Select for update somehow
 		invoice = get_object_or_404(
-						ItemListType,
+						SourceDocumentType,
 						refnum = invoice_refnum,
 						client__refnum = obj.get_client().refnum
 					)
@@ -102,7 +102,7 @@ class PaymentSingle( SingleObjectView ):
 	template_name = 'pages/org/payment/single'
 
 	def get_object( self, request, *args, **kwargs ):
-		return get_object_or_404( ItemListTransaction, refnum = self.url_kwargs.ilid, client__refnum = self.url_kwargs.cid, client__organization__refnum = self.url_kwargs.oid )
+		return get_object_or_404( SourceDocument, refnum = self.url_kwargs.sdid, client__refnum = self.url_kwargs.cid, client__organization__refnum = self.url_kwargs.oid )
 
 
 

@@ -77,17 +77,6 @@ class Base( View ):
 		return myid
 
 
-	def _extract_ids( self, required, **kwargs ):
-		class IdObject( object ):
-			pass
-		myid = IdObject()
-		for nm in required:
-			nid = kwargs.pop( nm, None )
-			if nid is None:
-				self.not_found()
-			setattr( myid, nm, nid )
-		return myid
-
 	# ************** Response methods
 
 	def _api_json( self, response, body ):

@@ -19,14 +19,12 @@ class ActivityList( ListView ):
 		return Organization.objects.get( refnum = self.url_kwargs.oid )
 
 	def get_object_list( self, request, *args, **kwargs ):
-		mid = self._extract_ids( [ 'oid' ], **kwargs )
-		obj_list = Activity.objects.filter( organization__refnum = mid.oid )
+		obj_list = Activity.objects.filter( organization__refnum = self.url_kwargs.oid )
 		return obj_list
 	
 	def _create_object( self, request, data, *args, **kwargs ):
-		mid = self._extract_ids( [ 'oid' ], **kwargs )
 
-		org = Organization.objects.get( refnum = mid.oid )
+		org = Organization.objects.get( refnum = self.url_kwargs.oid )
 		newact = ActivityBusLog.create( org, data[ 'name' ], data[ 'description' ] )
 		return newact
 
@@ -58,8 +56,7 @@ class ActivitySingle( SingleObjectView ):
 	template_name = 'pages/org/activity/single'
 
 	def get_object( self, request, *args, **kwargs ):
-		mid = self._extract_ids( [ 'oid', 'actid' ], **kwargs )
-		return get_object_or_404( Activity, id = mid.actid, organization__refnum = mid.oid )
+		return get_object_or_404( Activity, id = self.url_kwargs.actid, organization__refnum = self.url_kwargs.oid )
 
 	def delete_object( self, request, ob, *args, **kwargs ):
 		ob.delete()

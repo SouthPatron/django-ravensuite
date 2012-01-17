@@ -58,8 +58,7 @@ class TimerSingle( SingleObjectView ):
 	template_name = 'pages/timesheet/timer/single'
 
 	def get_object( self, request, *args, **kwargs ):
-		mid = self._extract_ids( [ 'timerid' ], **kwargs )
-		return get_object_or_404( TimesheetTimer, id = mid.timerid )
+		return get_object_or_404( TimesheetTimer, id = self.url_kwargs.timerid )
 
 	def delete_object( self, request, ob, *args, **kwargs ):
 		ob.delete()

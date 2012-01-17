@@ -19,14 +19,12 @@ class ProjectList( ListView ):
 		return Client.objects.get( refnum = self.url_kwargs.cid, organization__refnum = self.url_kwargs.oid )
 
 	def get_object_list( self, request, *args, **kwargs ):
-		mid = self._extract_ids( [ 'oid', 'cid' ], **kwargs )
-		obj_list = Project.objects.filter( client__refnum = mid.cid, client__organization__refnum = mid.oid )
+		obj_list = Project.objects.filter( client__refnum = self.url_kwargs.cid, client__organization__refnum = self.url_kwargs.oid )
 		return obj_list
 	
 	def _create_object( self, request, data, *args, **kwargs ):
-		mid = self._extract_ids( [ 'oid', 'cid' ], **kwargs )
 
-		client = Client.objects.get( refnum = mid.cid, organization__refnum = mid.oid )
+		client = Client.objects.get( refnum = self.url_kwargs.cid, organization__refnum = self.url_kwargs.oid )
 
 		newo = ProjectBusLog.create(
 					client,
@@ -68,8 +66,7 @@ class ProjectSingle( SingleObjectView ):
 	template_name = 'pages/org/project/single'
 
 	def get_object( self, request, *args, **kwargs ):
-		mid = self._extract_ids( [ 'oid', 'cid', 'pid' ], **kwargs )
-		return get_object_or_404( Project, refnum = mid.pid, client__refnum = mid.cid, client__organization__refnum = mid.oid )
+		return get_object_or_404( Project, refnum = self.url_kwargs.pid, client__refnum = self.url_kwargs.cid, client__organization__refnum = self.url_kwargs.oid )
 
 	def delete_object( self, request, ob, *args, **kwargs ):
 		ob.delete()

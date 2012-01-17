@@ -18,15 +18,13 @@ class TaskList( ListView ):
 		return Activity.objects.get( id = self.url_kwargs.actid )
 
 	def get_object_list( self, request, *args, **kwargs ):
-		mid = self._extract_ids( [ 'oid', 'actid' ], **kwargs )
-		obj_list = Task.objects.filter( activity__id = mid.actid, activity__organization__refnum = mid.oid )
+		obj_list = Task.objects.filter( activity__id = self.url_kwargs.actid, activity__organization__refnum = self.url_kwargs.oid )
 		return obj_list
 	
 	def _create_object( self, request, data, *args, **kwargs ):
-		mid = self._extract_ids( [ 'oid', 'actid' ], **kwargs )
 
 		newtask = TaskBusLog.create( 
-						Activity.objects.get( id = mid.actid, organization__refnum = mid.oid ),
+						Activity.objects.get( id = self.url_kwargs.actid, organization__refnum = self.url_kwargs.oid ),
 						data[ 'name' ],
 						data[ 'description' ],
 					)
@@ -61,8 +59,7 @@ class TaskSingle( SingleObjectView ):
 	template_name = 'pages/org/task/single'
 
 	def get_object( self, request, *args, **kwargs ):
-		mid = self._extract_ids( [ 'oid', 'actid', 'taskid' ], **kwargs )
-		return get_object_or_404( Task, id = mid.taskid, activity__id = mid.actid, activity__organization__refnum = mid.oid )
+		return get_object_or_404( Task, id = self.url_kwargs.taskid, activity__id = self.url_kwargs.actid, activity__organization__refnum = self.url_kwargs.oid )
 
 	def delete_object( self, request, ob, *args, **kwargs ):
 		ob.delete()

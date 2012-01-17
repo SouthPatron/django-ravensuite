@@ -85,14 +85,14 @@ TaxRate = ChoicesEnum(
 	EXEMPT = ( 3, 'Tax Exempt' ),
 )
 
-ItemListType = ChoicesEnum(
+SourceDocumentType = ChoicesEnum(
 	INVOICE = ( 0, 'Invoice' ),
 	CREDIT_NOTE = ( 10, 'Credit Note' ),
 	REFUND = ( 20, 'Refund' ),
 	PAYMENT = ( 30, 'Payment' )
 )
 
-ItemListState = ChoicesEnum(
+SourceDocumentState = ChoicesEnum(
 	DRAFT = ( 0, 'Draft' ),
 	FINAL = ( 10, 'Final' ),
 	VOID = ( 20, 'Void' ),
@@ -129,7 +129,7 @@ class OrganizationAccount( models.Model ):
 class OrganizationCounter( models.Model ):
 	organization = models.OneToOneField( Organization )
 
-	item_list_transaction_no =  models.BigIntegerField( default = 1 )
+	source_document_no =  models.BigIntegerField( default = 1 )
 
 	client_no = models.BigIntegerField( default = 1 )
 	project_no = models.BigIntegerField( default = 1 )
@@ -185,21 +185,21 @@ class Client( models.Model ):
 		return reverse( 'org-client-account-invoice-draft-list', kwargs = { 'oid' : self.organization.refnum, 'cid' : self.refnum } )
 
 	def get_unallocated_payment_list( self ):
-		return ItemListTransaction.objects.filter( client = self, document_type = ItemListType.PAYMENT, document_state = ItemListState.FINAL, fully_allocated = False )
+		return SourceDocument.objects.filter( client = self, document_type = SourceDocumentType.PAYMENT, document_state = SourceDocumentState.FINAL, fully_allocated = False )
 
 	def get_unallocated_payment_amount( self ):
-		return ItemListTransaction.objects.filter( client = self, document_type = ItemListType.PAYMENT, document_state = ItemListState.FINAL ).aggregate( models.Sum('allocated') )
+		return SourceDocument.objects.filter( client = self, document_type = SourceDocumentType.PAYMENT, document_state = SourceDocumentState.FINAL ).aggregate( models.Sum('allocated') )
 
 
 
 
-class ItemListTransaction( models.Model ):
+class SourceDocument( models.Model ):
 	client = models.ForeignKey( Client )
 	refnum = models.BigIntegerField()
 	creation_time = models.DateTimeField()
 
-	document_type = models.IntegerField( choices = ItemListType.choices() )
-	document_state = models.IntegerField( choices = ItemListState.choices() )
+	document_type = models.IntegerField( choices = SourceDocumentType.choices() )
+	document_state = models.IntegerField( choices = SourceDocumentState.choices() )
 
 	amount = models.BigIntegerField( default = 0 )
 	tax = models.BigIntegerField( default = 0 )
@@ -219,25 +219,25 @@ class ItemListTransaction( models.Model ):
 	def get_single_url( self ):
 		my_route = None
 
-		if self.document_type == ItemListType.INVOICE:
+		if self.document_type == SourceDocumentType.INVOICE:
 			my_route = 'org-client-account-invoice-single'
 
 		return reverse( my_route,
 					kwargs = {
 						'oid' : self.get_org().refnum,
 						'cid' : self.get_client().refnum,
-						'ilid' : self.refnum
+						'sdid' : self.refnum
 					}
 				)
 
 
-class ItemListMeta( models.Model ):
-	item_list_transaction = models.ForeignKey( ItemListTransaction )
+class SourceDocumentMeta( models.Model ):
+	source_document = models.ForeignKey( SourceDocument )
 	key = models.CharField( max_length = 255 )
 	value = models.CharField( max_length = 255 )
 	
-class ItemListLine( models.Model ):
-	item_list_transaction = models.ForeignKey( ItemListTransaction )
+class SourceDocumentLine( models.Model ):
+	source_document = models.ForeignKey( SourceDocument )
 
 	description = models.CharField( max_length = 64 )
 	units = models.BigIntegerField( default = 0 )
@@ -248,9 +248,9 @@ class ItemListLine( models.Model ):
 	total = models.BigIntegerField( default = 0 )
 
 
-class ItemListAllocation( models.Model ):
-	source = models.ForeignKey( ItemListTransaction, related_name = 'source_allocation' )
-	destination = models.ForeignKey( ItemListTransaction, related_name = 'destination_allocation' )
+class SourceDocumentAllocation( models.Model ):
+	source = models.ForeignKey( SourceDocument, related_name = 'source_allocation' )
+	destination = models.ForeignKey( SourceDocument, related_name = 'destination_allocation' )
 	amount = models.BigIntegerField( default = 0 )
 
 
@@ -283,7 +283,7 @@ class AccountTransaction( models.Model ):
 	balance_after = models.BigIntegerField( default = 0 )
 	amount = models.BigIntegerField( default = 0 )
 
-	item_list_transaction = models.ForeignKey( ItemListTransaction )
+	source_document = models.ForeignKey( SourceDocument )
 
 
 	def get_org( self ):

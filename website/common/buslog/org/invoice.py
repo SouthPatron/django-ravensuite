@@ -6,91 +6,11 @@ from copy import deepcopy
 from common.models import *
 from common.exceptions import *
 from common.buslog.org import AccountBusLog
-from common.buslog.org import ItemListTransactionBusLog as iltb
+from common.busobj.org import InvoiceObj
 from common.moe import MarginsOfError
 from common.utils.dbgdatetime import datetime
 from common.utils.objroute import *
 from common.utils.parse import *
-
-
-class InvoiceObj( object ):
-
-	def _create( self, client ):
-		return iltb.create( client, ItemListType.INVOICE, ItemListState.DRAFT )
-
-
-	def __init__( self, client = None, item_list_transaction = None, ilid = None ):
-
-		self.ilo = None
-
-		if item_list_transaction is not None:
-			self.ilo = item_list_transaction
-		else:
-			if client is None:
-				raise RuntimeError( 'A client is required when creating.' )
-
-			if ilid is not None:
-				self.ilo = ItemListTransaction.objects.get( refnum = ilid )
-			else:
-				self.ilo = self._create( client )
-				self.clear()
-
-
-	def clear( self ):
-		self.setInvoiceDate( datetime.date.today() )
-		self.setDueDate( datetime.date.today() + datetime.timedelta( weeks = 4 ) )
-		self.setComment( "" )
-
-		iltb.clear_lines( self.ilo )
-
-
-
-	def getInvoiceDate( self ):
-		return pdateparse( iltb.get_meta( self.ilo, "invoice_date" ) )
-
-	def setInvoiceDate( self, date ):
-		iltb.set_meta( self.ilo, "invoice_date", pdate( date ) )
-
-	def getDueDate( self ):
-		return pdateparse( iltb.get_meta( self.ilo, "due_date" ) )
-
-	def setDueDate( self, date ):
-		iltb.set_meta( self.ilo, "due_date", pdate( date ) )
-
-	def getComment( self ):
-		return iltb.get_meta( self.ilo, "comment" )
-
-	def setComment( self, comment ):
-		iltb.set_meta( self.ilo, "comment", comment[:255] )
-
-	def getAmount( self ):
-		return self.ilo.amount
-
-	def getTax( self ):
-		return self.ilo.tax
-
-	def getTotal( self ):
-		return self.ilo.total
-
-	def getLines( self ):
-		for line in iltb.get_lines( self.ilo ):
-			yield { 
-				"description" : line.description,
-				"units" : line.units,
-				"perunit" : line.perunit,
-				"amount" : line.amount,
-				"tax_rate" : TaxRate.get( line.tax_rate )[0],
-				"tax_display" : TaxRate.get( line.tax_rate )[1],
-				"tax_amount" : line.tax_amount,
-				"total" : line.total
-			}
-
-	def addLine( self, description, units, perunit, tax_rate ):
-		line = iltb.add_line( self.ilo, description, units, perunit, tax_rate )
-		self.ilo.amount += line.amount
-		self.ilo.tax += line.tax_amount
-		self.ilo.total += line.total
-		self.ilo.save()
 
 
 
@@ -98,25 +18,14 @@ class InvoiceBusLog( object ):
 
 
 	@staticmethod
-	def create( client ):
-		newt = iltb.create( client, ItemListType.INVOICE, ItemListState.DRAFT )
-
-		iltb.set_meta( newt, "invoice_date", datetime.date.today() )
-		iltb.set_meta( newt, "due_date", datetime.date.today() + datetime.timedelta( weeks = 4 ) )
-		iltb.set_meta( newt, "comment", "" )
-
-		newt.save()
-		return newt
-
-	@staticmethod
 	def delete( invoice ):
 
-		if invoice.state == ItemListState.FINAL:
+		if invoice.state == SourceDocumentState.FINAL:
 			raise BusLogError( 'This invoice has already been finalized. Try voiding it instead.' )
-		if invoice.state == ItemListState.VOID:
+		if invoice.state == SourceDocumentState.VOID:
 			raise BusLogError( 'This invoice has already been voided. It can not be removed.' )
 
-		ItemListTransactionBusLog.delete( invoice )
+		SourceDocumentBusLog.delete( invoice )
 
 
 	@staticmethod
@@ -125,7 +34,7 @@ class InvoiceBusLog( object ):
 			if new_data[ 'invoice_date' ] is not None:
 				new_data[ 'invoice_date' ] = pdateparse( new_data[ 'invoice_date' ] )
 			else:
-				new_data[ 'invoice_date' ] = pdateparse( iltb.get_meta( invoice, 'invoice_date' ) )
+				new_data[ 'invoice_date' ] = pdateparse( sdbl.get_meta( invoice, 'invoice_date' ) )
 		except ValueError:
 			raise BusLogError( 'The invoice date is invalid' )
 
@@ -133,7 +42,7 @@ class InvoiceBusLog( object ):
 			if new_data[ 'due_date' ] is not None:
 				new_data[ 'due_date' ] = pdateparse( new_data[ 'due_date' ] )
 			else:
-				new_data[ 'due_date' ] = pdateparse( iltb.get_meta( invoice, "due_date" ) )
+				new_data[ 'due_date' ] = pdateparse( sdbl.get_meta( invoice, "due_date" ) )
 		except ValueError:
 			raise BusLogError( 'The due date is invalid' )
 
@@ -147,7 +56,7 @@ class InvoiceBusLog( object ):
 		else:
 			new_data[ 'state' ] = invoice.document_state
 
-		if ItemListState.get( new_data['state'] ) is None:
+		if SourceDocumentState.get( new_data['state'] ) is None:
 			raise BusLogError( 'Unknown new state requested for invoice.' )
 
 
@@ -250,7 +159,7 @@ class InvoiceBusLog( object ):
 		InvoiceBusLog._update_sanitize_dates( invoice, new_data )
 		InvoiceBusLog._update_sanitize_state( invoice, new_data )
 
-		if invoice.document_state == ItemListState.DRAFT:
+		if invoice.document_state == SourceDocumentState.DRAFT:
 			InvoiceBusLog._update_sanitize_items( invoice, new_data )
 			InvoiceBusLog._update_sanitize_major_numbers( invoice, new_data )
 			InvoiceBusLog._update_sanitize_item_numbers( invoice, new_data )
@@ -258,25 +167,25 @@ class InvoiceBusLog( object ):
 
 		new_data[ 'comment' ] = new_data.get( 
 								'comment',
-								iltb.get_meta( invoice, 'comment', '' )
+								sdbl.get_meta( invoice, 'comment', '' )
 							)[:255]
 
 
 	@staticmethod
 	def _update_perform_update( invoice, new_data ):
 
-		iltb.clear_meta( invoice )
+		sdbl.clear_meta( invoice )
 		
-		iltb.set_meta( invoice, 'invoice_date', pdate( new_data[ 'invoice_date' ] ) )
-		iltb.set_meta( invoice, 'due_date', pdate( new_data[ 'due_date' ] ) )
-		iltb.set_meta( invoice, 'comment', new_data[ 'comment' ] )
+		sdbl.set_meta( invoice, 'invoice_date', pdate( new_data[ 'invoice_date' ] ) )
+		sdbl.set_meta( invoice, 'due_date', pdate( new_data[ 'due_date' ] ) )
+		sdbl.set_meta( invoice, 'comment', new_data[ 'comment' ] )
 
-		if invoice.document_state == ItemListState.DRAFT:
+		if invoice.document_state == SourceDocumentState.DRAFT:
 
-			iltb.clear_lines( invoice )
+			sdbl.clear_lines( invoice )
 
 			for row in new_data[ 'items' ]:
-				il = iltb.add_line(
+				il = sdbl.add_line(
 						invoice,
 						description = row[0],
 						units = row[1],
@@ -317,15 +226,15 @@ class InvoiceBusLog( object ):
 		if invoice.document_state == ns:
 			return
 
-		if invoice.document_state == ItemListState.DRAFT:
-			if ns != ItemListState.FINAL:
+		if invoice.document_state == SourceDocumentState.DRAFT:
+			if ns != SourceDocumentState.FINAL:
 				raise BusLogError( 'You can only finalize this invoice' )
 			invoice.document_state = ns
 			InvoiceBusLog._update_finalize_invoice( invoice )
 			return
 
-		if invoice.document_state == ItemListState.FINAL:
-			if ns != ItemListState.VOID:
+		if invoice.document_state == SourceDocumentState.FINAL:
+			if ns != SourceDocumentState.VOID:
 				raise BusLogError( 'You can only void this invoice' )
 			invoice.document_state = ns
 			InvoiceBusLog._update_void_invoice( invoice )

@@ -21,19 +21,17 @@ class UserList( ListView ):
 		return Organization.objects.get( refnum = self.url_kwargs.oid )
 
 	def get_object_list( self, request, *args, **kwargs ):
-		mid = self._extract_ids( [ 'oid' ], **kwargs )
-		obj_list = UserMembership.objects.filter( organization__refnum = mid.oid )
+		obj_list = UserMembership.objects.filter( organization__refnum = self.url_kwargs.oid )
 		return obj_list
 	
 	def _create_object( self, request, data, *args, **kwargs ):
-		mid = self._extract_ids( [ 'oid' ], **kwargs )
 
 		try:
 			newgrant = UserBusLog.invite_user( 
 							data[ 'first_name' ],
 							data[ 'last_name' ],
 							data[ 'email_address' ],
-							Organization.objects.get( refnum = mid.oid ),
+							Organization.objects.get( refnum = self.url_kwargs.oid ),
 							data[ 'category' ]
 						)
 		except BusLogError, berror:
@@ -66,8 +64,7 @@ class UserSingle( SingleObjectView ):
 	template_name = 'pages/org/user/single'
 
 	def get_object( self, request, *args, **kwargs ):
-		mid = self._extract_ids( [ 'oid', 'uid' ], **kwargs )
-		return get_object_or_404( UserMembership, id = mid.uid, organization__refnum = mid.oid )
+		return get_object_or_404( UserMembership, id = self.url_kwargs.uid, organization__refnum = self.url_kwargs.oid )
 
 	def delete_object( self, request, ob, *args, **kwargs ):
 		ob.delete()

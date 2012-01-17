@@ -7,7 +7,7 @@ cid = Client ID  (refnum)
 pid = Project ID (refnum)
 tid = Transaction ID  (refnum)
 
-ilid = ItemList ID (refnum)
+sdid = Source Document ID (refnum)
 
 
 actid = Activity ID  (id)
