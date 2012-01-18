@@ -24,23 +24,24 @@ class InvoiceList( ListView ):
 		return Client.objects.get( refnum = self.url_kwargs.cid, organization__refnum = self.url_kwargs.oid )
 
 	def get_object_list( self, request, *args, **kwargs ):
-		obj_list = SourceDocument.objects.filter( client__refnum = self.url_kwargs.cid, client__organization__refnum = self.url_kwargs.oid, document_type = SourceDocumentType.INVOICE )
+		obj_list = SourceDocument.objects.filter( client__refnum = self.url_kwargs.cid, client__organization__refnum = self.url_kwargs.oid, document_type = SourceDocumentType.INVOICE, document_state = SourceDocumentState.FINAL )
 		return obj_list
 
 	def _create_object( self, request, data, *args, **kwargs ):
 		client = Client.objects.get( refnum = self.url_kwargs.cid, organization__refnum = self.url_kwargs.oid )
-		inv = InvoiceObj.create( client )
+
+		inv = InvoiceObj()
+		inv.initialize( client )
 		return inv
 		
 	
 	def create_object_html( self, request, data, *args, **kwargs ):
 
-		client = Client.objects.get( refnum = self.url_kwargs.cid, organization__refnum = self.url_kwargs.oid )
-
 		try:
 			newo = self._create_object( request, data, *args, **kwargs )
 		except BusLogError, berror:
 			messages.error( request, berror.message )
+			client = Client.objects.get( refnum = self.url_kwargs.cid, organization__refnum = self.url_kwargs.oid )
 			return redirect( client.get_invoice_list_url() )
 		except Exception, error:
 			print error

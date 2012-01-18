@@ -36,6 +36,9 @@ class SourceDocumentObj( object ):
 	
 	def load( self, sdid ):
 		self.sdo = SourceDocument.objects.get( refnum = sdid )
+	
+	def wrap( self, sdo ):
+		self.sdo = sdo
 
 	def delete( self ):
 		self.sdo.delete()

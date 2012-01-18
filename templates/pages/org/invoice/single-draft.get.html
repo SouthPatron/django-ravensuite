@@ -1,7 +1,7 @@
 {% extends 'layouts/org/itemized_total.html' %}
 
 {% load decshift %}
-
+{% load sourcedoc %}
 
 {% block head_includes %}
 
@@ -226,14 +226,16 @@
 	);
 
 
-	{% for li in extra.getLines %}
+	{% get_document_obj instance as sdoc %}
+
+	{% for li in sdoc.getLines.all %}
 		afes.ex.table.appendRow(
 			"#id_table",
 			[
 				"{{ li.description|escapejs }}",
 				"{{ li.units|decsplay }}",
 				"{{ li.perunit|decsplay }}",
-				"{{ li.tax_display|escapejs }}",
+				"{{ li.get_tax_rate_display|escapejs }}",
 				"{{ li.tax_amount|decsplay }}",
 				"{{ li.total|decsplay }}",
 				$( "#click_me_div" ).html(),
@@ -286,11 +288,14 @@
 {% endblock %}
 
 {% block document_dates %}
+
+{% get_document_obj instance as sdoc %}
+
 <fieldset>
 	<label for="name">Invoice Date</label>
-	<input type="text" name="invoice_date" id="id_itol_date" class="text ui-widget-content ui-corner-all" value="{{ extra.getInvoiceDate|date:"j M Y" }}" />
+	<input type="text" name="invoice_date" id="id_itol_date" class="text ui-widget-content ui-corner-all" value="{{ sdoc.getSpecs.getInvoiceDate|date:"j M Y" }}" />
 	<label for="name">Due Date</label>
-	<input type="text" name="due_date" id="id_due_date" class="text ui-widget-content ui-corner-all" value="{{ extra.getDueDate|date:"j M Y" }}" />
+	<input type="text" name="due_date" id="id_due_date" class="text ui-widget-content ui-corner-all" value="{{ sdoc.getSpecs.getDueDate|date:"j M Y" }}" />
 </fieldset>
 {% endblock %}
 
@@ -311,6 +316,8 @@
 
 
 {% block document_body %}
+
+{% get_document_obj instance as sdoc %}
 
 <div id="click_me_div" style=" visible: hidden; display: none; ">
 <img class="item-delete-link" src='{{ STATIC_URL }}images/icons/line_delete_grey.png' />
@@ -347,7 +354,7 @@
 					<span>Comments:</span>
 				</div>
 				<div class="comment-block">
-					<textarea maxlength="255" name="invoice_comment">{{ extra.getComment }}</textarea>
+					<textarea maxlength="255" name="invoice_comment">{{ sdoc.getSpecs.getComment }}</textarea>
 				</div>
 			</div>
 		</div>
@@ -359,8 +366,8 @@
 					Amount
 				</div>
 				<div class="inner-amount-amount">
-					<span id="summary_amount">{{ extra.getAmount|decsplay }}</span>
-					<input type="hidden" id="id_itol_amount" name="invoice_amount" value="{{ extra.getAmount|decshow }}" />
+					<span id="summary_amount">{{ sdoc.getTotals.getAmount|decsplay }}</span>
+					<input type="hidden" id="id_itol_amount" name="invoice_amount" value="{{ sdoc.getTotals.getAmount|decshow }}" />
 				</div>
 			</div>
 
@@ -369,8 +376,8 @@
 					Sales Tax
 				</div>
 				<div class="inner-tax-amount">
-					<span id="summary_tax">{{ extra.getTax|decsplay }}</span>
-					<input type="hidden" id="id_itol_tax" name="invoice_tax" value="{{ extra.getTax|decshow }}" />
+					<span id="summary_tax">{{ sdoc.getTotals.getTax|decsplay }}</span>
+					<input type="hidden" id="id_itol_tax" name="invoice_tax" value="{{ sdoc.getTotals.getTax|decshow }}" />
 				</div>
 			</div>
 
@@ -379,8 +386,8 @@
 					Total
 				</div>
 				<div class="inner-total-amount">
-					<span id="summary_total">{{ extra.getTotal|decsplay }}</span>
-					<input type="hidden" id="id_itol_total" name="invoice_total" value="{{ extra.getTotal|decshow }}" />
+					<span id="summary_total">{{ sdoc.getTotals.getTotal|decsplay }}</span>
+					<input type="hidden" id="id_itol_total" name="invoice_total" value="{{ sdoc.getTotals.getTotal|decshow }}" />
 				</div>
 			</div>
 		</div>
