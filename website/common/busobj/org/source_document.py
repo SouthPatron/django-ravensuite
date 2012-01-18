@@ -1,24 +1,21 @@
 from __future__ import unicode_literals
 
-from math import *
-from copy import deepcopy
-
 from common.models import *
-from common.exceptions import *
-from common.buslog.org import AccountBusLog
-from common.moe import MarginsOfError
 from common.utils.dbgdatetime import datetime
-from common.utils.objroute import *
 from common.utils.parse import *
 
 
 class SourceDocumentObj( object ):
 
-	@staticmethod
-	def create( client, document_type, document_state ):
+	def __init__( self, sdid = None ):
+		self.sdo = None
+		if sdid is not None:
+			self.load( sdid )
+	
+	def initialize( self, client, document_type, document_state ):
 
 		# TODO: select_for_update()
-		sc = OrganizationCounter.objects.get( organization__refnum = client.org.refnum )
+		sc = OrganizationCounter.objects.get( organization__refnum = client.get_org().refnum )
 		refnum = sc.source_document_no
 		sc.source_document_no += 1
 		sc.save()
@@ -31,124 +28,148 @@ class SourceDocumentObj( object ):
 		sdo.creation_time = datetime.datetime.now()
 		sdo.save()
 
-		tmpobj = SourceDocumentObj( sdid = None )
-		tmpobj.sdo = sdo
-		return tmpobj
+		self.sdo = sdo
+		return self
 
-
-	def __init__( self, sdid ):
-		if sdid is not None:
-			self.sdo = SourceDocument.objects.get( refnum = sdid )
-			
+	def getObj( self ):
+		return self.sdo
+	
+	def load( self, sdid ):
+		self.sdo = SourceDocument.objects.get( refnum = sdid )
 
 	def delete( self ):
 		self.sdo.delete()
 
-	def	set_meta( self, key, value ):
-
-		sam = None
-
-		rc = SourceDocumentMeta.objects.filter(
-				source_document = self.sdo,
-				key = key
-			)
-		if rc.count() == 0:
-			sam = SourceDocumentMeta( source_document = self.sdo, key = key )
-		else:
-			sam = rc[0]
-
-		sam.value = '{}'.format( value )
-		sam.save()
-
-
-	def get_meta( self, key, default = None ):
-		rc = SourceDocumentMeta.objects.filter(
-				source_document = self.sdo,
-				key = key
-			)
-		if rc.count() <= 0:
-			if default is not None:
-				return default
-			raise RuntimeError( 'No results found' )
-
-		return rc[0].value
-	
-	def clear_meta( self, key = None ):
-		if key is None:
-			SourceDocumentMeta.objects.filter( source_document = self.sdo ).delete()
-		else:
-			SourceDocumentMeta.objects.filter( source_document = self.sdo, key = key ).delete()
-
-	def get_all_meta( self ):
-		return SourceDocumentMeta.objects.filter( source_document = self.sdo )
-
-
-	def add_line( self, description, units, perunit, tax_rate ):
-
-		my_total = 0
-		my_tax = 0
-		my_amount = 0
-		# TODO: dynamic tax rate
-		my_tax_rate = 0.14
-
-		multiple = long( units * perunit / 100 )
-
-		if tax_rate == TaxRate.NONE or tax_rate == TaxRate.EXEMPT:
-			my_amount = multiple
-			my_tax = 0
-			my_total = multiple
-		elif tax_rate == TaxRate.EXCLUSIVE:
-			my_tax = long( multiple * my_tax_rate )
-			my_total = multiple + my_tax
-			my_amount = multiple
-		elif tax_rate == TaxRate.INCLUSIVE:
-			my_total = multiple
-			my_tax = multiple - long(long( multiple * 100 / (1 + my_tax_rate) ) / 100)
-			my_amount = my_total - my_tax
-
-
-		sam = SourceDocumentLine(
-				source_document = self.sdo,
-				description = description,
-				units = units,
-				perunit = perunit,
-				amount = my_amount,
-				tax_rate = tax_rate,
-				tax_amount = my_tax,
-				total = my_total
-			)
-		sam.save()
-
-		return sam
-
-	
-	def clear_lines( self ):
-		SourceDocumentLine.objects.filter( source_document = self.sdo ).delete()
-		self.sdo.save()
-
-	def get_lines( self ):
-		return SourceDocumentLine.objects.filter( source_document = self.sdo )
-
-	def getTotal( self ):
-		return self.sdo.total
-
-	def setTotal( self, total ):
-		self.sdo.total = total
-	
-	def getAmount( self ):
-		return self.sdo.amount
-
-	def setAmount( self, amount ):
-		self.sdo.amount = self.sdo.amount
-	
-	def getTax( self ):
-		return self.sdo.tax
-
-	def setTax( self, tax ):
-		self.sdo.tax = tax
-
 	def save( self ):
 		self.sdo.save()
+
+	def get_single_url( self ):
+		return self.sdo.get_single_url()
+
+
+	def getLines( self ):
+		class Lines( object ):
+			def __init__( self, parent ):
+				self.parent = parent
+
+			def add( self, description, units, perunit, tax_rate ):
+				my_total = 0
+				my_tax = 0
+				my_amount = 0
+				# TODO: dynamic tax rate
+				my_tax_rate = 0.14
+
+				multiple = long( units * perunit / 100 )
+
+				if tax_rate == TaxRate.NONE or tax_rate == TaxRate.EXEMPT:
+					my_amount = multiple
+					my_tax = 0
+					my_total = multiple
+				elif tax_rate == TaxRate.EXCLUSIVE:
+					my_tax = long( multiple * my_tax_rate )
+					my_total = multiple + my_tax
+					my_amount = multiple
+				elif tax_rate == TaxRate.INCLUSIVE:
+					my_total = multiple
+					my_tax = multiple - long(long( multiple * 100 / (1 + my_tax_rate) ) / 100)
+					my_amount = my_total - my_tax
+
+
+				sam = SourceDocumentLine(
+						source_document = self.parent.getObj(),
+						description = description,
+						units = units,
+						perunit = perunit,
+						amount = my_amount,
+						tax_rate = tax_rate,
+						tax_amount = my_tax,
+						total = my_total
+					)
+				sam.save()
+
+				if my_total != 0 and my_tax != 0 and my_amount != 0:
+					self.parent.getObj().total += my_total
+					self.parent.getObj().tax += my_tax
+					self.parent.getObj().amount += my_amount
+					self.parent.save()
+
+				return sam
+
+	
+			def clear( self ):
+				objs = SourceDocumentLine.objects.filter( source_document = self.parent.getObj() )
+				if objs.count() > 0:
+					objs.delete()
+					self.parent.getObj().total = 0
+					self.parent.getObj().tax = 0
+					self.parent.getObj().amount = 0
+					self.parent.save()
+
+
+			def all( self ):
+				return SourceDocumentLine.objects.filter( source_document = self.parent.getObj() )
+
+		return Lines( self )
+
+
+	def getMeta( self ):
+		class Meta( object ):
+			def __init__( self, parent ):
+				self.parent = parent
+			
+			def	set( self, key, value ):
+				sam = None
+
+				try:
+					sam = SourceDocumentMeta.objects.get(
+							source_document = self.parent.getObj(),
+							key = key
+						)
+				except SourceDocumentMeta.DoesNotExist:
+					sam = SourceDocumentMeta( source_document = self.parent.getObj(), key = key )
+
+				newval = '{}'.format( value )
+
+				if newval != sam.value:
+					sam.value = newval
+					sam.save()
+
+
+			def get( self, key ):
+				rc = SourceDocumentMeta.objects.get(
+						source_document = self.parent.getObj(),
+						key = key
+					)
+				return rc.value
+	
+			def clear( self, key = None ):
+				if key is None:
+					SourceDocumentMeta.objects.filter( source_document = self.parent.getObj() ).delete()
+				else:
+					SourceDocumentMeta.objects.filter( source_document = self.parent.getObj(), key = key ).delete()
+
+			def all( self ):
+				return SourceDocumentMeta.objects.filter( source_document = self.parent.getObj() )
+
+		return Meta( self )
+
+
+
+	def getTotals( self ):
+		class Totals( object ):
+			def __init__( self, parent ):
+				self.parent = parent
+
+			def getTotal( self ):
+				return self.parent.getObj().total
+
+			def getAmount( self ):
+				return self.parent.getObj().amount
+
+			def getTax( self ):
+				return self.parent.getObj().tax
+
+		return Totals( self )
 
 
 
