@@ -8,7 +8,6 @@ from common.exceptions import *
 from common.buslog.org import AccountBusLog
 from common.moe import MarginsOfError
 from common.utils.dbgdatetime import datetime
-from common.utils.objroute import *
 
 
 class PaymentBusLog( object ):

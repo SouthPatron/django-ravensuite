@@ -8,7 +8,6 @@ from common.views.listview import ListView
 
 from common.models import *
 from common.utils.dbgdatetime import datetime
-from common.utils.objroute import ObjRoute
 
 
 class AccountTransactionList( ListView ):
@@ -22,13 +21,8 @@ class AccountTransactionList( ListView ):
 		return obj_list
 
 
-
 def account_transaction_router( request, oid, cid, tid ):
 	actrans = AccountTransaction.objects.get( refnum = tid, account__client__refnum = cid, account__client__organization__refnum = oid )
-	newobj = ObjRoute.get( actrans.originating_route )
-
-	if newobj is None:
-		raise RuntimeError( actrans.originating_route )
-
+	newobj = actrans.source_document
 	return redirect( newobj.get_single_url() )
 

@@ -1,6 +1,6 @@
 from __future__ import unicode_literals
 
-from django.db.models import F
+from django.db.models import F,Q
 
 from django.shortcuts import get_object_or_404, redirect
 from django.http import HttpResponseForbidden, HttpResponseServerError
@@ -10,8 +10,9 @@ from common.views.singleobjectview import SingleObjectView
 from common.views.listview import ListView
 from common.views.component import ComponentView 
 
-from common.buslog.org import InvoiceBusLog, PaymentBusLog
+from common.buslog.org import PaymentBusLog
 from common.busobj.org import InvoiceObj
+from common.bushelp.org import InvoiceHelper
 
 from common.exceptions import *
 from common.models import *
@@ -24,7 +25,12 @@ class InvoiceList( ListView ):
 		return Client.objects.get( refnum = self.url_kwargs.cid, organization__refnum = self.url_kwargs.oid )
 
 	def get_object_list( self, request, *args, **kwargs ):
-		obj_list = SourceDocument.objects.filter( client__refnum = self.url_kwargs.cid, client__organization__refnum = self.url_kwargs.oid, document_type = SourceDocumentType.INVOICE, document_state = SourceDocumentState.FINAL )
+		obj_list = SourceDocument.objects.filter(
+				Q( document_state = SourceDocumentState.FINAL ) | Q( document_state = SourceDocumentState.VOID ),
+				client__refnum = self.url_kwargs.cid,
+				client__organization__refnum = self.url_kwargs.oid,
+				document_type = SourceDocumentType.INVOICE
+			)
 		return obj_list
 
 	def _create_object( self, request, data, *args, **kwargs ):
@@ -95,7 +101,9 @@ class InvoiceSingle( SingleObjectView ):
 		return obj
 
 	def delete_object( self, request, ob, *args, **kwargs ):
-		InvoiceBusLog.delete( ob )
+		inv = InvoiceObj()
+		inv.wrap( ob )
+		inv.getActions().delete()
 		return redirect( ob.get_client().get_invoice_list_url() )
 
 
@@ -112,9 +120,6 @@ class InvoiceSingle( SingleObjectView ):
 
 		invoice_data[ 'invoice_date' ] = data.get( 'invoice_date' )
 		invoice_data[ 'due_date' ] = data.get( 'due_date' )
-		invoice_data[ 'tax' ] = data.get( 'invoice_tax' )
-		invoice_data[ 'amount' ] = data.get( 'invoice_amount' )
-		invoice_data[ 'total' ] = data.get( 'invoice_total' )
 		invoice_data[ 'comment' ] = data.get( 'invoice_comment', "" )
 		invoice_data[ 'items' ] = []
 		
@@ -123,12 +128,11 @@ class InvoiceSingle( SingleObjectView ):
 						data.getlist( 'description' )[ pos ],
 						data.getlist( 'units' )[ pos ],
 						data.getlist( 'perunit' )[ pos ],
-						data.getlist( 'tax_rate' )[ pos ],
-						data.getlist( 'amount' )[ pos ]
+						data.getlist( 'tax_rate' )[ pos ]
 					] )
 
 		try:
-			InvoiceBusLog.update( obj, invoice_data )
+			InvoiceHelper.update( obj, invoice_data )
 		except BusLogError, berror:
 			messages.error( request, berror.message )
 			return redirect( obj.get_single_url() )
