@@ -54,14 +54,20 @@
 		);
 	});
 
-	$( '#payment-create' ).smkTools(
-			'click_modal',
-			OOD.URL.Component(
-				OOD.URL.Account( {{ kwargs.oid }}, {{ kwargs.cid }} ),
-				'receive-payment'
-			)
+	$( "#payment-create" ).click(function() {
+
+		payment_list_url = OOD.URL.Payments( 
+							{{ instance.get_org.refnum }}, 
+							{{ instance.get_client.refnum }}
+						)
+						+ '?format=json';
+
+		$.post( payment_list_url, function( data ) {
+				window.location.href = data[ 'url' ];
+			}
 		);
-	
+	});
+
 
 	$( '#refund-create' ).smkTools(
 			'click_modal',

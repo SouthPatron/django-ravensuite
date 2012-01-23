@@ -31,6 +31,10 @@ var OOD = new function() {
 			return '/org/' + oid + '/client/' + cid + '/account/invoice/' + iid;
 		};
 
+		this.Payments = function( oid, cid ) {
+			return '/org/' + oid + '/client/' + cid + '/account/payments';
+		};
+
 		this.Payment = function( oid, cid, payid ) {
 			return '/org/' + oid + '/client/' + cid + '/account/payment/' + payid;
 		};

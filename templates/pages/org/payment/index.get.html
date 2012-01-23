@@ -1,6 +1,7 @@
 {% extends 'layouts/org/member.html' %}
 
 {% load decshift %}
+{% load sourcedoc %}
 
 
 {% block str_org_name %}{{ extra.get_org.trading_name }}{% endblock %}
@@ -59,11 +60,13 @@
 <tbody>
 {% for obj in object_list %}
 
+	{% get_document_obj obj as doc %}
+
 	<tr>
 		<td><a href='{{ obj.get_single_url }}'>{{ obj.refnum }}</a></td>
-		<td><a href='{{ obj.get_single_url }}'>{{ obj.payment_date }}</a></td>
-		<td><a href='{{ obj.get_single_url }}'>{{ obj.get_amount_allocated|decsplay }}</a></td>
-		<td><a href='{{ obj.get_single_url }}'>{{ obj.amount|decsplay }}</a></td>
+		<td><a href='{{ obj.get_single_url }}'>{{ doc.getSpecs.getPaymentDate }}</a></td>
+		<td><a href='{{ obj.get_single_url }}'>{{ doc.getTotals.getTotal|decsplay }}</a></td>
+		<td><a href='{{ obj.get_single_url }}'>{{ doc.getTotals.getTotal|decsplay }}</a></td>
 	</tr>
 {% endfor %}
 </tbody>

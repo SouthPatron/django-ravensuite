@@ -1,0 +1,83 @@
+{% extends 'pages/org/payment/single-template.get.html' %}
+
+{% load decshift %}
+{% load sourcedoc %}
+
+{% block str_section_name %}Payment{% endblock %}
+
+
+{% block onready %}
+
+	$( "#id_delete_payment" ).click( function() {
+		$( "#id_payment_state" ).val( 99 );
+		$( "#id_payment_form" ).submit();
+	});
+
+
+	$( "#id_save_payment" ).click( function() {
+		$( "#id_payment_form" ).submit();
+	});
+
+	$( "#id_finalize_payment" ).click( function() {
+		$( "#id_payment_state" ).val( 10 );
+		$( "#id_payment_form" ).submit();
+	});
+
+
+
+{% endblock %}
+
+
+
+{% block document_type %}Payment{% endblock %}
+
+{% block document_status %}
+{% get_document_obj instance as doc %}
+{{ doc.getObj.get_document_state_display }}
+{% endblock %}
+
+{% block document_dates %}
+{% get_document_obj instance as doc %}
+Date of Payment Receipt:
+<input type="text" id="id_payment_date" name="payment_date" value="{{ doc.getSpecs.getPaymentDate|date:"j M Y"|escape }}" />
+{% endblock %}
+
+
+
+{% block document_body %}
+
+
+<style>
+.itol-payment-table.allocation th {
+	text-align: left;
+	font-weight: bold;
+	padding-bottom: 20px;
+}
+	
+</style>
+
+
+<div>
+{% get_document_obj instance as doc %}
+Amount: <input type="text" name="amount" id="id_amount" value="{{ doc.getTotals.getTotal|escape }}" />
+</div>
+
+<div>
+Comment:<br/>
+<textarea name="payment_comment">{{ doc.getSpecs.getComment|escape }}</textarea>
+</div>
+
+{% endblock %}
+
+{% block document_button_row_left %}
+	<button id="id_delete_payment" type="button">Delete Payment</button>
+	<button id="id_finalize_payment" type="button">Approve Payment</button>
+{% endblock %}
+
+{% block document_button_row_right %}
+	<button id="id_save_payment" type="button">Save Draft</button>
+{% endblock %}
+
+
+
+

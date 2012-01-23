@@ -90,7 +90,7 @@ class SourceDocumentObj( object ):
 					)
 				sam.save()
 
-				if my_total != 0 and my_tax != 0 and my_amount != 0:
+				if my_amount != 0 and my_total != 0:
 					self.parent.getObj().total += my_total
 					self.parent.getObj().tax += my_tax
 					self.parent.getObj().amount += my_amount
@@ -122,6 +122,7 @@ class SourceDocumentObj( object ):
 			
 			def	set( self, key, value ):
 				sam = None
+				isNew = False
 
 				try:
 					sam = SourceDocumentMeta.objects.get(
@@ -130,10 +131,11 @@ class SourceDocumentObj( object ):
 						)
 				except SourceDocumentMeta.DoesNotExist:
 					sam = SourceDocumentMeta( source_document = self.parent.getObj(), key = key )
+					isNew = True
 
 				newval = '{}'.format( value )
 
-				if newval != sam.value:
+				if isNew is True or newval != sam.value:
 					sam.value = newval
 					sam.save()
 

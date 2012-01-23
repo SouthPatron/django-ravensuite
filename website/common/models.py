@@ -184,11 +184,15 @@ class Client( models.Model ):
 	def get_draft_invoice_list_url( self ):
 		return reverse( 'org-client-account-invoice-draft-list', kwargs = { 'oid' : self.organization.refnum, 'cid' : self.refnum } )
 
-	def get_unallocated_payment_list( self ):
-		return SourceDocument.objects.filter( client = self, document_type = SourceDocumentType.PAYMENT, document_state = SourceDocumentState.FINAL, fully_allocated = False )
+	def get_draft_payment_list_url( self ):
+		return reverse( 'org-client-account-payment-draft-list', kwargs = { 'oid' : self.organization.refnum, 'cid' : self.refnum } )
 
-	def get_unallocated_payment_amount( self ):
-		return SourceDocument.objects.filter( client = self, document_type = SourceDocumentType.PAYMENT, document_state = SourceDocumentState.FINAL ).aggregate( models.Sum('allocated') )
+
+	def get_draft_payment_count( self ):
+		return SourceDocument.objects.filter( client = self, document_type = SourceDocumentType.PAYMENT, document_state = SourceDocumentState.DRAFT ).count()
+
+	def get_unallocated_payment_count( self ):
+		return SourceDocument.objects.filter( client = self, document_type = SourceDocumentType.PAYMENT, document_state = SourceDocumentState.FINAL, total__ne = F( 'allocated' ) ).count()
 
 
 
@@ -221,6 +225,9 @@ class SourceDocument( models.Model ):
 
 		if self.document_type == SourceDocumentType.INVOICE:
 			my_route = 'org-client-account-invoice-single'
+
+		if self.document_type == SourceDocumentType.PAYMENT:
+			my_route = 'org-client-account-payment-single'
 
 		return reverse( my_route,
 					kwargs = {
