@@ -64,7 +64,7 @@
 
 	<tr>
 		<td><a href='{{ obj.get_single_url }}'>{{ obj.refnum }}</a></td>
-		<td><a href='{{ obj.get_single_url }}'>{{ doc.getSpecs.getPaymentDate }}</a></td>
+		<td><a href='{{ obj.get_single_url }}'>{{ doc.getSpecs.getPaymentDate|date:"d M Y" }}</a></td>
 		<td><a href='{{ obj.get_single_url }}'>{{ doc.getTotals.getTotal|decsplay }}</a></td>
 		<td><a href='{{ obj.get_single_url }}'>{{ doc.getTotals.getTotal|decsplay }}</a></td>
 	</tr>

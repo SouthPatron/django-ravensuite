@@ -149,12 +149,13 @@ class PaymentSingle( SingleObjectView ):
 
 	def update_object_html( self, request, obj, data, *args, **kwargs ):
 
-		state = data.get( 'payment_state', None )
+		state = long( data.get( 'payment_state', obj.document_state ) )
 
-		if state is not None and long(state) == SourceDocumentState.DELETE:
+		if state == SourceDocumentState.DELETE:
 			rc = self.delete_object( request, obj, *args, **kwargs )
 			messages.info( request, 'The draft payment has been deleted' )
 			return rc
+
 
 		pmt = PaymentObj()
 		pmt.wrap( obj )
@@ -163,23 +164,34 @@ class PaymentSingle( SingleObjectView ):
 		payment_date = pmt.getSpecs().getPaymentDate()
 		comment = pmt.getSpecs().getComment()
 
-		amount = data.get( 'amount', None )
-		if amount is not None:
-			pmt.getLines().clear()
-			pmt.getLines().add(
-				'Payment Received',
-				1,
-				pnumparse( amount ),
-				TaxRate.NONE
-			)
 
-		payment_date = data.get( 'payment_date', None )
-		if payment_date is not None:
-			pmt.getSpecs().setPaymentDate( pdateparse( payment_date ) )
+		if state == SourceDocumentState.DRAFT:
+			amount = data.get( 'amount', None )
+			if amount is not None:
+				pmt.getLines().clear()
+				pmt.getLines().add(
+					'Payment Received',
+					100,
+					pnumparse( amount ),
+					TaxRate.NONE
+				)
+
+			payment_date = data.get( 'payment_date', None )
+			if payment_date is not None:
+				pmt.getSpecs().setPaymentDate( pdateparse( payment_date ) )
 
 		comment = data.get( 'payment_comment', None )
 		if comment is not None:
 			pmt.getSpecs().setComment( comment )
+
+		if state != obj.document_state:
+
+			if state == SourceDocumentState.FINAL:
+				pmt.getActions().finalize()
+
+			if state == SourceDocumentState.VOID:
+				pmt.getActions().void()
+
 
 		return redirect( pmt.get_single_url() )
 

@@ -8,22 +8,14 @@
 
 {% block onready %}
 
-	$( "#id_delete_payment" ).click( function() {
-		$( "#id_payment_state" ).val( 99 );
+	$( "#id_void_payment" ).click( function() {
+		$( "#id_payment_state" ).val( 20 );
 		$( "#id_payment_form" ).submit();
 	});
-
 
 	$( "#id_save_payment" ).click( function() {
 		$( "#id_payment_form" ).submit();
 	});
-
-	$( "#id_finalize_payment" ).click( function() {
-		$( "#id_payment_state" ).val( 10 );
-		$( "#id_payment_form" ).submit();
-	});
-
-
 
 {% endblock %}
 
@@ -64,15 +56,14 @@
 		<div style="
 				float: left;
 			">
-			Amount: <input type="text" name="amount" id="id_amount" value="{{ doc.getTotals.getTotal|decsplay|escape }}" />
+			Amount: {{ doc.getTotals.getTotal|decsplay|escape }}
 		</div>
 
 		<div style="
 				float: right;
 				padding-right: 20px;
 			">
-			Date of Payment Receipt:
-			<input type="text" id="id_payment_date" name="payment_date" value="{{ doc.getSpecs.getPaymentDate|date:"j M Y"|escape }}" />
+			Date of Payment Receipt: {{ doc.getSpecs.getPaymentDate|date:"j M Y"|escape }}
 		</div>
 	</div>
 
@@ -96,13 +87,8 @@
 
 {% endblock %}
 
-{% block document_button_row_left %}
-	<button id="id_delete_payment" type="button">Delete Payment</button>
-{% endblock %}
-
 {% block document_button_row_right %}
-	<button id="id_finalize_payment" type="button">Approve Payment</button>
-	<button id="id_save_payment" type="button">Save Draft</button>
+	<button id="id_back_payment" type="button">Back</button>
 {% endblock %}
 
 
