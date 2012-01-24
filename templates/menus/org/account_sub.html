@@ -4,5 +4,6 @@
 	<li class="{% active request '\/account\/transactions$' %}"><a href="{% url org-client-account-transaction-list instance.get_org.refnum instance.get_client.refnum %}">Transactions</a></li>
 	<li class="{% active request '\/account\/invoice[s\/]' %}"><a href="{% url org-client-account-invoice-list instance.get_org.refnum instance.get_client.refnum %}">Invoices</a></li>
 	<li class="{% active request '\/account\/payment[s\/]' %}"><a href="{% url org-client-account-payment-list instance.get_org.refnum instance.get_client.refnum %}">Payments</a></li>
+	<li class="{% active request '\/account\/credit-note[s\/]' %}"><a href="{% url org-client-account-credit-note-list instance.get_org.refnum instance.get_client.refnum %}">Credit Notes</a></li>
 </ul>
 

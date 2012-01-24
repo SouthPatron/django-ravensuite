@@ -184,6 +184,10 @@ class Client( models.Model ):
 	def get_draft_invoice_list_url( self ):
 		return reverse( 'org-client-account-invoice-draft-list', kwargs = { 'oid' : self.organization.refnum, 'cid' : self.refnum } )
 
+	def get_draft_credit_note_list_url( self ):
+		return reverse( 'org-client-account-credit-note-draft-list', kwargs = { 'oid' : self.organization.refnum, 'cid' : self.refnum } )
+
+
 	def get_draft_payment_list_url( self ):
 		return reverse( 'org-client-account-payment-draft-list', kwargs = { 'oid' : self.organization.refnum, 'cid' : self.refnum } )
 
@@ -193,6 +197,11 @@ class Client( models.Model ):
 
 	def get_unallocated_payment_count( self ):
 		return SourceDocument.objects.filter( client = self, document_type = SourceDocumentType.PAYMENT, document_state = SourceDocumentState.FINAL, total__ne = F( 'allocated' ) ).count()
+
+	def get_unallocated_credit_note_count( self ):
+		return SourceDocument.objects.filter( client = self, document_type = SourceDocumentType.CREDIT_NOTE, document_state = SourceDocumentState.FINAL, total__ne = F( 'allocated' ) ).count()
+
+
 
 
 
@@ -228,6 +237,9 @@ class SourceDocument( models.Model ):
 
 		if self.document_type == SourceDocumentType.PAYMENT:
 			my_route = 'org-client-account-payment-single'
+
+		if self.document_type == SourceDocumentType.CREDIT_NOTE:
+			my_route = 'org-client-account-credit-note-single'
 
 		return reverse( my_route,
 					kwargs = {

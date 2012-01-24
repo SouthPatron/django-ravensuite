@@ -143,29 +143,6 @@ class InvoiceSingle( SingleObjectView ):
 		return redirect( obj.get_client().get_account_single_url() )
 
 
-	def update_object_json( self, request, obj, data, *args, **kwargs ):
-
-		newstate = data.get( 'state', None )
-
-		if newstate is not None:
-			if SourceDocumentState.contains( newstate ) is False:
-				return HttpResponseForbidden()
-
-			if obj.document_state == SourceDocumentState.FINAL:
-				if newdocument_state != SourceDocumentState.VOID:
-					return HttpResponseForbidden()
-				return void_invoice( request, obj, data, *args, **kwargs )
-
-			if newdocument_state == SourceDocumentState.VOID:
-				return delete_object( request, obj, data, *args, **kwargs )
-
-			if newdocument_state == SourceDocumentState.FINAL:
-				return finalize_invoice( request, obj, data, *args, **kwargs )
-
-			return HttpResponseServerError()
-
-		return update_invoice( request, obj, data, *args, **kwargs )
-
 
 
 class InvoiceComponents( ComponentView ):

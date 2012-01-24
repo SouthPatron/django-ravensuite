@@ -1,0 +1,80 @@
+{% extends 'layouts/org/member.html' %}
+
+{% load decshift %}
+{% load sourcedoc %}
+
+
+{% block str_org_name %}{{ extra.get_org.trading_name }}{% endblock %}
+{% block str_client_name %}{{ extra.trading_name }}{% endblock %}
+{% block str_section_name %}Account{% endblock %}
+
+{% block breadcrumbs %}
+	{{ block.super }}
+	<a href="{{ extra.get_org.get_client_list_url }}">Clients</a>&gt;
+	<a href="{{ extra.get_single_url }}">{{ extra.trading_name }}</a>&gt;
+	<a href="{{ extra.get_account_single_url }}">Account</a>&gt;
+{% endblock %}
+
+
+{% block page_functions %}
+{% include 'menus/org/client_top.html' with instance=extra %}
+{% endblock %}
+
+{% block subsection_functions %}
+{% include 'menus/org/account_sub.html' with instance=extra.get_account %}
+{% endblock %}
+
+{% block filter_functions %}
+{% include 'menus/org/credit_note_filter.html' with instance=extra.get_account %}
+{% endblock %}
+
+{% block onready %}
+
+	$('#credit_note_list_table').dataTable( {
+		"iDisplayLength" : 25,
+		"bFilter" : false,
+		"bSort" : false,
+		"sPaginationType" : "full_numbers",
+		"aaSortingFixed" : [[ 0, "asc" ]],
+		"sDom" : 't<"bottom"ip><"clear">'
+	});
+
+{% endblock %}
+
+
+{% block content %}
+
+
+<table
+	id="credit_note_list_table"
+	style=' text-align: left; '
+	>
+<thead>
+	<tr>
+		<th>Ref</th>
+		<th>Invoice Date</th>
+		<th>Due Date</th>
+		<th>Amount</th>
+		<th>Outstanding</th>
+	</tr>
+</thead>
+<tbody>
+{% for obj in object_list %}
+
+	{% get_document_obj obj as doc %}
+
+	<tr>
+		<td><a href='{{ obj.get_single_url }}'>{{ obj.refnum }}</a></td>
+		<td><a href='{{ obj.get_single_url }}'>{{ doc.getSpecs.getInvoiceDate|date:"d M Y" }}</a></td>
+		<td><a href='{{ obj.get_single_url }}'>{{ doc.getSpecs.getDueDate|date:"d M Y" }}</a></td>
+		<td><a href='{{ obj.get_single_url }}'>{{ doc.getTotals.getTotal|decsplay }}</a></td>
+		<td><a href='{{ obj.get_single_url }}'>Amount outstanding</a></td>
+	</tr>
+
+{% endfor %}
+</tbody>
+</table>
+
+{% endblock %}
+
+

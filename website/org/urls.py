@@ -119,6 +119,16 @@ urlpatterns = patterns('',
 			name = 'org-client-account-payment-component-allocate-payment'
 		),
 
+# ------ CLIENTS / ACCOUNT / CREDIT NOTES ------------------
+
+	url( r'^(?P<oid>\d+)/client/(?P<cid>\d+)/account/credit-notes$', login_required( CreditNoteList.as_view() ), name = 'org-client-account-credit-note-list' ),
+	url( r'^(?P<oid>\d+)/client/(?P<cid>\d+)/account/credit-note/(?P<sdid>\d+)$', login_required( CreditNoteSingle.as_view() ), name = 'org-client-account-credit-note-single' ),
+
+
+	url( r'^(?P<oid>\d+)/client/(?P<cid>\d+)/account/credit-notes/draft$', login_required( CreditNoteDraftList.as_view() ), name = 'org-client-account-credit-note-draft-list' ),
+	url( r'^(?P<oid>\d+)/client/(?P<cid>\d+)/account/credit-notes/unpaid$', login_required( CreditNoteUnpaidList.as_view() ), name = 'org-client-account-credit-note-unpaid-list' ),
+
+
 
 # ------ CLIENTS / ACCOUNT / REFUNDS ------------------
 
