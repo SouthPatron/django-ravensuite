@@ -68,6 +68,20 @@
 		);
 	});
 
+	$( "#credit-note-create" ).click(function() {
+
+		credit_note_list_url = OOD.URL.CreditNotes( 
+							{{ instance.get_org.refnum }}, 
+							{{ instance.get_client.refnum }}
+						)
+						+ '?format=json';
+
+		$.post( credit_note_list_url, function( data ) {
+				window.location.href = data[ 'url' ];
+			}
+		);
+	});
+
 
 	$( '#refund-create' ).smkTools(
 			'click_modal',
@@ -85,6 +99,7 @@
 <ul>
 	<li><a href="#" id="invoice-create">New Invoice</a></li>
 	<li><a href="#" id="payment-create">Receive Payment</a></li>
+	<li><a href="#" id="credit-note-create">Create a Credit Note</a></li>
 	<li><a href="#" id="refund-create">Refund</a></li>
 </ul>
 

@@ -52,10 +52,8 @@
 <thead>
 	<tr>
 		<th>Ref</th>
-		<th>Invoice Date</th>
-		<th>Due Date</th>
+		<th>Date</th>
 		<th>Amount</th>
-		<th>Outstanding</th>
 	</tr>
 </thead>
 <tbody>
@@ -65,10 +63,8 @@
 
 	<tr>
 		<td><a href='{{ obj.get_single_url }}'>{{ obj.refnum }}</a></td>
-		<td><a href='{{ obj.get_single_url }}'>{{ doc.getSpecs.getInvoiceDate|date:"d M Y" }}</a></td>
-		<td><a href='{{ obj.get_single_url }}'>{{ doc.getSpecs.getDueDate|date:"d M Y" }}</a></td>
+		<td><a href='{{ obj.get_single_url }}'>{{ doc.getSpecs.getCreditNoteDate|date:"d M Y" }}</a></td>
 		<td><a href='{{ obj.get_single_url }}'>{{ doc.getTotals.getTotal|decsplay }}</a></td>
-		<td><a href='{{ obj.get_single_url }}'>Amount outstanding</a></td>
 	</tr>
 
 {% endfor %}

@@ -19,14 +19,12 @@ class CreditNoteObj( SourceDocumentObj ):
 	def initialize( self, client ):
 		super( CreditNoteObj, self ).initialize(
 				client,
-				SourceDocumentType.INVOICE,
+				SourceDocumentType.CREDIT_NOTE,
 				SourceDocumentState.DRAFT
 			)
 
 		specs = self.getSpecs()
-
 		specs.setCreditNoteDate( datetime.date.today() )
-		specs.setDueDate( datetime.date.today() + datetime.timedelta( weeks = 4 ) )
 		specs.setComment( "" )
 		return self
 
@@ -55,7 +53,8 @@ class CreditNoteObj( SourceDocumentObj ):
 
 				AccountBusLog.adjust(
 					self.parent.getObj().client.account,
-					'INVOICE',
+					self.parent.getSpecs().getCreditNoteDate(),
+					'CREDIT NOTE',
 					'CreditNote {}'.format( self.parent.getObj().refnum ),
 					long(0) - (self.parent.getTotals().getTotal()),
 					self.parent.getObj(),
@@ -74,6 +73,7 @@ class CreditNoteObj( SourceDocumentObj ):
 
 				AccountBusLog.adjust(
 					self.parent.getObj().client.account,
+					self.parent.getSpecs().getCreditNoteDate(),
 					'VOID',
 					'Void of CreditNote {}'.format( self.parent.getObj().refnum ),
 					(self.parent.getTotals().getTotal()),
@@ -97,12 +97,6 @@ class CreditNoteObj( SourceDocumentObj ):
 
 			def setCreditNoteDate( self, date ):
 				self.parent.getMeta().set( "credit_note_date", pdate( date ) )
-
-			def getDueDate( self ):
-				return pdateparse( self.parent.getMeta().get( "due_date" ) )
-
-			def setDueDate( self, date ):
-				self.parent.getMeta().set( "due_date", pdate( date ) )
 
 			def getComment( self ):
 				return self.parent.getMeta().get( "comment" )

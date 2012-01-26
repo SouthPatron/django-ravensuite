@@ -53,6 +53,7 @@ class PaymentObj( SourceDocumentObj ):
 
 				AccountBusLog.adjust(
 					self.parent.getObj().client.account,
+					self.parent.getSpecs().getPaymentDate(),
 					'PAYMENT',
 					'Payment {}'.format( self.parent.getObj().refnum ),
 					self.parent.getTotals().getTotal(),
@@ -72,6 +73,7 @@ class PaymentObj( SourceDocumentObj ):
 
 				AccountBusLog.adjust(
 					self.parent.getObj().client.account,
+					self.parent.getSpecs().getPaymentDate(),
 					'VOID',
 					'Void of Payment {}'.format( self.parent.getObj().refnum ),
 					long(0) - (self.parent.getTotals().getTotal()),

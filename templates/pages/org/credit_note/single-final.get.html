@@ -1,4 +1,4 @@
-{% extends 'layouts/org/itemized_total.html' %}
+{% extends 'pages/org/credit_note/single.get.html' %}
 
 {% load decshift %}
 {% load sourcedoc %}
@@ -101,7 +101,7 @@
 {% endblock %}
 
 
-{% block document_type %}TAX INVOICE{% endblock %}
+{% block document_type %}CREDIT NOTE{% endblock %}
 {% block document_status %}
 {% include 'pages/org/credit_note/status-label.html' with instance=instance %}
 {% endblock %}
@@ -112,16 +112,9 @@
 {% get_document_obj instance as doc %}
 
 <fieldset>
-	<label for="name">Invoice Date</label>
-	<input type="text" name="credit_note_date" id="id_itol_date" class="text ui-widget-content ui-corner-all" value="{{ doc.getSpecs.getInvoiceDate|date:"j M Y" }}" />
-	<label for="name">Due Date</label>
-	<input type="text" name="due_date" id="id_due_date" class="text ui-widget-content ui-corner-all" value="{{ doc.getSpecs.getDueDate|date:"j M Y" }}" />
+	<label for="name">Credit Date</label>
+	<input type="text" name="credit_note_date" id="id_itol_date" class="text ui-widget-content ui-corner-all" value="{{ doc.getSpecs.getCreditNoteDate|date:"j M Y" }}" />
 </fieldset>
-{% endblock %}
-
-
-{% block document_payment_status %}
-{% include 'pages/org/credit_note/paid-label.html' with instance=instance %}
 {% endblock %}
 
 {% block document_body %}

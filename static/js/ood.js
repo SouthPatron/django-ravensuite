@@ -23,12 +23,20 @@ var OOD = new function() {
 			return '/org/' + oid + '/client/' + cid + '/account';
 		};
 
+		this.CreditNotes = function( oid, cid ) {
+			return '/org/' + oid + '/client/' + cid + '/account/credit-notes';
+		};
+
+		this.CreditNote = function( oid, cid, sdid ) {
+			return '/org/' + oid + '/client/' + cid + '/account/credit-note/' + sdid;
+		};
+
 		this.Invoices = function( oid, cid ) {
 			return '/org/' + oid + '/client/' + cid + '/account/invoices';
 		};
 
-		this.Invoice = function( oid, cid, iid ) {
-			return '/org/' + oid + '/client/' + cid + '/account/invoice/' + iid;
+		this.Invoice = function( oid, cid, sdid ) {
+			return '/org/' + oid + '/client/' + cid + '/account/invoice/' + sdid;
 		};
 
 		this.Payments = function( oid, cid ) {

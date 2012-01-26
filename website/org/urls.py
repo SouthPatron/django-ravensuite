@@ -126,7 +126,7 @@ urlpatterns = patterns('',
 
 
 	url( r'^(?P<oid>\d+)/client/(?P<cid>\d+)/account/credit-notes/draft$', login_required( CreditNoteDraftList.as_view() ), name = 'org-client-account-credit-note-draft-list' ),
-	url( r'^(?P<oid>\d+)/client/(?P<cid>\d+)/account/credit-notes/unpaid$', login_required( CreditNoteUnpaidList.as_view() ), name = 'org-client-account-credit-note-unpaid-list' ),
+	url( r'^(?P<oid>\d+)/client/(?P<cid>\d+)/account/credit-notes/unallocated$', login_required( CreditNoteUnallocatedList.as_view() ), name = 'org-client-account-credit-note-unallocated-list' ),
 
 
 

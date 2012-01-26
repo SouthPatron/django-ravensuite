@@ -72,8 +72,8 @@ class CreditNoteDraftList( ListView ):
 		return obj_list
 
 
-class CreditNoteUnpaidList( ListView ):
-	template_name = 'pages/org/credit_note/unpaid-index'
+class CreditNoteUnallocatedList( ListView ):
+	template_name = 'pages/org/credit_note/unallocated-index'
 
 	def get_extra( self, request, obj_list, fmt, *args, **kwargs ):
 		return Client.objects.get( refnum = self.url_kwargs.cid, organization__refnum = self.url_kwargs.oid )
@@ -119,7 +119,6 @@ class CreditNoteSingle( SingleObjectView ):
 			return redirect( obj.get_client().get_draft_credit_note_list_url() )
 
 		credit_note_data[ 'credit_note_date' ] = data.get( 'credit_note_date' )
-		credit_note_data[ 'due_date' ] = data.get( 'due_date' )
 		credit_note_data[ 'comment' ] = data.get( 'credit_note_comment', "" )
 		credit_note_data[ 'items' ] = []
 		

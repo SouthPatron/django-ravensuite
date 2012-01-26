@@ -198,6 +198,10 @@ class Client( models.Model ):
 	def get_unallocated_payment_count( self ):
 		return SourceDocument.objects.filter( client = self, document_type = SourceDocumentType.PAYMENT, document_state = SourceDocumentState.FINAL, total__ne = F( 'allocated' ) ).count()
 
+	def get_unallocatedcredit_note_list_url( self ):
+		return reverse( 'org-client-account-credit-note-unallocated-list', kwargs = { 'oid' : self.organization.refnum, 'cid' : self.refnum } )
+
+
 	def get_unallocated_credit_note_count( self ):
 		return SourceDocument.objects.filter( client = self, document_type = SourceDocumentType.CREDIT_NOTE, document_state = SourceDocumentState.FINAL, total__ne = F( 'allocated' ) ).count()
 
@@ -295,6 +299,7 @@ class Account( models.Model ):
 class AccountTransaction( models.Model ):
 	account = models.ForeignKey( Account )
 	refnum = models.BigIntegerField( default = 1 )
+	creation_time = models.DateTimeField()
 	event_time = models.DateTimeField()
 	group = models.CharField( max_length = 32 )
 	description = models.CharField( max_length = 64 )
@@ -318,7 +323,7 @@ class AccountTransaction( models.Model ):
 		return reverse( 'org-client-account-transaction-single', kwargs = { 'oid' : self.get_org().refnum, 'cid' : self.get_client().refnum, 'tid' : self.refnum } )
 
 	class Meta:
-		ordering = [ '-event_time' ]
+		ordering = [ '-event_time', '-creation_time' ]
 
 
 class AccountTransactionData( models.Model ):

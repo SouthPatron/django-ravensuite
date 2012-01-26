@@ -1,7 +1,8 @@
-{% extends 'layouts/org/itemized_total.html' %}
+{% extends 'pages/org/credit_note/single.get.html' %}
 
 {% load decshift %}
 {% load sourcedoc %}
+
 
 {% block head_includes %}
 
@@ -43,6 +44,7 @@
 		}
 	);
 
+
 	{% get_document_obj instance as doc %}
 
 	{% for li in doc.getLines.all %}
@@ -60,16 +62,15 @@
 	{% endfor %}
 
 
-	$( "#id_button_save" ).click( function() {
+	$( "#id_button_back" ).click( function() {
 		$( "#id_credit_note_form" ).submit();
 	});
-
 
 
 {% endblock %}
 
 
-{% block document_type %}TAX INVOICE{% endblock %}
+{% block document_type %}CREDIT NOTE{% endblock %}
 {% block document_status %}
 {% include 'pages/org/credit_note/status-label.html' with instance=instance %}
 {% endblock %}
@@ -77,20 +78,17 @@
 
 {% block document_dates %}
 
-	{% get_document_obj instance as doc %}
+{% get_document_obj instance as doc %}
 
 <fieldset>
-	<label for="name">Invoice Date</label>
-	<input type="text" name="credit_note_date" id="id_itol_date" class="text ui-widget-content ui-corner-all" value="{{ doc.getSpecs.getInvoiceDate|date:"j M Y" }}" />
-	<label for="name">Due Date</label>
-	<input type="text" name="due_date" id="id_due_date" class="text ui-widget-content ui-corner-all" value="{{ doc.getSpecs.getDueDate|date:"j M Y" }}" />
+	<label for="name">Credit Date</label>
+	<input type="text" name="credit_note_date" id="id_itol_date" class="text ui-widget-content ui-corner-all" value="{{ doc.getSpecs.getCreditNoteDate|date:"j M Y" }}" />
 </fieldset>
 {% endblock %}
 
-
 {% block document_body %}
 
-	{% get_document_obj instance as doc %}
+{% get_document_obj instance as doc %}
 
 
 <div class="item-list">
@@ -100,13 +98,14 @@
 	<th class="head-qty">Qty</th>
 	<th class="head-unit-price">Unit Price</th>
 	<th class="head-tax-rate">Tax Rate</th>
-	<th class="head-tax-amount">Tax</th>
+	<th class="head-tax-amount">Tax Amount</th>
 	<th class="head-amount">Amount</th>
 </thead>
 <tbody>
 </tbody>
 </table>
 </div>
+
 
 	<div class="summary-row">
 
@@ -150,6 +149,26 @@
 				</div>
 			</div>
 
+
+			<div class="inner-paid">
+				<div class="inner-paid-label">
+					Paid
+				</div>
+				<div class="inner-paid-amount">
+					<span id="summary_paid">{{ instance.get_amount_paid|decsplay }}</span>
+				</div>
+			</div>
+
+
+			<div class="inner-outstanding">
+				<div class="inner-outstanding-label">
+					Outstanding
+				</div>
+				<div class="inner-outstanding-amount">
+					<span id="summary_outstanding">{{ instance.get_amount_outstanding|decsplay }}</span>
+				</div>
+			</div>
+
 		</div>
 
 		<div style="clear: both;">&nbsp;</div>
@@ -157,7 +176,10 @@
 {% endblock %}
 
 
-{% block document_button_row_left %}
-	<button id="id_button_save" type="button">Save</button>
+{% block document_button_row_right %}
+	<button id="id_back_void" type="button">Back</button>
 {% endblock %}
+
+
+
 

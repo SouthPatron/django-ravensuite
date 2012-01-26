@@ -23,32 +23,22 @@ class CreditNoteHelper( object ):
 
 
 	@staticmethod
-	def _update_sanitize_dates( inv, new_data ):
+	def _update_sanitize_dates( crd, new_data ):
 		try:
 			if new_data[ 'credit_note_date' ] is not None:
 				new_data[ 'credit_note_date' ] = pdateparse( new_data[ 'credit_note_date' ] )
 			else:
-				new_data[ 'credit_note_date' ] = inv.getSpecs().getCreditNoteDate()
+				new_data[ 'credit_note_date' ] = crd.getSpecs().getCreditNoteDate()
 		except ValueError:
 			raise BusLogError( 'The credit note date is invalid' )
 
-		try:
-			if new_data[ 'due_date' ] is not None:
-				new_data[ 'due_date' ] = pdateparse( new_data[ 'due_date' ] )
-			else:
-				new_data[ 'due_date' ] = inv.getSpecs().getDueDate()
-		except ValueError:
-			raise BusLogError( 'The due date is invalid' )
-
-		if new_data[ 'due_date' ] < new_data[ 'credit_note_date' ]:
-			raise BusLogError( 'The due date is before the credit note date' )
 
 	@staticmethod
-	def _update_sanitize_state( inv, new_data ):
+	def _update_sanitize_state( crd, new_data ):
 		if new_data[ 'state' ] is not None:
 			new_data['state'] = int( new_data.get( 'state' ) )
 		else:
-			new_data[ 'state' ] = inv.getObj().document_state
+			new_data[ 'state' ] = crd.getObj().document_state
 
 		if SourceDocumentState.get( new_data['state'] ) is None:
 			raise BusLogError( 'Unknown new state requested for credit note.' )
@@ -62,7 +52,7 @@ class CreditNoteHelper( object ):
 		return val[0]
 
 	@staticmethod
-	def _update_sanitize_items( inv, new_data ):
+	def _update_sanitize_items( crd, new_data ):
 		new_items = []
 
 		try:
@@ -82,33 +72,32 @@ class CreditNoteHelper( object ):
 		new_data[ 'items' ] = new_items
 
 	@staticmethod
-	def _update_sanitize( inv, new_data ):
-		CreditNoteHelper._update_sanitize_dates( inv, new_data )
-		CreditNoteHelper._update_sanitize_state( inv, new_data )
+	def _update_sanitize( crd, new_data ):
+		CreditNoteHelper._update_sanitize_dates( crd, new_data )
+		CreditNoteHelper._update_sanitize_state( crd, new_data )
 
-		if inv.getObj().document_state == SourceDocumentState.DRAFT:
-			CreditNoteHelper._update_sanitize_items( inv, new_data )
+		if crd.getObj().document_state == SourceDocumentState.DRAFT:
+			CreditNoteHelper._update_sanitize_items( crd, new_data )
 
 		new_data[ 'comment' ] = new_data.get( 
 								'comment',
-								inv.getSpecs().getComment()
+								crd.getSpecs().getComment()
 							)[:255]
 
 
 	@staticmethod
-	def _update_perform_update( inv, new_data ):
+	def _update_perform_update( crd, new_data ):
 
-		inv.getSpecs().setCreditNoteDate( new_data[ 'credit_note_date' ] )
-		inv.getSpecs().setDueDate( new_data[ 'due_date' ] )
-		inv.getSpecs().setComment( new_data[ 'comment' ] )
+		crd.getSpecs().setCreditNoteDate( new_data[ 'credit_note_date' ] )
+		crd.getSpecs().setComment( new_data[ 'comment' ] )
 
 
-		if inv.getObj().document_state == SourceDocumentState.DRAFT:
+		if crd.getObj().document_state == SourceDocumentState.DRAFT:
 
-			inv.getLines().clear()
+			crd.getLines().clear()
 
 			for row in new_data[ 'items' ]:
-				il = inv.getLines().add(
+				il = crd.getLines().add(
 						description = row[0],
 						units = row[1],
 						perunit = row[2],
@@ -117,25 +106,25 @@ class CreditNoteHelper( object ):
 
 
 	@staticmethod
-	def _update_handle_state_change( inv, new_data ):
+	def _update_handle_state_change( crd, new_data ):
 		try:
 			ns = new_data['state']
 		except KeyError:
 			return
 
-		if ns == inv.getObj().document_state:
+		if ns == crd.getObj().document_state:
 			return
 
 		if ns == SourceDocumentState.FINAL:
-			inv.getActions().finalize()
+			crd.getActions().finalize()
 			return
 
 		if ns == SourceDocumentState.VOID:
-			inv.getActions().void()
+			crd.getActions().void()
 			return
 
 		if ns == SourceDocumentState.DELETE:
-			inv.getActions().delete()
+			crd.getActions().delete()
 			return
 
 		raise BusLogError( 'Invalid state change requested.' )
@@ -146,11 +135,11 @@ class CreditNoteHelper( object ):
 		
 		my_new_data = deepcopy( new_data )
 
-		inv = CreditNoteObj()
-		inv.wrap( credit_note )
+		crd = CreditNoteObj()
+		crd.wrap( credit_note )
 
-		CreditNoteHelper._update_sanitize( inv, my_new_data )
-		CreditNoteHelper._update_perform_update( inv, my_new_data )
-		CreditNoteHelper._update_handle_state_change( inv, my_new_data )
+		CreditNoteHelper._update_sanitize( crd, my_new_data )
+		CreditNoteHelper._update_perform_update( crd, my_new_data )
+		CreditNoteHelper._update_handle_state_change( crd, my_new_data )
 
 

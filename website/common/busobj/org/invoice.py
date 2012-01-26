@@ -55,6 +55,7 @@ class InvoiceObj( SourceDocumentObj ):
 
 				AccountBusLog.adjust(
 					self.parent.getObj().client.account,
+					self.parent.getSpecs().getInvoiceDate(),
 					'INVOICE',
 					'Invoice {}'.format( self.parent.getObj().refnum ),
 					long(0) - (self.parent.getTotals().getTotal()),
@@ -74,6 +75,7 @@ class InvoiceObj( SourceDocumentObj ):
 
 				AccountBusLog.adjust(
 					self.parent.getObj().client.account,
+					self.parent.getSpecs().getInvoiceDate(),
 					'VOID',
 					'Void of Invoice {}'.format( self.parent.getObj().refnum ),
 					(self.parent.getTotals().getTotal()),
