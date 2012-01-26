@@ -191,21 +191,31 @@ class SourceDocumentObj( object ):
 			def __init__( self, parent ):
 				self.parent = parent
 
-			def clear( self ):
-				if self.parent.getObj().document_status == SourceDocumentState.DRAFT:
-					return
-
-				qry = SourceDocumentAllocation.objects.filter(
+			def all( self ):
+				return SourceDocumentAllocation.objects.filter(
 						Q( source = self.parent.getObj() ) | Q( destination = self.parent.getObj() )
 					)
-				for sda in qry:
-					sda.destination.allocated -= sda.amount
-					if sda.destination != self.parent.getObj():
-						sda.destination.save()
 
-					sda.source.allocated -= sda.amount
-					if sda.source != self.parent.getObj():
+				
+
+			def clear( self ):
+				myObj = self.parent.getObj()
+
+				if myObj.document_state == SourceDocumentState.DRAFT:
+					return
+
+				for sda in self.all():
+					if sda.destination.id != myObj.id:
+						sda.destination.allocated -= sda.amount
+						sda.destination.save()
+					else:
+						myObj.allocated -= sda.amount
+
+					if sda.source.id != myObj.id:
+						sda.source.allocated -= sda.amount
 						sda.source.save()
+					else:
+						myObj.allocated -= sda.amount
 
 					sda.delete()
 
@@ -213,26 +223,10 @@ class SourceDocumentObj( object ):
 
 
 			def allocate( self, destination, amount ):
-
-				if self.parent.getObj().document_type != SourceDocumentType.PAYMENT and self.parent.getObj().document_type != SourceDocumentType.CREDIT_NOTE:
-					raise BusLogError( 'You can not allocate this type of SourceDocument. You can only receive allocations.' )
-
-				diff = destination.getTotals().getUnallocated()
-				if amount > diff:
-					raise BusLogError( 'The amount you want to allocate exceeds the amount that is outstanding.' )
-
-
-				sda = SourceDocumentAllocation()
-				sda.source = self.parent.getObj()
-				sda.destination = destination.getObj()
-				sda.amount = amount
-				sda.save()
-
-				destination.getObj().allocated += amount
-				destination.save()
-
-				self.parent.getObj().allocated += amount
-				self.parent.save()
+				return destination.getAllocations().receive(
+						self.parent,
+						amount
+					)
 
 
 			def receive( self, source, amount ):
@@ -243,7 +237,6 @@ class SourceDocumentObj( object ):
 				diff = self.parent.getTotals().getUnallocated()
 				if amount > diff:
 					raise BusLogError( 'The amount you want to allocate exceeds the amount that is outstanding.' )
-
 
 				sda = SourceDocumentAllocation()
 				sda.source = source.getObj()
