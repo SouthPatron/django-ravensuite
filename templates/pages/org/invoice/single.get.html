@@ -20,6 +20,10 @@
 {% endblock %}
 
 
+{% block filter_functions %}
+{% include 'menus/org/invoice_filter.html' with instance=instance.get_client.get_account %}
+{% endblock %}
+
 
 
 {% block head_includes %}
