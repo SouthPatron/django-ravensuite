@@ -54,6 +54,7 @@
 		<th>Ref</th>
 		<th>Payment Date</th>
 		<th>Allocated Amount</th>
+		<th>State</th>
 		<th>Amount</th>
 	</tr>
 </thead>
@@ -65,7 +66,8 @@
 	<tr>
 		<td><a href='{{ obj.get_single_url }}'>{{ obj.refnum }}</a></td>
 		<td><a href='{{ obj.get_single_url }}'>{{ doc.getSpecs.getPaymentDate|date:"d M Y" }}</a></td>
-		<td><a href='{{ obj.get_single_url }}'>{{ doc.getTotals.getTotal|decsplay }}</a></td>
+		<td><a href='{{ obj.get_single_url }}'>{{ doc.getTotals.getAllocated|decsplay }}</a></td>
+		<td><a href='{{ obj.get_single_url }}'>{{ obj.get_document_state_display }}</a></td>
 		<td><a href='{{ obj.get_single_url }}'>{{ doc.getTotals.getTotal|decsplay }}</a></td>
 	</tr>
 {% endfor %}

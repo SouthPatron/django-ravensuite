@@ -114,6 +114,23 @@ Current Balance: {{ instance.balance|decsplay }}
 </div>
 
 <div style=" font-size: 2em; margin: 20px 0px; ">
+<a href="{{ instance.get_client.get_unpaid_invoice_list_url }}">Unpaid Invoices: {{ instance.get_client.get_unpaid_invoice_count }}</a>
+</div>
+
+<div style=" font-size: 2em; margin: 20px 0px; ">
+<a href="{{ instance.get_client.get_unallocated_payment_list_url }}">Unallocated Payments: {{ instance.get_client.get_unallocated_payment_count }}</a>
+</div>
+
+<div style=" font-size: 2em; margin: 20px 0px; ">
+<a href="{{ instance.get_client.get_unallocated_credit_note_list_url }}">Unallocated Credit Notes: {{ instance.get_client.get_unallocated_credit_note_count }}</a>
+</div>
+
+
+
+
+
+
+<div style=" font-size: 2em; margin: 20px 0px; ">
 {% comment %}
 Unallocated Funds: {{ instance.get_client.get_unallocated_payment_amount|decsplay }}
 {% endcomment %}

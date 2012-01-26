@@ -1,6 +1,8 @@
 from __future__ import unicode_literals
 
+
 from django.db import models
+from django.db.models import F,Q
 from django.contrib.auth.models import User
 
 from django.core.urlresolvers import reverse
@@ -168,43 +170,61 @@ class Client( models.Model ):
 
 	def get_project_list_url( self ):
 		return reverse( 'org-client-project-list', kwargs = { 'oid' : self.organization.refnum, 'cid' : self.refnum } )
-	
+
 	def get_account_single_url( self ):
 		return reverse( 'org-client-account-single', kwargs = { 'oid' : self.organization.refnum, 'cid' : self.refnum } )
+
+	def get_account( self ):
+		return Account.objects.get( client = self )
+
+	# Transactions --------
+
+	# Invoices ------------
 
 	def get_invoice_list_url( self ):
 		return reverse( 'org-client-account-invoice-list', kwargs = { 'oid' : self.organization.refnum, 'cid' : self.refnum } )
 
-	def get_unpaid_invoice_list_url( self ):
-		return reverse( 'org-client-account-invoice-unpaid-list', kwargs = { 'oid' : self.organization.refnum, 'cid' : self.refnum } )
-	
-	def get_account( self ):
-		return Account.objects.get( client = self )
-
 	def get_draft_invoice_list_url( self ):
 		return reverse( 'org-client-account-invoice-draft-list', kwargs = { 'oid' : self.organization.refnum, 'cid' : self.refnum } )
+
+	def get_unpaid_invoice_list_url( self ):
+		return reverse( 'org-client-account-invoice-unpaid-list', kwargs = { 'oid' : self.organization.refnum, 'cid' : self.refnum } )
+
+	def get_unpaid_invoice_count( self ):
+		return SourceDocument.objects.filter( client = self, document_type = SourceDocumentType.INVOICE, document_state = SourceDocumentState.FINAL, total__gt = F( 'allocated' ) ).count()
+
+
+
+
+	# Credit Notes --------
 
 	def get_draft_credit_note_list_url( self ):
 		return reverse( 'org-client-account-credit-note-draft-list', kwargs = { 'oid' : self.organization.refnum, 'cid' : self.refnum } )
 
+	def get_unallocated_credit_note_list_url( self ):
+		return reverse( 'org-client-account-credit-note-unallocated-list', kwargs = { 'oid' : self.organization.refnum, 'cid' : self.refnum } )
+
+	def get_unallocated_credit_note_count( self ):
+		return SourceDocument.objects.filter( client = self, document_type = SourceDocumentType.CREDIT_NOTE, document_state = SourceDocumentState.FINAL, total__gt = F( 'allocated' ) ).count()
+
+
+	# Payments ------------
+
+	def get_unallocated_payment_list_url( self ):
+		return reverse( 'org-client-account-payment-unallocated-list', kwargs = { 'oid' : self.organization.refnum, 'cid' : self.refnum } )
 
 	def get_draft_payment_list_url( self ):
 		return reverse( 'org-client-account-payment-draft-list', kwargs = { 'oid' : self.organization.refnum, 'cid' : self.refnum } )
-
 
 	def get_draft_payment_count( self ):
 		return SourceDocument.objects.filter( client = self, document_type = SourceDocumentType.PAYMENT, document_state = SourceDocumentState.DRAFT ).count()
 
 	def get_unallocated_payment_count( self ):
-		return SourceDocument.objects.filter( client = self, document_type = SourceDocumentType.PAYMENT, document_state = SourceDocumentState.FINAL, total__ne = F( 'allocated' ) ).count()
-
-	def get_unallocatedcredit_note_list_url( self ):
-		return reverse( 'org-client-account-credit-note-unallocated-list', kwargs = { 'oid' : self.organization.refnum, 'cid' : self.refnum } )
+		return SourceDocument.objects.filter( client = self, document_type = SourceDocumentType.PAYMENT, document_state = SourceDocumentState.FINAL, total__gt = F( 'allocated' ) ).count()
 
 
-	def get_unallocated_credit_note_count( self ):
-		return SourceDocument.objects.filter( client = self, document_type = SourceDocumentType.CREDIT_NOTE, document_state = SourceDocumentState.FINAL, total__ne = F( 'allocated' ) ).count()
 
+	# Refunds -------------
 
 
 

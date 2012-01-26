@@ -68,7 +68,7 @@
 		<td><a href='{{ obj.get_single_url }}'>{{ doc.getSpecs.getInvoiceDate|date:"d M Y" }}</a></td>
 		<td><a href='{{ obj.get_single_url }}'>{{ doc.getSpecs.getDueDate|date:"d M Y" }}</a></td>
 		<td><a href='{{ obj.get_single_url }}'>{{ doc.getTotals.getTotal|decsplay }}</a></td>
-		<td><a href='{{ obj.get_single_url }}'>Amount outstanding</a></td>
+		<td><a href='{{ obj.get_single_url }}'>{{ doc.getTotals.getUnallocated|decsplay }}</a></td>
 	</tr>
 
 {% endfor %}

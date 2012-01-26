@@ -1,6 +1,8 @@
 from __future__ import unicode_literals
 
+from django.db.models import Q
 from common.models import *
+from common.exceptions import *
 from common.utils.dbgdatetime import datetime
 from common.utils.parse import *
 
@@ -41,6 +43,7 @@ class SourceDocumentObj( object ):
 		self.sdo = sdo
 
 	def delete( self ):
+		self.getAllocations().clear()
 		self.sdo.delete()
 
 	def save( self ):
@@ -174,7 +177,88 @@ class SourceDocumentObj( object ):
 			def getTax( self ):
 				return self.parent.getObj().tax
 
+			def getAllocated( self ):
+				return self.parent.getObj().allocated
+
+			def getUnallocated( self ):
+				return self.getTotal() - self.getAllocated()
+
 		return Totals( self )
+
+
+	def getAllocations( self ):
+		class Allocations( object ):
+			def __init__( self, parent ):
+				self.parent = parent
+
+			def clear( self ):
+				if self.parent.getObj().document_status == SourceDocumentState.DRAFT:
+					return
+
+				qry = SourceDocumentAllocation.objects.filter(
+						Q( source = self.parent.getObj() ) | Q( destination = self.parent.getObj() )
+					)
+				for sda in qry:
+					sda.destination.allocated -= sda.amount
+					if sda.destination != self.parent.getObj():
+						sda.destination.save()
+
+					sda.source.allocated -= sda.amount
+					if sda.source != self.parent.getObj():
+						sda.source.save()
+
+					sda.delete()
+
+				self.parent.save()
+
+
+			def allocate( self, destination, amount ):
+
+				if self.parent.getObj().document_type != SourceDocumentType.PAYMENT and self.parent.getObj().document_type != SourceDocumentType.CREDIT_NOTE:
+					raise BusLogError( 'You can not allocate this type of SourceDocument. You can only receive allocations.' )
+
+				diff = destination.getTotals().getUnallocated()
+				if amount > diff:
+					raise BusLogError( 'The amount you want to allocate exceeds the amount that is outstanding.' )
+
+
+				sda = SourceDocumentAllocation()
+				sda.source = self.parent.getObj()
+				sda.destination = destination.getObj()
+				sda.amount = amount
+				sda.save()
+
+				destination.getObj().allocated += amount
+				destination.save()
+
+				self.parent.getObj().allocated += amount
+				self.parent.save()
+
+
+			def receive( self, source, amount ):
+
+				if self.parent.getObj().document_type != SourceDocumentType.INVOICE and self.parent.getObj().document_type != SourceDocumentType.REFUND:
+					raise BusLogError( 'You can not allocate this type of SourceDocument. You can only receive allocations.' )
+
+				diff = self.parent.getTotals().getUnallocated()
+				if amount > diff:
+					raise BusLogError( 'The amount you want to allocate exceeds the amount that is outstanding.' )
+
+
+				sda = SourceDocumentAllocation()
+				sda.source = source.getObj()
+				sda.destination = self.parent.getObj()
+				sda.amount = amount
+				sda.save()
+
+				source.getObj().allocated += amount
+				source.save()
+
+				self.parent.getObj().allocated += amount
+				self.parent.save()
+
+		return Allocations( self )
+
 
 
 
