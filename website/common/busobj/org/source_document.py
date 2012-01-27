@@ -196,7 +196,38 @@ class SourceDocumentObj( object ):
 						Q( source = self.parent.getObj() ) | Q( destination = self.parent.getObj() )
 					)
 
-				
+			def clear_one( self, sda, save_parent = True, myObj = None ):
+			
+				if myObj is None:
+					myObj = self.parent.getObj()
+
+				if sda.destination.id != myObj.id:
+					sda.destination.allocated -= sda.amount
+					sda.destination.save()
+				else:
+					myObj.allocated -= sda.amount
+
+				if sda.source.id != myObj.id:
+					sda.source.allocated -= sda.amount
+					sda.source.save()
+				else:
+					myObj.allocated -= sda.amount
+
+				sda.delete()
+
+				if save_parent is True:
+					self.parent.save()
+
+			def clear_by_id( self, sda_id ):
+				try:
+					sda = SourceDocumentAllocation.objects.get(
+							Q( source = self.parent.getObj() ) | Q( destination = self.parent.getObj() ),
+							id = sda_id
+						)
+					return self.clear_one( sda )
+				except SourceDocumentAllocation.DoesNotExist:
+					raise BusLogError( 'There was no such allocation with that ID' )
+
 
 			def clear( self ):
 				myObj = self.parent.getObj()
@@ -205,19 +236,7 @@ class SourceDocumentObj( object ):
 					return
 
 				for sda in self.all():
-					if sda.destination.id != myObj.id:
-						sda.destination.allocated -= sda.amount
-						sda.destination.save()
-					else:
-						myObj.allocated -= sda.amount
-
-					if sda.source.id != myObj.id:
-						sda.source.allocated -= sda.amount
-						sda.source.save()
-					else:
-						myObj.allocated -= sda.amount
-
-					sda.delete()
+					self.clear_one( sda, False, myObj )
 
 				self.parent.save()
 

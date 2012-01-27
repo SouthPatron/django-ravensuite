@@ -1,7 +1,7 @@
 {% load decshift %}
 <div id="dialog-form" title="Deallocate Payment">
 	<p class="validateTips">All form fields are required</p>
-	<form id="deallocate-payment-form" method="POST" action="{% url org-client-account-invoice-component-deallocate-payment kwargs.oid kwargs.cid kwargs.iid %}?payid={{ instance.id }}">
+	<form id="deallocate-payment-form" method="POST" action="{% url org-client-account-payment-component-deallocate-payment kwargs.oid kwargs.cid kwargs.sdid kwargs.alocid %}">
 		{% csrf_token %}
 
 		<p>{{ instance.amount|decsplay }}</p>

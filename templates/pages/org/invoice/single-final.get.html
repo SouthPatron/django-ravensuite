@@ -193,7 +193,7 @@
 					Paid
 				</div>
 				<div class="inner-paid-amount">
-					<span id="summary_paid">{{ instance.get_amount_paid|decsplay }}</span>
+					<span id="summary_paid">{{ doc.getTotals.getAllocated|decsplay }}</span>
 				</div>
 			</div>
 
@@ -203,7 +203,7 @@
 					Outstanding
 				</div>
 				<div class="inner-outstanding-amount">
-					<span id="summary_outstanding">{{ instance.get_amount_outstanding|decsplay }}</span>
+					<span id="summary_outstanding">{{ doc.getTotals.getUnallocated|decsplay }}</span>
 				</div>
 			</div>
 

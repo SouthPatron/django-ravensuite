@@ -162,7 +162,6 @@ class PaymentSingle( SingleObjectView ):
 # ----------------------------------------------------------------
 
 class PaymentComponents( ComponentView ):
-
 	def get_object( self, request, *args, **kwargs ):
 		return get_object_or_404(
 					SourceDocument,
@@ -170,7 +169,6 @@ class PaymentComponents( ComponentView ):
 					client__refnum = self.url_kwargs.cid,
 					client__organization__refnum = self.url_kwargs.oid
 				)
-
 
 
 class PcAllocatePayment( PaymentComponents ):
@@ -197,5 +195,34 @@ class PcAllocatePayment( PaymentComponents ):
 
 		messages.success( request, 'Successfully allocated.' )
 		return redirect( obj.get_single_url() )
+
+
+class PcDeallocatePayment( PaymentComponents ):
+	template_name = 'components/org/payment/deallocate_payment'
+
+	def get_object( self, request, *args, **kwargs ):
+		return get_object_or_404(
+					SourceDocumentAllocation,
+					id = self.url_kwargs.alocid,
+					source__refnum = self.url_kwargs.sdid,
+					source__client__refnum = self.url_kwargs.cid,
+					source__client__organization__refnum = self.url_kwargs.oid
+				)
+
+
+
+	def post_html( self, request, obj, data, *args, **kwargs ):
+
+		try:
+			pay = PaymentObj()
+			pay.wrap( obj.source )
+			pay.getAllocations().clear_one( obj )
+
+		except BusLogError, berror:
+			messages.error( request, berror.message )
+			return redirect( obj.source.get_single_url() )
+
+		messages.success( request, 'Successfully deallocated.' )
+		return redirect( obj.source.get_single_url() )
 
 

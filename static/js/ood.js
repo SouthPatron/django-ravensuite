@@ -43,9 +43,14 @@ var OOD = new function() {
 			return '/org/' + oid + '/client/' + cid + '/account/payments';
 		};
 
-		this.Payment = function( oid, cid, payid ) {
-			return '/org/' + oid + '/client/' + cid + '/account/payment/' + payid;
+		this.Payment = function( oid, cid, sdid ) {
+			return '/org/' + oid + '/client/' + cid + '/account/payment/' + sdid;
 		};
+
+		this.PaymentAllocation = function( oid, cid, sdid, alocid ) {
+			return '/org/' + oid + '/client/' + cid + '/account/payment/' + sdid + '/allocation/' + alocid;
+		};
+
 
 		this.Component = function( base, name ) {
 			return base + '.pc.' + name + '?q=';
