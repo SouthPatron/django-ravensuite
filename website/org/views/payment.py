@@ -10,8 +10,7 @@ from common.views.singleobjectview import SingleObjectView
 from common.views.listview import ListView
 from common.views.component import ComponentView
 
-from common.buslog.org import PaymentBusLog
-from common.busobj.org import PaymentObj
+from common.busobj.org import PaymentObj, InvoiceObj
 
 from common.utils.parse import *
 
@@ -81,45 +80,6 @@ class PaymentUnallocatedList( PaymentList ):
 		obj_list = SourceDocument.objects.filter( client__refnum = self.url_kwargs.cid, client__organization__refnum = self.url_kwargs.oid, document_type = SourceDocumentType.PAYMENT, document_state = SourceDocumentState.FINAL, total__gt = F('allocated') )
 		return obj_list
 
-
-
-
-class PaymentComponents( ComponentView ):
-
-	def get_object( self, request, *args, **kwargs ):
-		return get_object_or_404(
-					SourceDocumentType,
-					refnum = self.url_kwargs.sdid,
-					client__refnum = self.url_kwargs.cid,
-					client__organization__refnum = self.url_kwargs.oid
-				)
-
-
-
-class PcAllocatePayment( PaymentComponents ):
-	template_name = 'components/org/payment/allocate_payment'
-
-	def post_html( self, request, obj, data, *args, **kwargs ):
-
-		invoice_refnum = data.get( "invoice-refnum" )
-		payment_amount = data.get( "payment-amount" )
-
-		# TODO: Select for update somehow
-		invoice = get_object_or_404(
-						SourceDocumentType,
-						refnum = invoice_refnum,
-						client__refnum = obj.get_client().refnum
-					)
-
-		try:
-			PaymentBusLog.allocate( obj, invoice, payment_amount )
-		except BusLogError, berror:
-			messages.error( request, berror.message )
-			return redirect( obj.get_single_url() )
-
-		messages.success( request, 'Successfully allocated.' )
-
-		return redirect( obj.get_single_url() )
 
 
 
@@ -194,5 +154,48 @@ class PaymentSingle( SingleObjectView ):
 
 
 		return redirect( pmt.get_single_url() )
+
+
+
+
+
+# ----------------------------------------------------------------
+
+class PaymentComponents( ComponentView ):
+
+	def get_object( self, request, *args, **kwargs ):
+		return get_object_or_404(
+					SourceDocument,
+					refnum = self.url_kwargs.sdid,
+					client__refnum = self.url_kwargs.cid,
+					client__organization__refnum = self.url_kwargs.oid
+				)
+
+
+
+class PcAllocatePayment( PaymentComponents ):
+	template_name = 'components/org/payment/allocate_payment'
+
+	def post_html( self, request, obj, data, *args, **kwargs ):
+
+		invoice_refnum = data.get( "invoice-refnum" )
+		payment_amount = pnumparse( data.get( "payment-amount" ) )
+
+		try:
+
+			inv = InvoiceObj()
+			inv.load( invoice_refnum )
+
+			pay = PaymentObj()
+			pay.wrap( obj )
+
+			pay.getAllocations().allocate( inv, payment_amount )
+
+		except BusLogError, berror:
+			messages.error( request, berror.message )
+			return redirect( obj.get_single_url() )
+
+		messages.success( request, 'Successfully allocated.' )
+		return redirect( obj.get_single_url() )
 
 

@@ -17,6 +17,17 @@
 		$( "#id_payment_form" ).submit();
 	});
 
+
+	$( '#id_allocate' ).smkTools(
+		'click_modal',
+		OOD.URL.Component(
+			OOD.URL.Payment( {{ kwargs.oid }}, {{ kwargs.cid }}, {{ kwargs.sdid }} ),
+			'allocate-payment'
+		)
+	);
+
+
+
 {% endblock %}
 
 
@@ -28,6 +39,28 @@
 <div style="font-size: 2em;">{{ doc.getObj.get_document_state_display }}</div>
 {% endblock %}
 
+
+{% block document_dates %}
+{% get_document_obj instance as doc %}
+<div style="
+	font-size: 1.3em;
+	">
+Date of Payment Receipt: {{ doc.getSpecs.getPaymentDate|date:"j M Y"|escape }}
+</div>
+{% endblock %}
+
+{% block document_payment_status %}
+<div style="
+		font-size: 1.3em;
+	">
+{% get_document_obj instance as doc %}
+{% if doc.getTotals.getUnallocated == 0 %}
+<span style=" color: green; ">Fully Allocated</span>
+{% else %}
+<span style=" color: darkred; ">Available for Allocation</span>
+{% endif %}
+</div>
+{% endblock %}
 
 
 
@@ -45,45 +78,95 @@
 	
 </style>
 
+	<div class="summary-row">
+
+		<div class="add-row-portion">
+			<div>
+				<button id="id_allocate" type="button">Allocate to an Invoice</button>
+			</div>
+
+			<div>
+				<div class="comment-title">
+					<span>Comments:</span>
+				</div>
+				<div class="comment-block">
+					<textarea maxlength="255" name="payment_comment">{{ doc.getSpecs.getComment|escape }}</textarea>
+				</div>
+			</div>
+		</div>
+
+		<div class="summary-portion">
+
+			<div class="inner-total">
+				<div class="inner-total-label">
+					Total
+				</div>
+				<div class="inner-total-amount">
+					<span id="summary_total">{{ doc.getTotals.getTotal|decsplay }}</span>
+				</div>
+			</div>
+
+
+			<div class="inner-paid">
+				<div class="inner-paid-label">
+					Allocated
+				</div>
+				<div class="inner-paid-amount">
+					<span id="summary_paid">{{ doc.getTotals.getAllocated|decsplay }}</span>
+				</div>
+			</div>
+
+
+			<div class="inner-outstanding">
+				<div class="inner-outstanding-label">
+					Available
+				</div>
+				<div class="inner-outstanding-amount">
+					<span id="summary_outstanding">{{ doc.getTotals.getUnallocated|decsplay }}</span>
+				</div>
+			</div>
+
+		</div>
+
+		<div style="clear: both;">&nbsp;</div>
+	</div>
+
+
+
+{% if doc.getTotals.getAllocated > 0 %}
 
 <div style="
-	padding-left: 20px;
-	font-size: 1.3em;
+	border-top: 1px solid #c0c0c0;
+	font-size: 2em;
+	padding: 20px 0px 0px 20px;
+	margin: 20px 0px;
 	">
-	<div style="
-		padding: 20px 0px;
-	">
-		<div style="
-				float: left;
-			">
-			Amount: {{ doc.getTotals.getTotal|decsplay|escape }}
-		</div>
-
-		<div style="
-				float: right;
-				padding-right: 20px;
-			">
-			Date of Payment Receipt: {{ doc.getSpecs.getPaymentDate|date:"j M Y"|escape }}
-		</div>
-	</div>
-
-	<div style="
-		padding: 10px 0px;
-		">
-		<div style="
-				padding: 10px 0px;
-			">Comment:</div>
-		<textarea style="
-			resize: none;
-			width: 350px;
-			height: 60px;
-			border: 1px solid #e2e2e2;
-			margin-top: 10px;
-			"
-			maxlength="255"
-			name="payment_comment">{{ doc.getSpecs.getComment|escape }}</textarea>
-	</div>
+Allocations
 </div>
+
+<div class="item-list" style="
+	margin-bottom: 20px;
+	">
+<table id="id_table">
+<thead>
+	<th class="head-description">Description</th>
+	<th class="head-amount">Amount</th>
+	<th class="head-delete">Delete</th>
+</thead>
+<tbody>
+{% for sda in doc.getAllocations.all %}
+	<tr>
+		<td>{{ sda.destination.get_document_type_display }} {{ sda.destination.refnum }}</td>
+		<td>{{ sda.amount|decsplay }}</td>
+		<td><img class="item-delete-link" src='{{ STATIC_URL }}images/icons/line_delete_grey.png' /></td>
+	</tr>
+{% endfor %}
+</tbody>
+</table>
+</div>
+
+{% endif %}
+
 
 {% endblock %}
 

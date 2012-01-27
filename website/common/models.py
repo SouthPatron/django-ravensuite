@@ -190,9 +190,11 @@ class Client( models.Model ):
 	def get_unpaid_invoice_list_url( self ):
 		return reverse( 'org-client-account-invoice-unpaid-list', kwargs = { 'oid' : self.organization.refnum, 'cid' : self.refnum } )
 
-	def get_unpaid_invoice_count( self ):
-		return SourceDocument.objects.filter( client = self, document_type = SourceDocumentType.INVOICE, document_state = SourceDocumentState.FINAL, total__gt = F( 'allocated' ) ).count()
+	def get_unpaid_invoice_list( self ):
+		return SourceDocument.objects.filter( client = self, document_type = SourceDocumentType.INVOICE, document_state = SourceDocumentState.FINAL, total__gt = F( 'allocated' ) )
 
+	def get_unpaid_invoice_count( self ):
+		return self.get_unpaid_invoice_list().count()
 
 
 

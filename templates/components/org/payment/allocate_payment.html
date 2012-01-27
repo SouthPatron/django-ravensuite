@@ -1,7 +1,8 @@
 {% load decshift %}
+{% load sourcedoc %}
 <div id="dialog-form" title="Allocate Payment">
 	<p class="validateTips">All form fields are required</p>
-	<form id="allocate-new-form" method="POST" action="{% url org-client-account-payment-component-allocate-payment kwargs.oid kwargs.cid kwargs.payid %}">
+	<form id="allocate-new-form" method="POST" action="{% url org-client-account-payment-component-allocate-payment kwargs.oid kwargs.cid kwargs.sdid %}">
 		{% csrf_token %}
 
 		<div id="dialog-text">&nbsp;</div>
@@ -32,18 +33,19 @@
 		</thead>
 		<tbody>
 			{% for obj in instance.client.get_unpaid_invoice_list %}
+			{% get_document_obj obj as doc %}
 			<tr class="payment-line">
 				<td class="first">{{ obj.refnum }}</td>
-				<td class="first">{{ obj.invoice_date }}</td>
-				<td>{{ obj.due_date }}</td>
-				<td class="numeric">{{ obj.total|decsplay }}</td>
-				<td class="numeric">{{ obj.get_amount_outstanding|decsplay }}</td>
+				<td class="first">{{ doc.getSpecs.getInvoiceDate|date:"j M Y" }}</td>
+				<td>{{ doc.getSpecs.getDueDate|date:"j M Y" }}</td>
+				<td class="numeric">{{ doc.getTotals.getTotal|decsplay }}</td>
+				<td class="numeric">{{ doc.getTotals.getUnallocated|decsplay }}</td>
 
 				<input class="refnum" type="hidden" value="{{ obj.refnum }}"/>
-				<input class="total" type="hidden" value="{{ obj.total|decsplay }}"/>
-				<input class="invoice-date" type="hidden" value="{{ obj.invoice_date|date:"j M Y" }}"/>
-				<input class="due-date" type="hidden" value="{{ obj.due_date|date:"j M Y" }}"/>
-				<input class="unpaid" type="hidden" value="{{ obj.get_amount_outstanding|decsplay }}"/>
+				<input class="total" type="hidden" value="{{ doc.getTotals.getTotal|decsplay }}"/>
+				<input class="invoice-date" type="hidden" value="{{ doc.getSpecs.getInvoiceDate|date:"j M Y" }}"/>
+				<input class="due-date" type="hidden" value="{{ doc.getSpecs.getDueDate|date:"j M Y" }}"/>
+				<input class="unpaid" type="hidden" value="{{ doc.getTotals.getUnallocated|decsplay }}"/>
 			</tr>
 			{% endfor %}
 		</tbody>

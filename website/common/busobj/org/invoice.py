@@ -83,6 +83,7 @@ class InvoiceObj( SourceDocumentObj ):
 					''
 				)
 
+				self.parent.getAllocations().clear()
 				return
 
 		return Actions( self )

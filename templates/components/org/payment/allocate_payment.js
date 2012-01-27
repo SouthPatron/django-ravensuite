@@ -1,4 +1,6 @@
 {% load decshift %}
+{% load sourcedoc %}
+{% get_document_obj instance as doc %}
 
 $(function() {
 	
@@ -110,7 +112,7 @@ $(function() {
 				}
 
 
-				invout = new Number( "{{ instance.get_amount_free|decshow }}" );
+				invout = new Number( "{{ doc.getTotals.getUnallocated|decshow }}" );
 
 				if ( proposedamount > invout )
 				{
