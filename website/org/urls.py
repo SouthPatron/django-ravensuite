@@ -112,6 +112,13 @@ urlpatterns = patterns('',
 			name = 'org-client-account-payment-component-deallocate-payment'
 		),
 
+	url( 
+			r'^(?P<oid>\d+)/client/(?P<cid>\d+)/account/payment/(?P<sdid>\d+).pc.refund-payment$',
+			login_required( PcRefundPayment.as_view() ),
+			name = 'org-client-account-payment-component-refund-payment'
+		),
+
+
 
 # ------ CLIENTS / ACCOUNT / CREDIT NOTES ------------------
 

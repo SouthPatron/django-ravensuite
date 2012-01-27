@@ -10,7 +10,7 @@ from common.views.singleobjectview import SingleObjectView
 from common.views.listview import ListView
 from common.views.component import ComponentView
 
-from common.busobj.org import PaymentObj, SourceDocumentObj
+from common.busobj.org import PaymentObj, SourceDocumentObj, RefundObj
 
 from common.utils.parse import *
 
@@ -224,5 +224,31 @@ class PcDeallocatePayment( PaymentComponents ):
 
 		messages.success( request, 'Successfully deallocated.' )
 		return redirect( obj.source.get_single_url() )
+
+
+class PcRefundPayment( PaymentComponents ):
+	template_name = 'components/org/payment/refund_payment'
+
+	def post_html( self, request, obj, data, *args, **kwargs ):
+
+		refund_amount = pnumparse( data.get( "refund-amount" ) )
+		refund_date = pdateparse( data.get( "refund-date" ) )
+
+		try:
+
+			pay = SourceDocumentObj()
+			pay.wrap( obj )
+
+			ref = RefundObj()
+			ref.initialize( pay, refund_amount, refund_date )
+			ref.getSpecs().setComment( "" )
+
+		except BusLogError, berror:
+			messages.error( request, berror.message )
+			return redirect( obj.get_single_url() )
+
+		messages.success( request, 'Successfully allocated.' )
+		return redirect( obj.get_single_url() )
+
 
 

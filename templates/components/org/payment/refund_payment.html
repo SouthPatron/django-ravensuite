@@ -1,0 +1,74 @@
+{% load decshift %}
+{% load sourcedoc %}
+
+{% get_document_obj instance as doc %}
+
+<div id="dialog-form" title="Refund Payment">
+	<p class="validateTips">All form fields are required</p>
+	<form id="refund-form" method="POST" action="{% url org-client-account-payment-component-refund-payment kwargs.oid kwargs.cid kwargs.sdid %}">
+		{% csrf_token %}
+
+		<div id="dialog-text">&nbsp;</div>
+
+
+		<input type="hidden" name="refund-amount" id="id-refund-amount" value="0"/>
+		<input type="hidden" name="refund-date" id="id-refund-date" value="today"/>
+	</form>
+</div>
+
+<div id="dialog-form-one">
+	<div>How much would you like to refund?:</div>
+
+	<fieldset>
+
+		<table>
+			<tbody>
+
+
+				<tr class="reference-row">
+					<td class="col1">Reference:</td>
+					<td class="col2"><span id="id-text-refnum">{{ instance.refnum }}</span></td>
+				</tr>
+
+				<tr class="total-amount-row">
+					<td class="col1">Total Amount:</td>
+					<td class="col2"><span id="id-text-refnum">{{ doc.getTotals.getTotal|decsplay }}</span></td>
+				</tr>
+
+				<tr class="already-allocated-row">
+					<td class="col1">Amount already allocated:</td>
+					<td class="col2"><span id="id-text-refnum">{{ doc.getTotals.getAllocated|decsplay }}</span></td>
+				</tr>
+
+				<tr class="available-to-allocate-row">
+					<td class="col1">Available to allocate:</td>
+					<td class="col2"><span id="id-text-refnum">{{ doc.getTotals.getUnallocated|decsplay }}</span></td>
+				</tr>
+
+
+				<tr class="refund-date-row">
+					<td class="col1">Date of refund:</td>
+					<td class="col2"><input id="id-chosen-date" type="text" value="Today" /></td>
+				</tr>
+
+				<tr class="amount-row">
+					<td class="col1">Amount you wish to refund:</td>
+					<td class="col2"><input id="id-chosen-amount" type="text" value="{{ doc.getTotals.getUnallocated|decsplay }}" /></td>
+				</tr>
+
+			</tbody>
+		</table>
+
+
+	</fieldset>
+
+</div>
+	
+
+<div id="dialog-form-two">
+	<div class="payment-amount-selection">
+		<div>Are you sure?</div>
+	</div>
+</div>
+
+

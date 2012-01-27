@@ -1,0 +1,111 @@
+
+
+.payment-table-list
+{
+	width: 100%;
+}
+
+
+.payment-table-list tr
+{
+}
+
+.payment-table-list tr .first
+{
+	border-left: 1px solid #d8d8d8;
+}
+
+
+.payment-table-list thead tr
+{
+	border-bottom: 1px solid black;
+	background-color: #e2e2e2;
+}
+
+.payment-table-list thead th
+{
+	text-align: left;
+	padding: 10px 10px;
+}
+
+
+.payment-table-list tbody td
+{
+	text-align: left;
+	padding: 10px 10px;
+	border-right: 1px solid #d8d8d8;
+	border-bottom: 1px solid #e8e8e8;
+	cursor: pointer;
+}
+
+.payment-table-list tbody td.numeric
+{
+	text-align: right;
+}
+
+
+.payment-table-list tr.selected-line
+{
+	background-color: #e2f2e2;
+}
+
+.payment-amount-selection table
+{
+	width: 100%;
+}
+
+.payment-amount-selection table .col1
+{
+	text-align: left;
+	font-size: 1.1em;
+	padding: 5px 10px;
+	font-weight: bold;
+}
+
+.payment-amount-selection table .col2
+{
+	text-align: right;
+	padding-right: 10px;
+}
+
+
+
+.payment-amount-selection .reference-row
+{
+}
+
+
+.payment-amount-selection .date-row
+{
+}
+
+
+.payment-amount-selection .amount-row
+{
+	height: 50px;
+}
+
+
+.payment-amount-selection .oustanding-row
+{
+	height: 50px;
+}
+
+
+.payment-amount-selection .available-row
+{
+	height: 50px;
+}
+
+
+.payment-amount-selection .allocate-row
+{
+}
+
+.payment-amount-selection .allocate-row input
+{
+	text-align: right;
+	width: 100%;
+}
+
+
