@@ -85,19 +85,6 @@ urlpatterns = patterns('',
 	url( r'^(?P<oid>\d+)/client/(?P<cid>\d+)/account/invoices$', login_required( InvoiceList.as_view() ), name = 'org-client-account-invoice-list' ),
 	url( r'^(?P<oid>\d+)/client/(?P<cid>\d+)/account/invoice/(?P<sdid>\d+)$', login_required( InvoiceSingle.as_view() ), name = 'org-client-account-invoice-single' ),
 
-	url( 
-			r'^(?P<oid>\d+)/client/(?P<cid>\d+)/account/invoice/(?P<sdid>\d+).pc.allocate-payment$',
-			login_required( IcAllocatePayment.as_view() ),
-			name = 'org-client-account-invoice-component-allocate-payment'
-		),
-
-	url( 
-			r'^(?P<oid>\d+)/client/(?P<cid>\d+)/account/invoice/(?P<sdid>\d+).pc.deallocate-payment$',
-			login_required( IcDeallocatePayment.as_view() ),
-			name = 'org-client-account-invoice-component-deallocate-payment'
-		),
-
-
 
 	url( r'^(?P<oid>\d+)/client/(?P<cid>\d+)/account/invoices/draft$', login_required( InvoiceDraftList.as_view() ), name = 'org-client-account-invoice-draft-list' ),
 	url( r'^(?P<oid>\d+)/client/(?P<cid>\d+)/account/invoices/unpaid$', login_required( InvoiceUnpaidList.as_view() ), name = 'org-client-account-invoice-unpaid-list' ),

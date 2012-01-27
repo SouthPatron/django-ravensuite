@@ -10,7 +10,7 @@ from common.views.singleobjectview import SingleObjectView
 from common.views.listview import ListView
 from common.views.component import ComponentView
 
-from common.busobj.org import PaymentObj, InvoiceObj
+from common.busobj.org import PaymentObj, SourceDocumentObj
 
 from common.utils.parse import *
 
@@ -181,10 +181,10 @@ class PcAllocatePayment( PaymentComponents ):
 
 		try:
 
-			inv = InvoiceObj()
+			inv = SourceDocumentObj()
 			inv.load( invoice_refnum )
 
-			pay = PaymentObj()
+			pay = SourceDocumentObj()
 			pay.wrap( obj )
 
 			pay.getAllocations().allocate( inv, payment_amount )
@@ -214,7 +214,7 @@ class PcDeallocatePayment( PaymentComponents ):
 	def post_html( self, request, obj, data, *args, **kwargs ):
 
 		try:
-			pay = PaymentObj()
+			pay = SourceDocumentObj()
 			pay.wrap( obj.source )
 			pay.getAllocations().clear_one( obj )
 

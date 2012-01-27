@@ -73,28 +73,28 @@
 	});
 
 
-	$( '#payment-allocate' ).smkTools(
+	$( '#id_allocate' ).smkTools(
 		'click_modal',
 		OOD.URL.Component(
-			OOD.URL.Invoice( {{ kwargs.oid }}, {{ kwargs.cid }}, {{ kwargs.sdid }} ),
+			OOD.URL.Payment( {{ kwargs.oid }}, {{ kwargs.cid }}, {{ kwargs.sdid }} ),
 			'allocate-payment'
 		)
 	);
 
 
-	$( '.deallocate-payment' ).click( function() {
-		var allocref = $(this).attr( "value" );
+	$( ".item-delete-link" ).click( function() {
+
+		var myid = $(this).parents("tr").find("input").val();
 
 		$(document).smkTools(
 			'load_modal',
-			'deallocate-payment',
+			'item-delete-link',
 			OOD.URL.Component(
-				OOD.URL.Invoice( {{ kwargs.oid }}, {{ kwargs.cid }}, {{ kwargs.sdid }} ),
-				'deallocate-payment'
+				OOD.URL.PaymentAllocation( {{ kwargs.oid }}, {{ kwargs.cid }}, {{ kwargs.sdid }}, myid )
 			)
-			+ '&payid=' + allocref
 		);
 	});
+
 
 
 
@@ -138,38 +138,26 @@
 </div>
 
 
+
+
 	<div class="summary-row">
 
 		<div class="add-row-portion">
+			<div>
+				<button id="id_allocate" type="button">Allocate to an Invoice</button>
+			</div>
+
 			<div>
 				<div class="comment-title">
 					<span>Comments:</span>
 				</div>
 				<div class="comment-block">
-					<textarea maxlength="255" name="credit_note_comment">{{ doc.getSpecs.getComment|escape }}</textarea>
+					<textarea maxlength="255" name="payment_comment">{{ doc.getSpecs.getComment|escape }}</textarea>
 				</div>
 			</div>
 		</div>
 
 		<div class="summary-portion">
-
-			<div class="inner-amount">
-				<div class="inner-amount-label">
-					Amount
-				</div>
-				<div class="inner-amount-amount">
-					<span id="summary_amount">{{ doc.getTotals.getAmount|decsplay }}</span>
-				</div>
-			</div>
-
-			<div class="inner-tax">
-				<div class="inner-tax-label">
-					Sales Tax
-				</div>
-				<div class="inner-tax-amount">
-					<span id="summary_tax">{{ doc.getTotals.getTax|decsplay }}</span>
-				</div>
-			</div>
 
 			<div class="inner-total">
 				<div class="inner-total-label">
@@ -183,20 +171,20 @@
 
 			<div class="inner-paid">
 				<div class="inner-paid-label">
-					Paid
+					Allocated
 				</div>
 				<div class="inner-paid-amount">
-					<span id="summary_paid">{{ instance.get_amount_paid|decsplay }}</span>
+					<span id="summary_paid">{{ doc.getTotals.getAllocated|decsplay }}</span>
 				</div>
 			</div>
 
 
 			<div class="inner-outstanding">
 				<div class="inner-outstanding-label">
-					Outstanding
+					Available
 				</div>
 				<div class="inner-outstanding-amount">
-					<span id="summary_outstanding">{{ instance.get_amount_outstanding|decsplay }}</span>
+					<span id="summary_outstanding">{{ doc.getTotals.getUnallocated|decsplay }}</span>
 				</div>
 			</div>
 
@@ -204,6 +192,44 @@
 
 		<div style="clear: both;">&nbsp;</div>
 	</div>
+
+
+
+{% if doc.getTotals.getAllocated > 0 %}
+
+<div style="
+	border-top: 1px solid #c0c0c0;
+	font-size: 2em;
+	padding: 20px 0px 0px 20px;
+	margin: 20px 0px;
+	">
+Allocations
+</div>
+
+<div class="item-list" style="
+	margin-bottom: 20px;
+	">
+<table id="id_table">
+<thead>
+	<th class="head-description">Description</th>
+	<th class="head-amount">Amount</th>
+	<th class="head-delete">Delete</th>
+</thead>
+<tbody>
+{% for sda in doc.getAllocations.all %}
+	<tr>
+		<td><a href="{{ sda.destination.get_single_url }}">{{ sda.destination.get_document_type_display }} {{ sda.destination.refnum }}</a></td>
+		<td><a href="{{ sda.destination.get_single_url }}">{{ sda.amount|decsplay }}</a></td>
+		<td><img class="item-delete-link" src='{{ STATIC_URL }}images/icons/line_delete_grey.png' /><input type="hidden" name="sub_allocation" value="{{ sda.id }}" /></td>
+	</tr>
+{% endfor %}
+</tbody>
+</table>
+</div>
+
+{% endif %}
+
+
 {% endblock %}
 
 
@@ -214,37 +240,5 @@
 {% block document_button_row_right %}
 	<button id="id_button_void" type="button">Void</button>
 {% endblock %}
-
-
-
-{% block document_addendum %}
-{% if not instance.is_paid %}
-<div>
-	<button id="payment-allocate" type="button">Allocate a Payment</button>
-</div>
-{% else %}
-<div>
-	Fully Allocated
-</div>
-{% endif %}
-
-
-<div>
-	<table class="itol-payment-table">
-	<tbody>
-	{% for pmt in instance.paymentallocation_set.all %}
-		<tr>
-			<td>Payment allocated:</td>
-			<td>{{ pmt.refnum }}</td>
-			<td>{{ pmt.amount|decsplay }}</td>
-			<td>{{ pmt.payment.payment_date|date:"j M Y" }}</td>
-			<td><input class="deallocate-payment" type="image" src='{{ STATIC_URL }}images/icons/line_delete_grey.png' value="{{ pmt.id }}"/></td>
-		</tr>
-	{% endfor %}
-	</tbody>
-	</table>
-</div>
-{% endblock %}
-
 
 
