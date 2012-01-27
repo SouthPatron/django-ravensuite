@@ -1,6 +1,6 @@
 from django import template
 
-from common.busobj.org import InvoiceObj, PaymentObj, CreditNoteObj
+from common.busobj.org import InvoiceObj, PaymentObj, CreditNoteObj, RefundObj
 from common.models import SourceDocumentType
 
 register = template.Library()
@@ -25,6 +25,9 @@ class GetDocumentObj( template.Node ):
 
 			if sdo.document_type == SourceDocumentType.CREDIT_NOTE:
 				obj = CreditNoteObj()
+
+			if sdo.document_type == SourceDocumentType.REFUND:
+				obj = RefundObj()
 
 			obj.wrap( sdo )
 

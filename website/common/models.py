@@ -229,7 +229,10 @@ class Client( models.Model ):
 	# Refunds -------------
 
 
+	def get_refund_list_url( self ):
+		return reverse( 'org-client-account-refund-list', kwargs = { 'oid' : self.organization.refnum, 'cid' : self.refnum } )
 
+	
 
 
 class SourceDocument( models.Model ):
@@ -266,6 +269,9 @@ class SourceDocument( models.Model ):
 
 		if self.document_type == SourceDocumentType.CREDIT_NOTE:
 			my_route = 'org-client-account-credit-note-single'
+
+		if self.document_type == SourceDocumentType.REFUND:
+			my_route = 'org-client-account-refund-single'
 
 		return reverse( my_route,
 					kwargs = {

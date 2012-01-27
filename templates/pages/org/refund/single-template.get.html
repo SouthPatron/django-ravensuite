@@ -1,0 +1,99 @@
+{% extends 'layouts/org/member.html' %}
+
+{% load decshift %}
+
+{% block str_org_name %}{{ instance.get_org.trading_name }}{% endblock %}
+{% block str_client_name %}{{ instance.get_client.trading_name }}{% endblock %}
+{% block str_section_name %}Payment {{ instance.refnum }}{% endblock %}
+
+{% block breadcrumbs %}
+{% include 'pages/org/refund/refund-breadcrumbs.html' with instance=instance %}
+{% endblock %}
+
+
+{% block page_functions %}
+{% include 'menus/org/client_top.html' with instance=instance.get_client %}
+{% endblock  %}
+
+{% block subsection_functions %}
+{% include 'menus/org/account_sub.html' with instance=instance %}
+{% endblock %}
+
+{% block filter_functions %}
+{% include 'menus/org/refund_filter.html' with instance=instance.get_client.get_account %}
+{% endblock %}
+
+
+
+
+
+{% block head_includes %}
+	<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}stylesheets/common/member-itemized-total.css" media="screen" />
+
+	<script type="text/javascript" src="{{ STATIC_URL }}js/smk.js"></script>
+	<script type="text/javascript" src="{{ STATIC_URL }}js/validations.js"></script>
+	<script type="text/javascript" src="{{ STATIC_URL }}js/date.js"></script>
+
+{% endblock %}
+
+
+
+{% block content %}
+
+
+<div class="itol">
+
+	<form method="POST" id="id_refund_form">
+	{% csrf_token %}
+
+	<div class="itol-header">
+		<div class="itol-type">{% block document_type %}{% endblock %}</div>
+
+		<div class="itol-type-status">
+		{% block document_status %}{% endblock %}
+		</div>
+		<div style="clear: both;">&nbsp;</div>
+	</div>
+
+	<div class="itol-status">
+		<div class="itol-dates">
+			{% block document_dates %}{% endblock %}
+		</div>
+
+		<div class="itol-payment-status">
+			{% block document_payment_status %}{% endblock %}
+		</div>
+		<div style="clear: both;">&nbsp;</div>
+	</div>
+
+	<div class="tax-row">
+		{% block document_tax_row %}{% endblock %}
+	</div>
+
+	{% block document_body %}{% endblock %}
+
+
+	<div class="button-row">
+		<div class="button-row-left">
+			{% block document_button_row_left %}{% endblock %}
+		</div>
+
+		<div class="button-row-right">
+			{% block document_button_row_right %}{% endblock %}
+		</div>
+
+		<div style="clear: both;">&nbsp;</div>
+	</div>
+
+	<input type="hidden" id="id_refund_state" name="refund_state" value="{{ instance.document_state }}" />
+	</form>
+
+</div>
+
+
+{% block document_addendum %}{% endblock %}
+
+{% endblock %}
+
+
+
