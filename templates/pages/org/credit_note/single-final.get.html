@@ -81,6 +81,15 @@
 		)
 	);
 
+	$( '#id_refund' ).smkTools(
+		'click_modal',
+		OOD.URL.Component(
+			OOD.URL.CreditNote( {{ kwargs.oid }}, {{ kwargs.cid }}, {{ kwargs.sdid }} ),
+			'refund'
+		)
+	);
+
+
 
 	$( ".item-delete-link" ).click( function() {
 
@@ -143,9 +152,12 @@
 	<div class="summary-row">
 
 		<div class="add-row-portion">
+			{% if doc.getTotals.getUnallocated > 0 %}
 			<div>
 				<button id="id_allocate" type="button">Allocate to an Invoice</button>
+				<button id="id_refund" type="button">Refund Portion to Client</button>
 			</div>
+			{% endif %}
 
 			<div>
 				<div class="comment-title">

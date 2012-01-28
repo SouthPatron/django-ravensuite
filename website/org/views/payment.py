@@ -227,7 +227,7 @@ class PcDeallocatePayment( PaymentComponents ):
 
 
 class PcRefundPayment( PaymentComponents ):
-	template_name = 'components/org/payment/refund_payment'
+	template_name = 'components/org/payment/refund'
 
 	def post_html( self, request, obj, data, *args, **kwargs ):
 

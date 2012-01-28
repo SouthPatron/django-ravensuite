@@ -5,7 +5,7 @@
 
 <div id="dialog-form" title="Refund Payment">
 	<p class="validateTips">All form fields are required</p>
-	<form id="refund-form" method="POST" action="{% url org-client-account-payment-component-refund-payment kwargs.oid kwargs.cid kwargs.sdid %}">
+	<form id="refund-form" method="POST" action="{% url org-client-account-payment-component-refund kwargs.oid kwargs.cid kwargs.sdid %}">
 		{% csrf_token %}
 
 		<div id="dialog-text">&nbsp;</div>

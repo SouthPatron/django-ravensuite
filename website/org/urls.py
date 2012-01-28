@@ -113,9 +113,9 @@ urlpatterns = patterns('',
 		),
 
 	url( 
-			r'^(?P<oid>\d+)/client/(?P<cid>\d+)/account/payment/(?P<sdid>\d+).pc.refund-payment$',
+			r'^(?P<oid>\d+)/client/(?P<cid>\d+)/account/payment/(?P<sdid>\d+).pc.refund$',
 			login_required( PcRefundPayment.as_view() ),
-			name = 'org-client-account-payment-component-refund-payment'
+			name = 'org-client-account-payment-component-refund'
 		),
 
 
@@ -128,6 +128,13 @@ urlpatterns = patterns('',
 
 	url( r'^(?P<oid>\d+)/client/(?P<cid>\d+)/account/credit-notes/draft$', login_required( CreditNoteDraftList.as_view() ), name = 'org-client-account-credit-note-draft-list' ),
 	url( r'^(?P<oid>\d+)/client/(?P<cid>\d+)/account/credit-notes/unallocated$', login_required( CreditNoteUnallocatedList.as_view() ), name = 'org-client-account-credit-note-unallocated-list' ),
+
+	url( 
+			r'^(?P<oid>\d+)/client/(?P<cid>\d+)/account/credit-note/(?P<sdid>\d+).pc.refund$',
+			login_required( PcRefundPayment.as_view() ),
+			name = 'org-client-account-credit-note-component-refund'
+		),
+
 
 
 
