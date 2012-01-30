@@ -8,7 +8,6 @@ from django.contrib import messages
 
 from common.views.singleobjectview import SingleObjectView
 from common.views.listview import ListView
-from common.views.component import ComponentView 
 
 from common.buslog.org import PaymentBusLog
 from common.busobj.org import CreditNoteObj

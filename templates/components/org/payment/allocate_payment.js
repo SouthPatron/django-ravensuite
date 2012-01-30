@@ -61,10 +61,10 @@ $(function() {
 
 				nam = new Number( selunpaid.replace( ',', '' ) );
 
-				invout = new Number( selunpaid );
+				avail = new Number( "{{ doc.getTotals.getUnallocated|decshow }}" );
 
-				if ( invout < nam )
-					nam = invout;
+				if ( avail < nam )
+					nam = avail;
 
 				$( "#dialog-text #id-text-refnum" ).text( selrefnum );
 				$( "#dialog-text #id-text-total" ).text( seltotal );

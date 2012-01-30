@@ -17,7 +17,7 @@ urlpatterns = patterns('',
 	url(
 			r'^(?P<oid>\d+)/clients.pc.add_new_client$',
 			login_required(
-				OrgComponents.as_view(
+				components.OrgComponents.as_view(
 					template_name = 'components/org/client/add_new_client'
 				)
 			),
@@ -58,7 +58,7 @@ urlpatterns = patterns('',
 	url( 
 			r'^(?P<oid>\d+)/client/(?P<cid>\d+)/account.pc.receive-payment$',
 			login_required(
-				AccountComponents.as_view(
+				components.AccountComponents.as_view(
 					template_name = 'components/org/account/receive_payment'
 				)
 			),
@@ -68,7 +68,7 @@ urlpatterns = patterns('',
 	url( 
 			r'^(?P<oid>\d+)/client/(?P<cid>\d+)/account.pc.refund$',
 			login_required(
-				AccountComponents.as_view(
+				components.AccountComponents.as_view(
 					template_name = 'components/org/account/refund'
 				)
 			),
@@ -102,19 +102,19 @@ urlpatterns = patterns('',
 
 	url( 
 			r'^(?P<oid>\d+)/client/(?P<cid>\d+)/account/payment/(?P<sdid>\d+).pc.allocate-payment$',
-			login_required( PcAllocatePayment.as_view() ),
+			login_required( components.PcAllocatePayment.as_view() ),
 			name = 'org-client-account-payment-component-allocate-payment'
 		),
 
 	url( 
 			r'^(?P<oid>\d+)/client/(?P<cid>\d+)/account/payment/(?P<sdid>\d+)/allocation/(?P<alocid>\d+)',
-			login_required( PcDeallocatePayment.as_view() ),
+			login_required( components.PcDeallocatePayment.as_view() ),
 			name = 'org-client-account-payment-component-deallocate-payment'
 		),
 
 	url( 
 			r'^(?P<oid>\d+)/client/(?P<cid>\d+)/account/payment/(?P<sdid>\d+).pc.refund$',
-			login_required( PcRefundPayment.as_view() ),
+			login_required( components.PcRefundPayment.as_view() ),
 			name = 'org-client-account-payment-component-refund'
 		),
 
@@ -131,7 +131,7 @@ urlpatterns = patterns('',
 
 	url( 
 			r'^(?P<oid>\d+)/client/(?P<cid>\d+)/account/credit-note/(?P<sdid>\d+).pc.refund$',
-			login_required( PcRefundPayment.as_view() ),
+			login_required( components.PcRefundPayment.as_view() ),
 			name = 'org-client-account-credit-note-component-refund'
 		),
 

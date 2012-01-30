@@ -19,3 +19,6 @@ from task import *
 
 from user import *
 
+
+import components
+

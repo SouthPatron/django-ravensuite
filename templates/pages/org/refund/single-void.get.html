@@ -8,11 +8,6 @@
 
 {% block onready %}
 
-	$( "#id_void_refund" ).click( function() {
-		$( "#id_refund_state" ).val( 20 );
-		$( "#id_refund_form" ).submit();
-	});
-
 	$( "#id_save_refund" ).click( function() {
 		$( "#id_refund_form" ).submit();
 	});
@@ -118,10 +113,6 @@ Allocations
 {% endif %}
 
 
-{% endblock %}
-
-{% block document_button_row_left %}
-	<button id="id_void_refund" type="button">Void Refund</button>
 {% endblock %}
 
 {% block document_button_row_right %}

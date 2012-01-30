@@ -9,7 +9,6 @@ from django.http import HttpResponseForbidden
 
 from common.views.singleobjectview import SingleObjectView
 from common.views.listview import ListView
-from common.views.component import ComponentView
 
 from common.models import *
 
@@ -95,12 +94,4 @@ class OrgTestSingle( SingleObjectView ):
 
 
 
-
-class OrgComponents( ComponentView ):
-
-	def get_object( self, request, *args, **kwargs ):
-		return get_object_or_404(
-					Organization,
-					refnum = self.url_kwargs.oid,
-				)
 

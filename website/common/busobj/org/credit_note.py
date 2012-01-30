@@ -27,7 +27,6 @@ class CreditNoteObj( SourceDocumentObj ):
 		specs.setCreditNoteDate( datetime.date.today() )
 		specs.setComment( "" )
 		return self
-
 	
 	def getActions( self ):
 		class Actions( object ):
@@ -56,7 +55,7 @@ class CreditNoteObj( SourceDocumentObj ):
 					self.parent.getSpecs().getCreditNoteDate(),
 					'CREDIT NOTE',
 					'CreditNote {}'.format( self.parent.getObj().refnum ),
-					long(0) - (self.parent.getTotals().getTotal()),
+					(self.parent.getTotals().getTotal()),
 					self.parent.getObj(),
 					''
 				)
@@ -76,7 +75,7 @@ class CreditNoteObj( SourceDocumentObj ):
 					self.parent.getSpecs().getCreditNoteDate(),
 					'VOID',
 					'Void of CreditNote {}'.format( self.parent.getObj().refnum ),
-					(self.parent.getTotals().getTotal()),
+					(long(0) - (self.parent.getTotals().getTotal())),
 					self.parent.getObj(),
 					''
 				)
@@ -85,8 +84,6 @@ class CreditNoteObj( SourceDocumentObj ):
 				return
 
 		return Actions( self )
-
-
 
 	def getSpecs( self ):
 		class Specifics( object ):
@@ -106,5 +103,4 @@ class CreditNoteObj( SourceDocumentObj ):
 				self.parent.getMeta().set( "comment", comment[:255] )
 
 		return Specifics( self )
-
 

@@ -83,15 +83,6 @@
 	});
 
 
-	$( '#refund-create' ).smkTools(
-			'click_modal',
-			OOD.URL.Component(
-				OOD.URL.Account( {{ kwargs.oid }}, {{ kwargs.cid }} ),
-				'refund'
-			)
-		);
-	
-
 {% endblock %}
 
 {% block content_menu_right %}
@@ -100,7 +91,6 @@
 	<li><a href="#" id="invoice-create">New Invoice</a></li>
 	<li><a href="#" id="payment-create">Receive Payment</a></li>
 	<li><a href="#" id="credit-note-create">Create a Credit Note</a></li>
-	<li><a href="#" id="refund-create">Refund</a></li>
 </ul>
 
 {% endblock %}

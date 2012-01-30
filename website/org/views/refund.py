@@ -9,6 +9,7 @@ from common.views.singleobjectview import SingleObjectView
 from common.views.listview import ListView
 
 from common.buslog.org import RefundBusLog
+from common.busobj.org import RefundObj
 
 from common.exceptions import *
 from common.models import *
@@ -49,5 +50,29 @@ class RefundSingle( SingleObjectView ):
 			self.template_name = 'pages/org/refund/single-void'
 
 		return obj
+
+
+
+	def update_object_html( self, request, obj, data, *args, **kwargs ):
+
+		state = long( data.get( 'refund_state', obj.document_state ) )
+
+		mobj = RefundObj()
+		mobj.wrap( obj )
+
+		comment = mobj.getSpecs().getComment()
+
+		comment = data.get( 'refund_comment', None )
+		if comment is not None:
+			mobj.getSpecs().setComment( comment )
+
+		if state != obj.document_state:
+
+			if state == SourceDocumentState.VOID:
+				mobj.getActions().void()
+
+
+		return redirect( mobj.get_single_url() )
+
 
 

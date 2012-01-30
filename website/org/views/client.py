@@ -5,7 +5,6 @@ from django.contrib import messages
 
 from common.views.singleobjectview import SingleObjectView
 from common.views.listview import ListView
-from common.views.component import ComponentView
 
 from common.models import *
 from common.buslog.org.client import ClientBusLog
@@ -66,13 +65,4 @@ class ClientSingle( SingleObjectView ):
 		return redirect( 'org-client-single', oid = obj.organization.refnum, cid = obj.refnum )
 
 
-
-class ClientComponents( ComponentView ):
-
-	def get_object( self, request, *args, **kwargs ):
-		return get_object_or_404(
-					Client,
-					refnum = self.url_kwargs.cid,
-					organization__refnum = self.url_kwargs.oid,
-				)
 

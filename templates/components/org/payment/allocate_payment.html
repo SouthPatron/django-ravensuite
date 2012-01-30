@@ -90,9 +90,11 @@
 </td>
 				</tr>
 
+				{% get_document_obj instance as doc %}
+
 				<tr class="available-row">
 					<td class="col1">Available to Allocate:</td>
-					<td class="col2"><span id="id-text-unpaid">0.00</span>
+					<td class="col2"><span id="id-text-available">{{ doc.getTotals.getUnallocated|decsplay }}</span>
 </td>
 				</tr>
 

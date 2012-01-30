@@ -48,6 +48,9 @@ class PaymentObj( SourceDocumentObj ):
 				if ns != SourceDocumentState.DRAFT:
 					raise BusLogError( 'This payment can not be finalized because it is not a draft.' )
 
+				if self.parent.getTotals().getTotal() <= 0:
+					raise BusLogError( 'The payment amount has to be greater than zero.' )
+
 				self.parent.getObj().document_state = SourceDocumentState.FINAL
 				self.parent.save()
 
