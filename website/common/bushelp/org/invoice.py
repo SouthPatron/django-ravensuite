@@ -137,8 +137,8 @@ class InvoiceHelper( object ):
 			return
 
 		if ns == SourceDocumentState.VOID:
-			ally = Allocator( af )
-			ally.clear()
+			ally = Allocator( )
+			ally.clear( obj )
 			af.void()
 			return
 

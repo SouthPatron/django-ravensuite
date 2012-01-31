@@ -121,17 +121,17 @@ class CreditNoteHelper( object ):
 		af = ActionFactory.instantiate( crd )
 
 		if ns == SourceDocumentState.FINAL:
-			crd.finalize()
+			af.finalize()
 			return
 
 		if ns == SourceDocumentState.VOID:
-			ally = Allocator( crd )
-			ally.clear()
-			crd.void()
+			ally = Allocator()
+			ally.clear( crd )
+			af.void()
 			return
 
 		if ns == SourceDocumentState.DELETE:
-			crd.delete()
+			af.delete()
 			return
 
 		raise BusLogError( 'Invalid state change requested.' )

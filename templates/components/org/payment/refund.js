@@ -27,7 +27,7 @@ $(function() {
 
 				thedate = Date.parse( thedate ).toString( 'dd MMM yyyy' );
 
-				var orig = $( "#id-chosen-amount" ).val();
+				var orig = $( "#dialog-text #id-chosen-amount" ).val();
 				var refa = orig.replace( ',', '' );
 
 				if ( isNaN( refa ) )
