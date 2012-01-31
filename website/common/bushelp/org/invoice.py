@@ -12,6 +12,10 @@ from common.utils.dbgdatetime import datetime
 from common.utils.parse import *
 
 
+
+from common.bushelp.org.actions import ActionFactory
+from common.bushelp.org.allocator import Allocator
+
 # Helper
 #	
 #
@@ -117,25 +121,29 @@ class InvoiceHelper( object ):
 
 
 	@staticmethod
-	def _update_handle_state_change( inv, new_data ):
+	def _update_handle_state_change( obj, new_data ):
 		try:
 			ns = new_data['state']
 		except KeyError:
 			return
 
-		if ns == inv.getObj().document_state:
+		if ns == obj.getObj().document_state:
 			return
 
+		af = ActionFactory.instantiate( obj )
+
 		if ns == SourceDocumentState.FINAL:
-			inv.getActions().finalize()
+			af.finalize()
 			return
 
 		if ns == SourceDocumentState.VOID:
-			inv.getActions().void()
+			ally = Allocator( af )
+			ally.clear()
+			af.void()
 			return
 
 		if ns == SourceDocumentState.DELETE:
-			inv.getActions().delete()
+			af.delete()
 			return
 
 		raise BusLogError( 'Invalid state change requested.' )

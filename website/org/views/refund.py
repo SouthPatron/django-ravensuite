@@ -10,6 +10,7 @@ from common.views.listview import ListView
 
 from common.buslog.org import RefundBusLog
 from common.busobj.org import RefundObj
+from common.bushelp.org.refund import RefundHelper
 
 from common.exceptions import *
 from common.models import *
@@ -69,7 +70,7 @@ class RefundSingle( SingleObjectView ):
 		if state != obj.document_state:
 
 			if state == SourceDocumentState.VOID:
-				mobj.getActions().void()
+				RefundHelper.void( mobj )
 
 
 		return redirect( mobj.get_single_url() )

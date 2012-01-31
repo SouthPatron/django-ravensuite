@@ -11,6 +11,9 @@ from common.moe import MarginsOfError
 from common.utils.dbgdatetime import datetime
 from common.utils.parse import *
 
+from common.bushelp.org.actions import ActionFactory
+from common.bushelp.org.allocator import Allocator
+
 
 # Helper
 #	
@@ -115,16 +118,20 @@ class CreditNoteHelper( object ):
 		if ns == crd.getObj().document_state:
 			return
 
+		af = ActionFactory.instantiate( crd )
+
 		if ns == SourceDocumentState.FINAL:
-			crd.getActions().finalize()
+			crd.finalize()
 			return
 
 		if ns == SourceDocumentState.VOID:
-			crd.getActions().void()
+			ally = Allocator( crd )
+			ally.clear()
+			crd.void()
 			return
 
 		if ns == SourceDocumentState.DELETE:
-			crd.getActions().delete()
+			crd.delete()
 			return
 
 		raise BusLogError( 'Invalid state change requested.' )

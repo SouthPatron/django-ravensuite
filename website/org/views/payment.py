@@ -11,6 +11,8 @@ from common.views.listview import ListView
 
 from common.busobj.org import PaymentObj, SourceDocumentObj, RefundObj
 
+from common.bushelp.org.actions import ActionFactory
+
 from common.utils.parse import *
 
 from common.exceptions import *
@@ -102,7 +104,7 @@ class PaymentSingle( SingleObjectView ):
 	def delete_object( self, request, ob, *args, **kwargs ):
 		pmt = PaymentObj()
 		pmt.wrap( ob )
-		pmt.getActions().delete()
+		ActionFactory.instantiate( pmt ).delete()
 		return redirect( ob.get_client().get_draft_payment_list_url() )
 
 
@@ -147,12 +149,13 @@ class PaymentSingle( SingleObjectView ):
 
 		if state != obj.document_state:
 
+			acf = ActionFactory.instantiate( pmt )
+
 			if state == SourceDocumentState.FINAL:
-				pmt.getActions().finalize()
+				acf.finalize()
 
 			if state == SourceDocumentState.VOID:
-				pmt.getActions().void()
-
+				acf.void()
 
 		return redirect( pmt.get_single_url() )
 

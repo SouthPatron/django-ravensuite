@@ -5,8 +5,13 @@ from django.db.models import F,Q
 from django.shortcuts import get_object_or_404, redirect
 from django.contrib import messages
 
-from common.busobj.org import PaymentObj, SourceDocumentObj, RefundObj
 from common.views.component import ComponentView
+
+from common.busobj.org import PaymentObj, SourceDocumentObj, RefundObj
+from common.busobj.org.factory import Factory
+from common.bushelp.org.allocator import Allocator
+from common.bushelp.org.actions import ActionFactory
+from common.bushelp.org.refund import RefundHelper
 
 from common.utils.parse import *
 
@@ -42,7 +47,8 @@ class PcAllocatePayment( PaymentComponents ):
 			pay = SourceDocumentObj()
 			pay.wrap( obj )
 
-			pay.getAllocations().allocate( inv, payment_amount )
+			alo = Allocator()
+			alo.allocate( pay, inv, payment_amount )
 
 		except BusLogError, berror:
 			messages.error( request, berror.message )
@@ -69,9 +75,15 @@ class PcDeallocatePayment( PaymentComponents ):
 	def post_html( self, request, obj, data, *args, **kwargs ):
 
 		try:
-			pay = SourceDocumentObj()
-			pay.wrap( obj.source )
-			pay.getAllocations().clear_one( obj )
+			pay = Factory.instantiate( obj.source )
+
+			alo = Allocator()
+			alo.deallocate( pay, obj.id )
+
+			if obj.destination.document_type == SourceDocumentType.REFUND:
+				dest = Factory.instantiate( obj.destination )
+				ActionFactory.instantiate( dest ).void()
+
 
 		except BusLogError, berror:
 			messages.error( request, berror.message )
@@ -90,12 +102,10 @@ class PcRefundPayment( PaymentComponents ):
 		refund_date = pdateparse( data.get( "refund-date" ) )
 
 		try:
-
-			pay = SourceDocumentObj()
+			pay = Factory.instantiate( obj )
 			pay.wrap( obj )
 
-			ref = RefundObj()
-			ref.initialize( pay, refund_amount, refund_date )
+			ref = RefundHelper.create( pay, refund_amount, refund_date )
 			ref.getSpecs().setComment( "" )
 
 		except BusLogError, berror:

@@ -13,6 +13,8 @@ from common.buslog.org import PaymentBusLog
 from common.busobj.org import InvoiceObj
 from common.bushelp.org import InvoiceHelper
 
+from common.bushelp.org.actions import ActionFactory
+
 from common.exceptions import *
 from common.models import *
 
@@ -102,7 +104,7 @@ class InvoiceSingle( SingleObjectView ):
 	def delete_object( self, request, ob, *args, **kwargs ):
 		inv = InvoiceObj()
 		inv.wrap( ob )
-		inv.getActions().delete()
+		ActionFactory.instantiate( inv ).delete()
 		return redirect( ob.get_client().get_invoice_list_url() )
 
 

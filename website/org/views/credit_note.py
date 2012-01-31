@@ -12,6 +12,7 @@ from common.views.listview import ListView
 from common.buslog.org import PaymentBusLog
 from common.busobj.org import CreditNoteObj
 from common.bushelp.org import CreditNoteHelper
+from common.bushelp.org.actions import ActionFactory
 
 from common.exceptions import *
 from common.models import *
@@ -102,7 +103,7 @@ class CreditNoteSingle( SingleObjectView ):
 	def delete_object( self, request, ob, *args, **kwargs ):
 		inv = CreditNoteObj()
 		inv.wrap( ob )
-		inv.getActions().delete()
+		ActionFactory.instantiate( inv ).delete()
 		return redirect( ob.get_client().get_credit_note_list_url() )
 
 
