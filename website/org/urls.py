@@ -141,7 +141,20 @@ urlpatterns = patterns('',
 # ------ CLIENTS / ACCOUNT / REFUNDS ------------------
 
 	url( r'^(?P<oid>\d+)/client/(?P<cid>\d+)/account/refunds$', login_required( RefundList.as_view() ), name = 'org-client-account-refund-list' ),
+
+	url( r'^(?P<oid>\d+)/client/(?P<cid>\d+)/account/refunds/draft$', login_required( RefundDraftList.as_view() ), name = 'org-client-account-refund-draft-list' ),
+
+	url( r'^(?P<oid>\d+)/client/(?P<cid>\d+)/account/refunds/unallocated$', login_required( RefundUnallocatedList.as_view() ), name = 'org-client-account-refund-unallocated-list' ),
+
 	url( r'^(?P<oid>\d+)/client/(?P<cid>\d+)/account/refund/(?P<sdid>\d+)$', login_required( RefundSingle.as_view() ), name = 'org-client-account-refund-single' ),
+
+
+	url( 
+			r'^(?P<oid>\d+)/client/(?P<cid>\d+)/account/refund/(?P<sdid>\d+).pc.allocate$',
+			login_required( components.PcAllocateRefund.as_view() ),
+			name = 'org-client-account-refund-component-allocate'
+		),
+
 
 
 # ------ ACTIVITIES -----------------------------

@@ -14,15 +14,15 @@ class RefundObj( SourceDocumentObj ):
 	def __init__( self, sdid = None ):
 		super( RefundObj, self ).__init__( sdid )
 
-	def initialize( self, source_document, amount, refund_date ):
+	def initialize( self, client ):
 		super( RefundObj, self ).initialize(
-				source_document.getObj().client,
+				client,
 				SourceDocumentType.REFUND,
-				SourceDocumentState.FINAL
+				SourceDocumentState.DRAFT
 			)
 
 		specs = self.getSpecs()
-		specs.setRefundDate( refund_date )
+		specs.setRefundDate( datetime.datetime.now() )
 		specs.setComment( "" )
 		return self
 

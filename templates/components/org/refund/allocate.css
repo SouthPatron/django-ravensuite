@@ -1,0 +1,111 @@
+
+
+.refund-table-list
+{
+	width: 100%;
+}
+
+
+.refund-table-list tr
+{
+}
+
+.refund-table-list tr .first
+{
+	border-left: 1px solid #d8d8d8;
+}
+
+
+.refund-table-list thead tr
+{
+	border-bottom: 1px solid black;
+	background-color: #e2e2e2;
+}
+
+.refund-table-list thead th
+{
+	text-align: left;
+	padding: 10px 10px;
+}
+
+
+.refund-table-list tbody td
+{
+	text-align: left;
+	padding: 10px 10px;
+	border-right: 1px solid #d8d8d8;
+	border-bottom: 1px solid #e8e8e8;
+	cursor: pointer;
+}
+
+.refund-table-list tbody td.numeric
+{
+	text-align: right;
+}
+
+
+.refund-table-list tr.selected-line
+{
+	background-color: #e2f2e2;
+}
+
+.refund-amount-selection table
+{
+	width: 100%;
+}
+
+.refund-amount-selection table .col1
+{
+	text-align: left;
+	font-size: 1.1em;
+	padding: 5px 10px;
+	font-weight: bold;
+}
+
+.refund-amount-selection table .col2
+{
+	text-align: right;
+	padding-right: 10px;
+}
+
+
+
+.refund-amount-selection .reference-row
+{
+}
+
+
+.refund-amount-selection .date-row
+{
+}
+
+
+.refund-amount-selection .amount-row
+{
+	height: 50px;
+}
+
+
+.refund-amount-selection .oustanding-row
+{
+	height: 50px;
+}
+
+
+.refund-amount-selection .available-row
+{
+	height: 50px;
+}
+
+
+.refund-amount-selection .allocate-row
+{
+}
+
+.refund-amount-selection .allocate-row input
+{
+	text-align: right;
+	width: 100%;
+}
+
+

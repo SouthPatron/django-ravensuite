@@ -1,0 +1,106 @@
+{% load decshift %}
+{% load sourcedoc %}
+<div id="dialog-form" title="Allocate to this Refund">
+	<p class="validateTips">All form fields are required</p>
+	<form id="allocate-new-form" method="POST" action="{% url org-client-account-refund-component-allocate kwargs.oid kwargs.cid kwargs.sdid %}">
+		{% csrf_token %}
+
+		<div id="dialog-text">&nbsp;</div>
+
+
+		<input type="hidden" id="id-avf-refnum" value="-1" name="refnum" />
+		<input type="hidden" id="id-avf-total" value="0"/>
+		<input type="hidden" id="id-avf-available" value="0"/>
+		<input type="hidden" id="id-avf-avf-date" value="Today"/>
+	</form>
+</div>
+
+<div id="dialog-form-one">
+	<div>List of available funds:</div>
+
+	<fieldset>
+
+	<table class="refund-table-list">
+		<thead>
+			<tr>
+				<th>Ref Num</th>
+				<th>Type</th>
+				<th>Date</th>
+				<th class="numeric">Total</th>
+				<th class="numeric">Available</th>
+			</tr>
+		</thead>
+		<tbody>
+			{% for obj in instance.client.get_available_funds_list %}
+			{% get_document_obj obj as doc %}
+			<tr class="refund-line">
+				<td class="first">{{ obj.refnum }}</td>
+				<td class="">{{ obj.get_document_type_display }}</td>
+				<td class="">{{ obj.creation_time|date:"j M Y" }}</td>
+				<td class="numeric">{{ doc.getTotals.getTotal|decsplay }}</td>
+				<td class="numeric">{{ doc.getTotals.getUnallocated|decsplay }}</td>
+
+				<input class="refnum" type="hidden" value="{{ obj.refnum }}"/>
+				<input class="total" type="hidden" value="{{ doc.getTotals.getTotal|decsplay }}"/>
+				<input class="avf-date" type="hidden" value="{{ obj.creation_time|date:"j M Y" }}"/>
+				<input class="available" type="hidden" value="{{ doc.getTotals.getUnallocated|decsplay }}"/>
+			</tr>
+			{% endfor %}
+		</tbody>
+	</table>
+	</fieldset>
+</div>
+	
+
+<div id="dialog-form-two">
+	<div class="refund-amount-selection">
+	<fieldset>
+
+		<table>
+			<tbody>
+
+				<tr class="reference-row">
+					<td class="col1">Reference:</td>
+					<td class="col2"><span id="id-text-refnum">0</span></td>
+				</tr>
+
+				<tr class="date-row">
+					<td class="col1">Date:</td>
+					<td class="col2"><span id="id-text-date">Today</span></td>
+				</tr>
+
+				<tr class="total-row">
+					<td class="col1">Total:</td>
+					<td class="col2"><span id="id-text-total">0.00</span>
+</td>
+				</tr>
+
+				<tr class="unallocated-row">
+					<td class="col1">Available to Allocate:</td>
+					<td class="col2"><span id="id-text-unallocated">0.00</span>
+</td>
+				</tr>
+
+				{% get_document_obj instance as doc %}
+
+				<tr class="available-row">
+					<td class="col1">Amount needed:</td>
+					<td class="col2"><span id="id-text-needed">{{ doc.getTotals.getUnallocated|decsplay }}</span>
+</td>
+				</tr>
+
+				<tr class="allocate-row">
+					<td class="col1">How much do you want to allocate?</td>
+					<td class="col2">
+						<input type="text" name="amount" id="id-amount" value="-1"/>
+					</td>
+				</tr>
+
+			</tbody>
+		</table>
+
+	</fieldset>
+	</div>
+</div>
+
+

@@ -177,6 +177,21 @@ class Client( models.Model ):
 	def get_account( self ):
 		return Account.objects.get( client = self )
 
+
+
+	# General Information -
+
+	def get_available_funds_list( self ):
+		return SourceDocument.objects.filter(
+				Q( document_type = SourceDocumentType.PAYMENT ) |
+				Q( document_type = SourceDocumentType.CREDIT_NOTE ),
+				client = self,
+				document_state = SourceDocumentState.FINAL,
+				total__gt = F( 'allocated' )
+			)
+
+
+
 	# Transactions --------
 
 	# Invoices ------------
@@ -232,7 +247,13 @@ class Client( models.Model ):
 	def get_refund_list_url( self ):
 		return reverse( 'org-client-account-refund-list', kwargs = { 'oid' : self.organization.refnum, 'cid' : self.refnum } )
 
-	
+	def get_unallocated_refund_list_url( self ):
+		return reverse( 'org-client-account-refund-unallocated-list', kwargs = { 'oid' : self.organization.refnum, 'cid' : self.refnum } )
+
+	def get_unallocated_refund_count( self ):
+		return SourceDocument.objects.filter( client = self, document_type = SourceDocumentType.REFUND, document_state = SourceDocumentState.FINAL, total__gt = F( 'allocated' ) ).count()
+
+
 
 
 class SourceDocument( models.Model ):
@@ -280,6 +301,10 @@ class SourceDocument( models.Model ):
 						'sdid' : self.refnum
 					}
 				)
+
+
+	class Meta:
+		ordering = [ '-refnum' ]
 
 
 class SourceDocumentMeta( models.Model ):

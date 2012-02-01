@@ -2,6 +2,6 @@
 <ul>
 	<li class="{% active request '\/account\/payments$' %}"><a href="{% url org-client-account-payment-list instance.get_org.refnum instance.get_client.refnum %}">All</a></li>
 	<li class="{% active request '\/account\/payments\/draft$' %}"><a href="{% url org-client-account-payment-draft-list instance.get_org.refnum instance.get_client.refnum %}">Draft{% if instance.get_client.get_draft_payment_count > 0 %} <strong>({{ instance.get_client.get_draft_payment_count }} draft{{ instance.get_client.get_draft_payment_count|pluralize }})</strong>{% endif %}</a></li>
-	<li class="{% active request '\/account\/payments\/unallocated$' %}"><a href="{% url org-client-account-payment-unallocated-list instance.get_org.refnum instance.get_client.refnum %}">Unallocated{% if instance.get_client.get_unallocated_payment_count > 0 %} <strong>({{ instance.get_client.get_unallocated_payment_count }} unallocated{{ instance.get_client.get_unallocated_payment_count|pluralize }})</strong>{% endif %}</a></li>
+	<li class="{% active request '\/account\/payments\/unallocated$' %}"><a href="{% url org-client-account-payment-unallocated-list instance.get_org.refnum instance.get_client.refnum %}">Unallocated{% if instance.get_client.get_unallocated_payment_count > 0 %} <strong>({{ instance.get_client.get_unallocated_payment_count }} unallocated)</strong>{% endif %}</a></li>
 </ul>
 

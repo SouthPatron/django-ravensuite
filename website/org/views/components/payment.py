@@ -7,11 +7,10 @@ from django.contrib import messages
 
 from common.views.component import ComponentView
 
-from common.busobj.org import PaymentObj, SourceDocumentObj, RefundObj
+from common.busobj.org import PaymentObj, SourceDocumentObj
 from common.busobj.org.factory import Factory
 from common.bushelp.org.allocator import Allocator
 from common.bushelp.org.actions import ActionFactory
-from common.bushelp.org.refund import RefundHelper
 
 from common.utils.parse import *
 
@@ -80,10 +79,6 @@ class PcDeallocatePayment( PaymentComponents ):
 			alo = Allocator()
 			alo.deallocate( pay, obj.id )
 
-			if obj.destination.document_type == SourceDocumentType.REFUND:
-				dest = Factory.instantiate( obj.destination )
-				ActionFactory.instantiate( dest ).void()
-
 
 		except BusLogError, berror:
 			messages.error( request, berror.message )
@@ -105,14 +100,14 @@ class PcRefundPayment( PaymentComponents ):
 			pay = Factory.instantiate( obj )
 			pay.wrap( obj )
 
-			ref = RefundHelper.create( pay, refund_amount, refund_date )
-			ref.getSpecs().setComment( "" )
+#			ref = RefundHelper.create( pay, refund_amount, refund_date )
+#			ref.getSpecs().setComment( "" )
 
 		except BusLogError, berror:
 			messages.error( request, berror.message )
 			return redirect( obj.get_single_url() )
 
-		messages.success( request, 'Successfully allocated.' )
+		messages.success( request, 'Successfully did nothing!' )
 		return redirect( obj.get_single_url() )
 
 

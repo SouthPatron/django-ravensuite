@@ -125,23 +125,40 @@ class PaymentActions( object ):
 		)
 
 
-
 class RefundActions( object ):
 	def __init__( self, sdo ):
 		super( RefundActions, self ).__init__()
 		self.sdo = sdo
 
-	def apply( self ):
+	def delete( self ):
+		if self.sdo.getObj().document_state == SourceDocumentState.FINAL:
+			raise BusLogError( 'This refund has already been finalized. Try voiding it instead.' )
+		if self.sdo.getObj().document_state == SourceDocumentState.VOID:
+			raise BusLogError( 'This refund has already been voided. It can not be removed.' )
+
+		self.sdo.getObj().delete()
+
+	def finalize( self ):
+		ns = self.sdo.getObj().document_state
+
+		if ns != SourceDocumentState.DRAFT:
+			raise BusLogError( 'This refund can not be finalized because it is not a draft.' )
+
+		if self.sdo.getTotals().getTotal() <= 0:
+			raise BusLogError( 'The refund amount has to be greater than zero.' )
+
+		self.sdo.getObj().document_state = SourceDocumentState.FINAL
+		self.sdo.save()
+
 		AccountBusLog.adjust(
 			self.sdo.getObj().client.account,
 			self.sdo.getSpecs().getRefundDate(),
 			'REFUND',
 			'Refund {}'.format( self.sdo.getObj().refnum ),
-			((float(0) - self.sdo.getTotals().getTotal())),
+			(long(0) - self.sdo.getTotals().getTotal()),
 			self.sdo.getObj(),
 			''
 		)
-
 
 	def void( self ):
 		if self.sdo.getAllocations().all().count() > 0:
@@ -151,7 +168,7 @@ class RefundActions( object ):
 		ns = self.sdo.getObj().document_state
 
 		if ns != SourceDocumentState.FINAL:
-			raise BusLogError( 'This credit note can not be voided because it is not yet finalized.' )
+			raise BusLogError( 'This refund can not be voided because it is not yet finalized.' )
 
 		self.sdo.getObj().document_state = SourceDocumentState.VOID
 		self.sdo.save()
@@ -161,10 +178,11 @@ class RefundActions( object ):
 			self.sdo.getSpecs().getRefundDate(),
 			'VOID',
 			'Void of Refund {}'.format( self.sdo.getObj().refnum ),
-			(self.sdo.getTotals().getTotal()),
+			self.sdo.getTotals().getTotal(),
 			self.sdo.getObj(),
 			''
 		)
+
 
 
 

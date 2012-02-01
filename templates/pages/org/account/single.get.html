@@ -25,7 +25,6 @@
 {% block head_includes %}
 	<script type="text/javascript" src="{{ STATIC_URL }}js/smk.js"></script>
 	<script type="text/javascript" src="{{ STATIC_URL }}js/validations.js"></script>
-
 {% endblock %}
 
 
@@ -82,6 +81,22 @@
 		);
 	});
 
+	$( "#refund-create" ).click(function() {
+
+		refund_list_url = OOD.URL.Refunds( 
+							{{ instance.get_org.refnum }}, 
+							{{ instance.get_client.refnum }}
+						)
+						+ '?format=json';
+
+		$.post( refund_list_url, function( data ) {
+				window.location.href = data[ 'url' ];
+			}
+		);
+	});
+
+
+
 
 {% endblock %}
 
@@ -91,6 +106,7 @@
 	<li><a href="#" id="invoice-create">New Invoice</a></li>
 	<li><a href="#" id="payment-create">Receive Payment</a></li>
 	<li><a href="#" id="credit-note-create">Create a Credit Note</a></li>
+	<li><a href="#" id="refund-create">Create a Refund</a></li>
 </ul>
 
 {% endblock %}
@@ -115,8 +131,9 @@ Current Balance: {{ instance.balance|decsplay }}
 <a href="{{ instance.get_client.get_unallocated_credit_note_list_url }}">Unallocated Credit Notes: {{ instance.get_client.get_unallocated_credit_note_count }}</a>
 </div>
 
-
-
+<div style=" font-size: 2em; margin: 20px 0px; ">
+<a href="{{ instance.get_client.get_unallocated_refund_list_url }}">Unallocated Refunds: {{ instance.get_client.get_unallocated_refund_count }}</a>
+</div>
 
 
 

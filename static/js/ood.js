@@ -51,12 +51,18 @@ var OOD = new function() {
 			return '/org/' + oid + '/client/' + cid + '/account/payment/' + sdid + '/allocation/' + alocid;
 		};
 
+		this.Refunds = function( oid, cid ) {
+			return '/org/' + oid + '/client/' + cid + '/account/refunds';
+		};
+
+		this.Refund = function( oid, cid, sdid ) {
+			return '/org/' + oid + '/client/' + cid + '/account/refund/' + sdid;
+		};
 
 		this.Component = function( base, name ) {
 			return base + '.pc.' + name + '?q=';
 		};
 	};
 };
-
 
 

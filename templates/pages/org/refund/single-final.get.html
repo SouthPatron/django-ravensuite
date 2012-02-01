@@ -17,6 +17,16 @@
 		$( "#id_refund_form" ).submit();
 	});
 
+	$( '#id_allocate' ).smkTools(
+		'click_modal',
+		OOD.URL.Component(
+			OOD.URL.Refund( {{ kwargs.oid }}, {{ kwargs.cid }}, {{ kwargs.sdid }} ),
+			'allocate'
+		)
+	);
+
+
+
 {% endblock %}
 
 
@@ -38,6 +48,22 @@ Date of Refund: {{ doc.getSpecs.getRefundDate|date:"j M Y"|escape }}
 </div>
 {% endblock %}
 
+{% block document_payment_status %}
+<div style="
+		font-size: 1.3em;
+	">
+{% get_document_obj instance as doc %}
+{% if doc.getTotals.getUnallocated == 0 %}
+<span style=" color: green; ">Fully Allocated</span>
+{% else %}
+<span style=" color: darkred; ">Available for Allocation</span>
+{% endif %}
+</div>
+{% endblock %}
+
+
+
+
 
 {% block document_body %}
 
@@ -56,6 +82,12 @@ Date of Refund: {{ doc.getSpecs.getRefundDate|date:"j M Y"|escape }}
 	<div class="summary-row">
 
 		<div class="add-row-portion">
+
+			{% if doc.getTotals.getUnallocated > 0 %}
+			<div>
+				<button id="id_allocate" type="button">Allocate to this Refund</button>
+			</div>
+			{% endif %}
 
 			<div>
 				<div class="comment-title">
