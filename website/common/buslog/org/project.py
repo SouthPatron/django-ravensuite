@@ -22,7 +22,7 @@ class ProjectBusLog( object ):
 		try:
 			newproj = Project.objects.get( name = name, client = client )
 
-			raise BusLogError( 'There is already a project with that name for this client.' )
+			raise BLE_ConflictError( 'There is already a project with that name for this client.' )
 		except Project.DoesNotExist:
 			pass
 

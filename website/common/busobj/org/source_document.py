@@ -28,6 +28,7 @@ class SourceDocumentObj( object ):
 		sdo.document_type = document_type
 		sdo.document_state = document_state
 		sdo.creation_time = datetime.datetime.now()
+		sdo.event_time = sdo.creation_time
 		sdo.save()
 
 		self.sdo = sdo
@@ -47,6 +48,25 @@ class SourceDocumentObj( object ):
 
 	def get_single_url( self ):
 		return self.sdo.get_single_url()
+
+	class Dates( object ):
+		def __init__( self, parent ):
+			self.parent = parent
+
+		def getEventTime( self ):
+			return self.parent.getObj().event_time
+
+		def setEventTime( self, dat ):
+			self.parent.getObj().event_time = dat
+			self.parent.getObj().save()
+
+		def getCreationTime( self ):
+			return self.parent.getObj().creation_time
+
+
+	def getDates( self ):
+		return self.Dates( self )
+
 
 	class Lines( object ):
 		def __init__( self, parent ):

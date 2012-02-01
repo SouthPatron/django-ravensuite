@@ -1,7 +1,0 @@
-
-
-
-class BusLogError( Exception ):
-	pass
-
-

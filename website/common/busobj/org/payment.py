@@ -32,10 +32,10 @@ class PaymentObj( SourceDocumentObj ):
 				self.parent = parent
 				
 			def getPaymentDate( self ):
-				return pdateparse( self.parent.getMeta().get( "payment_date" ) )
+				return self.parent.getDates().getEventTime()
 
-			def setPaymentDate( self, date ):
-				self.parent.getMeta().set( "payment_date", pdate( date ) )
+			def setPaymentDate( self, dat ):
+				self.parent.getDates().setEventTime( dat )
 
 			def getComment( self ):
 				return self.parent.getMeta().get( "comment" )

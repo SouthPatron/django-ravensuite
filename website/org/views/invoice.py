@@ -9,7 +9,6 @@ from django.contrib import messages
 from common.views.singleobjectview import SingleObjectView
 from common.views.listview import ListView
 
-from common.buslog.org import PaymentBusLog
 from common.busobj.org import InvoiceObj
 from common.bushelp.org import InvoiceHelper
 
@@ -46,7 +45,7 @@ class InvoiceList( ListView ):
 
 		try:
 			newo = self._create_object( request, data, *args, **kwargs )
-		except BusLogError, berror:
+		except BLE_Error, berror:
 			messages.error( request, berror.message )
 			client = Client.objects.get( refnum = self.url_kwargs.cid, organization__refnum = self.url_kwargs.oid )
 			return redirect( client.get_invoice_list_url() )
@@ -134,7 +133,7 @@ class InvoiceSingle( SingleObjectView ):
 
 		try:
 			InvoiceHelper.update( obj, invoice_data )
-		except BusLogError, berror:
+		except BLE_Error, berror:
 			messages.error( request, berror.message )
 			return redirect( obj.get_single_url() )
 

@@ -9,7 +9,6 @@ from django.contrib import messages
 from common.views.singleobjectview import SingleObjectView
 from common.views.listview import ListView
 
-from common.buslog.org import PaymentBusLog
 from common.busobj.org import CreditNoteObj
 from common.bushelp.org import CreditNoteHelper
 from common.bushelp.org.actions import ActionFactory
@@ -45,7 +44,7 @@ class CreditNoteList( ListView ):
 
 		try:
 			newo = self._create_object( request, data, *args, **kwargs )
-		except BusLogError, berror:
+		except BLE_Error, berror:
 			messages.error( request, berror.message )
 			client = Client.objects.get( refnum = self.url_kwargs.cid, organization__refnum = self.url_kwargs.oid )
 			return redirect( client.get_credit_note_list_url() )
@@ -132,7 +131,7 @@ class CreditNoteSingle( SingleObjectView ):
 
 		try:
 			CreditNoteHelper.update( obj, credit_note_data )
-		except BusLogError, berror:
+		except BLE_Error, berror:
 			messages.error( request, berror.message )
 			return redirect( obj.get_single_url() )
 

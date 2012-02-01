@@ -40,7 +40,7 @@ class OrgList( ListView ):
 
 		try:
 			neworg = self._create_object( request, form.cleaned_data, *args, **kwargs )
-		except BusLogError, berror:
+		except BLE_Error, berror:
 			messages.error( request, berror.message )
 			return redirect( 'org-list' )
 

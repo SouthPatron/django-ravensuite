@@ -22,7 +22,7 @@ class ClientBusLog( object ):
 		try:
 			newclient = Client.objects.get( trading_name = trading_name, organization = org )
 
-			raise BusLogError( 'There is already a client with that name.' )
+			raise BLE_ConflictError( 'There is already a client with that name.' )
 		except Client.DoesNotExist:
 			pass
 

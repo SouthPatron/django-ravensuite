@@ -45,7 +45,7 @@ class TimerList( ListView ):
 
 		try:
 			newo = self._create_object( request, form.cleaned_data, *args, **kwargs )
-		except BusLogError, berror:
+		except BLE_Error, berror:
 			messages.error( request, berror.message )
 			return redirect( 'timesheet-timer-list' )
 
@@ -89,7 +89,7 @@ class TimerSingle( SingleObjectView ):
 	def update_object_html( self, request, obj, data, *args, **kwargs ):
 		try:
 			self._update_object( request, obj, data, *args, **kwargs )
-		except BusLogError, berror:
+		except BLE_Error, berror:
 			messages.error( request, berror.message )
 		messages.success( request, 'Timer was updated.' )
 		return redirect( 'timesheet-timer-list' )

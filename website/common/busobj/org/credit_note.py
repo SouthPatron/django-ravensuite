@@ -33,10 +33,10 @@ class CreditNoteObj( SourceDocumentObj ):
 				self.parent = parent
 				
 			def getCreditNoteDate( self ):
-				return pdateparse( self.parent.getMeta().get( "credit_note_date" ) )
+				return self.parent.getDates().getEventTime()
 
-			def setCreditNoteDate( self, date ):
-				self.parent.getMeta().set( "credit_note_date", pdate( date ) )
+			def setCreditNoteDate( self, dat ):
+				self.parent.getDates().setEventTime( dat )
 
 			def getComment( self ):
 				return self.parent.getMeta().get( "comment" )

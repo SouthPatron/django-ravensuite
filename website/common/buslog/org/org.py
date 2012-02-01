@@ -21,7 +21,7 @@ class OrgBusLog( object ):
 		try:
 			neworg = Organization.objects.get( trading_name = trading_name, usermembership__user = user )
 
-			raise BusLogError( 'An organization already exists with that name' )
+			raise BLE_ConflictError( 'An organization already exists with that name' )
 		except Organization.DoesNotExist:
 			pass
 

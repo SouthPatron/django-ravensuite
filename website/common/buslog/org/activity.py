@@ -11,7 +11,7 @@ class ActivityBusLog( object ):
 
 		try:
 			newacc = Activity.objects.get( organization = org, name = name )
-			raise BusLogError( 'An activity with that name already exists' )
+			raise BLE_ConflictError( 'An activity with that name already exists' )
 		except Activity.DoesNotExist:
 			pass
 

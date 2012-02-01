@@ -34,10 +34,10 @@ class RefundObj( SourceDocumentObj ):
 				self.parent = parent
 				
 			def getRefundDate( self ):
-				return pdateparse( self.parent.getMeta().get( "refund_date" ) )
+				return self.parent.getDates().getEventTime()
 
-			def setRefundDate( self, date ):
-				self.parent.getMeta().set( "refund_date", pdate( date ) )
+			def setRefundDate( self, dat ):
+				self.parent.getDates().setEventTime( dat )
 
 			def getComment( self ):
 				return self.parent.getMeta().get( "comment" )

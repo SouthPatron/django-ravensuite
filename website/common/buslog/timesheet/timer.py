@@ -13,7 +13,7 @@ class TimerBusLog( object ):
 
 		try:
 			newo = TimesheetTimer.objects.get( user = user, project = project )
-			raise BusLogError( 'There is an existing timer running on that project for the user.' )
+			raise BLE_ConflictError( 'There is an existing timer running on that project for the user.' )
 		except TimesheetTimer.DoesNotExist:
 			pass
 
@@ -33,7 +33,7 @@ class TimerBusLog( object ):
 		try:
 			newo = TimesheetTimer.objects.get( user = user, project = project  )
 		except TimesheetTimer.DoesNotExist:
-			raise BusLogError( 'There is no timer running for that user on that project.' )
+			raise BLE_NotFoundError( 'There is no timer running for that user on that project.' )
 
 		newo.delete()
 		return newo
@@ -45,7 +45,7 @@ class TimerBusLog( object ):
 		try:
 			newo = TimesheetTimer.objects.get( user = user, project = project  )
 		except TimesheetTimer.DoesNotExist:
-			raise BusLogError( 'There is no timer running for that user on that project.' )
+			raise BLE_NotFoundError( 'There is no timer running for that user on that project.' )
 
 		timo = TimesheetEntry()
 		timo.user = newo.user

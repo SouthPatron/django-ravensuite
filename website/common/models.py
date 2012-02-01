@@ -260,6 +260,7 @@ class SourceDocument( models.Model ):
 	client = models.ForeignKey( Client )
 	refnum = models.BigIntegerField()
 	creation_time = models.DateTimeField()
+	event_time = models.DateTimeField()
 
 	document_type = models.IntegerField( choices = SourceDocumentType.choices() )
 	document_state = models.IntegerField( choices = SourceDocumentState.choices() )
@@ -304,7 +305,7 @@ class SourceDocument( models.Model ):
 
 
 	class Meta:
-		ordering = [ '-refnum' ]
+		ordering = [ '-event_time' ]
 
 
 class SourceDocumentMeta( models.Model ):

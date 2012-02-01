@@ -49,7 +49,7 @@ class PcAllocatePayment( PaymentComponents ):
 			alo = Allocator()
 			alo.allocate( pay, inv, payment_amount )
 
-		except BusLogError, berror:
+		except BLE_Error, berror:
 			messages.error( request, berror.message )
 			return redirect( obj.get_single_url() )
 
@@ -80,7 +80,7 @@ class PcDeallocatePayment( PaymentComponents ):
 			alo.deallocate( pay, obj.id )
 
 
-		except BusLogError, berror:
+		except BLE_Error, berror:
 			messages.error( request, berror.message )
 			return redirect( obj.source.get_single_url() )
 
@@ -103,7 +103,7 @@ class PcRefundPayment( PaymentComponents ):
 #			ref = RefundHelper.create( pay, refund_amount, refund_date )
 #			ref.getSpecs().setComment( "" )
 
-		except BusLogError, berror:
+		except BLE_Error, berror:
 			messages.error( request, berror.message )
 			return redirect( obj.get_single_url() )
 

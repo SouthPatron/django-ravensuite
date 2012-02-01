@@ -35,10 +35,10 @@ class InvoiceObj( SourceDocumentObj ):
 				self.parent = parent
 				
 			def getInvoiceDate( self ):
-				return pdateparse( self.parent.getMeta().get( "invoice_date" ) )
+				return self.parent.getDates().getEventTime()
 
-			def setInvoiceDate( self, date ):
-				self.parent.getMeta().set( "invoice_date", pdate( date ) )
+			def setInvoiceDate( self, dat ):
+				self.parent.getDates().setEventTime( dat )
 
 			def getDueDate( self ):
 				return pdateparse( self.parent.getMeta().get( "due_date" ) )

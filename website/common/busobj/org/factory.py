@@ -23,10 +23,9 @@ class Factory( object ):
 
 
 		if obj is None:
-			raise RuntimeError( 'Unknown SourceDocumentType' )
+			raise BLE_DevError( 'Unknown SourceDocumentType' )
 
 		obj.wrap( sdo )
-
 		return obj
 
 

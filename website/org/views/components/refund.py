@@ -44,7 +44,7 @@ class PcAllocateRefund( RefundComponents ):
 			alo = Allocator()
 			alo.allocate( inv, ref, amount )
 
-		except BusLogError, berror:
+		except BLE_Error, berror:
 			messages.error( request, berror.message )
 			return redirect( obj.get_single_url() )
 

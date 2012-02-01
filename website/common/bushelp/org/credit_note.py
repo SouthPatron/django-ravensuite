@@ -33,7 +33,7 @@ class CreditNoteHelper( object ):
 			else:
 				new_data[ 'credit_note_date' ] = crd.getSpecs().getCreditNoteDate()
 		except ValueError:
-			raise BusLogError( 'The credit note date is invalid' )
+			raise BLE_InvalidInputError( 'The credit note date is invalid' )
 
 
 	@staticmethod
@@ -44,14 +44,14 @@ class CreditNoteHelper( object ):
 			new_data[ 'state' ] = crd.getObj().document_state
 
 		if SourceDocumentState.get( new_data['state'] ) is None:
-			raise BusLogError( 'Unknown new state requested for credit note.' )
+			raise BLE_InvalidInputError( 'Unknown new state requested for credit note.' )
 
 
 	@staticmethod
 	def _update_get_tax_rate( mystr ):
 		val = TaxRate.get( long(mystr) )
 		if val is None:
-			raise BusLogError( 'The tax rate specified appears to be invalid' )
+			raise BLE_InvalidInputError( 'The tax rate specified appears to be invalid' )
 		return val[0]
 
 	@staticmethod
@@ -134,7 +134,7 @@ class CreditNoteHelper( object ):
 			af.delete()
 			return
 
-		raise BusLogError( 'Invalid state change requested.' )
+		raise BLE_InvalidInputError( 'Invalid state change requested.' )
 
 
 	@staticmethod

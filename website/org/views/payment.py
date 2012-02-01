@@ -46,7 +46,7 @@ class PaymentList( ListView ):
 
 		try:
 			newo = self._create_object( request, *args, **kwargs )
-		except BusLogError, berror:
+		except BLE_Error, berror:
 			messages.error( request, berror.message )
 			client = Client.objects.get( refnum = self.url_kwargs.cid, organization__refnum = self.url_kwargs.oid )
 			return redirect( client.get_account_single_url() )

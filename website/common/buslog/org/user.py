@@ -12,10 +12,10 @@ class UserBusLog( object ):
 	def grant( user, org, category ):
 
 		if UserMembership.objects.filter( user = user, organization = org ).exists():
-			raise BusLogError( 'That user already has access to this organization.' )
+			raise BLE_ConflictError( 'That user already has access to this organization.' )
 
 		if UserMembership.objects.filter( user = user, organization__trading_name = org.trading_name ).exists() is True:
-			raise BusLogError( 'That user already has an organization with the same name as this one. One of them will need to change names.' )
+			raise BLE_ConflictError( 'That user already has an organization with the same name as this one. One of them will need to change names.' )
 
 		newuser = UserMembership()
 		newuser.user = user

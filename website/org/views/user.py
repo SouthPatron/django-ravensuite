@@ -34,7 +34,7 @@ class UserList( ListView ):
 							Organization.objects.get( refnum = self.url_kwargs.oid ),
 							data[ 'category' ]
 						)
-		except BusLogError, berror:
+		except BLE_Error, berror:
 			messages.error( request, berror.message )
 			return redirect( 'org-list' )
 

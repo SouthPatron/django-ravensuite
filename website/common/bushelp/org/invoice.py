@@ -34,7 +34,7 @@ class InvoiceHelper( object ):
 			else:
 				new_data[ 'invoice_date' ] = inv.getSpecs().getInvoiceDate()
 		except ValueError:
-			raise BusLogError( 'The invoice date is invalid' )
+			raise BLE_InvalidInputError( 'The invoice date is invalid' )
 
 		try:
 			if new_data[ 'due_date' ] is not None:
@@ -42,10 +42,10 @@ class InvoiceHelper( object ):
 			else:
 				new_data[ 'due_date' ] = inv.getSpecs().getDueDate()
 		except ValueError:
-			raise BusLogError( 'The due date is invalid' )
+			raise BLE_InvalidInputError( 'The due date is invalid' )
 
 		if new_data[ 'due_date' ] < new_data[ 'invoice_date' ]:
-			raise BusLogError( 'The due date is before the invoice date' )
+			raise BLE_ValueRangeError( 'The due date is before the invoice date' )
 
 	@staticmethod
 	def _update_sanitize_state( inv, new_data ):
@@ -55,14 +55,14 @@ class InvoiceHelper( object ):
 			new_data[ 'state' ] = inv.getObj().document_state
 
 		if SourceDocumentState.get( new_data['state'] ) is None:
-			raise BusLogError( 'Unknown new state requested for invoice.' )
+			raise BLE_InvalidInputError( 'Unknown new state requested for invoice.' )
 
 
 	@staticmethod
 	def _update_get_tax_rate( mystr ):
 		val = TaxRate.get( long(mystr) )
 		if val is None:
-			raise BusLogError( 'The tax rate specified appears to be invalid' )
+			raise BLE_InvalidInputError( 'The tax rate specified appears to be invalid' )
 		return val[0]
 
 	@staticmethod
@@ -146,7 +146,7 @@ class InvoiceHelper( object ):
 			af.delete()
 			return
 
-		raise BusLogError( 'Invalid state change requested.' )
+		raise BLE_InvalidInputError( 'Invalid state change requested.' )
 
 
 	@staticmethod

@@ -14,9 +14,9 @@ class InvoiceActions( object ):
 
 	def delete( self ):
 		if self.sdo.getObj().document_state == SourceDocumentState.FINAL:
-			raise BusLogError( 'This invoice has already been finalized. Try voiding it instead.' )
+			raise BLE_ProcessFlowError( 'This invoice has already been finalized. Try voiding it instead.' )
 		if self.sdo.getObj().document_state == SourceDocumentState.VOID:
-			raise BusLogError( 'This invoice has already been voided. It can not be removed.' )
+			raise BLE_ProcessFlowError( 'This invoice has already been voided. It can not be removed.' )
 
 		self.sdo.getObj().delete()
 
@@ -25,7 +25,7 @@ class InvoiceActions( object ):
 		ns = self.sdo.getObj().document_state
 
 		if ns != SourceDocumentState.DRAFT:
-			raise BusLogError( 'This invoice can not be finalized because it is not a draft.' )
+			raise BLE_ProcessFlowError( 'This invoice can not be finalized because it is not a draft.' )
 
 		self.sdo.getObj().document_state = SourceDocumentState.FINAL
 		self.sdo.save()
@@ -43,13 +43,13 @@ class InvoiceActions( object ):
 	def void( self ):
 
 		if self.sdo.getAllocations().all().count() > 0:
-			raise BusLogError( 'There are still allocations associated with this source document. Please clear them first.' )
+			raise BLE_ProcessFlowError( 'There are still allocations associated with this source document. Please clear them first.' )
 
 
 		ns = self.sdo.getObj().document_state
 
 		if ns != SourceDocumentState.FINAL:
-			raise BusLogError( 'This invoice can not be voided because it is not yet finalized.' )
+			raise BLE_ProcessFlowError( 'This invoice can not be voided because it is not yet finalized.' )
 
 		self.sdo.getObj().document_state = SourceDocumentState.VOID
 		self.sdo.save()
@@ -73,9 +73,9 @@ class PaymentActions( object ):
 
 	def delete( self ):
 		if self.sdo.getObj().document_state == SourceDocumentState.FINAL:
-			raise BusLogError( 'This payment has already been finalized. Try voiding it instead.' )
+			raise BLE_ProcessFlowError( 'This payment has already been finalized. Try voiding it instead.' )
 		if self.sdo.getObj().document_state == SourceDocumentState.VOID:
-			raise BusLogError( 'This payment has already been voided. It can not be removed.' )
+			raise BLE_ProcessFlowError( 'This payment has already been voided. It can not be removed.' )
 
 		self.sdo.getObj().delete()
 
@@ -83,10 +83,10 @@ class PaymentActions( object ):
 		ns = self.sdo.getObj().document_state
 
 		if ns != SourceDocumentState.DRAFT:
-			raise BusLogError( 'This payment can not be finalized because it is not a draft.' )
+			raise BLE_ProcessFlowError( 'This payment can not be finalized because it is not a draft.' )
 
 		if self.sdo.getTotals().getTotal() <= 0:
-			raise BusLogError( 'The payment amount has to be greater than zero.' )
+			raise BLE_ValueRangeError( 'The payment amount has to be greater than zero.' )
 
 		self.sdo.getObj().document_state = SourceDocumentState.FINAL
 		self.sdo.save()
@@ -103,13 +103,13 @@ class PaymentActions( object ):
 
 	def void( self ):
 		if self.sdo.getAllocations().all().count() > 0:
-			raise BusLogError( 'There are still allocations associated with this source document. Please clear them first.' )
+			raise BLE_ProcessFlowError( 'There are still allocations associated with this source document. Please clear them first.' )
 
 
 		ns = self.sdo.getObj().document_state
 
 		if ns != SourceDocumentState.FINAL:
-			raise BusLogError( 'This payment can not be voided because it is not yet finalized.' )
+			raise BLE_ProcessFlowError( 'This payment can not be voided because it is not yet finalized.' )
 
 		self.sdo.getObj().document_state = SourceDocumentState.VOID
 		self.sdo.save()
@@ -132,9 +132,9 @@ class RefundActions( object ):
 
 	def delete( self ):
 		if self.sdo.getObj().document_state == SourceDocumentState.FINAL:
-			raise BusLogError( 'This refund has already been finalized. Try voiding it instead.' )
+			raise BLE_ProcessFlowError( 'This refund has already been finalized. Try voiding it instead.' )
 		if self.sdo.getObj().document_state == SourceDocumentState.VOID:
-			raise BusLogError( 'This refund has already been voided. It can not be removed.' )
+			raise BLE_ProcessFlowError( 'This refund has already been voided. It can not be removed.' )
 
 		self.sdo.getObj().delete()
 
@@ -142,10 +142,10 @@ class RefundActions( object ):
 		ns = self.sdo.getObj().document_state
 
 		if ns != SourceDocumentState.DRAFT:
-			raise BusLogError( 'This refund can not be finalized because it is not a draft.' )
+			raise BLE_ProcessFlowError( 'This refund can not be finalized because it is not a draft.' )
 
 		if self.sdo.getTotals().getTotal() <= 0:
-			raise BusLogError( 'The refund amount has to be greater than zero.' )
+			raise BLE_ValueRangeError( 'The refund amount has to be greater than zero.' )
 
 		self.sdo.getObj().document_state = SourceDocumentState.FINAL
 		self.sdo.save()
@@ -162,13 +162,13 @@ class RefundActions( object ):
 
 	def void( self ):
 		if self.sdo.getAllocations().all().count() > 0:
-			raise BusLogError( 'There are still allocations associated with this source document. Please clear them first.' )
+			raise BLE_ProcessFlowError( 'There are still allocations associated with this source document. Please clear them first.' )
 
 
 		ns = self.sdo.getObj().document_state
 
 		if ns != SourceDocumentState.FINAL:
-			raise BusLogError( 'This refund can not be voided because it is not yet finalized.' )
+			raise BLE_ProcessFlowError( 'This refund can not be voided because it is not yet finalized.' )
 
 		self.sdo.getObj().document_state = SourceDocumentState.VOID
 		self.sdo.save()
@@ -194,9 +194,9 @@ class CreditNoteActions( object ):
 
 	def delete( self ):
 		if self.sdo.getObj().document_state == SourceDocumentState.FINAL:
-			raise BusLogError( 'This credit note has already been finalized. Try voiding it instead.' )
+			raise BLE_ProcessFlowError( 'This credit note has already been finalized. Try voiding it instead.' )
 		if self.sdo.getObj().document_state == SourceDocumentState.VOID:
-			raise BusLogError( 'This credit note has already been voided. It can not be removed.' )
+			raise BLE_ProcessFlowError( 'This credit note has already been voided. It can not be removed.' )
 
 		self.sdo.getObj().delete()
 
@@ -204,7 +204,7 @@ class CreditNoteActions( object ):
 		ns = self.sdo.getObj().document_state
 
 		if ns != SourceDocumentState.DRAFT:
-			raise BusLogError( 'This credit note can not be finalized because it is not a draft.' )
+			raise BLE_ProcessFlowError( 'This credit note can not be finalized because it is not a draft.' )
 
 		self.sdo.getObj().document_state = SourceDocumentState.FINAL
 		self.sdo.save()
@@ -221,13 +221,13 @@ class CreditNoteActions( object ):
 
 	def void( self ):
 		if self.sdo.getAllocations().all().count() > 0:
-			raise BusLogError( 'There are still allocations associated with this source document. Please clear them first.' )
+			raise BLE_ProcessFlowError( 'There are still allocations associated with this source document. Please clear them first.' )
 
 
 		ns = self.sdo.getObj().document_state
 
 		if ns != SourceDocumentState.FINAL:
-			raise BusLogError( 'This credit note can not be voided because it is not yet finalized.' )
+			raise BLE_ProcessFlowError( 'This credit note can not be voided because it is not yet finalized.' )
 
 		self.sdo.getObj().document_state = SourceDocumentState.VOID
 		self.sdo.save()
@@ -266,7 +266,7 @@ class ActionFactory( object ):
 			obj = RefundActions( sdo )
 
 		if obj is None:
-			raise RuntimeError( 'Unknown document type' )
+			raise BLE_DevError( 'Unknown document type' )
 
 		return obj
 

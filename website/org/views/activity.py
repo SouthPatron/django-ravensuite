@@ -35,7 +35,7 @@ class ActivityList( ListView ):
 
 		try:
 			newo = self._create_object( request, form.cleaned_data, *args, **kwargs )
-		except BusLogError, berror:
+		except BLE_Error, berror:
 			messages.error( request, berror.message )
 			return redirect( 'org-activity-list', oid = self.url_kwargs.oid )
 

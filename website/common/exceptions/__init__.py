@@ -1,4 +1,4 @@
 
-from buslog import *
-from data import *
+from all import *
+
 
