@@ -1,3 +1,4 @@
+from django.utils.translation import ugettext as _
 
 from common.models import SourceDocumentType
 from common.busobj.org import InvoiceObj, PaymentObj, CreditNoteObj, RefundObj
@@ -21,9 +22,8 @@ class Factory( object ):
 		if sdo.document_type == SourceDocumentType.REFUND:
 			obj = RefundObj()
 
-
 		if obj is None:
-			raise BLE_DevError( 'Unknown SourceDocumentType' )
+			raise BLE_DevError( _('BLE_80002') )
 
 		obj.wrap( sdo )
 		return obj

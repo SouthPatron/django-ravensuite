@@ -27,11 +27,19 @@ DATABASES = {
 	}
 }
 
-TIME_ZONE = 'Africa/Johannesburg'
-LANGUAGE_CODE = 'en-us'
 SITE_ID = 1
+
+TIME_ZONE = 'Africa/Johannesburg'
+
+
 USE_I18N = True
 USE_L10N = True
+LANGUAGE_CODE = 'en-us'
+
+ugettext = lambda s: s
+LANGUAGES = (
+	('en', ugettext('English')),
+)
 
 
 MEDIA_ROOT = ''

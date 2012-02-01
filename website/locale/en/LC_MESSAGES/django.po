@@ -1,0 +1,135 @@
+# Message Translation File.
+# Copyright (C) 2012 SMK Software CC
+# This file is distributed under the same license as the rest of the tree.
+# "Support at SMK" <support@smksoftware.com>, 2012.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2012-02-01 18:08+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: settings.py:41
+msgid "English"
+msgstr ""
+
+#: common/bushelp/org/actions.py:16
+msgid "BLE_40001"
+msgstr "You can not delete this invoice. It has already been finalized."
+
+#: common/bushelp/org/actions.py:18
+msgid "BLE_40002"
+msgstr "You can not delete this invoice. It has already been voided."
+
+#: common/bushelp/org/actions.py:27
+msgid "BLE_40003"
+msgstr "You can not finalize this invoice. It is not a draft."
+
+#: common/bushelp/org/actions.py:35
+msgid "BNAV_40101"
+msgstr "INVOICE"
+
+#: common/bushelp/org/actions.py:45
+msgid "BLE_40004"
+msgstr "There are still allocations for this invoice. It can not be voided."
+
+#: common/bushelp/org/actions.py:51
+msgid "BLE_40005"
+msgstr "You can not void this invoice. It is not yet finalized."
+
+#: common/bushelp/org/actions.py:59 common/bushelp/org/actions.py:119
+#: common/bushelp/org/actions.py:178 common/bushelp/org/actions.py:237
+msgid "BNAV_40105"
+msgstr "VOID"
+
+#: common/bushelp/org/actions.py:75
+msgid "BLE_40101"
+msgstr "You can not delete this payment. It has already been finalized."
+
+#: common/bushelp/org/actions.py:77
+msgid "BLE_40102"
+msgstr "You can not delete this payment. It has already been voided."
+
+#: common/bushelp/org/actions.py:85
+msgid "BLE_40103"
+msgstr "You can not finalize this payment. It is not a draft."
+
+#: common/bushelp/org/actions.py:88
+msgid "BLE_40104"
+msgstr "The amount must be greater than zero."
+
+#: common/bushelp/org/actions.py:96
+msgid "BNAV_40103"
+msgstr "PAYMENT"
+
+#: common/bushelp/org/actions.py:105
+msgid "BLE_40105"
+msgstr "There are still allocations for this payment. Delete them first."
+
+#: common/bushelp/org/actions.py:111
+msgid "BLE_40106"
+msgstr "You can not void this invoice. It is not yet finalized."
+
+#: common/bushelp/org/actions.py:134
+msgid "BLE_40201"
+msgstr "You can not delete this refund. It has already been finalized."
+
+#: common/bushelp/org/actions.py:136
+msgid "BLE_40202"
+msgstr "You can not delete this refund. It has already been voided."
+
+#: common/bushelp/org/actions.py:144
+msgid "BLE_40203"
+msgstr "You can not finalize this refund. It is not a draft."
+
+#: common/bushelp/org/actions.py:147
+msgid "BLE_40204"
+msgstr "The amount must be greater than zero."
+
+#: common/bushelp/org/actions.py:155
+msgid "BNAV_40104"
+msgstr "REFUND"
+
+#: common/bushelp/org/actions.py:164
+msgid "BLE_40205"
+msgstr "You can not void this refund. There are still allocations present."
+
+#: common/bushelp/org/actions.py:170
+msgid "BLE_40206"
+msgstr "This refund has not been finalized. It can not be voided."
+
+#: common/bushelp/org/actions.py:196
+msgid "BLE_40301"
+msgstr "You can not delete this credit note. It has already been finalized."
+
+#: common/bushelp/org/actions.py:198
+msgid "BLE_40302"
+msgstr "You can not delete this credit note. It has already been voided."
+
+#: common/bushelp/org/actions.py:206
+msgid "BLE_40303"
+msgstr "You can not finalize this credit note. It is not a draft."
+
+#: common/bushelp/org/actions.py:214
+msgid "BNAV_40102"
+msgstr "CREDIT NOTE"
+
+#: common/bushelp/org/actions.py:223
+msgid "BLE_40305"
+msgstr ""
+"You can not void this credit note. There are still allocations present."
+
+#: common/bushelp/org/actions.py:229
+msgid "BLE_40306"
+msgstr "You can not void this credit note. It is not yet finalized."
+
+#: common/bushelp/org/actions.py:268 common/busobj/org/factory.py:26
+msgid "BLE_80002"
+msgstr "Unknown SourceDocumentType"

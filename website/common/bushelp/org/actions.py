@@ -1,9 +1,8 @@
+from django.utils.translation import ugettext as _
 
 from common.models import *
 from common.exceptions import *
-
 from common.buslog.org import AccountBusLog
-
 
 
 class InvoiceActions( object ):
@@ -14,9 +13,9 @@ class InvoiceActions( object ):
 
 	def delete( self ):
 		if self.sdo.getObj().document_state == SourceDocumentState.FINAL:
-			raise BLE_ProcessFlowError( 'This invoice has already been finalized. Try voiding it instead.' )
+			raise BLE_ProcessFlowError( _('BLE_40001') )
 		if self.sdo.getObj().document_state == SourceDocumentState.VOID:
-			raise BLE_ProcessFlowError( 'This invoice has already been voided. It can not be removed.' )
+			raise BLE_ProcessFlowError( _('BLE_40002') )
 
 		self.sdo.getObj().delete()
 
@@ -25,7 +24,7 @@ class InvoiceActions( object ):
 		ns = self.sdo.getObj().document_state
 
 		if ns != SourceDocumentState.DRAFT:
-			raise BLE_ProcessFlowError( 'This invoice can not be finalized because it is not a draft.' )
+			raise BLE_ProcessFlowError( _('BLE_40003') )
 
 		self.sdo.getObj().document_state = SourceDocumentState.FINAL
 		self.sdo.save()
@@ -33,7 +32,7 @@ class InvoiceActions( object ):
 		AccountBusLog.adjust(
 			self.sdo.getObj().client.account,
 			self.sdo.getSpecs().getInvoiceDate(),
-			'INVOICE',
+			_('BNAV_40101'),
 			'Invoice {}'.format( self.sdo.getObj().refnum ),
 			long(0) - (self.sdo.getTotals().getTotal()),
 			self.sdo.getObj(),
@@ -43,13 +42,13 @@ class InvoiceActions( object ):
 	def void( self ):
 
 		if self.sdo.getAllocations().all().count() > 0:
-			raise BLE_ProcessFlowError( 'There are still allocations associated with this source document. Please clear them first.' )
+			raise BLE_ProcessFlowError( _('BLE_40004') )
 
 
 		ns = self.sdo.getObj().document_state
 
 		if ns != SourceDocumentState.FINAL:
-			raise BLE_ProcessFlowError( 'This invoice can not be voided because it is not yet finalized.' )
+			raise BLE_ProcessFlowError( _('BLE_40005') )
 
 		self.sdo.getObj().document_state = SourceDocumentState.VOID
 		self.sdo.save()
@@ -57,7 +56,7 @@ class InvoiceActions( object ):
 		AccountBusLog.adjust(
 			self.sdo.getObj().client.account,
 			self.sdo.getSpecs().getInvoiceDate(),
-			'VOID',
+			_('BNAV_40105'),
 			'Void of Invoice {}'.format( self.sdo.getObj().refnum ),
 			(self.sdo.getTotals().getTotal()),
 			self.sdo.getObj(),
@@ -73,9 +72,9 @@ class PaymentActions( object ):
 
 	def delete( self ):
 		if self.sdo.getObj().document_state == SourceDocumentState.FINAL:
-			raise BLE_ProcessFlowError( 'This payment has already been finalized. Try voiding it instead.' )
+			raise BLE_ProcessFlowError( _('BLE_40101') )
 		if self.sdo.getObj().document_state == SourceDocumentState.VOID:
-			raise BLE_ProcessFlowError( 'This payment has already been voided. It can not be removed.' )
+			raise BLE_ProcessFlowError( _('BLE_40102') )
 
 		self.sdo.getObj().delete()
 
@@ -83,10 +82,10 @@ class PaymentActions( object ):
 		ns = self.sdo.getObj().document_state
 
 		if ns != SourceDocumentState.DRAFT:
-			raise BLE_ProcessFlowError( 'This payment can not be finalized because it is not a draft.' )
+			raise BLE_ProcessFlowError( _('BLE_40103') )
 
 		if self.sdo.getTotals().getTotal() <= 0:
-			raise BLE_ValueRangeError( 'The payment amount has to be greater than zero.' )
+			raise BLE_ValueRangeError( _('BLE_40104') )
 
 		self.sdo.getObj().document_state = SourceDocumentState.FINAL
 		self.sdo.save()
@@ -94,7 +93,7 @@ class PaymentActions( object ):
 		AccountBusLog.adjust(
 			self.sdo.getObj().client.account,
 			self.sdo.getSpecs().getPaymentDate(),
-			'PAYMENT',
+			_('BNAV_40103'),
 			'Payment {}'.format( self.sdo.getObj().refnum ),
 			self.sdo.getTotals().getTotal(),
 			self.sdo.getObj(),
@@ -103,13 +102,13 @@ class PaymentActions( object ):
 
 	def void( self ):
 		if self.sdo.getAllocations().all().count() > 0:
-			raise BLE_ProcessFlowError( 'There are still allocations associated with this source document. Please clear them first.' )
+			raise BLE_ProcessFlowError( _('BLE_40105') )
 
 
 		ns = self.sdo.getObj().document_state
 
 		if ns != SourceDocumentState.FINAL:
-			raise BLE_ProcessFlowError( 'This payment can not be voided because it is not yet finalized.' )
+			raise BLE_ProcessFlowError( _('BLE_40106') )
 
 		self.sdo.getObj().document_state = SourceDocumentState.VOID
 		self.sdo.save()
@@ -117,7 +116,7 @@ class PaymentActions( object ):
 		AccountBusLog.adjust(
 			self.sdo.getObj().client.account,
 			self.sdo.getSpecs().getPaymentDate(),
-			'VOID',
+			_('BNAV_40105'),
 			'Void of Payment {}'.format( self.sdo.getObj().refnum ),
 			long(0) - (self.sdo.getTotals().getTotal()),
 			self.sdo.getObj(),
@@ -132,9 +131,9 @@ class RefundActions( object ):
 
 	def delete( self ):
 		if self.sdo.getObj().document_state == SourceDocumentState.FINAL:
-			raise BLE_ProcessFlowError( 'This refund has already been finalized. Try voiding it instead.' )
+			raise BLE_ProcessFlowError( _('BLE_40201') )
 		if self.sdo.getObj().document_state == SourceDocumentState.VOID:
-			raise BLE_ProcessFlowError( 'This refund has already been voided. It can not be removed.' )
+			raise BLE_ProcessFlowError( _('BLE_40202') )
 
 		self.sdo.getObj().delete()
 
@@ -142,10 +141,10 @@ class RefundActions( object ):
 		ns = self.sdo.getObj().document_state
 
 		if ns != SourceDocumentState.DRAFT:
-			raise BLE_ProcessFlowError( 'This refund can not be finalized because it is not a draft.' )
+			raise BLE_ProcessFlowError( _('BLE_40203') )
 
 		if self.sdo.getTotals().getTotal() <= 0:
-			raise BLE_ValueRangeError( 'The refund amount has to be greater than zero.' )
+			raise BLE_ValueRangeError( _('BLE_40204') )
 
 		self.sdo.getObj().document_state = SourceDocumentState.FINAL
 		self.sdo.save()
@@ -153,7 +152,7 @@ class RefundActions( object ):
 		AccountBusLog.adjust(
 			self.sdo.getObj().client.account,
 			self.sdo.getSpecs().getRefundDate(),
-			'REFUND',
+			_('BNAV_40104'),
 			'Refund {}'.format( self.sdo.getObj().refnum ),
 			(long(0) - self.sdo.getTotals().getTotal()),
 			self.sdo.getObj(),
@@ -162,13 +161,13 @@ class RefundActions( object ):
 
 	def void( self ):
 		if self.sdo.getAllocations().all().count() > 0:
-			raise BLE_ProcessFlowError( 'There are still allocations associated with this source document. Please clear them first.' )
+			raise BLE_ProcessFlowError( _('BLE_40205') )
 
 
 		ns = self.sdo.getObj().document_state
 
 		if ns != SourceDocumentState.FINAL:
-			raise BLE_ProcessFlowError( 'This refund can not be voided because it is not yet finalized.' )
+			raise BLE_ProcessFlowError( _('BLE_40206') )
 
 		self.sdo.getObj().document_state = SourceDocumentState.VOID
 		self.sdo.save()
@@ -176,7 +175,7 @@ class RefundActions( object ):
 		AccountBusLog.adjust(
 			self.sdo.getObj().client.account,
 			self.sdo.getSpecs().getRefundDate(),
-			'VOID',
+			_('BNAV_40105'),
 			'Void of Refund {}'.format( self.sdo.getObj().refnum ),
 			self.sdo.getTotals().getTotal(),
 			self.sdo.getObj(),
@@ -194,9 +193,9 @@ class CreditNoteActions( object ):
 
 	def delete( self ):
 		if self.sdo.getObj().document_state == SourceDocumentState.FINAL:
-			raise BLE_ProcessFlowError( 'This credit note has already been finalized. Try voiding it instead.' )
+			raise BLE_ProcessFlowError( _('BLE_40301') )
 		if self.sdo.getObj().document_state == SourceDocumentState.VOID:
-			raise BLE_ProcessFlowError( 'This credit note has already been voided. It can not be removed.' )
+			raise BLE_ProcessFlowError( _('BLE_40302') )
 
 		self.sdo.getObj().delete()
 
@@ -204,7 +203,7 @@ class CreditNoteActions( object ):
 		ns = self.sdo.getObj().document_state
 
 		if ns != SourceDocumentState.DRAFT:
-			raise BLE_ProcessFlowError( 'This credit note can not be finalized because it is not a draft.' )
+			raise BLE_ProcessFlowError( _('BLE_40303') )
 
 		self.sdo.getObj().document_state = SourceDocumentState.FINAL
 		self.sdo.save()
@@ -212,7 +211,7 @@ class CreditNoteActions( object ):
 		AccountBusLog.adjust(
 			self.sdo.getObj().client.account,
 			self.sdo.getSpecs().getCreditNoteDate(),
-			'CREDIT NOTE',
+			_('BNAV_40102'),
 			'CreditNote {}'.format( self.sdo.getObj().refnum ),
 			(self.sdo.getTotals().getTotal()),
 			self.sdo.getObj(),
@@ -221,13 +220,13 @@ class CreditNoteActions( object ):
 
 	def void( self ):
 		if self.sdo.getAllocations().all().count() > 0:
-			raise BLE_ProcessFlowError( 'There are still allocations associated with this source document. Please clear them first.' )
+			raise BLE_ProcessFlowError( _('BLE_40305') )
 
 
 		ns = self.sdo.getObj().document_state
 
 		if ns != SourceDocumentState.FINAL:
-			raise BLE_ProcessFlowError( 'This credit note can not be voided because it is not yet finalized.' )
+			raise BLE_ProcessFlowError( _('BLE_40306') )
 
 		self.sdo.getObj().document_state = SourceDocumentState.VOID
 		self.sdo.save()
@@ -235,7 +234,7 @@ class CreditNoteActions( object ):
 		AccountBusLog.adjust(
 			self.sdo.getObj().client.account,
 			self.sdo.getSpecs().getCreditNoteDate(),
-			'VOID',
+			_('BNAV_40105'),
 			'Void of CreditNote {}'.format( self.sdo.getObj().refnum ),
 			(long(0) - (self.sdo.getTotals().getTotal())),
 			self.sdo.getObj(),
@@ -266,7 +265,7 @@ class ActionFactory( object ):
 			obj = RefundActions( sdo )
 
 		if obj is None:
-			raise BLE_DevError( 'Unknown document type' )
+			raise BLE_DevError( _('BLE_80002') )
 
 		return obj
 

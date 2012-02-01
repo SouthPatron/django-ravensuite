@@ -1,0 +1,63 @@
+
+
+BNAV - Business Nouns, Verbs and Actions
+
+40000 - 50000 : Client  
+
+
+BLE - Business Logic Errors
+
+40000 - 49999 : ProcessFlowError
+80000 - 89999 : DevErrors
+
+
+------------
+
+BNAV_40001	- Invoice
+BNAV_40002	- Credit Note
+BNAV_40003	- Payment
+BNAV_40004	- Refund
+
+BNAV_40101	- INVOICE
+BNAV_40102	- CREDIT NOTE
+BNAV_40103	- PAYMENT
+BNAV_40104	- REFUND
+BNAV_40105	- VOID
+
+
+-------------
+
+BLE_40001	- On delete, invoice already finalized.
+BLE_40002	- On delete, invoice already voided.
+BLE_40003	- On finalize, invoice not a draft.
+BLE_40004	- On void, invoice allocations still present.
+BLE_40005	- On void, invoice not finalized.
+
+BLE_40101	- On delete, payment already finalized.
+BLE_40102	- On delete, payment already voided.
+BLE_40103	- On finalize, payment not a draft.
+BLE_40104	- On finalize, payment amount less than or equal to zero.
+BLE_40105	- On void, payment allocations still present.
+BLE_40106	- On void, payment not finalized.
+
+BLE_40201	- On delete, refund already finalized.
+BLE_40202	- On delete, refund already voided.
+BLE_40203	- On finalize, refund not a draft.
+BLE_40204	- On finalize, refund amount less than or equal to zero.
+BLE_40205	- On void, refund allocations still present.
+BLE_40206	- On void, refund not finalized.
+
+BLE_40301	- On delete, credit note already finalized.
+BLE_40302	- On delete, credit note already voided.
+BLE_40303	- On finalize, credit note not a draft.
+BLE_40304	- On finalize, credit note amount less than or equal to zero.
+BLE_40305	- On void, credit note allocations still present.
+BLE_40306	- On void, credit note not finalized.
+
+
+
+
+BLE_80002	- Unknown SourceDocumentType
+
+
+
