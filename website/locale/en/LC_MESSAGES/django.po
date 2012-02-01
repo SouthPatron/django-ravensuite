@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-02-01 18:29+0200\n"
+"POT-Creation-Date: 2012-02-01 20:08+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -158,18 +158,56 @@ msgstr "The allocation amount exceeds the funds required."
 msgid "BLE_20002"
 msgstr "The allocation amount exceeds the funds available."
 
-#: common/bushelp/org/credit_note.py:37
+#: common/bushelp/org/credit_note.py:36
 msgid "BLE_10001"
 msgstr "The credit note date is invalid."
 
-#: common/bushelp/org/credit_note.py:48
+#: common/bushelp/org/credit_note.py:47
 msgid "BLE_10002"
 msgstr "An unknown state was requested for the credit note."
 
-#: common/bushelp/org/credit_note.py:55
-msgid "BLE_10401"
+#: common/bushelp/org/credit_note.py:54
+msgid "BLE_11401"
 msgstr "The tax rate was invalid."
 
-#: common/bushelp/org/credit_note.py:138
-msgid "BLE_10402"
+#: common/bushelp/org/credit_note.py:137 common/bushelp/org/invoice.py:64
+#: common/bushelp/org/invoice.py:148
+msgid "BLE_11402"
 msgstr "An invalid state change was requested for the document."
+
+#: common/bushelp/org/invoice.py:36 common/bushelp/org/invoice.py:47
+msgid "BLE_10102"
+msgstr "The due date is before the invoice date."
+
+#: common/bushelp/org/invoice.py:57
+msgid "BLE_10103"
+msgstr "An unknown state was requested for the invoice."
+
+#: common/buslog/org/activity.py:16
+msgid "BLE_50001"
+msgstr "There already is an activity with that name."
+
+#: common/buslog/org/client.py:27
+msgid "BLE_50002"
+msgstr "There already is a client with that name."
+
+#: common/buslog/org/org.py:26
+msgid "BLE_50003"
+msgstr "There already is an organization with the same name."
+
+#: common/buslog/org/project.py:27
+msgid "BLE_50004"
+msgstr "There already is a project with the same name."
+
+#: common/buslog/org/task.py:16
+msgid "BLE_50005"
+msgstr "There already is a task with the same name."
+
+#: common/buslog/org/user.py:17
+msgid "BLE_50006"
+msgstr "The user already has access to the organization."
+
+#: common/buslog/org/user.py:20
+msgid "BLE_50007"
+msgstr ""
+"The user already has access to another organization with the same name."

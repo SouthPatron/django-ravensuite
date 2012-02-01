@@ -1,4 +1,6 @@
 
+from django.utils.translation import ugettext as _
+
 from common.exceptions import *
 from common.models import *
 
@@ -21,7 +23,7 @@ class OrgBusLog( object ):
 		try:
 			neworg = Organization.objects.get( trading_name = trading_name, usermembership__user = user )
 
-			raise BLE_ConflictError( 'An organization already exists with that name' )
+			raise BLE_ConflictError( _('BLE_50003') )
 		except Organization.DoesNotExist:
 			pass
 

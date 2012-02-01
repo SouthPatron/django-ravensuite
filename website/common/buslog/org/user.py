@@ -1,3 +1,5 @@
+from django.utils.translation import ugettext as _
+
 from common.models import *
 
 from common.exceptions import *
@@ -12,10 +14,10 @@ class UserBusLog( object ):
 	def grant( user, org, category ):
 
 		if UserMembership.objects.filter( user = user, organization = org ).exists():
-			raise BLE_ConflictError( 'That user already has access to this organization.' )
+			raise BLE_ConflictError( _('BLE_50006') )
 
 		if UserMembership.objects.filter( user = user, organization__trading_name = org.trading_name ).exists() is True:
-			raise BLE_ConflictError( 'That user already has an organization with the same name as this one. One of them will need to change names.' )
+			raise BLE_ConflictError( _('BLE_50007') )
 
 		newuser = UserMembership()
 		newuser.user = user

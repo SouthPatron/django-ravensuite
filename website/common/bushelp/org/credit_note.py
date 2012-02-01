@@ -1,4 +1,5 @@
 from __future__ import unicode_literals
+
 from django.utils.translation import ugettext as _
 
 from math import *
@@ -50,7 +51,7 @@ class CreditNoteHelper( object ):
 	def _update_get_tax_rate( mystr ):
 		val = TaxRate.get( long(mystr) )
 		if val is None:
-			raise BLE_InvalidInputError( _('BLE_10401') )
+			raise BLE_InvalidInputError( _('BLE_11401') )
 		return val[0]
 
 	@staticmethod
@@ -133,7 +134,7 @@ class CreditNoteHelper( object ):
 			af.delete()
 			return
 
-		raise BLE_InvalidInputError( _('BLE_10402') )
+		raise BLE_InvalidInputError( _('BLE_11402') )
 
 
 	@staticmethod

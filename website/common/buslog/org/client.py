@@ -1,5 +1,7 @@
 from __future__ import unicode_literals
 
+from django.utils.translation import ugettext as _
+
 from common.models import *
 from common.exceptions import *
 
@@ -22,7 +24,7 @@ class ClientBusLog( object ):
 		try:
 			newclient = Client.objects.get( trading_name = trading_name, organization = org )
 
-			raise BLE_ConflictError( 'There is already a client with that name.' )
+			raise BLE_ConflictError( _('BLE_50002') )
 		except Client.DoesNotExist:
 			pass
 

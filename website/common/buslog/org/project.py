@@ -1,5 +1,7 @@
 from __future__ import unicode_literals
 
+from django.utils.translation import ugettext as _
+
 from common.models import *
 from common.exceptions import *
 
@@ -22,7 +24,7 @@ class ProjectBusLog( object ):
 		try:
 			newproj = Project.objects.get( name = name, client = client )
 
-			raise BLE_ConflictError( 'There is already a project with that name for this client.' )
+			raise BLE_ConflictError( _('BLE_50004') )
 		except Project.DoesNotExist:
 			pass
 

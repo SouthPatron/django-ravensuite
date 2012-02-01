@@ -12,6 +12,7 @@ BLE - Business Logic Errors
 20000 - 29999 : ValueRangeError
 30000 - 39999 : NotFoundError
 40000 - 49999 : ProcessFlowError
+50000 - 59999 : ConflictError
 80000 - 89999 : DevError
 
 
@@ -35,8 +36,13 @@ BNAV_40105	- VOID
 BLE_10001	- The credit note date is invalid.
 BLE_10002	- Unknown state requested for credit note.
 
-BLE_10402	- Invalid Tax Rate.
-BLE_10402	- Invalid state change was requested.
+BLE_10101	- The invoice or due date is invalid.
+BLE_10102	- Due date preceeds invoice date.
+BLE_10103	- Unknown state requested for invoice
+
+
+BLE_11401	- Invalid Tax Rate.
+BLE_11402	- Invalid state change was requested.
 
 -------------
 
@@ -80,7 +86,19 @@ BLE_40305	- On void, credit note allocations still present.
 BLE_40306	- On void, credit note not finalized.
 
 
+-------------
 
+BLE_50001	- Existing activity with same name.
+BLE_50002	- Client with same name.
+BLE_50003	- Organization with same name.
+BLE_50004	- Project with same name.
+BLE_50005	- Task with same name.
+BLE_50006	- User already has access.
+BLE_50007	- User already has access to another organization with same name.
+
+
+
+-------------
 
 BLE_80002	- Unknown SourceDocumentType.
 BLE_80003	- Allocation destination target was incorrect doc type.

@@ -1,5 +1,7 @@
 from __future__ import unicode_literals
 
+from django.utils.translation import ugettext as _
+
 from common.models import *
 from common.exceptions import *
 
@@ -11,7 +13,7 @@ class TaskBusLog( object ):
 
 		try:
 			newtask = Task.objects.get( activity = activity, name = name )
-			raise BLE_ConflictError( 'A task with that name already exists' )
+			raise BLE_ConflictError( _('BLE_50005') )
 		except Task.DoesNotExist:
 			pass
 
