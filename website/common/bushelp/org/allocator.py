@@ -1,3 +1,4 @@
+from django.utils.translation import ugettext as _
 
 
 from django.db.models import Q
@@ -37,7 +38,7 @@ class Allocator( object ):
 
 			self.deallocate_one( reference, sda )
 		except SourceDocumentAllocation.DoesNotExist:
-			raise BLE_NotFoundError( 'There was no such allocation with that id and reference.' )
+			raise BLE_NotFoundError( _('BLE_30001') )
 
 
 
@@ -50,21 +51,21 @@ class Allocator( object ):
 
 		# Is the destination a receivable?
 		if destination.getObj().document_type != SourceDocumentType.INVOICE and destination.getObj().document_type != SourceDocumentType.REFUND:
-			raise BLE_DevError( 'The allocation failed because the destination is not able to receive allocations.' )
+			raise BLE_DevError( _('BLE_80003') )
 
 		# Is the source a payable?
 		if source.getObj().document_type != SourceDocumentType.CREDIT_NOTE and source.getObj().document_type != SourceDocumentType.PAYMENT:
-			raise BLE_DevError( 'The allocation failed because the source is not able to be allocated.' )
+			raise BLE_DevError( _('BLE_80004') )
 	
 		# Can destination receive amount?
 		diff = destination.getTotals().getUnallocated()
 		if amount > diff:
-			raise BLE_ValueRangeError( 'The amount you want to allocate exceeds the amount that is outstanding.' )
+			raise BLE_ValueRangeError( _('BLE_20001') )
 
 		# Can source receive amount?
 		diff = source.getTotals().getUnallocated()
 		if amount > diff:
-			raise BLE_ValueRangeError( 'The amount you want to allocate exceeds the amount that is available for allocation.' )
+			raise BLE_ValueRangeError( _('BLE_20002') )
 
 		# Allocate
 		sda = SourceDocumentAllocation()

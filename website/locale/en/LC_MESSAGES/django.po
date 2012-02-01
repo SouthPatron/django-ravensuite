@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-02-01 18:08+0200\n"
+"POT-Creation-Date: 2012-02-01 18:29+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -133,3 +133,43 @@ msgstr "You can not void this credit note. It is not yet finalized."
 #: common/bushelp/org/actions.py:268 common/busobj/org/factory.py:26
 msgid "BLE_80002"
 msgstr "Unknown SourceDocumentType"
+
+#: common/bushelp/org/allocator.py:41
+msgid "BLE_30001"
+msgstr "No such allocation was found."
+
+#: common/bushelp/org/allocator.py:54
+msgid "BLE_80003"
+msgstr ""
+"The allocation failed because the destination is not a valid recipient "
+"document type."
+
+#: common/bushelp/org/allocator.py:58
+msgid "BLE_80004"
+msgstr ""
+"The allocation failed because the source is not an allocatable source "
+"document type."
+
+#: common/bushelp/org/allocator.py:63
+msgid "BLE_20001"
+msgstr "The allocation amount exceeds the funds required."
+
+#: common/bushelp/org/allocator.py:68
+msgid "BLE_20002"
+msgstr "The allocation amount exceeds the funds available."
+
+#: common/bushelp/org/credit_note.py:37
+msgid "BLE_10001"
+msgstr "The credit note date is invalid."
+
+#: common/bushelp/org/credit_note.py:48
+msgid "BLE_10002"
+msgstr "An unknown state was requested for the credit note."
+
+#: common/bushelp/org/credit_note.py:55
+msgid "BLE_10401"
+msgstr "The tax rate was invalid."
+
+#: common/bushelp/org/credit_note.py:138
+msgid "BLE_10402"
+msgstr "An invalid state change was requested for the document."

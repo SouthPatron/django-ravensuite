@@ -1,4 +1,5 @@
 from __future__ import unicode_literals
+from django.utils.translation import ugettext as _
 
 from math import *
 from copy import deepcopy
@@ -23,8 +24,6 @@ from common.bushelp.org.allocator import Allocator
 
 class CreditNoteHelper( object ):
 
-
-
 	@staticmethod
 	def _update_sanitize_dates( crd, new_data ):
 		try:
@@ -33,7 +32,7 @@ class CreditNoteHelper( object ):
 			else:
 				new_data[ 'credit_note_date' ] = crd.getSpecs().getCreditNoteDate()
 		except ValueError:
-			raise BLE_InvalidInputError( 'The credit note date is invalid' )
+			raise BLE_InvalidInputError( _('BLE_10001') )
 
 
 	@staticmethod
@@ -44,14 +43,14 @@ class CreditNoteHelper( object ):
 			new_data[ 'state' ] = crd.getObj().document_state
 
 		if SourceDocumentState.get( new_data['state'] ) is None:
-			raise BLE_InvalidInputError( 'Unknown new state requested for credit note.' )
+			raise BLE_InvalidInputError( _('BLE_10002') )
 
 
 	@staticmethod
 	def _update_get_tax_rate( mystr ):
 		val = TaxRate.get( long(mystr) )
 		if val is None:
-			raise BLE_InvalidInputError( 'The tax rate specified appears to be invalid' )
+			raise BLE_InvalidInputError( _('BLE_10401') )
 		return val[0]
 
 	@staticmethod
@@ -134,7 +133,7 @@ class CreditNoteHelper( object ):
 			af.delete()
 			return
 
-		raise BLE_InvalidInputError( 'Invalid state change requested.' )
+		raise BLE_InvalidInputError( _('BLE_10402') )
 
 
 	@staticmethod
