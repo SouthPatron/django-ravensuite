@@ -1,5 +1,8 @@
 from __future__ import unicode_literals
 
+from django.utils.translation import ugettext as _
+
+from django.utils.html import escape
 from django.shortcuts import get_object_or_404, redirect
 
 from common.views.singleobjectview import SingleObjectView
@@ -40,7 +43,12 @@ class UserList( ListView ):
 
 		messages.success(
 			request,
-			'<a href="{}">{} {}</a> was successfully added.'.format( newgrant.get_single_url(), newgrant.user.first_name, newgrant.user.last_name )
+			_( 'VMG_20010' ) % 
+			{
+				'url' : escape(newgrant.get_single_url()),
+				'first_name' : newgrant.user.first_name,
+				'last_name' : newgrant.user.last_name
+			}
 		)
 
 		return newgrant

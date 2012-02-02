@@ -1,3 +1,6 @@
+
+from django.utils.translation import ugettext as _
+
 from django.contrib import messages
 from django.core.urlresolvers import reverse
 from django.views.generic import DetailView, UpdateView
@@ -36,6 +39,6 @@ class ProfileChangePassword( UpdateView ):
 		return reverse( self.success_url )
 
 	def form_valid( self, form ):
-		messages.success( self.request, 'Your password was successfully changed' )
+		messages.success( self.request, _('VMG_10001') )
 		return super( ProfileChangePassword, self ).form_valid( form )
 

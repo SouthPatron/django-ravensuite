@@ -1,5 +1,7 @@
 from __future__ import unicode_literals
 
+from django.utils.translation import ugettext as _
+
 from django.db.models import F,Q
 
 from django.shortcuts import get_object_or_404, redirect
@@ -48,7 +50,7 @@ class PcAllocateRefund( RefundComponents ):
 			messages.error( request, berror.message )
 			return redirect( obj.get_single_url() )
 
-		messages.success( request, 'Successfully allocated.' )
+		messages.success( request, _('VMG_21003') )
 		return redirect( obj.get_single_url() )
 
 

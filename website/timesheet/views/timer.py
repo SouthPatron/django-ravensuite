@@ -1,5 +1,7 @@
 from __future__ import unicode_literals
 
+from django.utils.translation import ugettext as _
+
 from django.shortcuts import get_object_or_404, redirect
 from django.contrib import messages
 
@@ -49,7 +51,7 @@ class TimerList( ListView ):
 			messages.error( request, berror.message )
 			return redirect( 'timesheet-timer-list' )
 
-		messages.success( request, 'Timer has started.' )
+		messages.success( request, _('VMG_30001') )
 		return redirect( 'timesheet-timer-list' )
 
 
@@ -62,7 +64,7 @@ class TimerSingle( SingleObjectView ):
 
 	def delete_object( self, request, ob, *args, **kwargs ):
 		ob.delete()
-		messages.success( request, 'Timer was deleted.' )
+		messages.success( request, _('VMG_30002') )
 		return redirect( 'timesheet-timer-list' )
 
 	def _update_object( self, request, obj, data, *args, **kwargs ):
@@ -91,7 +93,7 @@ class TimerSingle( SingleObjectView ):
 			self._update_object( request, obj, data, *args, **kwargs )
 		except BLE_Error, berror:
 			messages.error( request, berror.message )
-		messages.success( request, 'Timer was updated.' )
+		messages.success( request, _('VMG_30003') )
 		return redirect( 'timesheet-timer-list' )
 
 	def update_object_json( self, request, obj, data, *args, **kwargs ):

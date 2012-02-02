@@ -1,5 +1,15 @@
 
 
+NIL - NIL
+
+
+VMG - View Messages
+
+10000 - 19999 : Account
+20000 - 29999 : Organization
+30000 - 39999 : Timer
+
+
 BNAV - Business Nouns, Verbs and Actions
 
 40000 - 50000 : Client  
@@ -16,6 +26,38 @@ BLE - Business Logic Errors
 80000 - 89999 : DevError
 
 
+
+------------
+
+NIL			- Nothing happened here.
+
+------------
+
+VMG_10001	- Password changed successfully
+
+------------
+
+VMG_20001	- Activity created. [ url, name ]
+VMG_20002	- Client created. [ url, name ]
+VMG_20003	- Draft credit note deleted.
+VMG_20004	- Draft invoice deleted.
+VMG_20005	- Organization created. [ url, name ]
+VMG_20006	- Draft payment deleted.
+VMG_20007	- Project created. [ url, name ]
+VMG_20008	- Draft refund deleted.
+VMG_20009	- Task created. [ url, name ]
+VMG_20010	- User created. [ url, first_name, last_name ]
+
+VMG_21001	- Payment was successfully allocated.
+VMG_21002	- Payment was successfully deallocated.
+VMG_21003	- Refund was successfully allocated.
+
+------------
+
+VMG_30001	- Timer has started.
+VMG_30002	- Timer was deleted.
+VMG_30003	- Timer was updated.
+
 ------------
 
 BNAV_40001	- Invoice
@@ -29,8 +71,6 @@ BNAV_40103	- PAYMENT
 BNAV_40104	- REFUND
 BNAV_40105	- VOID
 
-
-
 -------------
 
 BLE_10001	- The credit note date is invalid.
@@ -40,7 +80,6 @@ BLE_10101	- The invoice or due date is invalid.
 BLE_10102	- Due date preceeds invoice date.
 BLE_10103	- Unknown state requested for invoice
 
-
 BLE_11401	- Invalid Tax Rate.
 BLE_11402	- Invalid state change was requested.
 
@@ -49,12 +88,9 @@ BLE_11402	- Invalid state change was requested.
 BLE_20001	- Allocation amount exceeds funds required.
 BLE_20002	- Allocation amount exceeds funds available.
 
-
-
 -------------
 
 BLE_30001	- No such allocation was found.
-
 
 -------------
 
@@ -85,7 +121,6 @@ BLE_40304	- On finalize, credit note amount less than or equal to zero.
 BLE_40305	- On void, credit note allocations still present.
 BLE_40306	- On void, credit note not finalized.
 
-
 -------------
 
 BLE_50001	- Existing activity with same name.
@@ -96,13 +131,10 @@ BLE_50005	- Task with same name.
 BLE_50006	- User already has access.
 BLE_50007	- User already has access to another organization with same name.
 
-
-
 -------------
 
 BLE_80002	- Unknown SourceDocumentType.
 BLE_80003	- Allocation destination target was incorrect doc type.
 BLE_80004	- Allocation source was incorrect doc type.
-
 
 

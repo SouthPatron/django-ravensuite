@@ -1,5 +1,7 @@
 from __future__ import unicode_literals
 
+from django.utils.translation import ugettext as _
+
 from django.db.models import F,Q
 
 from django.shortcuts import get_object_or_404, redirect
@@ -115,7 +117,7 @@ class InvoiceSingle( SingleObjectView ):
 
 		if invoice_data[ 'state' ] is not None and long(invoice_data['state']) == SourceDocumentState.DELETE:
 			rc = self.delete_object( request, obj, *args, **kwargs )
-			messages.info( request, 'The draft invoice has been deleted' )
+			messages.info( request, _('VMG_20004') )
 			return redirect( obj.get_client().get_draft_invoice_list_url() )
 
 		invoice_data[ 'invoice_date' ] = data.get( 'invoice_date' )

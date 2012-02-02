@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-02-01 20:08+0200\n"
+"POT-Creation-Date: 2012-02-02 14:44+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -19,6 +19,10 @@ msgstr ""
 #: settings.py:41
 msgid "English"
 msgstr ""
+
+#: account/views/profile.py:42
+msgid "VMG_10001"
+msgstr "Your password was changed successfully."
 
 #: common/bushelp/org/actions.py:16
 msgid "BLE_40001"
@@ -211,3 +215,74 @@ msgstr "The user already has access to the organization."
 msgid "BLE_50007"
 msgstr ""
 "The user already has access to another organization with the same name."
+
+#: org/views/activity.py:44
+msgid "VMG_20001"
+msgstr "Activity <a href='%(url)s'>%(name)s</a> was successfully created."
+
+#: org/views/client.py:43
+msgid "VMG_20002"
+msgstr "<a href='%(url)s'>%(name)s</a> was successfully added as a client."
+
+#: org/views/credit_note.py:119
+msgid "VMG_20003"
+msgstr "The draft credit note was deleted."
+
+#: org/views/invoice.py:120
+msgid "VMG_20004"
+msgstr "The draft invoice was deleted."
+
+#: org/views/org.py:49
+msgid "VMG_20005"
+msgstr "Organization <a href='%(url)s'>%(name)s</a> was successfully created."
+
+#: org/views/payment.py:119
+msgid "VMG_20006"
+msgstr "The draft payment was deleted."
+
+#: org/views/project.py:59
+msgid "VMG_20007"
+msgstr "The project <a href='%(url)s'>%(name)s</a> was successfully created."
+
+#: org/views/refund.py:119
+msgid "VMG_20008"
+msgstr "The draft refund was deleted."
+
+#: org/views/task.py:47
+msgid "VMG_20009"
+msgstr "Task <a href='%(url)s'>%(name)s</a> was successfully created."
+
+#: org/views/user.py:51
+msgid "VMG_20010"
+msgstr ""
+"The user <a href='%(url)s'>%(first_name)s %(last_name)s</a> was successfully "
+"created."
+
+#: org/views/components/payment.py:59
+msgid "VMG_21001"
+msgstr "Payment was successfully allocated."
+
+#: org/views/components/payment.py:90
+msgid "VMG_21002"
+msgstr "Payment was successfully deallocated."
+
+#: org/views/components/payment.py:113
+msgid "NIL"
+msgstr ""
+"Debugging message. Just for testing. Nothing to see here. Move along. :)"
+
+#: org/views/components/refund.py:53
+msgid "VMG_21003"
+msgstr "Refund was successfully allocated."
+
+#: timesheet/views/timer.py:54
+msgid "VMG_30001"
+msgstr "The timer was started."
+
+#: timesheet/views/timer.py:67
+msgid "VMG_30002"
+msgstr "The timer was deleted."
+
+#: timesheet/views/timer.py:96
+msgid "VMG_30003"
+msgstr "The timer was updated."

@@ -1,5 +1,7 @@
 from __future__ import unicode_literals
 
+from django.utils.translation import ugettext as _
+
 from django.db.models import F,Q
 
 from django.shortcuts import get_object_or_404, redirect
@@ -114,7 +116,7 @@ class CreditNoteSingle( SingleObjectView ):
 
 		if credit_note_data[ 'state' ] is not None and long(credit_note_data['state']) == SourceDocumentState.DELETE:
 			rc = self.delete_object( request, obj, *args, **kwargs )
-			messages.info( request, 'The draft credit_note has been deleted' )
+			messages.info( request, _('VMG_20003') )
 			return redirect( obj.get_client().get_draft_credit_note_list_url() )
 
 		credit_note_data[ 'credit_note_date' ] = data.get( 'credit_note_date' )

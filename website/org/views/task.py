@@ -1,5 +1,7 @@
 from __future__ import unicode_literals
 
+from django.utils.translation import ugettext as _
+
 from django.shortcuts import get_object_or_404, redirect
 from django.contrib import messages
 
@@ -42,7 +44,7 @@ class TaskList( ListView ):
 			messages.error( request, berror.message )
 			return redirect( 'org-activity-task-list', oid = self.url_kwargs.oid, actid = self.url_kwargs.actid )
 
-		messages.success( request, 'Task <a href="{}">{}</a> was successfully created.'.format( newo.get_single_url(), newo.name ) )
+		messages.success( request, _('VMG_20009') % { 'url' : newo.get_single_url(), 'name' : newo.name } )
 		return redirect( 'org-activity-task-list', oid = self.url_kwargs.oid, actid = self.url_kwargs.actid )
 
 

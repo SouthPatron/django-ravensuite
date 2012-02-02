@@ -1,5 +1,7 @@
 from __future__ import unicode_literals
 
+from django.utils.translation import ugettext as _
+
 from django.shortcuts import get_object_or_404, redirect
 from django.core.urlresolvers import reverse
 from django.contrib import messages
@@ -44,7 +46,7 @@ class OrgList( ListView ):
 			messages.error( request, berror.message )
 			return redirect( 'org-list' )
 
-		messages.success( request, 'Created new organization <a href="{}">{}</a>'.format( neworg.get_single_url(), neworg.trading_name ) )
+		messages.success( request, _('VMG_20005') % { 'url' : neworg.get_single_url(), 'name' : neworg.trading_name } )
 
 		return redirect( 'org-list' )
 

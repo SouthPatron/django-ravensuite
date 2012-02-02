@@ -1,5 +1,7 @@
 from __future__ import unicode_literals
 
+from django.utils.translation import ugettext as _
+
 from django.shortcuts import get_object_or_404, redirect
 from django.contrib import messages
 
@@ -38,7 +40,7 @@ class ClientList( ListView ):
 			messages.error( request, berror.message )
 			return redirect( 'org-client-list', oid = self.url_kwargs.oid )
 
-		messages.success( request, '<a href="{}">{}</a> was added as a new client.'.format( newo.get_single_url(), newo.trading_name ) )
+		messages.success( request, _('VMG_20002') % { 'url' : newo.get_single_url(), 'name' : newo.trading_name } )
 		return redirect( 'org-client-list', oid = self.url_kwargs.oid )
 
 	def create_object_json( self, request, data, *args, **kwargs ):

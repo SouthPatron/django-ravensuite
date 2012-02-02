@@ -1,5 +1,7 @@
 from __future__ import unicode_literals
 
+from django.utils.translation import ugettext as _
+
 from django.db.models import F,Q
 
 from django.shortcuts import get_object_or_404, redirect
@@ -114,7 +116,7 @@ class PaymentSingle( SingleObjectView ):
 
 		if state == SourceDocumentState.DELETE:
 			rc = self.delete_object( request, obj, *args, **kwargs )
-			messages.info( request, 'The draft payment has been deleted' )
+			messages.info( request, _('VMG_20006') )
 			return rc
 
 
