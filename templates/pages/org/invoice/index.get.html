@@ -24,6 +24,11 @@
 {% include 'menus/org/account_sub.html' with instance=extra.get_account %}
 {% endblock %}
 
+{% block dblsubsection_functions %}
+{% include 'menus/org/account_transactions_sub.html' with instance=extra.get_account %}
+{% endblock %}
+
+
 {% block filter_functions %}
 {% include 'menus/org/invoice_filter.html' with instance=extra.get_account %}
 {% endblock %}

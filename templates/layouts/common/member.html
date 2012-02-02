@@ -10,6 +10,8 @@
 {% captureas str_section_name %}{% block str_section_name %}{% endblock %}{% endcaptureas %}
 {% captureas page_functions_content %}{% block page_functions %}{% endblock %}{% endcaptureas %}
 {% captureas subsection_functions_content %}{% block subsection_functions %}{% endblock %}{% endcaptureas %}
+{% captureas dblsubsection_functions_content %}{% block dblsubsection_functions %}{% endblock %}{% endcaptureas %}
+{% captureas tplsubsection_functions_content %}{% block tplsubsection_functions %}{% endblock %}{% endcaptureas %}
 {% captureas filter_functions_content %}{% block filter_functions %}{% endblock %}{% endcaptureas %}
 
 {% captureas breadcrumbs %}{% block breadcrumbs %}{% endblock %}{% endcaptureas %}
@@ -185,6 +187,24 @@ $(document).ready(function(){
 </div> <!-- subsection-functions-proper -->
 </div> <!-- subsection-functions-div -->
 {% endif %}
+
+{% if dblsubsection_functions_content %}
+<div id="dblsubsection-functions-div">
+<div id="dblsubsection-functions-proper">
+{{ dblsubsection_functions_content }}
+</div> <!-- dblsubsection-functions-proper -->
+</div> <!-- dblsubsection-functions-div -->
+{% endif %}
+
+{% if tplsubsection_functions_content %}
+<div id="tplsubsection-functions-div">
+<div id="tplsubsection-functions-proper">
+{{ tplsubsection_functions_content }}
+</div> <!-- tplsubsection-functions-proper -->
+</div> <!-- tplsubsection-functions-div -->
+{% endif %}
+
+
 
 <!-- FILTER FUNCTIONS ------------------------------------- -->
 {% if filter_functions_content %}

@@ -4,10 +4,10 @@
 
 {% block str_org_name %}{{ instance.get_org.trading_name }}{% endblock %}
 {% block str_client_name %}{{ instance.get_client.trading_name }}{% endblock %}
-{% block str_section_name %}Invoice {{ instance.refnum }}{% endblock %}
+{% block str_section_name %}Credit Note {{ instance.refnum }}{% endblock %}
 
 {% block breadcrumbs %}
-{% include 'pages/org/invoice/invoice-breadcrumbs.html' with instance=instance %}
+{% include 'pages/org/credit_note/credit-note-breadcrumbs.html' with instance=instance %}
 {% endblock %}
 
 
@@ -19,10 +19,15 @@
 {% include 'menus/org/account_sub.html' with instance=instance %}
 {% endblock %}
 
+{% block dblsubsection_functions %}
+{% include 'menus/org/account_transactions_sub.html' with instance=instance %}
+{% endblock %}
 
 {% block filter_functions %}
-{% include 'menus/org/invoice_filter.html' with instance=instance.get_client.get_account %}
+{% include 'menus/org/credit_note_filter.html' with instance=instance.get_client.get_account %}
 {% endblock %}
+
+
 
 
 
@@ -42,7 +47,7 @@
 
 <div class="itol">
 
-	<form method="POST" id="id_invoice_form">
+	<form method="POST" id="id_credit_note_form">
 	{% csrf_token %}
 
 	<div class="itol-header">
@@ -84,7 +89,7 @@
 		<div style="clear: both;">&nbsp;</div>
 	</div>
 
-	<input type="hidden" id="id_invoice_state" name="invoice_state" value="{{ instance.document_state }}" />
+	<input type="hidden" id="id_credit_note_state" name="credit_note_state" value="{{ instance.document_state }}" />
 	</form>
 
 </div>
