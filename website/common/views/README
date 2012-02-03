@@ -93,24 +93,34 @@ ComponentView (Derived from Base)
 
 		. Serving a component for display on a webpage. This
 			includes: the javascript, html and stylesheet portions.
-		. Handles the receiving of POST data via overridden methods:
-
-			post_<format>( self, request, obj, data, *args, **kwargs )
-
-		eg:
-			post_html( self, request, obj, data, *args, **kwargs )
+		. A component may be multi-paged. Each page has it's own
+			html, javascript and stylesheet to be delivered.
+		. The page number is determined by a POST (or GET) variable
+			called "_page". Page numbers start at 1.
+		. For each different page, a verify_<format> method is called
+			to verify the POST/GET data.
+		. If a page template (html portion) is not found, the pages
+			are considered completely served and the post_<format> method
+			is called.
+		. Template files are called "{name}.{page_num}.{css/js/html}".
 
 	Objects available to template:
 
 		. instance - the object returned by get_object()
 		. extra - the object returned by get_extra()
 		. kwargs - as extracted from URL parser
+		. data - the POST and GET arguments from the previous call. GET
+			arguments override the POST ones.
 
 	Notable methods:
 
 		. get_extra()
 		. get_object()
-		. post_<format>( self, request, obj, data, *args, **kwargs )
+		. verify_<format>( self, request, obj, extra, data, *args, **kwargs )
+			- If not None is returned, the value is returned to the
+				requester.
+		. post_<format>( self, request, obj, extra, data, *args, **kwargs )
+			- The return value is returned to the requester.
 
 
 

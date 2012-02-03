@@ -107,9 +107,9 @@ urlpatterns = patterns('',
 		),
 
 	url( 
-			r'^(?P<oid>\d+)/client/(?P<cid>\d+)/account/payment/(?P<sdid>\d+)/allocation/(?P<alocid>\d+)',
+			r'^(?P<oid>\d+)/client/(?P<cid>\d+)/account/payment/(?P<sdid>\d+)/allocation/(?P<alocid>\d+)\.pc\.deallocate$',
 			login_required( components.PcDeallocatePayment.as_view() ),
-			name = 'org-client-account-payment-component-deallocate-payment'
+			name = 'org-client-account-payment-component-deallocate'
 		),
 
 	url( 

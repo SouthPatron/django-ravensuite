@@ -61,7 +61,7 @@ class PcAllocatePayment( PaymentComponents ):
 
 
 class PcDeallocatePayment( PaymentComponents ):
-	template_name = 'components/org/payment/deallocate_payment'
+	template_name = 'components/org/payment/deallocate'
 
 	def get_object( self, request, *args, **kwargs ):
 		return get_object_or_404(
@@ -73,8 +73,7 @@ class PcDeallocatePayment( PaymentComponents ):
 				)
 
 
-
-	def post_html( self, request, obj, data, *args, **kwargs ):
+	def post_html( self, request, obj, extra, data, *args, **kwargs ):
 
 		try:
 			pay = Factory.instantiate( obj.source )

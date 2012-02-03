@@ -77,17 +77,14 @@
 
 		var mylist = $(this).parents("td").first().find("input").val();
 
-		alert( mylist );
-
 		var alles = mylist.split(',');
-
-		alert( alles );
 
 		$(document).smkTools(
 			'load_modal',
 			'item-delete-link',
 			OOD.URL.Component(
-				OOD.URL.PaymentAllocation( {{ kwargs.oid }}, {{ kwargs.cid }}, alles[0], alles[1] )
+				OOD.URL.PaymentAllocation( {{ kwargs.oid }}, {{ kwargs.cid }}, alles[0], alles[1] ),
+				'deallocate'
 			)
 		);
 	});

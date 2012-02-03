@@ -58,6 +58,9 @@ class Base( View ):
 			return None
 		return fmt
 
+	def _get_query_data( self, request ):
+		return request.GET
+
 	def _get_body_data( self, request, fmt ):
 		if fmt == 'html':
 			return request.POST
