@@ -1,4 +1,4 @@
-/* Afes - Advanced Field Entering System
+/* Afes-table - Advanced Field Entering System: Table functionality
  * Copyright (c) 2012 SMK Software CC
  *
  * This code is private and not for distribution by any party besides
@@ -107,6 +107,16 @@
  *		. Afes
  *
  */
+
+
+/* ----------------- Dependency Checks ------------------- */
+
+if ( typeof afes == 'undefined') {
+	alert( 'ERROR: (AFES-TABLE) afes-table requires afes to be loaded' );
+	exit();
+}
+
+/* ------------------------------------------------------- */
 
 
 if ( ! afes.ex ) afes.ex = {}

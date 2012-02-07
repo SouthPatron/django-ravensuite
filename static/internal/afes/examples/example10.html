@@ -1,18 +1,13 @@
-{% extends 'layouts/org/member.html' %}
+<html>
+<head>
+	<title>Afes Table - Example - Simple Table</title>
 
-{% block str_section_name %}Choose an Organization{% endblock %}
+	<script type="text/javascript" src="../../../external/jquery/jquery.js"></script>
+	<script type="text/javascript" src="../../../external/jquery.ui/jquery-ui.custom.min.js"></script>
+	<script type="text/javascript" src="../afes.js"></script>
+	<script type="text/javascript" src="../afes-table.js"></script>
 
-{% block head_includes %}
-	<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}stylesheets/common/member-itemized-total.css" media="screen" />
-
-	<script type="text/javascript" src="{{ STATIC_URL }}js/smk.js"></script>
-	<script type="text/javascript" src="{{ STATIC_URL }}js/validations.js"></script>
-	<script type="text/javascript" src="{{ STATIC_URL }}js/date.js"></script>
-	<script type="text/javascript" src="{{ STATIC_URL }}js/afes.js"></script>
-	<script type="text/javascript" src="{{ STATIC_URL }}js/afes-table.js"></script>
-
-	<style>
-
+<style type="text/css">
 
 .afes-table
 {
@@ -66,7 +61,6 @@
 }
 
 .description.afes-table-body-cell {
-	background-color: red;
 }
 
 
@@ -77,12 +71,40 @@
 #id_table thead .head-amount { width: 158px; }
 #id_table thead .head-delete { width: 20px; }
 
+		
+</style>
+</head>
 
-	</style>
+<body>
 
-{% endblock %}
+<div>
+	<h1>Simple Table</h1>
 
-{% block onready %}
+<div id="click_me_div" style=" visible: hidden; display: none; ">
+<a class='delete-me-click' href='#'>X</a>
+</div>
+
+
+<table id="id_table">
+<thead>
+	<th class="head-description">Description</th>
+	<th class="head-qty">Qty</th>
+	<th class="head-unit-price">Unit Price</th>
+	<th class="head-tax-rate">Tax Rate</th>
+	<th class="head-amount">Amount</th>
+	<th class="head-delete">Delete</th>
+</thead>
+<tbody>
+</tbody>
+</table>
+
+</div>
+
+
+
+<script language="javascript">
+
+
 
 	myhooks = {
 		onUpdate : function( event, oldVal, newVal ) {
@@ -103,59 +125,6 @@
 
 			$(this).parents( ".afes-table-body-row" ).first().find( "td.amount" ).html( amt.toFixed(2) );
 			$(this).parents( ".afes-table-body-row" ).first().find( "div.amount input" ).val( amt.toFixed(2) );
-
-
-			/*
-
-			afes.ex.table.insertRow( "#id_table", 
-						[ 
-							"description",
-							"60.00",
-							"100.00",
-							"Tax Exempt",
-							"6000.00",
-							"0.00"
-						],
-						2
-					);
-
-			afes.ex.table.insertRow( "#id_table", 
-						[ 
-							"description one",
-							"60.00",
-							"100.00",
-							"Tax Exempt",
-							"6000.00",
-							"0.00"
-						],
-						0
-					);
-
-			afes.ex.table.insertRow( "#id_table", 
-						[ 
-							"description two",
-							"60.00",
-							"100.00",
-							"Tax Exempt",
-							"6000.00",
-							"0.00"
-						],
-						200
-					);
-
-			afes.ex.table.insertRow( "#id_table", 
-						[ 
-							"description three",
-							"60.00",
-							"100.00",
-							"Tax Exempt",
-							"6000.00",
-							"0.00"
-						],
-						-100
-					);
-
-*/
 
 
 			return true;
@@ -229,34 +198,41 @@
 	);
 
 
+	afes.ex.table.insertRow( "#id_table", 
+				[ 
+					"description one",
+					"60.00",
+					"100.00",
+					"Tax Exempt",
+					"6000.00",
+					$( "#click_me_div" ).html()
+				],
+				1
+			);
+
+	afes.ex.table.insertRow( "#id_table", 
+			[ 
+					"description two",
+					"60.00",
+					"100.00",
+					"Tax Inclusive",
+					"6000.00",
+					$( "#click_me_div" ).html()
+			],
+			0
+		);
+
+
+
 	$( ".delete-me-click" ).click( function(){
 		$( this ).parents("tr").first().remove();
 	});
 
 
-{% endblock %}
 
+</script>
 
-{% block content %}
+</body>
+</html>
 
-<div id="click_me_div" style=" visible: hidden; display: none; ">
-<a class='delete-me-click' href='#'>X</a>
-</div>
-
-
-<table id="id_table">
-<thead>
-	<th class="head-description">Description</th>
-	<th class="head-qty">Qty</th>
-	<th class="head-unit-price">Unit Price</th>
-	<th class="head-tax-rate">Tax Rate</th>
-	<th class="head-amount">Amount</th>
-	<th class="head-delete">Delete</th>
-</thead>
-<tbody>
-</tbody>
-</table>
-
-
-{% endblock %}
 

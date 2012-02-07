@@ -1,6 +1,8 @@
 /* Afes - Advanced Field Entering System
  * Copyright (c) 2012 SMK Software CC
  *
+ * Version 1.0.0
+ *
  * This code is private and not for distribution by any party besides
  * the original authors and in the manner they intended.
  *
@@ -12,7 +14,6 @@
  * Requires:
  * 
  *		. JavaScript Number
- *
  * 		. jQuery
  * 		. jQuery UI datepicker
  * 		. Date library
@@ -48,6 +49,17 @@
  *		onNext( event )
  *		onFocusOut( event, val )
  *
+ * CSS classes:
+ *
+ * 	afes-input
+ *
+ * 	afes-input-type-text
+ * 	afes-input-type-currency
+ * 	afes-input-type-select
+ *
+ *
+ * 
+ *
  */
 
 
@@ -63,8 +75,33 @@
  */
 
 
+/* ----------------- Dependency Checks ------------------- */
+
+if (typeof jQuery == 'undefined') {
+	alert( 'ERROR: (AFES) afes requires jQuery to be loaded' );
+	exit();
+}
+
+if ( jQuery.fn.jquery < '1.6.2' ) {
+	alert( 'ERROR: (AFES) afes has only been tested against jQuery 1.6.2. Please upgrade.' );
+	exit();
+}
+
+if ( typeof jQuery().datepicker == 'undefined' ) {
+	alert( 'ERROR: (AFES) afes requires the jQuery datepicker plugin.' );
+	exit();
+}
+
+if ( typeof Date == 'undefined' ) {
+	alert( 'ERROR: (AFES) afes requires the Date javascript library' );
+	exit();
+}
+
+/* ------------------------------------------------------- */
 
 var afes = new function() {
+
+	this.version = '1.0.0';
 
 
 	this.date_settings = {
@@ -444,6 +481,10 @@ var afes = new function() {
 		};
 
 		$( elem ).one( 'click', { 'opset' : opset }, afes.stubs.ih.activate );
+
+		$( elem ).addClass( 'afes-input' );
+		$( elem ).addClass( 'afes-input-type-text' );
+
 		return afes;
 	}
 
@@ -460,6 +501,10 @@ var afes = new function() {
 		};
 
 		$( elem ).one( 'click', { 'opset' : opset }, afes.stubs.ih.activate );
+
+		$( elem ).addClass( 'afes-input' );
+		$( elem ).addClass( 'afes-input-type-currency' );
+
 		return afes;
 	}
 
@@ -476,6 +521,10 @@ var afes = new function() {
 		};
 
 		$( elem ).one( 'click', { 'opset' : opset }, afes.stubs.ih.activate );
+
+		$( elem ).addClass( 'afes-input' );
+		$( elem ).addClass( 'afes-input-type-select' );
+
 		return afes;
 	}
 

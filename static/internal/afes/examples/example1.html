@@ -1,0 +1,97 @@
+<html>
+<head>
+	<title>Afes - Example - Simple Inputs</title>
+
+	<script type="text/javascript" src="../../../external/jquery/jquery.js"></script>
+	<script type="text/javascript" src="../../../external/jquery.ui/jquery-ui.custom.min.js"></script>
+	<script type="text/javascript" src="../afes.js"></script>
+
+<style type="text/css">
+
+.first-col {
+	text-align: right;
+}
+
+.second-col {
+	width: 300px;
+}
+
+.afes-input {
+	background-color: #a0a0e0;
+	border: 1px solid #e0e0e0;
+	padding: 5px;
+}
+		
+</style>
+</head>
+
+<body>
+
+<div>
+	<h1>Simple Inputs</h1>
+	<table>
+		<tr>
+			<td class="first-col">Text Input:</td>
+			<td class="second-col">
+				<div id="id_b1_myspan_one">This is it, Yo!</div>
+			</td>
+		</tr>
+		<tr>
+			<td class="first-col">Currency Input:</td>
+			<td class="second-col">
+				<div id="id_b1_myspan_two">500.00</div>
+			</td>
+		</tr>
+		<tr>
+			<td class="first-col">Select Input:</td>
+			<td class="second-col">
+				<div id="id_b1_myspan_three">Three</div>
+			</td>
+		</tr>
+	</table>
+</div>
+
+
+
+
+<script language="javascript">
+
+	afes.textInput(
+		$( "#id_b1_myspan_one" ),
+		{
+			behaviour : {
+				next : '#id_b1_myspan_two'
+			}
+		}
+	);
+
+	afes.currencyInput(
+		$( "#id_b1_myspan_two" ),
+		{
+			behaviour : {
+				next : '#id_b1_myspan_three'
+			}
+		}
+	);
+
+	afes.selectInput(
+		$( "#id_b1_myspan_three" ),
+		{
+			behaviour : {
+				next : '#id_b1_myspan_one'
+			},
+			options : {
+				'One' : 1,
+				'Two' : 2,
+				'Three' : 3,
+				'Four' : 4
+			}
+		}
+	);
+
+</script>
+
+
+</body>
+</html>
+
