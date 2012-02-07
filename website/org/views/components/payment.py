@@ -34,7 +34,7 @@ class PaymentComponents( ComponentView ):
 
 
 class PcAllocatePayment( PaymentComponents ):
-	template_name = 'components/org/payment/allocate_payment'
+	template_name = 'components/org/payment/allocate'
 
 	def post_html( self, request, obj, data, *args, **kwargs ):
 

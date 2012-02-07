@@ -1,3 +1,10 @@
+/* Afes - Advanced Field Entering System
+ * Copyright (c) 2012 SMK Software CC
+ *
+ * This code is private and not for distribution by any party besides
+ * the original authors and in the manner they intended.
+ *
+ */
 
 /*
  *
