@@ -1,12 +1,10 @@
 <html>
 <head>
-	<title>Afes - Example - Simple Inputs</title>
+	<title>Afes - Example - Simple Hooks</title>
 
 	<script type="text/javascript" src="../../../external/jquery/jquery.js"></script>
 	<script type="text/javascript" src="../../../external/jquery.ui/jquery-ui.custom.min.js"></script>
 	<script type="text/javascript" src="../afes.js"></script>
-
-	<link rel="stylesheet" type="text/css" href="../../../external/jquery.ui/ui/jquery-ui.custom.css" media="screen" />
 
 <style type="text/css">
 
@@ -30,7 +28,9 @@
 <body>
 
 <div>
-	<h1>Simple Inputs</h1>
+	<h1>Simple Hooks</h1>
+
+
 	<table>
 		<tr>
 			<td class="first-col">Text Input:</td>
@@ -50,43 +50,67 @@
 				<div id="id_b1_myspan_three">Three</div>
 			</td>
 		</tr>
-
-		<tr>
-			<td class="first-col">Date Input:</td>
-			<td class="second-col">
-				<div id="id_b1_myspan_four">21 Dec 2012</div>
-			</td>
-		</tr>
-
 	</table>
 
+	<div style="margin-top: 20px;">
+		<div id="id_change_alert">
+			<span>Callbacks go here:</span>
+		</div>
+	</div>
 
-		<input type="text" value="21 Dec 2012" id="bob" />
 </div>
-
-
 
 
 <script language="javascript">
 
-	$( "#bob" ).datepicker();
-
+	myhooks = {
+			onFocus : function( event, val ) {
+				$( "#id_change_alert" ).append( "<div>onFocus: " + val + "</div>" );
+				return true;
+			},
+			onUpdate : function( event, val ) {
+				$( "#id_change_alert" ).append( "<div>onUpdate: " + val + "</div>");
+				return true;
+			},
+			onChange : function( event, val ) {
+				$( "#id_change_alert" ).append( "<div>onChange: " + val + "</div>");
+				return true;
+			},
+			onEnter : function( event ) {
+				$( "#id_change_alert" ).append( "<div>onEnter</div>" );
+				return true;
+			},
+			onCancel : function( event ) {
+				$( "#id_change_alert" ).append( "<div>onCancel</div>" );
+				return true;
+			},
+			onNext : function( event ) {
+				$( "#id_change_alert" ).append( "<div>onNext</div>" );
+				return true;
+			},
+			onFocusOut : function( event, val ) {
+				$( "#id_change_alert" ).append( "<div>onFocusOut: " + val + "</div>" );
+			}
+	};
 
 	afes.textInput(
 		$( "#id_b1_myspan_one" ),
 		{
 			behaviour : {
 				next : '#id_b1_myspan_two'
-			}
+			},
+			callbacks : myhooks
 		}
 	);
+
 
 	afes.currencyInput(
 		$( "#id_b1_myspan_two" ),
 		{
 			behaviour : {
 				next : '#id_b1_myspan_three'
-			}
+			},
+			callbacks : myhooks
 		}
 	);
 
@@ -94,8 +118,9 @@
 		$( "#id_b1_myspan_three" ),
 		{
 			behaviour : {
-				next : '#id_b1_myspan_four'
+				next : '#id_b1_myspan_one'
 			},
+			callbacks : myhooks,
 			options : {
 				'One' : 1,
 				'Two' : 2,
@@ -105,18 +130,9 @@
 		}
 	);
 
-	afes.dateInput(
-		$( "#id_b1_myspan_four" ),
-		{
-			behaviour : {
-				next : '#id_b1_myspan_one'
-			}
-		}
-	);
 
 
 </script>
-
 
 </body>
 </html>

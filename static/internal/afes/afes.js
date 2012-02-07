@@ -56,6 +56,7 @@
  * 	afes-input-type-text
  * 	afes-input-type-currency
  * 	afes-input-type-select
+ * 	afes-input-type-date
  *
  *
  * 
@@ -103,22 +104,6 @@ var afes = new function() {
 
 	this.version = '1.0.0';
 
-
-	this.date_settings = {
-		dateFormat: 'd M yy',
-		onClose: function( theDate ) {
-			requested_date = Date.parse( theDate );
-			if ( requested_date != null )
-				$(this).val( $.datepicker.formatDate( 'd M yy', requested_date ) );
-			else
-				$(this).val( $.datepicker.formatDate( 'd M yy', Date.today() ) );
-		}
-	}
-
-	this.prepareDateInput = function( elem ) {
-		$( elem ).datepicker( datesettings );
-		return this;
-	}
 
 	this.numberize = function( val ) {
 		if ( isNaN( val ) ) return (new Number( '0.00')).toFixed(2);
@@ -465,6 +450,215 @@ var afes = new function() {
 
 
 
+	//						DATE INPUT ------------------------------------
+
+
+	this.ih.date = function() {}
+	
+	/*
+	this.ih.date.activate = function( elem, event, opset ) {
+
+		var rc = afes.ih.text.activate( elem, event, opset );
+
+		var date_settings = {
+			dateFormat: 'd M yy',
+			onClose: function( theDate ) {
+				requested_date = Date.parse( theDate );
+				if ( requested_date != null )
+					$(this).val( $.datepicker.formatDate( 'd M yy', requested_date ) );
+				else
+					$(this).val( $.datepicker.formatDate( 'd M yy', Date.today() ) );
+			}
+		};
+
+		var sam = $(elem).find("input").first();
+
+		$( sam ).datepicker( date_settings );
+		$( sam ).datepicker( "show" );
+		return false;
+	}
+	*/
+
+
+
+	this.ih.date.activate = function( elem, event, opset ) {
+		var dsval = $(elem).html();
+		opset.scratchpad.original_value = dsval;
+
+		var callbacks = opset.settings.callbacks;
+
+		if ( callbacks.onFocus )
+		{
+			var rc = callbacks.onFocus.call( elem, event, dsval );
+			
+			if ( rc === false )
+			{
+				$(elem).one(
+					'click',
+					{ 'opset' : opset },
+					opset.functional.activate
+				);
+				return false;
+			}
+
+			if ( rc !== true ) dsval = rc;
+		}
+
+		var sam = $( "<input/>", { text: "text", value: dsval } );
+
+		$(elem).empty().append( sam );
+
+		sam.focus()
+			.focusout( { 'opset' : opset }, afes.stubs.ih.update )
+			.keydown( { 'opset' : opset }, afes.stubs.ih.keystroke )
+			.select();
+
+		return false;
+	}
+
+
+	this.ih.date.update = function( elem, event, opset ) {
+		var dsval = $(elem).val();
+		var callbacks = opset.settings.callbacks;
+
+		if ( callbacks.onUpdate )
+		{
+			var rc = callbacks.onUpdate.call(
+						elem,
+						event,
+						opset.scratchpad.original_value,
+						dsval
+					);
+
+			if ( rc === false )
+			{
+				$(elem).one( 'click', { 'opset' : opset }, afes.stubs.ih.activate);
+				return false;
+			}
+
+			if ( rc && rc !== true ) dsval = rc;
+		}
+
+		// Update forms entries, if specified.
+		if ( opset.settings.behaviour.form_update )
+			$( opset.settings.behaviour.form_update ).val( dsval );
+
+		var par = $(elem).parent();
+
+		par
+			.empty()
+			.html( dsval )
+			.one( 'click', { 'opset' : opset }, afes.stubs.ih.activate );
+
+		if ( callbacks.onFocusOut )
+			callbacks.onFocusOut.call( par, event, dsval );
+
+		return false;
+	}
+
+	this.ih.date.cancel = function( elem, event, opset ) {
+		var dsval = $(elem).val();
+		var callbacks = opset.settings.callbacks;
+
+		if ( callbacks.onCancel )
+		{
+			var rc = callbacks.onCancel.call( elem, event );
+
+			if ( rc === false )
+			{
+				$(elem).one( 'click', { 'opset' : opset }, afes.stubs.ih.activate);
+				return false;
+			}
+		}
+
+		var par = $(elem).parent();
+
+		par
+			.empty()
+			.html( opset.scratchpad.original_value )
+			.one( 'click', { 'opset' : opset }, afes.stubs.ih.activate );
+
+
+		if ( callbacks.onFocusOut )
+			callbacks.onFocusOut.call(
+				par,
+				event,
+				opset.scratchpad.original_value
+			);
+
+		return false;
+
+	}
+
+	this.ih.date.keystroke = function( elem, event, opset ) {
+
+		var callbacks = opset.settings.callbacks;
+		var next = opset.settings.behaviour.next;
+		var original_value = opset.scratchpad.original_value;
+
+		// KEY: Enter
+
+		if ( event.keyCode == '13') {
+			event.preventDefault();
+
+			if ( callbacks.onEnter )
+				if ( callbacks.onEnter.call( elem, event ) === false )
+					return false;
+
+			return opset.functional.update( elem, event, opset );
+		}
+
+		// KEY: Tab
+
+		if ( event.keyCode == '9') {
+			event.preventDefault();
+
+			if ( callbacks.onNext )
+				if ( callbacks.onNext.call( elem, event ) === false )
+					return false;
+
+			var par = elem.parent();
+
+			var dc = opset.functional.update( elem, event, opset );
+
+			if ( opset.settings.behaviour.next )
+			{
+				var rc = opset.settings.behaviour.next;
+
+				if ( typeof( opset.settings.behaviour.next ) === 'function' )
+				{
+					rc = opset.settings.behaviour.next.call( par, event );
+				}
+
+				if ( rc !== false ) $( rc ).click();
+			}
+
+			return dc;
+		}
+
+		// KEY: Escape
+
+		if ( event.keyCode == '27') {
+			event.preventDefault();
+
+			if ( callbacks.onCancel )
+				if ( callbacks.onCancel.call( elem, event ) === false )
+					return false;
+
+			return opset.functional.cancel( elem, event, opset );
+		}
+
+
+		if ( callbacks.onChange ) {
+			var newval = elem.val();
+			if ( newval != original_value )
+				callbacks.onChange.call( elem, event, newval );
+		}
+	}
+
+
+
+
 	// ----------------- Methods ----------------------------------------
 
 
@@ -527,6 +721,29 @@ var afes = new function() {
 
 		return afes;
 	}
+
+
+	this.dateInput = function( elem, thesettings ) {
+		
+		var opset = {
+			functional : {
+				activate : afes.ih.date.activate,
+				update : afes.ih.date.update,
+				cancel : afes.ih.date.cancel,
+				keystroke : afes.ih.date.keystroke
+			},
+			settings : thesettings
+		};
+
+
+		$( elem ).one( 'click', { 'opset' : opset }, afes.stubs.ih.activate );
+
+		$( elem ).addClass( 'afes-input' );
+		$( elem ).addClass( 'afes-input-type-date' );
+		return afes;
+	}
+
+
 
 }
 

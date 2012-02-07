@@ -1,0 +1,84 @@
+{% load decshift %}
+{% load sourcedoc %}
+<div id="dialog-form" title="Allocate Payment">
+	<p class="validateTips">All form fields are required</p>
+	<form id="allocate-new-form" method="POST" action="{% url org-client-account-payment-component-allocate-payment kwargs.oid kwargs.cid kwargs.sdid %}">
+		{% csrf_token %}
+
+		<div id="dialog-text">
+
+	<fieldset>
+
+		<table>
+			<tbody>
+
+		<input type="hidden" name="refnum" id="id-invoice-refnum" value="-1"/>
+		<input type="hidden" name="total" id="id-invoice-total" value="0"/>
+		<input type="hidden" name="unpaid" id="id-invoice-unpaid" value="0"/>
+		<input type="hidden" name="invoice-date" id="id-invoice-invoice-date" value="Today"/>
+		<input type="hidden" name="due-date" id="id-invoice-due-date" value="Today"/>
+
+
+
+				<tr class="reference-row">
+					<td class="col1">Reference:</td>
+					<td class="col2"><span id="id-text-refnum">{{ data.refnum }}</span></td>
+				</tr>
+
+				<tr class="date-row">
+					<td class="col1">Invoice Date:</td>
+					<td class="col2"><span id="id-text-invoice-date">Today</span></td>
+				</tr>
+
+				<tr class="date-row">
+					<td class="col1">Due Date:</td>
+					<td class="col2"><span id="id-text-due-date">Today</span></td>
+				</tr>
+
+
+				<tr class="amount-row">
+					<td class="col1">Amount:</td>
+					<td class="col2"><span id="id-text-total">0.00</span>
+</td>
+				</tr>
+
+				<tr class="oustanding-row">
+					<td class="col1">Outstanding Invoice Amount:</td>
+					<td class="col2"><span id="id-text-unpaid">0.00</span>
+</td>
+				</tr>
+
+				{% get_document_obj instance as doc %}
+
+				<tr class="available-row">
+					<td class="col1">Available to Allocate:</td>
+					<td class="col2"><span id="id-text-available">{{ doc.getTotals.getUnallocated|decsplay }}</span>
+</td>
+				</tr>
+
+				<tr class="allocate-row">
+					<td class="col1">How much do you want to allocate?</td>
+					<td class="col2">
+						<input type="text" name="payment-amount" id="id-payment-amount" value="-1"/>
+					</td>
+				</tr>
+
+			</tbody>
+		</table>
+
+	</fieldset>
+
+
+
+		</div>
+
+
+		<input type="hidden" name="invoice-refnum" id="id-invoice-refnum" value="-1"/>
+		<input type="hidden" id="id-invoice-total" value="0"/>
+		<input type="hidden" id="id-invoice-unpaid" value="0"/>
+		<input type="hidden" id="id-invoice-invoice-date" value="Today"/>
+		<input type="hidden" id="id-invoice-due-date" value="Today"/>
+	</form>
+</div>
+
+
