@@ -455,86 +455,25 @@ var afes = new function() {
 
 	this.ih.date = function() {}
 	
-
 	this.ih.date.activate = function( elem, event, opset ) {
-		var dsval = $(elem).html();
-		opset.scratchpad.original_value = dsval;
-
-		var callbacks = opset.settings.callbacks;
-
-		if ( callbacks.onFocus )
-		{
-			var rc = callbacks.onFocus.call( elem, event, dsval );
-			
-			if ( rc === false )
-			{
-				$(elem).one(
-					'click',
-					{ 'opset' : opset },
-					opset.functional.activate
-				);
-				return false;
-			}
-
-			if ( rc !== true ) dsval = rc;
-		}
-
-		var sam = $( "<input/>", { text: "text", value: dsval } );
-
-		$(elem).empty().append( sam );
-
-
-		var date_settings = {
-			dateFormat: "d M yy",
-			constrainInput : true,
-			onClose: function( theDate ) {
-				var requested_date = Date.parse( theDate );
-
-				if ( requested_date == null )
-					requested_date = Date.parse( opset.scratchpad.original_value );
-				if ( requested_date == null )
-					requested_date = Date.today();
-
-
-				var dsval = requested_date.toString( "d MMM yyyy" );
-
-				if ( callbacks.onUpdate )
-				{
-					var rc = callbacks.onUpdate.call(
-								elem,
-								event,
-								opset.scratchpad.original_value,
-								dsval
-							);
-
-					if ( rc === false )
-						dsval = opset.scratchpad.original_value;
-
-					if ( rc && rc !== true ) dsval = rc;
-				}
-
-					
-				var par = $(this).parent();
-
-				$( par ).empty().html( dsval );
-
-				$( par ).one( 'click', { 'opset' : opset }, afes.stubs.ih.activate);
-
-
-				// Update forms entries, if specified.
-				if ( opset.settings.behaviour.form_update )
-					$( opset.settings.behaviour.form_update ).val( dsval );
-
-				if ( callbacks.onFocusOut )
-					callbacks.onFocusOut.call( par, event, dsval );
-			}
-		};
-
-		$( sam ).datepicker( date_settings );
-		sam.focus().select();
-		return false;
+		var dsval = Date.parse( $(elem).html() );
+		if ( dsval == null ) dsval = Date.today();
+		dsval = dsval.toString( "d MMM yyyy" );
+		$(elem).html( dsval );
+		return afes.ih.text.activate( elem, event, opset );
 	}
 
+	this.ih.date.update = function( elem, event, opset ) {
+
+		var gooba = $(elem).val();
+
+		var dsval = Date.parse( gooba );
+		if ( dsval == null ) dsval = Date.parse( opset.scratchpad.original_value );
+		dsval = dsval.toString( "d MMM yyyy" );
+
+		$(elem).val( dsval );
+		return afes.ih.text.update( elem, event, opset );
+	}
 
 
 	// ----------------- Methods ----------------------------------------
@@ -605,7 +544,10 @@ var afes = new function() {
 		
 		var opset = {
 			functional : {
-				activate : afes.ih.date.activate
+				activate : afes.ih.date.activate,
+				update : afes.ih.date.update,
+				cancel : afes.ih.text.cancel,
+				keystroke : afes.ih.text.keystroke
 			},
 			settings : thesettings
 		};
