@@ -15,7 +15,6 @@
  * 
  *		. JavaScript Number
  * 		. jQuery
- * 		. jQuery UI datepicker
  * 		. Date library
  */
 
@@ -85,11 +84,6 @@ if (typeof jQuery == 'undefined') {
 
 if ( jQuery.fn.jquery < '1.6.2' ) {
 	alert( 'ERROR: (AFES) afes has only been tested against jQuery 1.6.2. Please upgrade.' );
-	exit();
-}
-
-if ( typeof jQuery().datepicker == 'undefined' ) {
-	alert( 'ERROR: (AFES) afes requires the jQuery datepicker plugin.' );
 	exit();
 }
 

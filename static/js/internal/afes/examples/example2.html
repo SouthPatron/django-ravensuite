@@ -3,7 +3,7 @@
 	<title>Afes - Example - Simple Hooks</title>
 
 	<script type="text/javascript" src="../../../external/jquery/jquery.js"></script>
-	<script type="text/javascript" src="../../../external/jquery.ui/jquery-ui.custom.min.js"></script>
+	<script type="text/javascript" src="../../../external/date/date.js"></script>
 	<script type="text/javascript" src="../afes.js"></script>
 
 <style type="text/css">
@@ -50,6 +50,13 @@
 				<div id="id_b1_myspan_three">Three</div>
 			</td>
 		</tr>
+		<tr>
+			<td class="first-col">Date Input:</td>
+			<td class="second-col">
+				<div id="id_b1_myspan_four">21 Dec 2012</div>
+			</td>
+		</tr>
+
 	</table>
 
 	<div style="margin-top: 20px;">
@@ -118,7 +125,7 @@
 		$( "#id_b1_myspan_three" ),
 		{
 			behaviour : {
-				next : '#id_b1_myspan_one'
+				next : '#id_b1_myspan_four'
 			},
 			callbacks : myhooks,
 			options : {
@@ -127,6 +134,17 @@
 				'Three' : 3,
 				'Four' : 4
 			}
+		}
+	);
+
+
+	afes.dateInput(
+		$( "#id_b1_myspan_four" ),
+		{
+			behaviour : {
+				next : '#id_b1_myspan_one'
+			},
+			callbacks : myhooks
 		}
 	);
 

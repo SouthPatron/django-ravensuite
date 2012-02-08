@@ -3,7 +3,6 @@
 	<title>Afes Table - Example - Simple Table</title>
 
 	<script type="text/javascript" src="../../../external/jquery/jquery.js"></script>
-	<script type="text/javascript" src="../../../external/jquery.ui/jquery-ui.custom.min.js"></script>
 	<script type="text/javascript" src="../afes.js"></script>
 	<script type="text/javascript" src="../afes-table.js"></script>
 
@@ -43,10 +42,17 @@
 
 .afes-table-body-cell input
 {
-	border: 0px;
-	background-color: #f0f0f0;
+	border: 0px solid black;
 	width: 100%;
 }
+
+.afes-table-body-cell input:focus,
+.afes-table-body-cell select:focus
+{
+	outline:none;
+	font: inherit;
+}
+
 
 .afes-table-body-cell-type-currency,
 .afes-table-body-cell-type-currency input
