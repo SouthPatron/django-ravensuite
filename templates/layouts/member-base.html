@@ -23,13 +23,11 @@
 {% if str_section_name %}{{ str_section_name }}{% endif %}
 </title>
 
-	<!-- No caching ever -->
-	<meta http-equiv="expires" CONTENT="Fri, 1 Jan 1990 00:00:00 GMT">
-	<meta http-equiv="pragma" CONTENT="no-cache">
-	<meta http-equiv="cache-control" value="no-cache, no store, must-revalidate">
-	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	{% include 'global/head-nocache.html' %}
 
 	{% rely reset jquery.ui datatables superfish formfit sitekit %}
+
+	<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}local/css/general-common.css" media="screen" />
 
 	<!-- Include custom stylesheets -->
 	<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}local/css/member-layout.css" media="screen" />
