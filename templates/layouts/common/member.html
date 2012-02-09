@@ -29,7 +29,7 @@
 	<meta http-equiv="cache-control" value="no-cache, no store, must-revalidate">
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 
-	{% rely reset jquery.ui datatables superfish forms sitekit %}
+	{% rely reset jquery.ui datatables superfish formfit sitekit %}
 
 	<!-- Include custom stylesheets -->
 	<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}local/css/member-layout.css" media="screen" />
@@ -50,20 +50,6 @@
 	<script type="text/javascript">
 
 $(document).ready(function(){
-
-	$( '.jForms input[type=submit],button' ).button();
-	$( '.jForms' ).jForms( 'formify' );
-
-	$( '.jForms :input[title]').tooltip({
-		position: "top center",
-		offset: [-30, 10],
-		effect: "fade",
-		opacity: 0.9,
-		tipClass: "jFormTip"
-	});
-
-
-
 	{% block onready %}
 	{% endblock onready %}
 })

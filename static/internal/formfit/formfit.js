@@ -137,8 +137,28 @@ $.fn.jForms = function( method ) {
 		return methods.init.apply( this, arguments );
 	} else {
 		$.error( 'Method ' +  method + ' does not exist on jQuery.jForms' );
-	}    
+	}
 
 };
 })( jQuery );
+
+
+$(document).ready( function() {
+	$(document).find( "form.jForms" ).each( function() {
+
+		$(this).jForms( "formify" );
+
+		$(this).find( "input[type=submit],button" ).button();
+
+		$(this).find( ":input[title]" ).tooltip({
+			position: "top center",
+			offset: [-30, 10],
+			effect: "fade",
+			opacity: 0.9,
+			tipClass: "jFormTip"
+		});
+	});
+});
+
+
 

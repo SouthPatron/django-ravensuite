@@ -1,0 +1,50 @@
+{% extends 'layouts/public-base.html' %}
+
+{% load rely %}
+
+{% block head_includes %}
+	{{ block.super }}
+	<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}local/css/account-auth-base.css" media="screen" />
+	{% rely formfit %}
+{% endblock %}
+
+
+{% block body %}
+
+<div id="wrap">
+
+	<div id="header">
+		<div class="wrap_container">
+			Header
+		</div>
+	</div>
+
+	<div id="page_functions">
+		<div class="wrap_container">
+			<a href='{% url register-url %}'>Register for a new account</a> &middot;
+			<a href='{% url login %}'>Login</a> &middot;
+			<a href='{% url resend-authentication-code %}'>Resend Authentication Code</a>
+		</div>
+	</div>
+
+	{% if form.non_field_errors %}
+	<div id="messages">
+		<div class="wrap_container">
+			{% include 'global/forms/form_global_errors.html' with width="364px" %}
+		</div>
+	</div>
+	{% endif %}
+
+	<div id="content">
+		<div class="wrap_container">
+			{% block content %}
+			Content
+			{% endblock %}
+		</div>
+	</div>
+
+</div>
+
+{% endblock %}
+
+

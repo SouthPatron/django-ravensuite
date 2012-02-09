@@ -76,7 +76,13 @@ rely_graph = {
 	'jquery.ui' : {
 			'js' : [ pe( 'jquery.ui/jquery-ui.custom.min.js' ) ],
 			'css' : [ pe( 'jquery.ui/css/jquery-ui.custom.css' ) ],
-			'deps' : []
+			'deps' : [ 'jquery' ]
+		},
+
+	'jquery.tools' : {
+			'js' : [ pe( 'jquery.tools/jquery.tools.min.js' ) ],
+			'css' : [],
+			'deps' : [ 'jquery' ]
 		},
 
 	'afes' : {
@@ -91,10 +97,10 @@ rely_graph = {
 			'deps' : [ 'afes' ]
 		},
 
-	'forms' : {
-			'js' : [ pi( 'forms/forms.js' ) ],
-			'css' : [ pi( 'forms/css/forms.css' ) ],
-			'deps' : [ 'jquery' ]
+	'formfit' : {
+			'js' : [ pi( 'formfit/formfit.js' ) ],
+			'css' : [ pi( 'formfit/css/formfit.css' ) ],
+			'deps' : [ 'jquery.ui', 'jquery.tools' ]
 		},
 
 	'datatables' : {

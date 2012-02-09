@@ -14,7 +14,7 @@ import datetime
 
 
 class RegistrationStep1( FormView ):
-	template_name = 'pages/account/register_step1.html'
+	template_name = 'pages/account/auth-register-step1.html'
 	form_class = RegistrationForm
 	success_url = 'register-step2'
 
@@ -43,7 +43,7 @@ class RegistrationStep1( FormView ):
 
 
 class RegistrationStep2( FormView ):
-	template_name = 'pages/account/register_step2.html'
+	template_name = 'pages/account/auth-register-step2.html'
 	form_class = AuthenticationCodeForm
 	success_url = 'login'
 

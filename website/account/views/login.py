@@ -8,7 +8,7 @@ from ..forms import *
 
 
 class LoginView( FormView ):
-	template_name = 'pages/account/login.html'
+	template_name = 'pages/account/auth-login.html'
 	form_class = LoginForm
 	success_url = 'org-list'
 

@@ -1,0 +1,78 @@
+/* ----- GLOBAL --------------------------------------------- */
+
+html {
+	height: 100%;
+}
+
+html body {
+	position: relative;
+	width: auto;
+	height: 100%;
+	margin: 0;
+	padding: 0;
+	font-family: Tahoma, Geneva, Sans-Serif;
+	font-size: 12px;
+	background: white;
+}
+
+
+#wrap {
+	min-width: 900px;
+}
+
+.wrap_container {
+	width: 900px;
+}
+
+
+
+#header
+{
+	font-size: 2em;
+	padding: 30px 30px;
+	background-color: #303080;
+	color: white;
+}
+
+#page_functions
+{
+	font-size: 1.5em;
+	padding: 5px 20px;
+	background-color: #202020;
+	color: white;
+}
+
+#page_functions a,
+#page_functions a:visited
+{
+	color: #a0a0a0;
+	text-decoration: none;
+	padding: 0px 20px;
+}
+
+#page_functions a:hover
+{
+}
+
+#messages {
+	min-height: 40px;
+	width: 400px;
+
+	font-size: 1.5em;
+	margin: 50px 50px 50px 50px;
+	padding: 10px;
+	background-color: #f0e0e0;
+	border: 1px solid #6f0000;
+	color: darkred;
+}
+
+
+
+#content {
+	height: auto;
+	min-height: 300px;
+	margin: auto;
+}
+
+
+

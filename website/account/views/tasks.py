@@ -8,7 +8,7 @@ from common.models import *
 from ..forms import *
 
 class ResendAuthCode( FormView ):
-	template_name = 'pages/account/resend-authcode.html'
+	template_name = 'pages/account/auth-resend-authcode.html'
 	form_class = EmailRequestForm
 	success_url = 'register-step2'
 
@@ -25,7 +25,7 @@ class ResendAuthCode( FormView ):
 
 
 class ResetPassword( FormView ):
-	template_name = 'pages/account/password-reset.html'
+	template_name = 'pages/account/auth-password-reset.html'
 	form_class = EmailRequestForm
 	success_url = 'login'
 
