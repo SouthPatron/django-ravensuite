@@ -1,6 +1,6 @@
 
 def enum(*args, **kwargs):
-	return type('Enum', (object), dict((y, x) for x, y in enumerate(args), **kwargs)) 
+	return type('Enum', (object,), dict((y, x) for x, y in enumerate(args), **kwargs)) 
 
 
 class ChoicesEnum( object ):

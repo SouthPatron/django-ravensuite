@@ -1,0 +1,9 @@
+
+.dataTables_wrapper tr.tablerow_disabled {
+	color: #808080;
+}
+
+.dataTables_wrapper tr.tablerow_enabled {
+}
+
+

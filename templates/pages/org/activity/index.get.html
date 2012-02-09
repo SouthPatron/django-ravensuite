@@ -1,5 +1,7 @@
 {% extends 'layouts/org/member.html' %}
 
+{% load rely %}
+
 
 {% block str_org_name %}{{ extra.trading_name }}{% endblock %}
 {% block str_section_name %}Activities{% endblock %}
@@ -12,9 +14,7 @@
 
 
 {% block head_includes %}
-
-	<script type="text/javascript" src="{{ STATIC_URL }}js/validations.js"></script>
-
+	{% rely sitekit %}
 {% endblock %}
 
 {% block onready %}

@@ -1,6 +1,7 @@
 {% extends 'layouts/org/member.html' %}
 
 {% load decshift %}
+{% load rely %}
 
 {% block str_org_name %}{{ instance.get_org.trading_name }}{% endblock %}
 {% block str_client_name %}{{ instance.get_client.trading_name }}{% endblock %}
@@ -32,12 +33,9 @@
 
 
 {% block head_includes %}
-	<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}stylesheets/common/member-itemized-total.css" media="screen" />
+	<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}local/css/member-itemized-total.css" media="screen" />
 
-	<script type="text/javascript" src="{{ STATIC_URL }}js/smk.js"></script>
-	<script type="text/javascript" src="{{ STATIC_URL }}js/validations.js"></script>
-	<script type="text/javascript" src="{{ STATIC_URL }}js/date.js"></script>
-
+	{% rely sitekit date %}
 {% endblock %}
 
 

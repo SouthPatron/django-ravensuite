@@ -1,5 +1,6 @@
 {% extends 'layouts/org/member.html' %}
 
+{% load rely %}
 {% load decshift %}
 
 {% block str_org_name %}{{ instance.get_org.trading_name }}{% endblock %}
@@ -29,14 +30,10 @@
 {% endblock %}
 
 
-
 {% block head_includes %}
-	<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}stylesheets/common/member-itemized-total.css" media="screen" />
-
-	<script type="text/javascript" src="{{ STATIC_URL }}js/smk.js"></script>
-	<script type="text/javascript" src="{{ STATIC_URL }}js/validations.js"></script>
-	<script type="text/javascript" src="{{ STATIC_URL }}js/date.js"></script>
-
+	{% rely sitekit date afes %}
+	<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}local/css/member-itemized-total.css" media="screen" />
+	<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}local/css/member-afes-itol.css" media="screen" />
 {% endblock %}
 
 

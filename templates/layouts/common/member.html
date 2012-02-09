@@ -3,6 +3,7 @@
 <head profile="http://gmpg.org/xfn/11">
 
 {% load active %}
+{% load rely %}
 
 {% load captureas %}
 {% captureas str_org_name %}{% block str_org_name %}{% endblock %}{% endcaptureas %}
@@ -28,52 +29,19 @@
 	<meta http-equiv="cache-control" value="no-cache, no store, must-revalidate">
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 
+	{% rely reset jquery.ui datatables superfish forms sitekit %}
+
 	<!-- Include custom stylesheets -->
-	<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}stylesheets/reset.css" media="screen" />
-	<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}stylesheets/common/member-layout.css" media="screen" />
-	<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}stylesheets/common/member-content-menu.css" media="screen" />
-	<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}stylesheets/common/member-page-functions.css" media="screen" />
-	<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}stylesheets/common/member-subsection-functions.css" media="screen" />
-	<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}stylesheets/common/member-filter-functions.css" media="screen" />
-	<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}stylesheets/common/member-message-notices.css" media="screen" />
-	<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}stylesheets/common/member-timer-block.css" media="screen" />
-	<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}stylesheets/common/member-extras.css" media="screen" />
-	<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}stylesheets/common/member-dialog.css" media="screen" />
+	<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}local/css/member-layout.css" media="screen" />
+	<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}local/css/member-content-menu.css" media="screen" />
+	<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}local/css/member-page-functions.css" media="screen" />
+	<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}local/css/member-subsection-functions.css" media="screen" />
+	<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}local/css/member-filter-functions.css" media="screen" />
+	<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}local/css/member-message-notices.css" media="screen" />
+	<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}local/css/member-timer-block.css" media="screen" />
+	<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}local/css/member-extras.css" media="screen" />
+	<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}local/css/member-dialog.css" media="screen" />
 
-	<!-- Include jquery -->
-	<script type='text/javascript' src="{{ STATIC_URL }}js/jquery.js"></script>
-
-	<!-- include jquery ui -->
-	<script type='text/javascript' src="{{ STATIC_URL }}js/jquery-ui.custom.min.js"></script>
-	<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}stylesheets/ui/jquery-ui.custom.css" media="screen" />
-
-	<!-- include jquery datatables -->
-	<script type='text/javascript' src="{{ STATIC_URL }}js/jquery.dataTables.min.js"></script>
-	<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}stylesheets/datatable/datatable.css" media="screen" />
-
-
-	<!-- Include superfish -->
-	<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}stylesheets/superfish.css" media="screen" />
-	<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}stylesheets/superfish-vertical.css" media="screen" />
-	<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}stylesheets/superfish-navbar.css" media="screen" />
-	<script type="text/javascript" src="{{ STATIC_URL }}js/hoverIntent.js"></script>
-	<script type="text/javascript" src="{{ STATIC_URL }}js/superfish.js"></script>
-	<script type="text/javascript" src="{{ STATIC_URL }}js/supersubs.js"></script>
-
-	<!-- Include jquery tools -->
-	<script type='text/javascript' src="{{ STATIC_URL }}js/jquery.tools.min.js"></script>
-
-	<!-- include forms -->
-	<script type='text/javascript' src="{{ STATIC_URL }}js/forms.js"></script>
-	<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}stylesheets/forms/forms.css" media="screen" />
-
-	<!-- include smktools -->
-	<script type='text/javascript' src="{{ STATIC_URL }}js/smktools.js"></script>
-	<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}stylesheets/common/smktools.css" media="screen" />
-
-	<!-- include some basic support -->
-	<script type='text/javascript' src="{{ STATIC_URL }}js/smk.js"></script>
-	<script type='text/javascript' src="{{ STATIC_URL }}js/ood.js"></script>
 
 	{% block head_includes %}
 	{% endblock %}
