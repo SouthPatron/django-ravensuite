@@ -1,0 +1,35 @@
+
+#subgroup-panel
+{
+	position: relative;
+	padding: 15px 20px;
+	margin: auto;
+	height: 18px;
+	background: #2e2e2e;
+}
+
+
+#subgroup-panel #subgroup-panel-orgname-title
+{
+	position: absolute;
+	left: 20px;
+	top: 15px;
+	font-size: 1.5em;
+	text-shadow: 1px 1px 1px black;
+	overflow: hidden;
+}
+
+#subgroup-panel #subgroup-panel-orgname-title a,
+#subgroup-panel #subgroup-panel-orgname-title a:visited,
+#subgroup-panel #subgroup-panel-orgname-title a:active
+{
+	text-decoration: none;
+	color: #cccccc;
+}
+
+#subgroup-panel #subgroup-panel-orgname-title a:hover
+{
+	text-decoration: underline;
+}
+
+

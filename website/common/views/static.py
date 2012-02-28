@@ -26,7 +26,8 @@ def static_serve( request, path_name ):
 	return render_to_response(
 				'static/{}'.format( path_name ),
 				{ },
-				context_instance=RequestContext(request)
+				context_instance=RequestContext(request),
+				mimetype='text/css'
 			)
 
 

@@ -2,10 +2,12 @@
 
 {% block tpl_si_section %}Choose an Organization{% endblock %}
 
+{% load rely %}
+
 
 {% block tpl_bl_head_inner %}
 
-	<script type="text/javascript" src="{{ STATIC_URL }}js/validations.js"></script>
+	{% rely sitekit %}
 
 {% endblock %}
 
