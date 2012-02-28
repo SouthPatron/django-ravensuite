@@ -43,10 +43,16 @@
 
 {% captureas breadcrumbs %}{% block breadcrumbs %}{% endblock %}{% endcaptureas %}
 
+
+{% captureas content_menu_left %}{% block content_menu_left %}{% endblock %}{% endcaptureas %}
+{% captureas content_menu_right %}{% block content_menu_right %}{% endblock %}{% endcaptureas %}
+{% captureas content %}{% block content %}{% endblock %}{% endcaptureas %}
+
+
+
 {% comment %}
 -------------------- FINISHED ---------------------------------------
 {% endcomment %}
-
 
 {% include 'layouts/member-inc-header.html' %}
 {% include 'layouts/member-inc-subgroup.html' %}
