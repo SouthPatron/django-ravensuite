@@ -15,6 +15,8 @@
 #id_table thead .head-amount { width: 138px; }
 	</style>
 
+	{{ block.super }}
+
 {% endblock %}
 
 {% block tpl_bl_onready %}
@@ -222,7 +224,7 @@ Allocations
 	<tr>
 		<td><a href="{{ sda.source.get_single_url }}">{{ sda.source.get_document_type_display }} {{ sda.source.refnum }}</a></td>
 		<td><a href="{{ sda.source.get_single_url }}">{{ sda.amount|decsplay }}</a></td>
-		<td><img class="item-delete-link" src='{{ STATIC_URL }}images/icons/line_delete_grey.png' /><input type="hidden" name="sub_allocation" value="{{ sda.source.refnum }},{{ sda.id }}" /></td>
+		<td><img class="item-delete-link" src='{{ STATIC_URL }}local/images/icons/line_delete_grey.png' /><input type="hidden" name="sub_allocation" value="{{ sda.source.refnum }},{{ sda.id }}" /></td>
 	</tr>
 {% endfor %}
 </tbody>

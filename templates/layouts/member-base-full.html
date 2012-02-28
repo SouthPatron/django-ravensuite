@@ -5,9 +5,9 @@
 
 
 {% block tpl_bl_head %}
-	{{ block.super }}
-
 	{% rely reset jquery.ui datatables superfish formfit sitekit %}
+
+	{{ block.super }}
 
 	<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}local/css/member-base-full.css" media="screen" />
 
@@ -25,11 +25,11 @@
 {% captureas tpl_si_client %}{% block tpl_si_client %}{% endblock %}{% endcaptureas %}
 {% captureas tpl_si_section %}{% block tpl_si_section %}{% endblock %}{% endcaptureas %}
 
-{% captureas page_functions_content %}{% block page_functions %}{% endblock %}{% endcaptureas %}
-{% captureas subsection_functions_content %}{% block subsection_functions %}{% endblock %}{% endcaptureas %}
-{% captureas dblsubsection_functions_content %}{% block dblsubsection_functions %}{% endblock %}{% endcaptureas %}
-{% captureas tplsubsection_functions_content %}{% block tplsubsection_functions %}{% endblock %}{% endcaptureas %}
-{% captureas filter_functions_content %}{% block filter_functions %}{% endblock %}{% endcaptureas %}
+{% captureas page_functions_content %}{% block tpl_bl_body_functions_page %}{% endblock %}{% endcaptureas %}
+{% captureas subsection_functions_content %}{% block tpl_bl_body_functions_sub %}{% endblock %}{% endcaptureas %}
+{% captureas dblsubsection_functions_content %}{% block tpl_bl_body_functions_dbl %}{% endblock %}{% endcaptureas %}
+{% captureas tplsubsection_functions_content %}{% block tpl_bl_body_functions_tpl %}{% endblock %}{% endcaptureas %}
+{% captureas filter_functions_content %}{% block tpl_bl_body_functions_filter %}{% endblock %}{% endcaptureas %}
 
 {% captureas breadcrumbs %}{% block breadcrumbs %}{% endblock %}{% endcaptureas %}
 

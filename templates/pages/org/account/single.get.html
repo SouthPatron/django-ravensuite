@@ -15,11 +15,11 @@
 {% endblock %}
 
 
-{% block page_functions %}
+{% block tpl_bl_body_functions_page %}
 {% include 'menus/org/client_top.html' with instance=instance.get_client %}
 {% endblock %}
 
-{% block subsection_functions %}
+{% block tpl_bl_body_functions_sub %}
 {% include 'menus/org/account_sub.html' with instance=instance %}
 {% endblock %}
 

@@ -224,7 +224,7 @@ Allocations
 	<tr>
 		<td><a href="{{ sda.destination.get_single_url }}">{{ sda.destination.get_document_type_display }} {{ sda.destination.refnum }}</a></td>
 		<td><a href="{{ sda.destination.get_single_url }}">{{ sda.amount|decsplay }}</a></td>
-		<td><img class="item-delete-link" src='{{ STATIC_URL }}images/icons/line_delete_grey.png' /><input type="hidden" name="sub_allocation" value="{{ sda.id }}" /></td>
+		<td><img class="item-delete-link" src='{{ STATIC_URL }}local/images/icons/line_delete_grey.png' /><input type="hidden" name="sub_allocation" value="{{ sda.id }}" /></td>
 	</tr>
 {% endfor %}
 </tbody>
