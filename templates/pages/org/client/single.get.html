@@ -1,8 +1,8 @@
-{% extends 'layouts/member-org-base.html' %}
+{% extends 'layouts/member-base-full.html' %}
 
-{% block str_org_name %}{{ instance.get_org.trading_name }}{% endblock %}
-{% block str_client_name %}{{ instance.trading_name }}{% endblock %}
-{% block str_section_name %}Dashboard{% endblock %}
+{% block tpl_si_org %}{{ instance.get_org.trading_name }}{% endblock %}
+{% block tpl_si_client %}{{ instance.trading_name }}{% endblock %}
+{% block tpl_si_section %}Dashboard{% endblock %}
 
 {% block breadcrumbs %}
 	{{ block.super }}

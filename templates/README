@@ -1,0 +1,30 @@
+
+
+BLOCKS
+
+tpl_bl_head
+	tpl_bl_title
+	tpl_bl_head_inner
+	tpl_bl_onready
+
+tpl_bl_body
+	tpl_bl_b_head
+
+
+VARIABLES
+
+
+tpl_<type>_<name>
+
+Types:
+
+si - section information
+
+
+tpl_si_title - Full Title (overrides whatever the following tpl_si_ settings are )
+
+tpl_si_org - Focused Organization Name
+tpl_si_client - Focused Client Name
+tpl_si_section - Focused Section Name
+
+

@@ -10,21 +10,21 @@
 
 <link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}local/css/general-common.css" media="screen" />
 
-{% block head_includes %}
+{% block tpl_bl_head_inner %}
 {% endblock %}
 
 <!-- Document OnReady -->
 <script type="text/javascript">
 $(document).ready(function(){
-{% block onready %}
-{% endblock onready %}
+{% block tpl_bl_onready %}
+{% endblock tpl_bl_onready %}
 })
 </script>
 
 </head>
 
 <body>
-{% block body %}
+{% block tpl_bl_body %}
 {% endblock %}
 </body>
 </html>

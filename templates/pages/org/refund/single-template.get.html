@@ -1,11 +1,11 @@
-{% extends 'layouts/member-org-base.html' %}
+{% extends 'layouts/member-base-full.html' %}
 
 {% load decshift %}
 {% load rely %}
 
-{% block str_org_name %}{{ instance.get_org.trading_name }}{% endblock %}
-{% block str_client_name %}{{ instance.get_client.trading_name }}{% endblock %}
-{% block str_section_name %}Payment {{ instance.refnum }}{% endblock %}
+{% block tpl_si_org %}{{ instance.get_org.trading_name }}{% endblock %}
+{% block tpl_si_client %}{{ instance.get_client.trading_name }}{% endblock %}
+{% block tpl_si_section %}Payment {{ instance.refnum }}{% endblock %}
 
 {% block breadcrumbs %}
 {% include 'pages/org/refund/refund-breadcrumbs.html' with instance=instance %}
@@ -30,7 +30,7 @@
 
 
 
-{% block head_includes %}
+{% block tpl_bl_head_inner %}
 	<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}local/css/member-itemized-total.css" media="screen" />
 
 	{% rely sitekit date %}

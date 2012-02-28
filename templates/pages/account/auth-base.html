@@ -2,14 +2,14 @@
 
 {% load rely %}
 
-{% block head_includes %}
+{% block tpl_bl_head_inner %}
 	{{ block.super }}
 	<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}local/css/account-auth-base.css" media="screen" />
 	{% rely formfit %}
 {% endblock %}
 
 
-{% block body %}
+{% block tpl_bl_body %}
 
 <div id="wrap">
 

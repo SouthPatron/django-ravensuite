@@ -1,0 +1,38 @@
+
+<div id="page-section-info">
+
+<div id="location-block">
+
+	{% if tpl_si_client %}
+	<div id="client-name">
+		{% if kwargs.oid %}
+		<a href="{% url org-client-single kwargs.oid kwargs.cid %}">
+		{% endif %}
+		<span id="client-name-title">{{ tpl_si_client }}</span>
+		{% if kwargs.oid %}
+		</a>
+		{% endif %}
+	</div>
+	{% endif %}
+
+	<div id="breadcrumbs">
+	{{ breadcrumbs }}
+	</div>
+
+	{% if tpl_si_section %}
+	<div id="location-block-title">{{ tpl_si_section }}</div>
+	{% endif %}
+</div> <!-- #location-block -->
+
+{% if messages %}
+<div id="message-block">
+{% for message in messages %}
+	<div class="message-notice {{ message.tags }}"><span>{{ message|safe }}</span></div>
+{% endfor %}
+</div>
+{% endif %}
+
+
+</div> <!-- #page-section-info -->
+
+

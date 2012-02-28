@@ -1,12 +1,12 @@
-{% extends 'layouts/member-org-base.html' %}
+{% extends 'layouts/member-base-full.html' %}
 
 {% load decshift %}
 {% load sourcedoc %}
 
 
-{% block str_org_name %}{{ extra.get_org.trading_name }}{% endblock %}
-{% block str_client_name %}{{ extra.trading_name }}{% endblock %}
-{% block str_section_name %}Account{% endblock %}
+{% block tpl_si_org %}{{ extra.get_org.trading_name }}{% endblock %}
+{% block tpl_si_client %}{{ extra.trading_name }}{% endblock %}
+{% block tpl_si_section %}Account{% endblock %}
 
 {% block breadcrumbs %}
 	{{ block.super }}
@@ -33,7 +33,7 @@
 {% include 'menus/org/payment_filter.html' with instance=extra.get_account %}
 {% endblock %}
 
-{% block onready %}
+{% block tpl_bl_onready %}
 
 	$('#invoice_list_table').dataTable( {
 		"iDisplayLength" : 25,

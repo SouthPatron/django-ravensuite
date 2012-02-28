@@ -1,8 +1,8 @@
-{% extends 'layouts/member-org-base.html' %}
+{% extends 'layouts/member-base-full.html' %}
 
 
-{% block str_org_name %}{{ extra.trading_name }}{% endblock %}
-{% block str_section_name %}Clients{% endblock %}
+{% block tpl_si_org %}{{ extra.trading_name }}{% endblock %}
+{% block tpl_si_section %}Clients{% endblock %}
 
 
 {% block page_functions %}
@@ -10,13 +10,13 @@
 {% endblock  %}
 
 
-{% block head_includes %}
+{% block tpl_bl_head_inner %}
 
 	<script type="text/javascript" src="{{ STATIC_URL }}js/validations.js"></script>
 
 {% endblock %}
 
-{% block onready %}
+{% block tpl_bl_onready %}
 
 	$('#client_list_table').dataTable( {
 		"iDisplayLength" : 25,

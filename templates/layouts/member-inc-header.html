@@ -1,0 +1,18 @@
+{% load active %}
+
+<div id="header">
+
+	<div id="global-links">
+		<ul>
+			<li class="{% active request '^/org' %}"><a href='{% url org-list %}'>Organizations</a></li>
+
+			<li class="{% active request '^/timesheet' %}"><a href='{% url timesheet-entry-list %}'>Timesheet</a>{% if request.user.timesheettimer_set.count != 0 %} (<a href='{% url timesheet-timer-list %}'>{{ request.user.timesheettimer_set.count }} active timer{{ request.user.timesheettimer_set.count|pluralize }}</a>) {% endif %}</li>
+		</ul>
+	</div>
+
+	<div id="header-options"><a href='{% url account-profile %}'>{{ request.user.email }}</a> | <a href='{% url logout %}'>logout</a></div>
+
+	<div style="clear: both;">&nbsp;</div>
+
+</div> <!-- #header -->
+

@@ -1,10 +1,10 @@
-{% extends 'layouts/member-org-base.html' %}
+{% extends 'layouts/member-base-full.html' %}
 
 {% load rely %}
 
 
-{% block str_org_name %}{{ extra.trading_name }}{% endblock %}
-{% block str_section_name %}Activities{% endblock %}
+{% block tpl_si_org %}{{ extra.trading_name }}{% endblock %}
+{% block tpl_si_section %}Activities{% endblock %}
 
 
 
@@ -13,11 +13,11 @@
 {% endblock  %}
 
 
-{% block head_includes %}
+{% block tpl_bl_head_inner %}
 	{% rely sitekit %}
 {% endblock %}
 
-{% block onready %}
+{% block tpl_bl_onready %}
 
 	$(function() {
 		

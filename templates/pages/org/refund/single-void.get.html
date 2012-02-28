@@ -3,10 +3,10 @@
 {% load decshift %}
 {% load sourcedoc %}
 
-{% block str_section_name %}Refund{% endblock %}
+{% block tpl_si_section %}Refund{% endblock %}
 
 
-{% block onready %}
+{% block tpl_bl_onready %}
 
 	$( "#id_save_refund" ).click( function() {
 		$( "#id_refund_form" ).submit();

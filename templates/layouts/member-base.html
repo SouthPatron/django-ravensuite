@@ -1,236 +1,51 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
-<head profile="http://gmpg.org/xfn/11">
 
-{% load active %}
 {% load rely %}
-
 {% load captureas %}
-{% captureas str_org_name %}{% block str_org_name %}{% endblock %}{% endcaptureas %}
-{% captureas str_client_name %}{% block str_client_name %}{% endblock %}{% endcaptureas %}
-{% captureas str_section_name %}{% block str_section_name %}{% endblock %}{% endcaptureas %}
-{% captureas page_functions_content %}{% block page_functions %}{% endblock %}{% endcaptureas %}
-{% captureas subsection_functions_content %}{% block subsection_functions %}{% endblock %}{% endcaptureas %}
-{% captureas dblsubsection_functions_content %}{% block dblsubsection_functions %}{% endblock %}{% endcaptureas %}
-{% captureas tplsubsection_functions_content %}{% block tplsubsection_functions %}{% endblock %}{% endcaptureas %}
-{% captureas filter_functions_content %}{% block filter_functions %}{% endblock %}{% endcaptureas %}
 
-{% captureas breadcrumbs %}{% block breadcrumbs %}{% endblock %}{% endcaptureas %}
+{% comment %}
+-------------------- LOADING UP GENERAL VARIABLES -------------------
+{% endcomment %}
 
-<title>
-{% if str_org_name %}{{ str_org_name }}{% if str_client_name or str_section_name %} | {% endif %}{% endif %}
-{% if str_client_name %}{{ str_client_name }}{% if str_section_name %} | {% endif %}{% endif %}
-{% if str_section_name %}{{ str_section_name }}{% endif %}
-</title>
+{% captureas tpl_si_org %}{% block tpl_si_org %}{% endblock %}{% endcaptureas %}
+{% captureas tpl_si_client %}{% block tpl_si_client %}{% endblock %}{% endcaptureas %}
+{% captureas tpl_si_section %}{% block tpl_si_section %}{% endblock %}{% endcaptureas %}
 
-	{% include 'global/head-nocache.html' %}
+{% comment %}
+-------------------- FINISHED ---------------------------------------
+{% endcomment %}
 
-	{% rely reset jquery.ui datatables superfish formfit sitekit %}
+<head profile="http://gmpg.org/xfn/11">
+{% block tpl_bl_head %}
 
-	<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}local/css/general-common.css" media="screen" />
+<title>{% block tpl_bl_title %}{% if tpl_si_org %}{{ tpl_si_org }}{% if tpl_si_client or tpl_si_section %} | {% endif %}{% endif %}{% if tpl_si_client %}{{ tpl_si_client }}{% if tpl_si_section %} | {% endif %}{% endif %}{% if tpl_si_section %}{{ tpl_si_section }}{% endif %}{% endblock %}</title>
 
-	<!-- Include custom stylesheets -->
-	<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}local/css/member-layout.css" media="screen" />
-	<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}local/css/member-content-menu.css" media="screen" />
-	<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}local/css/member-page-functions.css" media="screen" />
-	<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}local/css/member-subsection-functions.css" media="screen" />
-	<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}local/css/member-filter-functions.css" media="screen" />
-	<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}local/css/member-message-notices.css" media="screen" />
-	<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}local/css/member-timer-block.css" media="screen" />
-	<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}local/css/member-extras.css" media="screen" />
-	<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}local/css/member-dialog.css" media="screen" />
+{% include 'global/head-nocache.html' %}
 
+{% rely reset %}
 
-	{% block head_includes %}
-	{% endblock %}
+<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}local/css/general-common.css" media="screen" />
+<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}local/css/member-common.css" media="screen" />
 
-	<!-- Document OnReady -->
-	<script type="text/javascript">
+{% block tpl_bl_head_inner %}
+{% endblock %}
 
+<!-- Document OnReady -->
+<script type="text/javascript">
 $(document).ready(function(){
-	{% block onready %}
-	{% endblock onready %}
+{% block tpl_bl_onready %}
+{% endblock %}
 })
-	</script>
+</script>
 
-
+{% endblock %}
 </head>
+
 <body>
-
-<div id="wrap">
-
-<!-- HEADER ------------------------------------------------- -->
-
-<div id="header">
-
-	<div id="global-links">
-		<ul>
-			<li class="{% active request '^/org' %}"><a href='{% url org-list %}'>Organizations</a></li>
-
-			<li class="{% active request '^/timesheet' %}"><a href='{% url timesheet-entry-list %}'>Timesheet</a>{% if request.user.timesheettimer_set.count != 0 %} (<a href='{% url timesheet-timer-list %}'>{{ request.user.timesheettimer_set.count }} active timer{{ request.user.timesheettimer_set.count|pluralize }}</a>) {% endif %}</li>
-		</ul>
-	</div>
-
-	<div id="header-options"><a href='{% url account-profile %}'>{{ request.user.email }}</a> | <a href='{% url logout %}'>logout</a></div>
-
-	<div style="clear: both;">&nbsp;</div>
-
-</div> <!-- #header -->
-
-
-<!-- SUBGROUP PANEL ----------------------------------------- -->
-
-<div id="subgroup-panel">
-{% if str_org_name %}
-	<div id="subgroup-panel-orgname-title"><a href="{% url org-single kwargs.oid %}">{{ str_org_name }}</a></div>
-{% endif %}
-</div>
-
-<!-- PAGE SECTION INFO ------------------------------------- -->
-
-<div id="page-section-info">
-
-<div id="location-block">
-
-	{% if str_client_name %}
-	<div id="client-name">
-		{% if kwargs.oid %}
-		<a href="{% url org-client-single kwargs.oid kwargs.cid %}">
-		{% endif %}
-		<span id="client-name-title">{{ str_client_name }}</span>
-		{% if kwargs.oid %}
-		</a>
-		{% endif %}
-	</div>
-	{% endif %}
-
-	<div id="breadcrumbs">
-	{{ breadcrumbs }}
-	</div>
-
-	{% if str_section_name %}
-	<div id="location-block-title">{{ str_section_name }}</div>
-	{% endif %}
-</div> <!-- #location-block -->
-
-{% if messages %}
-<div id="message-block">
-{% for message in messages %}
-	<div class="message-notice {{ message.tags }}"><span>{{ message|safe }}</span></div>
-{% endfor %}
-</div>
-{% endif %}
-
-
-</div> <!-- #page-section-info -->
-
-<!-- PAGE FUNCTIONS ------------------------------------- -->
-<div id="page-functions-div">
-<div id="page-functions-proper">
-{{ page_functions_content }}
-</div> <!-- page-functions-proper -->
-</div> <!-- page-functions-div -->
-
-<!-- SUBSECTION FUNCTIONS ------------------------------------- -->
-{% if subsection_functions_content %}
-<div id="subsection-functions-div">
-<div id="subsection-functions-proper">
-{{ subsection_functions_content }}
-</div> <!-- subsection-functions-proper -->
-</div> <!-- subsection-functions-div -->
-{% endif %}
-
-{% if dblsubsection_functions_content %}
-<div id="dblsubsection-functions-div">
-<div id="dblsubsection-functions-proper">
-{{ dblsubsection_functions_content }}
-</div> <!-- dblsubsection-functions-proper -->
-</div> <!-- dblsubsection-functions-div -->
-{% endif %}
-
-{% if tplsubsection_functions_content %}
-<div id="tplsubsection-functions-div">
-<div id="tplsubsection-functions-proper">
-{{ tplsubsection_functions_content }}
-</div> <!-- tplsubsection-functions-proper -->
-</div> <!-- tplsubsection-functions-div -->
-{% endif %}
-
-
-
-<!-- FILTER FUNCTIONS ------------------------------------- -->
-{% if filter_functions_content %}
-<div id="filter-functions-div">
-<div id="filter-functions-proper">
-{{ filter_functions_content }}
-</div> <!-- filter-functions-proper -->
-</div> <!-- filter-functions-div -->
-{% endif %}
-
-
-
-
-<div id="content-wrap">
-
-{% captureas content_menu_left %}{% block content_menu_left %}{% endblock %}{% endcaptureas %}
-{% captureas content_menu_right %}{% block content_menu_right %}{% endblock %}{% endcaptureas %}
-{% captureas content %}{% block content %}{% endblock %}{% endcaptureas %}
-
-
-{% comment %} ********** 1 COLUMN-LEFT ************ {% endcomment %}
-
-{% if content_menu_left and not content_menu_right %}
-<div id="content-menu-left" class="content-menu">
-{{ content_menu_left }}
-</div> <!-- #content-menu-left -->
-
-<div id="content" class="with-menu-left">
-{{ content }}
-</div> <!-- #content -->
-{% endif %}
-
-{% comment %} ********** 1 COLUMN-RIGHT ************ {% endcomment %}
-
-{% if not content_menu_left and content_menu_right %}
-<div id="content-menu-right" class="content-menu">
-{{ content_menu_right }}
-</div> <!-- #content-menu-right -->
-
-<div id="content" class="with-menu-right">
-{{ content }}
-</div> <!-- #content -->
-{% endif %}
-
-
-{% comment %} ********** 2 COLUMNS ************ {% endcomment %}
-
-{% if content_menu_left and content_menu_right %}
-<div id="content-menu-left" class="content-menu">
-{{ content_menu_left }}
-</div> <!-- #content-menu-left -->
-
-<div id="content-menu-right" class="content-menu">
-{{ content_menu_right }}
-</div> <!-- #content-menu-right -->
-
-<div id="content" class="with-menu-both">
-{{ content }}
-</div> <!-- #content -->
-{% endif %}
-
-
-
-{% comment %} ********** NO COLUMNS ************ {% endcomment %}
-
-{% if not content_menu_left and not content_menu_right %}
-<div id="content" class="without-menu">
-{{ content }}
-</div> <!-- #content -->
-{% endif %}
-
-</div> <!-- content-wrap -->
-
-</div> <!-- #wrap -->
-
+<div id="id_tpl_bl_body_wrap">
+{% block tpl_bl_body %}
+{% endblock %}
+</div> <!-- #id_tpl_bl_body_wrap -->
 </body>
 </html>

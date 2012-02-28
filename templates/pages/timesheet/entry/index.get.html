@@ -1,13 +1,13 @@
-{% extends 'layouts/member-timesheet-base.html' %}
+{% extends 'layouts/member-base-full.html' %}
 
-{% block str_section_name %}Timesheet{% endblock %}
+{% block tpl_si_section %}Timesheet{% endblock %}
 
 {% block page_functions %}
 {% include 'menus/timesheet/timesheet_top.html' %}
 {% endblock  %}
 
 
-{% block onready %}
+{% block tpl_bl_onready %}
 
 	$('#entry_list_table').dataTable( {
 		"iDisplayLength" : 25,

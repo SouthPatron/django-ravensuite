@@ -1,10 +1,10 @@
-{% extends 'layouts/member-org-base.html' %}
+{% extends 'layouts/member-base-full.html' %}
 
 {% load decshift %}
 
-{% block str_org_name %}{{ extra.get_org.trading_name }}{% endblock %}
-{% block str_client_name %}{{ extra.get_client.trading_name }}{% endblock %}
-{% block str_section_name %}Account{% endblock %}
+{% block tpl_si_org %}{{ extra.get_org.trading_name }}{% endblock %}
+{% block tpl_si_client %}{{ extra.get_client.trading_name }}{% endblock %}
+{% block tpl_si_section %}Account{% endblock %}
 
 {% block breadcrumbs %}
 	{{ block.super }}
@@ -29,7 +29,7 @@
 
 
 
-{% block onready %}
+{% block tpl_bl_onready %}
 
 	$('#account_list_table').dataTable( {
 		"iDisplayLength" : 25,
