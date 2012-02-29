@@ -1,5 +1,7 @@
 {% extends 'layouts/member-base-full.html' %}
 
+{% block tpl_ps_rely %}datatables{% endblock %}
+
 {% load decshift %}
 
 {% block tpl_si_org %}{{ extra.get_org.trading_name }}{% endblock %}
@@ -25,8 +27,6 @@
 {% block tpl_bl_body_functions_dbl %}
 {% include 'menus/org/account_transactions_sub.html' with instance=extra %}
 {% endblock %}
-
-
 
 
 {% block tpl_bl_head_onready %}

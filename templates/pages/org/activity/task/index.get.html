@@ -1,28 +1,23 @@
 {% extends 'layouts/member-base-full.html' %}
 
+{% block tpl_ps_rely %}datatables jquery.ui sitekit{% endblock %}
+
 
 {% block tpl_si_org %}{{ extra.get_org.trading_name }}{% endblock %}
-{% block tpl_si_client %}{{ extra.trading_name }}{% endblock %}
-{% block tpl_si_section %}Projects{% endblock %}
+{% block tpl_si_section %}Tasks{% endblock %}
 
 
 {% block tpl_bl_body_breadcrumbs %}
 	{{ block.super }}
-	<a href="{{ extra.get_org.get_client_list_url }}">Clients</a>&gt;
-	<a href="{{ extra.get_single_url }}">{{ extra.trading_name }}</a>&gt;
+	<a href="{{ extra.get_org.get_activity_list_url }}">Activities</a>&gt;
+	<a href="{{ extra.get_single_url }}">{{ extra.name }}</a>&gt;
 {% endblock %}
 
 
 {% block tpl_bl_body_functions_page %}
-{% include 'menus/org/client_top.html' with instance=extra %}
-{% endblock  %}
-
-
-{% block tpl_bl_head_inner %}
-
-	<script type="text/javascript" src="{{ STATIC_URL }}js/validations.js"></script>
-		
+{% include 'menus/org/activity_top.html' with instance=extra %}
 {% endblock %}
+
 
 {% block tpl_bl_head_onready %}
 
@@ -30,8 +25,7 @@
 		
 		var name = $( "#id_name" ),
 			description = $( "#id_description" ),
-			status = $( "#id_status" ),
-			allFields = $( [] ).add( name ).add( description ).add( status ),
+			allFields = $( [] ).add( name ).add( description ),
 			tips = $( ".validateTips" );
 
 		$( "#dialog-form" ).dialog({
@@ -40,11 +34,11 @@
 			width: 550,
 			modal: true,
 			buttons: {
-				"Create a new Project": function() {
+				"Add a new Task": function() {
 					var bValid = true;
 					allFields.removeClass( "ui-state-error" );
 
-					bValid = bValid && validation.length( tips, name, "Name", 3, 32 );
+					bValid = bValid && validation.length( tips, name, "Name", 3, 192 );
 
 					if ( bValid ) {
 						$( "#create-new-form" ).submit();
@@ -59,21 +53,20 @@
 			}
 		});
 
-		$( "#client-create-new-project" )
+		$( "#org-create-new-task" )
 			.click(function() {
 				$( "#dialog-form" ).dialog( "open" );
 			});
 	});
 
 
-	$('#project_list_table').dataTable( {
+	$('#task_list_table').dataTable( {
 		"iDisplayLength" : 25,
 		"bFilter" : false,
 		"bSort" : true,
 		"sPaginationType" : "full_numbers",
 		"aaSortingFixed" : [[ 0, "asc" ]],
 		"aoColumns" : [
-			{ "sType" : "html", "bSortable" : false },
 			{ "sType" : "html", "bSortable" : false },
 			{ "sType" : "html", "bSortable" : false }
 		],
@@ -86,28 +79,18 @@
 
 {% block tpl_bl_body_content_right %}
 <ul>
-	<li><a href="#" id="client-create-new-project">Create a new Project</a></li>
+	<li><a href="#" id="org-create-new-task">Add a new Task</a></li>
 </ul>
 
-<div id="dialog-form" title="Create a new Project">
+<div id="dialog-form" title="Add a new task">
 	<p class="validateTips">All form fields are required</p>
 	<form id="create-new-form" method="POST" action="">
 		{% csrf_token %}
 		<fieldset>
-			<label for="name">Project Name</label>
+			<label for="name">Name</label>
 			<input type="text" name="name" id="id_name" class="text ui-widget-content ui-corner-all" />
-			<label for="description">Description</label>
+			<label for="name">Description</label>
 			<textarea name="description" id="id_description" class="text ui-widget-content ui-corner-all"></textarea>
-
-			<label for="status">Status</label>
-			<select name="status" id="id_status" class="select ui-widget-content ui-corner-all">
-				<option value="0">INACTIVE</option>
-				<option value="10" SELECTED="1">ACTIVE</option>
-				<option value="20">COMPLETE</option>
-				<option value="30">MAINTENANCE</option>
-			</select>
-
-
 		</fieldset>
 	</form>
 </div>
@@ -117,14 +100,13 @@
 {% block tpl_bl_body_content_center %}
 
 <table
-	id="project_list_table"
+	id="task_list_table"
 	style=' text-align: left; '
 	>
 <thead>
 	<tr>
-		<th>Name</th>
-		<th width="200px">Description</th>
-		<th width="200px">Status</th>
+		<th width="200px">Name</th>
+		<th>Description</th>
 	</tr>
 </thead>
 <tbody>
@@ -133,7 +115,6 @@
 	<tr>
 		<td><a href='{{ obj.get_single_url }}'>{{ obj.name }}</a></td>
 		<td><a href='{{ obj.get_single_url }}'>{{ obj.description }}</a></td>
-		<td><a href='{{ obj.get_single_url }}'>{{ obj.get_status_display }}</a></td>
 	</tr>
 {% endfor %}
 </tbody>

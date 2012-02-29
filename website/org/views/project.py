@@ -15,7 +15,7 @@ from common.exceptions import *
 from ..forms import project as forms
 
 class ProjectList( ListView ):
-	template_name = 'pages/org/project/index'
+	template_name = 'pages/org/client/project/index'
 
 	def get_extra( self, request, obj_list, fmt, *args, **kwargs ):
 		return Client.objects.get( refnum = self.url_kwargs.cid, organization__refnum = self.url_kwargs.oid )
@@ -65,7 +65,7 @@ class ProjectList( ListView ):
 
 
 class ProjectSingle( SingleObjectView ):
-	template_name = 'pages/org/project/single'
+	template_name = 'pages/org/client/project/single'
 
 	def get_object( self, request, *args, **kwargs ):
 		return get_object_or_404( Project, refnum = self.url_kwargs.pid, client__refnum = self.url_kwargs.cid, client__organization__refnum = self.url_kwargs.oid )

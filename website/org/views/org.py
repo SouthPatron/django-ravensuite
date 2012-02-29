@@ -22,7 +22,7 @@ from common.exceptions import *
 
 
 class OrgList( ListView ):
-	template_name = 'pages/org/org/index'
+	template_name = 'pages/org/index'
 
 	def get_object_list( self, request, *args, **kwargs ):
 		umems = UserMembership.objects.filter( user = request.user )
@@ -65,7 +65,7 @@ class OrgList( ListView ):
 
 
 class OrgSingle( SingleObjectView ):
-	template_name = 'pages/org/org/single'
+	template_name = 'pages/org/single'
 
 	def get_object( self, request, *args, **kwargs ):
 		return get_object_or_404( Organization, refnum = self.url_kwargs.oid )
@@ -89,7 +89,7 @@ class OrgSingle( SingleObjectView ):
 
 
 class OrgTestSingle( SingleObjectView ):
-	template_name = 'pages/org/org/test'
+	template_name = 'pages/org/test'
 
 	def get_object( self, request, *args, **kwargs ):
 		return { 'hello' : True }

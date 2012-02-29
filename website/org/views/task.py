@@ -14,7 +14,7 @@ from common.buslog.org import *
 from ..forms import task as forms
 
 class TaskList( ListView ):
-	template_name = 'pages/org/task/index'
+	template_name = 'pages/org/activity/task/index'
 
 	def get_extra( self, request, obj_list, fmt, *args, **kwargs ):
 		return Activity.objects.get( id = self.url_kwargs.actid )
@@ -58,7 +58,7 @@ class TaskList( ListView ):
 
 
 class TaskSingle( SingleObjectView ):
-	template_name = 'pages/org/task/single'
+	template_name = 'pages/org/activity/task/single'
 
 	def get_object( self, request, *args, **kwargs ):
 		return get_object_or_404( Task, id = self.url_kwargs.taskid, activity__id = self.url_kwargs.actid, activity__organization__refnum = self.url_kwargs.oid )

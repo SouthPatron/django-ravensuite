@@ -1,5 +1,6 @@
 {% extends 'layouts/member-base-full.html' %}
 
+{% block tpl_ps_rely %}datatables sitekit{% endblock %}
 
 {% block tpl_si_org %}{{ extra.trading_name }}{% endblock %}
 {% block tpl_si_section %}Clients{% endblock %}
@@ -9,12 +10,6 @@
 {% include 'menus/org/org_top.html' with instance=extra %}
 {% endblock  %}
 
-
-{% block tpl_bl_head_inner %}
-
-	<script type="text/javascript" src="{{ STATIC_URL }}js/validations.js"></script>
-
-{% endblock %}
 
 {% block tpl_bl_head_onready %}
 
@@ -37,8 +32,6 @@
 				'add_new_client'
 			)
 		);
-	
-
 
 {% endblock %}
 
@@ -63,7 +56,6 @@
 </thead>
 <tbody>
 {% for obj in object_list %}
-
 	<tr>
 		<td><a href='{{ obj.get_single_url }}'>{{ obj.trading_name }}</a></td>
 	</tr>
@@ -72,5 +64,4 @@
 </table>
 
 {% endblock %}
-
 

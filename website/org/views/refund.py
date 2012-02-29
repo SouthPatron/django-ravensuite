@@ -22,7 +22,7 @@ from common.models import *
 
 
 class RefundList( ListView ):
-	template_name = 'pages/org/refund/index'
+	template_name = 'pages/org/client/account/refund/index'
 
 	def get_extra( self, request, obj_list, fmt, *args, **kwargs ):
 		return Client.objects.get( refnum = self.url_kwargs.cid, organization__refnum = self.url_kwargs.oid )
@@ -63,7 +63,7 @@ class RefundList( ListView ):
 
 
 class RefundDraftList( ListView ):
-	template_name = 'pages/org/refund/draft-index'
+	template_name = 'pages/org/client/account/refund/draft-index'
 
 	def get_extra( self, request, obj_list, fmt, *args, **kwargs ):
 		return Client.objects.get( refnum = self.url_kwargs.cid, organization__refnum = self.url_kwargs.oid )
@@ -74,7 +74,7 @@ class RefundDraftList( ListView ):
 
 
 class RefundUnallocatedList( RefundList ):
-	template_name = 'pages/org/refund/unallocated-index'
+	template_name = 'pages/org/client/account/refund/unallocated-index'
 
 	def get_extra( self, request, obj_list, fmt, *args, **kwargs ):
 		return Client.objects.get( refnum = self.url_kwargs.cid, organization__refnum = self.url_kwargs.oid )
@@ -88,18 +88,18 @@ class RefundUnallocatedList( RefundList ):
 
 
 class RefundSingle( SingleObjectView ):
-	template_name = 'pages/org/refund/single'
+	template_name = 'pages/org/client/account/refund/single'
 
 
 	def get_object( self, request, *args, **kwargs ):
 		obj = get_object_or_404( SourceDocument, refnum = self.url_kwargs.sdid, client__refnum = self.url_kwargs.cid, client__organization__refnum = self.url_kwargs.oid )
 
 		if obj.document_state == SourceDocumentState.DRAFT:
-			self.template_name = 'pages/org/refund/single-draft'
+			self.template_name = 'pages/org/client/account/refund/single-draft'
 		elif obj.document_state == SourceDocumentState.FINAL:
-			self.template_name = 'pages/org/refund/single-final'
+			self.template_name = 'pages/org/client/account/refund/single-final'
 		elif obj.document_state == SourceDocumentState.VOID:
-			self.template_name = 'pages/org/refund/single-void'
+			self.template_name = 'pages/org/client/account/refund/single-void'
 
 		return obj
 

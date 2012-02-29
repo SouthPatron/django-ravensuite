@@ -1,5 +1,7 @@
 {% extends 'layouts/member-base-full.html' %}
 
+{% block tpl_ps_rely %}datatables jquery.ui sitekit{% endblock %}
+
 {% block tpl_si_org %}{{ extra.trading_name }}{% endblock %}
 {% block tpl_si_section %}Users{% endblock %}
 
@@ -7,11 +9,6 @@
 {% include 'menus/org/org_top.html' with instance=extra %}
 {% endblock  %}
 
-{% block tpl_bl_head_inner %}
-
-	<script type="text/javascript" src="{{ STATIC_URL }}js/validations.js"></script>
-
-{% endblock %}
 
 {% block tpl_bl_head_onready %}
 

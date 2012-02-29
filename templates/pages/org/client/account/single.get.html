@@ -1,5 +1,7 @@
 {% extends 'layouts/member-base-full.html' %}
 
+{% block tpl_ps_rely %}sitekit{% endblock %}
+
 {% load decshift %}
 
 {% block tpl_si_org %}{{ instance.get_org.trading_name }}{% endblock %}
@@ -21,8 +23,6 @@
 {% block tpl_bl_body_functions_sub %}
 {% include 'menus/org/account_sub.html' with instance=instance %}
 {% endblock %}
-
-{% block tpl_ps_rely %}sitekit{% endblock %}
 
 
 {% block tpl_bl_head_onready %}
@@ -111,7 +111,6 @@
 
 {% block tpl_bl_body_content_center %}
 
-
 <div style=" font-size: 2em; margin: 20px 0px; ">
 Current Balance: {{ instance.balance|decsplay }}
 </div>
@@ -132,15 +131,11 @@ Current Balance: {{ instance.balance|decsplay }}
 <a href="{{ instance.get_client.get_unallocated_refund_list_url }}">Unallocated Refunds: {{ instance.get_client.get_unallocated_refund_count }}</a>
 </div>
 
-
-
 <div style=" font-size: 2em; margin: 20px 0px; ">
 {% comment %}
 Unallocated Funds: {{ instance.get_client.get_unallocated_payment_amount|decsplay }}
 {% endcomment %}
 </div>
 
-
 {% endblock %}
-
 
