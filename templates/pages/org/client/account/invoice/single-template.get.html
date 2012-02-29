@@ -1,6 +1,6 @@
 {% extends 'layouts/member-base-full.html' %}
 
-{% block tpl_ps_rely %}sitekit date afes-table{% endblock %}
+{% block tpl_ps_rely %}sitekit date afes-table jquery.tools{% endblock %}
 
 {% load decshift %}
 
@@ -9,7 +9,7 @@
 {% block tpl_si_section %}Invoice {{ instance.refnum }}{% endblock %}
 
 {% block tpl_bl_body_breadcrumbs %}
-{% include 'pages/org/invoice/invoice-breadcrumbs.html' with instance=instance %}
+{% include 'pages/org/client/account/invoice/invoice-breadcrumbs.html' with instance=instance %}
 {% endblock %}
 
 

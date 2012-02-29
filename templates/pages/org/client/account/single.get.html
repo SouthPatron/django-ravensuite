@@ -27,15 +27,6 @@
 
 {% block tpl_bl_head_onready %}
 
-	$('#account_list_table').dataTable( {
-		"iDisplayLength" : 25,
-		"bFilter" : false,
-		"bSort" : false,
-		"sPaginationType" : "full_numbers",
-		"aaSortingFixed" : [[ 0, "asc" ]],
-		"sDom" : 't<"bottom"ip><"clear">'
-	});
-
 	$( "#invoice-create" ).click(function() {
 
 		invoice_list_url = OOD.URL.Invoices( 

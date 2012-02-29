@@ -1,9 +1,10 @@
-{% extends 'pages/org/invoice/single-template.get.html' %}
+{% extends 'pages/org/client/account/invoice/single-template.get.html' %}
 
 {% load decshift %}
 {% load sourcedoc %}
 
 {% block tpl_bl_head_inner %}
+	{{ block.super }}
 
 	<style>
 #id_table tbody .afes-table-body-cell-type-currency { text-align: right; }
@@ -16,9 +17,35 @@
 #id_table thead .head-delete { width: 20px; }
 	</style>
 
+	<!-- wrapper, inputs and labels  -->
+	<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}custom/jquery.tools/css/flight.css"/>
+
+	<!-- calendar styling -->
+	<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}custom/jquery.tools/css/flight-calendar.css"/>
+
 {% endblock %}
 
 {% block tpl_bl_head_onready %}
+
+
+	$('.date_input').dateinput({ trigger: true, format: 'dd mmm yyyy' });
+
+	// use the same callback for two different events. possible with bind
+	$('.date_input').bind("onShow onHide", function()  {
+		$(this).parent().toggleClass("active"); 
+	});
+
+	var bob = $('.date_input');
+	var sam = bob.first();
+	var garth = sam.data("dateinput");
+	
+	// when first date input is changed
+	$('.date_input').first().data("dateinput").change(function() {
+			
+		// we use it's value for the seconds input min option
+		$('.date_input').last().data("dateinput").setMin(this.getValue(), true);
+	});
+	
 
 	function update_totals()
 	{
@@ -275,18 +302,23 @@
 
 {% block document_type %}TAX INVOICE{% endblock %}
 {% block document_status %}
-{% include 'pages/org/invoice/status-label.html' with instance=instance %}
+{% include 'pages/org/client/account/invoice/status-label.html' with instance=instance %}
 {% endblock %}
 
 {% block document_dates %}
 
 {% get_document_obj instance as sdoc %}
 
-<fieldset>
-	<label for="name">Invoice Date</label>
-	<input type="text" name="invoice_date" id="id_itol_date" class="text ui-widget-content ui-corner-all" value="{{ sdoc.getSpecs.getInvoiceDate|date:"j M Y" }}" />
-	<label for="name">Due Date</label>
-	<input type="text" name="due_date" id="id_due_date" class="text ui-widget-content ui-corner-all" value="{{ sdoc.getSpecs.getDueDate|date:"j M Y" }}" />
+<fieldset id="flight">
+	<label for="name">
+		Invoice Date <br />
+		<input class="date_input" type="text" name="invoice_date" value="{{ sdoc.getSpecs.getInvoiceDate|date:"j M Y" }}" />
+	</label>
+
+	<label for="name">
+		Due Date <br />
+		<input class="date_input" type="text" name="due_date" value="{{ sdoc.getSpecs.getDueDate|date:"j M Y" }}" />
+	</label>
 </fieldset>
 {% endblock %}
 
