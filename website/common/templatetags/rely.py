@@ -129,41 +129,40 @@ rely_graph = {
 }
 
 
+def sub_render( name, seen ):
+	if name in seen:
+		return ''		# nop
+
+	ans = '\n'
+
+	# TODO: This should maybe be more tolerant one day
+	if name not in rely_graph:
+		raise KeyError( 'No such rely option: {}'.format( name ) )
+
+	for dep in rely_graph[ name ][ 'deps' ]:
+		rc = sub_render( dep, seen )
+		ans = '{}{}'.format( ans, rc )
+
+	for js in rely_graph[ name ][ 'js' ]:
+		ans = '{}\n<script type="text/javascript" src="{}"></script>'.format( ans, js )
+
+	for css in rely_graph[ name ][ 'css' ]:
+		ans = '{}\n<link rel="stylesheet" type="text/css" href="{}" media="screen" />'.format( ans, css )
+
+	seen[ name ] = True
+	return ans
+
+
+
 class RelyOn( template.Node ):
 	def __init__( self, deps ):
 		self.deps = deps
-		self.seen = {}
-
-	def sub_render( self, name ):
-
-		if name in self.seen:
-			return ''		# nop
-
-		ans = '\n'
-
-		# TODO: This should maybe be more tolerant one day
-		if name not in rely_graph:
-			raise KeyError( 'No such rely option: {}'.format( name ) )
-
-		for dep in rely_graph[ name ][ 'deps' ]:
-			rc = self.sub_render( dep )
-			ans = '{}{}'.format( ans, rc )
-
-		for js in rely_graph[ name ][ 'js' ]:
-			ans = '{}\n<script type="text/javascript" src="{}"></script>'.format( ans, js )
-
-		for css in rely_graph[ name ][ 'css' ]:
-			ans = '{}\n<link rel="stylesheet" type="text/css" href="{}" media="screen" />'.format( ans, css )
-
-
-		self.seen[ name ] = True
-		return ans
-
 
 	def render( self, context ):
 		ans = ''
+		seen = {}
 		for dep in self.deps.split():
-			rc = self.sub_render( dep )
+			rc = sub_render( dep, seen )
 			ans = '{}{}'.format( ans, rc )
 		return ans
 
@@ -179,4 +178,37 @@ def rely( parser, token ):
 		raise template.TemplateSyntaxError( '{} tag requires arguments'.format( token.contents.split()[0] ) )
 
 	return RelyOn( deps )
+
+
+
+
+class RelyOnIndirect( template.Node ):
+	def __init__( self, deps ):
+		self.deps = template.Variable( deps )
+	
+	def render( self, context ):
+		try:
+			deps = self.deps.resolve( context )
+		except:
+			pass
+
+		ans = ''
+		seen = {}
+		for dep in deps.split():
+			rc = sub_render( dep, seen )
+			ans = '{}{}'.format( ans, rc )
+		return ans
+
+@register.tag( name='relyindirect' )
+def relyindirect( parser, token ):
+	""" Encapsulates the SourceDocument model provided into a Business Object.
+
+	"""
+
+	try:
+		tag_name, deps = token.contents.split( None, 1 )
+	except ValueError:
+		raise template.TemplateSyntaxError( '{} tag requires arguments'.format( token.contents.split()[0] ) )
+
+	return RelyOnIndirect( deps )
 

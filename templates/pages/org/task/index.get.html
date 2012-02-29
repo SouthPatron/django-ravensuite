@@ -5,7 +5,7 @@
 {% block tpl_si_section %}Tasks{% endblock %}
 
 
-{% block breadcrumbs %}
+{% block tpl_bl_body_breadcrumbs %}
 	{{ block.super }}
 	<a href="{{ extra.get_org.get_activity_list_url }}">Activities</a>&gt;
 	<a href="{{ extra.get_single_url }}">{{ extra.name }}</a>&gt;
@@ -24,7 +24,7 @@
 
 {% endblock %}
 
-{% block tpl_bl_onready %}
+{% block tpl_bl_head_onready %}
 
 	$(function() {
 		
@@ -82,7 +82,7 @@
 {% endblock %}
 
 
-{% block content_menu_right %}
+{% block tpl_bl_body_content_right %}
 <ul>
 	<li><a href="#" id="org-create-new-task">Add a new Task</a></li>
 </ul>
@@ -102,7 +102,7 @@
 {% endblock %}
 
 
-{% block content %}
+{% block tpl_bl_body_content_center %}
 
 <table
 	id="task_list_table"

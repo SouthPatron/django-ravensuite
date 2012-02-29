@@ -1,18 +1,11 @@
 {% extends 'layouts/member-base.html' %}
 
-{% load rely %}
 {% load captureas %}
 
-
-{% block tpl_bl_head %}
-	{% rely reset jquery.ui datatables superfish formfit sitekit %}
-
+{% block tpl_bl_head_inner %}
 	{{ block.super }}
-
 	<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}local/css/member-base-full.css" media="screen" />
-
 {% endblock %}
-
 
 
 {% block tpl_bl_body %}
@@ -31,25 +24,21 @@
 {% captureas tplsubsection_functions_content %}{% block tpl_bl_body_functions_tpl %}{% endblock %}{% endcaptureas %}
 {% captureas filter_functions_content %}{% block tpl_bl_body_functions_filter %}{% endblock %}{% endcaptureas %}
 
-{% captureas breadcrumbs %}{% block breadcrumbs %}{% endblock %}{% endcaptureas %}
+{% captureas breadcrumbs %}{% block tpl_bl_body_breadcrumbs %}{% endblock %}{% endcaptureas %}
 
-
-{% captureas content_menu_left %}{% block content_menu_left %}{% endblock %}{% endcaptureas %}
-{% captureas content_menu_right %}{% block content_menu_right %}{% endblock %}{% endcaptureas %}
-{% captureas content %}{% block content %}{% endblock %}{% endcaptureas %}
-
-
+{% captureas content_menu_left %}{% block tpl_bl_body_content_left %}{% endblock %}{% endcaptureas %}
+{% captureas content_menu_right %}{% block tpl_bl_body_content_right %}{% endblock %}{% endcaptureas %}
+{% captureas content %}{% block tpl_bl_body_content_center %}{% endblock %}{% endcaptureas %}
 
 {% comment %}
 -------------------- FINISHED ---------------------------------------
 {% endcomment %}
 
-{% include 'layouts/member-inc-header.html' %}
-{% include 'layouts/member-inc-subgroup.html' %}
-{% include 'layouts/member-inc-pagesection.html' %}
-{% include 'layouts/member-inc-functions.html' %}
-{% include 'layouts/member-inc-content.html' %}
+{% include 'layouts/includes/member-inc-header.html' %}
+{% include 'layouts/includes/member-inc-subgroup.html' %}
+{% include 'layouts/includes/member-inc-pagesection.html' %}
+{% include 'layouts/includes/member-inc-functions.html' %}
+{% include 'layouts/includes/member-inc-content.html' %}
 
 {% endblock %}
-
 

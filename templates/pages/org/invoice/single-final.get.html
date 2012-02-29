@@ -5,6 +5,8 @@
 
 
 {% block tpl_bl_head_inner %}
+	{{ block.super }}
+
 	<style>
 #id_table tbody .afes-table-body-cell-type-currency { text-align: right; }
 #id_table thead .head-description { width: 235px; }
@@ -15,11 +17,9 @@
 #id_table thead .head-amount { width: 138px; }
 	</style>
 
-	{{ block.super }}
-
 {% endblock %}
 
-{% block tpl_bl_onready %}
+{% block tpl_bl_head_onready %}
 
 	afes.ex.table.init(
 		$( "#id_table" ),

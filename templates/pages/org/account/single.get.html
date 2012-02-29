@@ -1,13 +1,12 @@
 {% extends 'layouts/member-base-full.html' %}
 
 {% load decshift %}
-{% load rely %}
 
 {% block tpl_si_org %}{{ instance.get_org.trading_name }}{% endblock %}
 {% block tpl_si_client %}{{ instance.get_client.trading_name }}{% endblock %}
 {% block tpl_si_section %}Account{% endblock %}
 
-{% block breadcrumbs %}
+{% block tpl_bl_body_breadcrumbs %}
 	{{ block.super }}
 	<a href="{{ instance.get_org.get_client_list_url }}">Clients</a>&gt;
 	<a href="{{ instance.get_client.get_single_url }}">{{ instance.get_client.trading_name }}</a>&gt;
@@ -23,12 +22,10 @@
 {% include 'menus/org/account_sub.html' with instance=instance %}
 {% endblock %}
 
-{% block tpl_bl_head_inner %}
-	{% rely sitekit %}
-{% endblock %}
+{% block tpl_ps_rely %}sitekit{% endblock %}
 
 
-{% block tpl_bl_onready %}
+{% block tpl_bl_head_onready %}
 
 	$('#account_list_table').dataTable( {
 		"iDisplayLength" : 25,
@@ -100,7 +97,7 @@
 
 {% endblock %}
 
-{% block content_menu_right %}
+{% block tpl_bl_body_content_right %}
 
 <ul>
 	<li><a href="#" id="invoice-create">New Invoice</a></li>
@@ -112,7 +109,7 @@
 {% endblock %}
 
 
-{% block content %}
+{% block tpl_bl_body_content_center %}
 
 
 <div style=" font-size: 2em; margin: 20px 0px; ">

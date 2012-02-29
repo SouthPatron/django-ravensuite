@@ -6,7 +6,7 @@
 {% block tpl_si_section %}Projects{% endblock %}
 
 
-{% block breadcrumbs %}
+{% block tpl_bl_body_breadcrumbs %}
 	{{ block.super }}
 	<a href="{{ extra.get_org.get_client_list_url }}">Clients</a>&gt;
 	<a href="{{ extra.get_single_url }}">{{ extra.trading_name }}</a>&gt;
@@ -24,7 +24,7 @@
 		
 {% endblock %}
 
-{% block tpl_bl_onready %}
+{% block tpl_bl_head_onready %}
 
 	$(function() {
 		
@@ -84,7 +84,7 @@
 {% endblock %}
 
 
-{% block content_menu_right %}
+{% block tpl_bl_body_content_right %}
 <ul>
 	<li><a href="#" id="client-create-new-project">Create a new Project</a></li>
 </ul>
@@ -114,7 +114,7 @@
 {% endblock %}
 
 
-{% block content %}
+{% block tpl_bl_body_content_center %}
 
 <table
 	id="project_list_table"

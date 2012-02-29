@@ -6,7 +6,7 @@
 {% block tpl_si_client %}{{ extra.get_client.trading_name }}{% endblock %}
 {% block tpl_si_section %}Account{% endblock %}
 
-{% block breadcrumbs %}
+{% block tpl_bl_body_breadcrumbs %}
 	{{ block.super }}
 	<a href="{{ extra.get_org.get_client_list_url }}">Clients</a>&gt;
 	<a href="{{ extra.get_client.get_single_url }}">{{ extra.get_client.trading_name }}</a>&gt;
@@ -29,7 +29,7 @@
 
 
 
-{% block tpl_bl_onready %}
+{% block tpl_bl_head_onready %}
 
 	$('#account_list_table').dataTable( {
 		"iDisplayLength" : 25,
@@ -42,7 +42,7 @@
 
 {% endblock %}
 
-{% block content %}
+{% block tpl_bl_body_content_center %}
 
 
 

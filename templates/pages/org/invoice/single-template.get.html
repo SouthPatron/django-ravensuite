@@ -1,13 +1,12 @@
 {% extends 'layouts/member-base-full.html' %}
 
-{% load rely %}
 {% load decshift %}
 
 {% block tpl_si_org %}{{ instance.get_org.trading_name }}{% endblock %}
 {% block tpl_si_client %}{{ instance.get_client.trading_name }}{% endblock %}
 {% block tpl_si_section %}Invoice {{ instance.refnum }}{% endblock %}
 
-{% block breadcrumbs %}
+{% block tpl_bl_body_breadcrumbs %}
 {% include 'pages/org/invoice/invoice-breadcrumbs.html' with instance=instance %}
 {% endblock %}
 
@@ -30,15 +29,17 @@
 {% endblock %}
 
 
+{% block tpl_ps_rely %}sitekit date afes-table{% endblock %}
+
 {% block tpl_bl_head_inner %}
-	{% rely sitekit date afes %}
+	{{ block.super }}
 	<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}local/css/with-itol.css" media="screen" />
 	<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}local/css/with-afes-bill.css" media="screen" />
 {% endblock %}
 
 
 
-{% block content %}
+{% block tpl_bl_body_content_center %}
 
 
 <div class="itol">

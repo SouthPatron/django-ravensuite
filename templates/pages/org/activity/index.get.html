@@ -1,7 +1,6 @@
 {% extends 'layouts/member-base-full.html' %}
 
-{% load rely %}
-
+{% block tpl_ps_rely %}sitekit{% endblock %}
 
 {% block tpl_si_org %}{{ extra.trading_name }}{% endblock %}
 {% block tpl_si_section %}Activities{% endblock %}
@@ -13,11 +12,8 @@
 {% endblock  %}
 
 
-{% block tpl_bl_head_inner %}
-	{% rely sitekit %}
-{% endblock %}
 
-{% block tpl_bl_onready %}
+{% block tpl_bl_head_onready %}
 
 	$(function() {
 		
@@ -75,7 +71,7 @@
 {% endblock %}
 
 
-{% block content_menu_right %}
+{% block tpl_bl_body_content_right %}
 <ul>
 	<li><a href="#" id="org-create-new-activity">Add a new Activity</a></li>
 </ul>
@@ -95,7 +91,7 @@
 {% endblock %}
 
 
-{% block content %}
+{% block tpl_bl_body_content_center %}
 
 <table
 	id="activity_list_table"

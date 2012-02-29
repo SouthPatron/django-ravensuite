@@ -1,11 +1,10 @@
 {% extends 'layouts/public-base.html' %}
 
-{% load rely %}
+{% block tpl_ps_rely %}formfit{% endblock %}
 
 {% block tpl_bl_head_inner %}
 	{{ block.super }}
 	<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}local/css/account-auth-base.css" media="screen" />
-	{% rely formfit %}
 {% endblock %}
 
 
@@ -37,7 +36,7 @@
 
 	<div id="content">
 		<div class="wrap_container">
-			{% block content %}
+			{% block tpl_bl_body_content_center %}
 			Content
 			{% endblock %}
 		</div>

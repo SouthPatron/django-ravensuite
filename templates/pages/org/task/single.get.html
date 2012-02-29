@@ -4,7 +4,7 @@
 {% block tpl_si_section %}{{ instance.name }}{% endblock %}
 
 
-{% block breadcrumbs %}
+{% block tpl_bl_body_breadcrumbs %}
 	{{ block.super }}
 	<a href="{{ instance.get_org.get_activity_list_url }}">Activities</a>&gt;
 	<a href="{{ instance.get_activity.get_single_url }}">{{ instance.get_activity.name }}</a>&gt;
@@ -23,7 +23,7 @@
 {% endblock  %}
 
 
-{% block content %}
+{% block tpl_bl_body_content_center %}
 
 <table>
 <tr>

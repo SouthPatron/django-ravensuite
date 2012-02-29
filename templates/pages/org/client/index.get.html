@@ -16,7 +16,7 @@
 
 {% endblock %}
 
-{% block tpl_bl_onready %}
+{% block tpl_bl_head_onready %}
 
 	$('#client_list_table').dataTable( {
 		"iDisplayLength" : 25,
@@ -43,14 +43,14 @@
 {% endblock %}
 
 
-{% block content_menu_right %}
+{% block tpl_bl_body_content_right %}
 <ul>
 	<li><a href="#" id="org-add-new-client">Add a new Client</a></li>
 </ul>
 {% endblock %}
 
 
-{% block content %}
+{% block tpl_bl_body_content_center %}
 
 <table
 	id="client_list_table"
