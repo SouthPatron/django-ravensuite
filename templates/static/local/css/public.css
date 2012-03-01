@@ -22,14 +22,14 @@ html body {
 	height: 100%;
 	margin: 0;
 	padding: 0;
-	font-family: Tahoma, Geneva, Sans-Serif;
+	font-family: Arial, Tahoma, Geneva, Sans-Serif;
 	font-size: 12px;
 	background: white;
 	margin-top: -18px;
 }
 
 h1, h2, h3, h4, h5, h6 {
-	font-family: Trebuchet MS;
+	font-family: Arial, Trebuchet MS;
 }
 
 h1
