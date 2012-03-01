@@ -61,6 +61,7 @@
 	float: right;
 	padding: 10px 10px 0px 0px;
 	margin: 0px;
+	color: #cccccc;
 	text-align: right;
 }
 
@@ -68,7 +69,7 @@
 #id_header #header-options a:visited
 {
 	text-decoration: none;
-	color: #cccccc;
+	color: inherit;
 }
 
 #id_header #header-options a:hover

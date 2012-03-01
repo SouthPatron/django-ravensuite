@@ -1,4 +1,4 @@
-{% extends 'pages/org/refund/single-template.get.html' %}
+{% extends 'pages/org/client/account/refund/single-template.get.html' %}
 
 {% load decshift %}
 {% load sourcedoc %}
@@ -7,7 +7,6 @@
 
 
 {% block tpl_bl_head_onready %}
-
 	$( "#id_delete_refund" ).click( function() {
 		$( "#id_refund_state" ).val( 99 );
 		$( "#id_refund_form" ).submit();
@@ -22,9 +21,6 @@
 		$( "#id_refund_state" ).val( 10 );
 		$( "#id_refund_form" ).submit();
 	});
-
-
-
 {% endblock %}
 
 

@@ -1,10 +1,11 @@
-{% extends 'pages/org/credit_note/single-template.get.html' %}
+{% extends 'pages/org/client/account/credit_note/single-template.get.html' %}
 
 {% load decshift %}
 {% load sourcedoc %}
 
 
 {% block tpl_bl_head_inner %}
+	{{ block.super }}
 
 	<style>
 #id_table tbody .afes-table-body-cell-type-currency { text-align: right; }
@@ -104,7 +105,7 @@
 
 {% block document_type %}CREDIT NOTE{% endblock %}
 {% block document_status %}
-{% include 'pages/org/credit_note/status-label.html' with instance=instance %}
+{% include 'pages/org/client/account/credit_note/status-label.html' with instance=instance %}
 {% endblock %}
 
 
