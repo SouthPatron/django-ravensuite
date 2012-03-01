@@ -1,8 +1,10 @@
 {% load active %}
+<div>
 <ul>
 	<li class="{% active request '\/account\/invoice[s\/]' %}"><a href="{% url org-client-account-invoice-list instance.get_org.refnum instance.get_client.refnum %}">Invoices</a></li>
 	<li class="{% active request '\/account\/payment[s\/]' %}"><a href="{% url org-client-account-payment-list instance.get_org.refnum instance.get_client.refnum %}">Payments</a></li>
 	<li class="{% active request '\/account\/credit-note[s\/]' %}"><a href="{% url org-client-account-credit-note-list instance.get_org.refnum instance.get_client.refnum %}">Credit Notes</a></li>
 	<li class="{% active request '\/account\/refund[s\/]' %}"><a href="{% url org-client-account-refund-list instance.get_org.refnum instance.get_client.refnum %}">Refunds</a></li>
 </ul>
+</div>
 

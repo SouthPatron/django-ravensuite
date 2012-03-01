@@ -4,12 +4,6 @@
 {% block tpl_si_section %}Dashboard{% endblock %}
 
 
-{% block tpl_bl_body_breadcrumbs %}
-	{{ block.super }}
-	<a href="{{ instance.get_org.get_activity_list_url }}">Activities</a>&gt;
-	<a href="{{ instance.get_single_url }}">{{ instance.name }}</a>&gt;
-{% endblock %}
-
 
 {% block tpl_bl_body_functions_page %}
 {% include 'menus/org/activity_top.html' with instance=instance %}

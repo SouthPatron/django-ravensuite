@@ -4,15 +4,6 @@
 {% block tpl_si_section %}{{ instance.name }}{% endblock %}
 
 
-{% block tpl_bl_body_breadcrumbs %}
-	{{ block.super }}
-	<a href="{{ instance.get_org.get_activity_list_url }}">Activities</a>&gt;
-	<a href="{{ instance.get_activity.get_single_url }}">{{ instance.get_activity.name }}</a>&gt;
-	<a href="{{ instance.get_activity.get_task_list_url }}">Tasks</a>&gt;
-{% endblock %}
-
-
-
 
 {% block tpl_bl_body_functions_page %}
 

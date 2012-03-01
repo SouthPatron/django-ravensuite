@@ -11,13 +11,8 @@ tpl_bl_head
 
 tpl_bl_body
 
-	tpl_bl_body_breadcrumbs
-
 	tpl_bl_body_functions_page
 	tpl_bl_body_functions_sub
-	tpl_bl_body_functions_dbl
-	tpl_bl_body_functions_tpl
-	tpl_bl_body_functions_filter
 
 	tpl_bl_body_content_left
 	tpl_bl_body_content_right
@@ -39,5 +34,19 @@ tpl_ps_rely - Rely on modules declaration
 
 
 ---------------------- STYLESHEET NAMING ---------------------------------
+
+
+
+id_header
+
+
+
+
+
+
+
+
+
+
 
 

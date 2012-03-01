@@ -3,12 +3,6 @@
 {% block tpl_si_org %}{{ instance.get_org.trading_name }}{% endblock %}
 {% block tpl_si_section %}Dashboard{% endblock %}
 
-{% block tpl_bl_body_breadcrumbs %}
-	{{ block.super }}
-	<a href="{{ instance.get_org.get_user_list_url }}">Users</a>&gt;
-	<a href="{{ instance.get_single_url }}">{{ instance.user.first_name }} {{ instance.user.last_name }}</a>&gt;
-{% endblock %}
-
 
 {% block tpl_bl_body_functions_page %}
 

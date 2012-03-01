@@ -6,10 +6,6 @@
 {% block tpl_si_client %}{{ instance.get_client.trading_name }}{% endblock %}
 {% block tpl_si_section %}Payment {{ instance.refnum }}{% endblock %}
 
-{% block tpl_bl_body_breadcrumbs %}
-{% include 'pages/org/payment/payment-breadcrumbs.html' with instance=instance %}
-{% endblock %}
-
 
 {% block tpl_bl_body_functions_page %}
 {% include 'menus/org/client_top.html' with instance=instance %}
@@ -17,13 +13,7 @@
 
 {% block tpl_bl_body_functions_sub %}
 {% include 'menus/org/account_sub.html' with instance=instance %}
-{% endblock %}
-
-{% block tpl_bl_body_functions_dbl %}
 {% include 'menus/org/account_transactions_sub.html' with instance=instance %}
-{% endblock %}
-
-{% block tpl_bl_body_functions_filter %}
 {% include 'menus/org/payment_filter.html' with instance=instance.get_client.get_account %}
 {% endblock %}
 

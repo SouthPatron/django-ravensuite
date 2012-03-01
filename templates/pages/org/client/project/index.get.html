@@ -8,12 +8,6 @@
 {% block tpl_si_section %}Projects{% endblock %}
 
 
-{% block tpl_bl_body_breadcrumbs %}
-	{{ block.super }}
-	<a href="{{ extra.get_org.get_client_list_url }}">Clients</a>&gt;
-	<a href="{{ extra.get_single_url }}">{{ extra.trading_name }}</a>&gt;
-{% endblock %}
-
 
 {% block tpl_bl_body_functions_page %}
 {% include 'menus/org/client_top.html' with instance=extra %}

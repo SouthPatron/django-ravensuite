@@ -29,14 +29,13 @@
 #page-functions-proper ul li
 {
 	float: left;
-	margin: 0px 10px;
+	margin: 0px 5px;
 	background: #7e7e7e;
 	padding: 8px 20px 10px 20px;
-	border-top: 1px solid #f2f2f2;
-	border-left: 1px solid #f2f2f2;
-	border-right: 1px solid #f2f2f2;
-	border-radius: 2px 2px 0px 0px;
-	background-color: #e2e2e2;
+	border-top: 1px solid #e0e0e0;
+	border-left: 1px solid #e0e0e0;
+	border-right: 1px solid #e0e0e0;
+	background-color: #e2efe2;
 }
 
 #page-functions-proper ul li.active
@@ -110,7 +109,7 @@
 
 /* ------------- SUBSECTION -------------------------- */
 
-#subsection-functions-div
+#subsection-functions-div div
 {
 	height: 30px;
 	overflow: hidden;
@@ -121,12 +120,13 @@
 	border-bottom: 1px solid #e0e0e0;
 }
 
-#subsection-functions-proper ul
+
+#subsection-functions-div ul
 {
 	list-style: none;
 }
 
-#subsection-functions-proper ul:after {
+#subsection-functions-div ul:after {
 	content: "\0020";
 	display: block;
 	height: 0;
@@ -135,123 +135,25 @@
 	overflow: hidden;
 }
 
-#subsection-functions-proper ul li
+#subsection-functions-div ul li
 {
 	float: left;
 	margin: 0px 10px;
 	padding: 8px 10px 10px 10px;
 }
 
-#subsection-functions-proper ul li.active
+#subsection-functions-div ul li.active
 {
 	color: white;
 	background-color: #727272;
 }
 
-#subsection-functions-proper ul li a
+#subsection-functions-div ul li a
 {
 	text-decoration: none;
 	font-size: 1em;
 	color: inherit;
 }
-
-
-/* ------------- DBLSUBSECTION -------------------------- */
-
-#dblsubsection-functions-div
-{
-	height: 30px;
-	overflow: hidden;
-	margin: 0px;
-	padding-left: 40px;
-	color: black;
-
-	border-bottom: 1px solid #e0e0e0;
-}
-
-#dblsubsection-functions-proper ul
-{
-	list-style: none;
-}
-
-#dblsubsection-functions-proper ul:after {
-	content: "\0020";
-	display: block;
-	height: 0;
-	clear: both;
-	visibility: hidden;
-	overflow: hidden;
-}
-
-#dblsubsection-functions-proper ul li
-{
-	float: left;
-	margin: 0px 10px;
-	padding: 8px 10px 10px 10px;
-}
-
-#dblsubsection-functions-proper ul li.active
-{
-	color: white;
-	background-color: #727272;
-}
-
-#dblsubsection-functions-proper ul li a
-{
-	text-decoration: none;
-	font-size: 1em;
-	color: inherit;
-}
-
-
-
-/* ------------- TPLSUBSECTION -------------------------- */
-
-#tplsubsection-functions-div
-{
-	height: 30px;
-	overflow: hidden;
-	margin: 0px;
-	padding-left: 40px;
-	color: black;
-
-	border-bottom: 1px solid #e0e0e0;
-}
-
-#tplsubsection-functions-proper ul
-{
-	list-style: none;
-}
-
-#tplsubsection-functions-proper ul:after {
-	content: "\0020";
-	display: block;
-	height: 0;
-	clear: both;
-	visibility: hidden;
-	overflow: hidden;
-}
-
-#tplsubsection-functions-proper ul li
-{
-	float: left;
-	margin: 0px 10px;
-	padding: 8px 10px 10px 10px;
-}
-
-#tplsubsection-functions-proper ul li.active
-{
-	color: white;
-	background-color: #727272;
-}
-
-#tplsubsection-functions-proper ul li a
-{
-	text-decoration: none;
-	font-size: 1em;
-	color: inherit;
-}
-
 
 
 

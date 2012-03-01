@@ -14,8 +14,8 @@
 	position: absolute;
 	left: 20px;
 	top: 15px;
-	font-size: 1.5em;
-	text-shadow: 1px 1px 1px black;
+	font-size: 1.8em;
+	text-shadow: 0px 1px 0px black;
 	overflow: hidden;
 }
 
@@ -24,7 +24,7 @@
 #subgroup-panel #subgroup-panel-orgname-title a:active
 {
 	text-decoration: none;
-	color: #cccccc;
+	color: #eeeeee;
 }
 
 #subgroup-panel #subgroup-panel-orgname-title a:hover

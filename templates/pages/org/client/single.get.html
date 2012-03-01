@@ -4,12 +4,6 @@
 {% block tpl_si_client %}{{ instance.trading_name }}{% endblock %}
 {% block tpl_si_section %}Dashboard{% endblock %}
 
-{% block tpl_bl_body_breadcrumbs %}
-	{{ block.super }}
-	<a href="{{ instance.get_org.get_client_list_url }}">Clients</a>&gt;
-	<a href="{{ instance.get_single_url }}">{{ instance.trading_name }}</a>&gt;
-{% endblock %}
-
 
 {% block tpl_bl_body_functions_page %}
 {% include 'menus/org/client_top.html' with instance=instance %}

@@ -8,13 +8,6 @@
 {% block tpl_si_client %}{{ extra.get_client.trading_name }}{% endblock %}
 {% block tpl_si_section %}Account{% endblock %}
 
-{% block tpl_bl_body_breadcrumbs %}
-	{{ block.super }}
-	<a href="{{ extra.get_org.get_client_list_url }}">Clients</a>&gt;
-	<a href="{{ extra.get_client.get_single_url }}">{{ extra.get_client.trading_name }}</a>&gt;
-	<a href="{{ extra.get_client.get_account_single_url }}">Account</a>&gt;
-{% endblock %}
-
 
 {% block tpl_bl_body_functions_page %}
 {% include 'menus/org/client_top.html' with instance=extra.get_client %}
@@ -22,9 +15,6 @@
 
 {% block tpl_bl_body_functions_sub %}
 {% include 'menus/org/account_sub.html' with instance=extra %}
-{% endblock %}
-
-{% block tpl_bl_body_functions_dbl %}
 {% include 'menus/org/account_transactions_sub.html' with instance=extra %}
 {% endblock %}
 
