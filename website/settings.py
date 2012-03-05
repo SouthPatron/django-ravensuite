@@ -1,35 +1,22 @@
 # Django settings for southpatron project.
 
-DEBUG = True
-TEMPLATE_DEBUG = DEBUG
+DEBUG = False
+TEMPLATE_DEBUG = False
 
 WSGI_APPLICATION = "website.wsgi.application"
 
 AUTH_PROFILE_MODULE = "common.UserProfile"
 
 LOGIN_URL = '/account/login'
-LOGIN_REDIRECT_URL = '/org/'
 LOGOUT_URL = '/account/logout'
+LOGIN_REDIRECT_URL = '/org/'
 
 
 ADMINS = (
-	( 'Webmaster', 'webmaster@smksoftware.com' ),
+	( 'Support at SouthPatron', 'support@southpatron.com' ),
 )
 
 MANAGERS = ADMINS
-
-DATABASES = {
-	'default': {
-		'ENGINE': 'django.db.backends.sqlite3',
-		'NAME': '/home/durand/db/southpatron.db',
-		'USER': '',
-		'PASSWORD': '',
-		'HOST': '',
-		'PORT': '',
-	}
-}
-
-SITE_ID = 1
 
 TIME_ZONE = 'Africa/Johannesburg'
 
@@ -46,8 +33,6 @@ LANGUAGES = (
 
 MEDIA_ROOT = ''
 MEDIA_URL = ''
-
-STATIC_BASE = '/home/durand/projects/smk/products/southpatron/static'
 STATIC_URL = '/static/'
 
 # Make this unique, and don't share it with anybody.
@@ -57,7 +42,6 @@ SECRET_KEY = 'ffcx$@3767*we0o*t+xxk=is3@f&=!si=v^p-1h@3e!fe27k^r'
 TEMPLATE_LOADERS = (
 	'django.template.loaders.filesystem.Loader',
 	'django.template.loaders.app_directories.Loader',
-#     'django.template.loaders.eggs.Loader',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -70,9 +54,6 @@ MIDDLEWARE_CLASSES = (
 
 ROOT_URLCONF = 'website.urls'
 
-TEMPLATE_DIRS = (
-	'/home/durand/projects/smk/products/southpatron/templates',
-)
 
 TEMPLATE_CONTEXT_PROCESSORS = (
 	'django.contrib.auth.context_processors.auth',
@@ -125,4 +106,13 @@ LOGGING = {
 		},
 	}
 }
+
+
+# Load site specific configurations
+
+try:
+	from settings_site import *
+except ImportError, e:
+	pass
+
 
