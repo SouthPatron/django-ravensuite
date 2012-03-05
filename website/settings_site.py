@@ -14,10 +14,12 @@ except ImportError, e:
 #
 #	SITE_ID = 1
 #
+#	WEBSITE_BASE = '/home/user/projects/smk/products/southpatron'
+#
 #	DATABASES = {
 #		'default': {
 #			'ENGINE': 'django.db.backends.sqlite3',
-#			'NAME': '/home/user/db/southpatron.db',
+#			'NAME': WEBSITE_BASE + '/db/southpatron.db',
 # 			'USER': '',
 #			'PASSWORD': '',
 #			'HOST': '',
@@ -25,13 +27,10 @@ except ImportError, e:
 #		}
 #	}
 #
-#	STATIC_BASE = '/home/user/projects/smk/products/southpatron/static'
+#	STATIC_BASE = WEBSITE_BASE + '/static'
 #
 #	TEMPLATE_DIRS = (
-#		'/home/user/projects/smk/products/southpatron/templates',
+#		WEBSITE_BASE + '/templates',
 #	)
 #
-
-
-
 

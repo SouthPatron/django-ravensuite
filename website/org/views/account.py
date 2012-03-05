@@ -9,8 +9,6 @@ from common.models import *
 from common.buslog.org import *
 from common.exceptions import *
 
-from ..forms import account as forms
-
 
 class AccountSingle( SingleObjectView ):
 	template_name = 'pages/org/client/account/single'
