@@ -6,10 +6,10 @@ from django.conf.urls.defaults import patterns, include, url
 
 urlpatterns = patterns('',
 
-	url(r'^static/', include('common.urls')),
+	url(r'^static/', include('website.common.urls')),
 
-	url(r'^account/', include('account.urls')),
-	url(r'^org/', include('org.urls')),
-	url(r'^timesheet/', include('timesheet.urls')),
+	url(r'^account/', include('website.account.urls')),
+	url(r'^org/', include('website.org.urls')),
+	url(r'^timesheet/', include('website.timesheet.urls')),
 )
 
