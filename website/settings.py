@@ -1,4 +1,4 @@
-# Django settings for billing project.
+# Django settings for southpatron project.
 
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
@@ -21,7 +21,7 @@ MANAGERS = ADMINS
 DATABASES = {
 	'default': {
 		'ENGINE': 'django.db.backends.sqlite3',
-		'NAME': '/home/durand/db/billing.db',
+		'NAME': '/home/durand/db/southpatron.db',
 		'USER': '',
 		'PASSWORD': '',
 		'HOST': '',
@@ -47,7 +47,7 @@ LANGUAGES = (
 MEDIA_ROOT = ''
 MEDIA_URL = ''
 
-STATIC_BASE = '/home/durand/projects/smk/products/billing/static'
+STATIC_BASE = '/home/durand/projects/smk/products/southpatron/static'
 STATIC_URL = '/static/'
 
 # Make this unique, and don't share it with anybody.
@@ -71,7 +71,7 @@ MIDDLEWARE_CLASSES = (
 ROOT_URLCONF = 'website.urls'
 
 TEMPLATE_DIRS = (
-	'/home/durand/projects/smk/products/billing/templates',
+	'/home/durand/projects/smk/products/southpatron/templates',
 )
 
 TEMPLATE_CONTEXT_PROCESSORS = (
