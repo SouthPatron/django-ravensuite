@@ -3,11 +3,13 @@
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 
-AUTH_PROFILE_MODULE="common.UserProfile"
+WSGI_APPLICATION = "website.wsgi.application"
 
-LOGIN_URL='/account/login'
-LOGIN_REDIRECT_URL='/org/'
-LOGOUT_URL='/account/logout'
+AUTH_PROFILE_MODULE = "common.UserProfile"
+
+LOGIN_URL = '/account/login'
+LOGIN_REDIRECT_URL = '/org/'
+LOGOUT_URL = '/account/logout'
 
 
 ADMINS = (
