@@ -75,6 +75,8 @@ INSTALLED_APPS = (
 	'django.contrib.sites',
 	'django.contrib.messages',
 
+	'south',
+
 	'account',
 	'org',
 	'common',
