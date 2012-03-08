@@ -11,12 +11,8 @@ LOGIN_URL = '/account/login'
 LOGOUT_URL = '/account/logout'
 LOGIN_REDIRECT_URL = '/org/'
 
+SEND_BROKEN_LINK_EMAILS = True
 
-ADMINS = (
-	( 'Support at South Patron', 'support@southpatron.com' ),
-)
-
-MANAGERS = ADMINS
 
 TIME_ZONE = 'Africa/Johannesburg'
 

@@ -30,6 +30,13 @@ TEMPLATE_DIRS = (
 )
 
 
+ADMINS = (
+	( 'Support at South Patron', 'support@southpatron.com' ),
+)
+
+MANAGERS = ADMINS
+
+
 
 # --- Here comes the local stuff.
 
