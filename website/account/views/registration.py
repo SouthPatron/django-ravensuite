@@ -22,10 +22,12 @@ class RegistrationStep1( FormView ):
 		rc = super( RegistrationStep1, self ).form_valid( form )
 
 		cd = form.cleaned_data
+
 		username = cd[ 'email_address' ]
 		password = cd[ 'password1' ]
 		firstname = cd[ 'first_name' ]
 		lastname = cd[ 'last_name' ]
+
 
 		luser = AccountSupport.create(
 					username = username,

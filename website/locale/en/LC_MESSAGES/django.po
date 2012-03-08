@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-02-02 14:44+0200\n"
+"POT-Creation-Date: 2012-03-08 19:14+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -16,13 +16,17 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: settings.py:41
+#: settings.py:26
 msgid "English"
 msgstr ""
 
 #: account/views/profile.py:42
 msgid "VMG_10001"
 msgstr "Your password was changed successfully."
+
+#: account/views/registration.py:29
+msgid "TMP_00001"
+msgstr "This is a closed alpha development for a select few. Thanks for trying, though. Your information was not saved, just deleted."
 
 #: common/bushelp/org/actions.py:16
 msgid "BLE_40001"
@@ -252,7 +256,7 @@ msgstr "The draft refund was deleted."
 msgid "VMG_20009"
 msgstr "Task <a href='%(url)s'>%(name)s</a> was successfully created."
 
-#: org/views/user.py:51
+#: org/views/user.py:46
 msgid "VMG_20010"
 msgstr ""
 "The user <a href='%(url)s'>%(first_name)s %(last_name)s</a> was successfully "
@@ -262,11 +266,11 @@ msgstr ""
 msgid "VMG_21001"
 msgstr "Payment was successfully allocated."
 
-#: org/views/components/payment.py:90
+#: org/views/components/payment.py:89
 msgid "VMG_21002"
 msgstr "Payment was successfully deallocated."
 
-#: org/views/components/payment.py:113
+#: org/views/components/payment.py:112
 msgid "NIL"
 msgstr ""
 "Debugging message. Just for testing. Nothing to see here. Move along. :)"

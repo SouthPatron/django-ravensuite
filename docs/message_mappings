@@ -2,6 +2,8 @@
 
 NIL - NIL
 
+TMP - Temporary Development Messages
+
 
 VMG - View Messages
 
@@ -30,6 +32,13 @@ BLE - Business Logic Errors
 ------------
 
 NIL			- Nothing happened here.
+
+
+------------
+
+
+TMP_00001	- Registration is limited during development.
+
 
 ------------
 

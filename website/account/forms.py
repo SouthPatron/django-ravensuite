@@ -4,6 +4,13 @@ from django.contrib.auth import authenticate
 from common.models import *
 
 
+from django.utils.translation import ugettext as _
+import re
+from django.contrib import messages
+
+
+
+
 
 # ---------------------- FORMS -----------------------------------------
 
@@ -61,6 +68,9 @@ class RegistrationForm(InstanceAwareForm):
 		pass1 = cleaned_data.get("password1")
 		pass2 = cleaned_data.get("password2")
 		email_address = cleaned_data.get("email_address")
+
+		if re.match( r'@djm.co.za$', email_address ) is None:
+			raise forms.ValidationError( _('TMP_00001') )
 
 		if pass1 != pass2:
 			msg = u"Password fields must match!"
