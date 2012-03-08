@@ -1,22 +1,22 @@
 {% extends "pages/account/auth-register-step1.html" %}
 
-{% block page_title %}Authenticate Your Account{% endblock %}
+{% block page_title %}Registration: Step 2{% endblock %}
 
 {% block tpl_bl_body_content_center %}
-
-{% include 'global/forms/form_global_errors.html' %}
 
 <div class="form-general" style=" width: 378px; margin: auto;">
 
 {% include 'global/forms/form_start.html' %}
 
 <div class='JFGROUP' style="padding: 10px;">
-	<label>Authentication Code</label>
-{% include "global/forms/text_field.html" with field=form.authcode width='24em' class='JFGROUPFIELD' %}
+	<fieldset>
+	<legend>Authentication Code</legend>
+{% include "global/forms/text_field.html" with field=form.authcode width='23em' class='JFGROUPFIELD' %}
+	</fieldset>
 </div>
 
 <div>
-<div style="float: left; padding-top: 15px; margin-left: 10px; font-size: 0.8em;">
+<div style="float: left; padding-top: 15px; margin-left: 20px; font-size: 0.8em;">
 <a style="text-decoration: none; color: #336FB6; " href="{% url resend-authentication-code %}">Resend code?</a>
 </div>
 

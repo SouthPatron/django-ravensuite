@@ -69,7 +69,7 @@ class RegistrationForm(InstanceAwareForm):
 		pass2 = cleaned_data.get("password2")
 		email_address = cleaned_data.get("email_address")
 
-		if re.match( r'^.*\@djm\.co\.za$', email_address ) is None:
+		if email_address and re.match( r'^.*\@djm\.co\.za$', email_address ) is None:
 			raise forms.ValidationError( _('TMP_00001') )
 
 		if pass1 != pass2:

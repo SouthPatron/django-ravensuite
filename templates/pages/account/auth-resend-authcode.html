@@ -4,15 +4,15 @@
 
 {% block tpl_bl_body_content_center %}
 
-{% include 'global/forms/form_global_errors.html' %}
-
 <div class="form-general" style=" width: 378px; margin: auto;">
 
 {% include 'global/forms/form_start.html' %}
 
 <div class='JFGROUP' style="padding: 10px;">
-	<label>Resend your Authentication Code</label>
-{% include "global/forms/text_field.html" with field=form.email_address width='24em' class='JFGROUPFIELD' %}
+	<fieldset>
+	<legend>Resend your Authentication Code</legend>
+{% include "global/forms/text_field.html" with field=form.email_address width='23em' class='JFGROUPFIELD' %}
+	</fieldset>
 </div>
 
 <div>

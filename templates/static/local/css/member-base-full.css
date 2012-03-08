@@ -4,12 +4,12 @@
 {% include 'static/local/css/includes/member-inc-pagesection.css' %}
 {% include 'static/local/css/includes/member-inc-functions.css' %}
 {% include 'static/local/css/includes/member-inc-content.css' %}
+{% include 'static/local/css/includes/member-inc-messages.css' %}
 
 /*
 member-common.css
 member-dialog.css
 member-layout.css
-member-message-notices.css
 member-timer-block.css
 */
 

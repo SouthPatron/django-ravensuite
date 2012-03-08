@@ -7,6 +7,7 @@ urlpatterns = patterns('',
 
 	url( r'^$',
 		TemplateView.as_view(template_name='pages/home/index.html'),
+		name = 'home-index'
 	),
 
 )

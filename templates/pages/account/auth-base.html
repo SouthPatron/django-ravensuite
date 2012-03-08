@@ -2,9 +2,19 @@
 
 {% block tpl_ps_rely %}formfit{% endblock %}
 
-{% block tpl_bl_head_inner %}
-	{{ block.super }}
-	<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}local/css/forms.css" media="screen" />
+
+
+{% block tpl_bl_body_content_right %}
+
+<div id="auth-page-title">{% block page_title %}{% endblock %}</div>
+
+{% if form.non_field_errors %}
+<div id="message-block">
+{% for error in form.non_field_errors %}
+	<div class="message-notice"><span>{{ error|safe }}</span></div>
+{% endfor %}
+</div>
+{% endif %}
 {% endblock %}
 
 

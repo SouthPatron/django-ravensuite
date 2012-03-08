@@ -157,6 +157,8 @@ $(document).ready( function() {
 			opacity: 0.9,
 			tipClass: "jFormTip"
 		});
+
+
 	});
 });
 

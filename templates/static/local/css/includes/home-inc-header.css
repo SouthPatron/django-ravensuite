@@ -3,9 +3,9 @@
 {
 	position: relative;
 	padding: 20px 0px 0px 30px;
-	margin: auto;
 	overflow: hidden;
-	height: 120px;
+	height: 100px;
+	border-bottom: 1px solid #e0e0e0;
 }
 
 #id_header_logo_div
@@ -15,6 +15,13 @@
 	width: 450px;
 	z-index: 0;
 }
+
+#id_header_logo_div h1 a
+{
+	text-decoration: none;
+	color: inherit;
+}
+
 
 #id_header_menu_div
 {

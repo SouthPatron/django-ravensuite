@@ -1,15 +1,19 @@
 {% extends "pages/account/auth-base.html" %}
 
+
+{% block page_title %}Registration: Step 1{% endblock %}
+
+
+
 {% block tpl_bl_body_content_center %}
 
-{% include 'global/forms/form_global_errors.html' %}
-
-<div class="form-general" style=" width: 378px; margin: auto;">
+<div class="form-general" style=" width: 400px; margin: auto;">
 
 {% include 'global/forms/form_start.html' %}
 
 <div class='JFGROUP' style="padding: 10px;">
-	<label>Your Details</label>
+	<fieldset>
+	<legend>Your Details</legend>
 {% include "global/forms/text_field.html" with field=form.first_name width='10em' class='JFGROUPFIELD JFALIGNLEFT' %}
 {% include "global/forms/text_field.html" with field=form.last_name width='12.5em' class='JFGROUPFIELD JFALIGNLEFT' %}
 
@@ -17,11 +21,12 @@
 
 {% include "global/forms/text_field.html" with field=form.password1 width='11.2em' class='JFGROUPFIELD JFALIGNLEFT' type='password' %}
 {% include "global/forms/text_field.html" with field=form.password2 width='11.2em' class='JFGROUPFIELD JFALIGNLEFT' type='password' %}
+	</fieldset>
 </div>
 
 
 <div>
-<div style="float: right; padding-top: 10px;">
+<div style="float: right; padding-top: 10px; margin-right: 20px;">
 <input type="submit" value="Register" />
 </div>
 <div style="clear: both;"></div>
