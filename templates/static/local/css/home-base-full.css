@@ -1,0 +1,6 @@
+
+{% include 'static/local/css/includes/home-inc-setup.css' %}
+{% include 'static/local/css/includes/home-inc-header.css' %}
+{% include 'static/local/css/includes/home-inc-content.css' %}
+
+

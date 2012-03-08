@@ -3,3 +3,9 @@ input:focus {
 	outline: none;
 }
 
+#id_tpl_bl_body_wrap
+{
+	min-width: 960px;
+}
+
+

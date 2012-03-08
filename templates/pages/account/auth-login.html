@@ -5,7 +5,9 @@
 
 {% block tpl_bl_body_content_center %}
 
-<div class="form_top_box" style=" width: 478px; margin: auto;">
+{% include 'global/forms/form_global_errors.html' %}
+
+<div class="form-general" style=" width: 478px; margin: auto;">
 
 {% include 'global/forms/form_start.html' %}
 
@@ -15,7 +17,7 @@
 {% include "global/forms/text_field.html" with field=form.password width='14em' class='JFGROUPFIELD JFALIGNLEFT' type='password' %}
 </div>
 
-<div class="form_bottom_box">
+<div>
 <div style="float: left; width: 300px; padding-top: 15px; margin-left: 10px; font-size: 0.8em;">
 <a style="text-decoration: none; color: #336FB6; " href="{% url password-reset %}">Forgot your password?</a>
 <a style="margin-left: 10px; text-decoration: none; color: #336FB6; " href="{% url register-step2 %}">Authenticated?</a>

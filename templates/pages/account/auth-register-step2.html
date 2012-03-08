@@ -4,7 +4,9 @@
 
 {% block tpl_bl_body_content_center %}
 
-<div class="form_top_box" style=" width: 378px; margin: auto;">
+{% include 'global/forms/form_global_errors.html' %}
+
+<div class="form-general" style=" width: 378px; margin: auto;">
 
 {% include 'global/forms/form_start.html' %}
 
@@ -13,7 +15,7 @@
 {% include "global/forms/text_field.html" with field=form.authcode width='24em' class='JFGROUPFIELD' %}
 </div>
 
-<div class="form_bottom_box">
+<div>
 <div style="float: left; padding-top: 15px; margin-left: 10px; font-size: 0.8em;">
 <a style="text-decoration: none; color: #336FB6; " href="{% url resend-authentication-code %}">Resend code?</a>
 </div>

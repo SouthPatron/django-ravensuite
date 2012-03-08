@@ -1,0 +1,44 @@
+
+#id_header
+{
+	position: relative;
+	padding: 20px 0px 0px 30px;
+	margin: auto;
+	overflow: hidden;
+	height: 120px;
+}
+
+#id_header_logo_div
+{
+	float: left;
+	margin: 0px;
+	width: 450px;
+	z-index: 0;
+}
+
+#id_header_menu_div
+{
+	float: right;
+	padding-top: 25px;
+	padding-right: 50px;
+}
+
+#id_header_menu_div ul
+{
+	list-style: none;
+}
+
+#id_header_menu_div ul li
+{
+	float: left;
+	padding-left: 30px;
+}
+
+#id_header_menu_div ul li a
+{
+	text-decoration: none;
+	font-size: 1.5em;
+	color: black;
+}
+
+

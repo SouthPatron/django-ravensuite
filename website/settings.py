@@ -13,7 +13,7 @@ LOGIN_REDIRECT_URL = '/org/'
 
 
 ADMINS = (
-	( 'Support at SouthPatron', 'support@southpatron.com' ),
+	( 'Support at South Patron', 'support@southpatron.com' ),
 )
 
 MANAGERS = ADMINS
@@ -77,6 +77,7 @@ INSTALLED_APPS = (
 
 	'south',
 
+	'home',
 	'account',
 	'org',
 	'common',

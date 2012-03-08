@@ -4,10 +4,23 @@
 {% load rely %}
 {% load captureas %}
 
+{% comment %}
+-------------------- LOADING UP GENERAL VARIABLES -------------------
+{% endcomment %}
+
+{% captureas tpl_si_title %}{% block tpl_si_title %}{% endblock %}{% endcaptureas %}
+
 {% captureas tpl_ps_rely %}reset jquery {% block tpl_ps_rely %}{% endblock %}{% endcaptureas %}
 
+{% comment %}
+-------------------- FINISHED ---------------------------------------
+{% endcomment %}
+
 <head profile="http://gmpg.org/xfn/11">
-<title>{% block site_title %}My Website{% endblock %} | {% block page_title %}{% block tpl_bl_body_content_center_title %}Home{% endblock %}{% endblock %}</title>
+{% block tpl_bl_head %}
+
+<title>South Patron{% if tpl_si_title %} | {{ tpl_si_title }}{% endif %}</title>
+
 
 {% relyindirect tpl_ps_rely %}
 
@@ -24,11 +37,14 @@ $(document).ready(function(){
 })
 </script>
 
+{% endblock %}
 </head>
 
 <body>
+<div id="id_tpl_bl_body_wrap">
 {% block tpl_bl_body %}
 {% endblock %}
+</div> <!-- #id_tpl_bl_body_wrap -->
 </body>
 </html>
 

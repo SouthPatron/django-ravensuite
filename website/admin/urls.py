@@ -7,8 +7,6 @@ from views import *
 
 urlpatterns = patterns('',
 
-# ------- ORGANIZATION -------------------------
-
 	url( r'^update$',
 		login_required( UpdateView.as_view() ),
 		name = 'admin-update'

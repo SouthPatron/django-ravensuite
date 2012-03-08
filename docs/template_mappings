@@ -25,6 +25,7 @@ si - section information
 ps - page support
 
 tpl_si_title - Full Title (overrides tpl_si_ settings)
+
 tpl_si_org - Focused Organization Name
 tpl_si_client - Focused Client Name
 tpl_si_section - Focused Section Name
