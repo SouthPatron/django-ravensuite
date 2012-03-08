@@ -27,6 +27,7 @@ STATIC_BASE = WEBSITE_BASE + '/static'
 
 TEMPLATE_DIRS = (
 	WEBSITE_BASE + '/templates',
+	WEBSITE_BASE + '/templates/errors',
 )
 
 
