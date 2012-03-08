@@ -33,7 +33,7 @@ class UpdateView( ProcessFormView ):
 			try:
 				output = subprocess.check_output( cmd, shell = True )
 			except subprocess.CalledProcessError, e:
-				output = e.message()
+				output = e.message
 			
 
 
