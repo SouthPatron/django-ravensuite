@@ -1,8 +1,7 @@
-
+{% if tpl_si_org or tpl_si_client %}
 <div id="page-section-info">
 
 <div id="location-block">
-
 	{% if tpl_si_client %}
 	<div id="client-name">
 		{% if kwargs.oid %}
@@ -12,9 +11,8 @@
 		{% if kwargs.oid %}
 		</a>
 		{% endif %}
-	</div>
+	</div> <!-- #client-name -->
 	{% endif %}
-
 </div> <!-- #location-block -->
 
 {% if messages %}
@@ -22,10 +20,8 @@
 {% for message in messages %}
 	<div class="message-notice {{ message.tags }}"><span>{{ message|safe }}</span></div>
 {% endfor %}
-</div>
+</div> <!-- #message-block -->
 {% endif %}
 
-
 </div> <!-- #page-section-info -->
-
-
+{% endif %}

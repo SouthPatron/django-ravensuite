@@ -2,20 +2,21 @@
 #subgroup-panel
 {
 	position: relative;
-	padding: 15px 20px;
 	margin: auto;
-	height: 18px;
-	background: #2e2e2e;
+	padding-top: 15px;
+	background: #f2f2f2;
 }
 
+#subgroup-panel-inner
+{
+	position: relative;
+	background-color: #4e5e4e;
+}
 
 #subgroup-panel #subgroup-panel-orgname-title
 {
-	position: absolute;
-	left: 20px;
-	top: 15px;
-	font-size: 1.8em;
-	text-shadow: 0px 1px 0px black;
+	padding: 15px 15px;
+	font-size: 2em;
 	overflow: hidden;
 }
 
@@ -24,7 +25,7 @@
 #subgroup-panel #subgroup-panel-orgname-title a:active
 {
 	text-decoration: none;
-	color: #eeeeee;
+	color: white;
 }
 
 #subgroup-panel #subgroup-panel-orgname-title a:hover

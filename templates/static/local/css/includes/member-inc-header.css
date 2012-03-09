@@ -5,7 +5,8 @@
 	padding: 0px;
 	margin: auto;
 	overflow: hidden;
-	background: #4e4e4e;
+	background: white;
+	border-bottom: 1px solid #a0a0a0;
 }
 
 #id_header #global-links
@@ -15,7 +16,7 @@
 	width: 650px;
 	padding-top: 5px;
 	z-index: 0;
-	color: #9e9e9e;
+	color: #3e3e3e;
 }
 
 #id_header #global-links ul
@@ -28,19 +29,18 @@
 	float: left;
 	padding: 8px 13px;
 	margin-left: 3px;
-	border-left: 1px solid #808080;
-	border-top: 1px solid #808080;
-	border-right: 1px solid #808080;
+	border-left: 1px solid #b0b0b0;
+	border-top: 1px solid #b0b0b0;
+	border-right: 1px solid #b0b0b0;
 	font-size: 1em;
-//	border-radius: 5px 5px 0px 0px;
+	border-radius: 5px 5px 0px 0px;
 }
 
 #id_header #global-links ul li.active
 {
-	background: #2e2e2e;
-	color: #6e6e6e;
+	background: #e2efe2;
+	color: black;
 }
-
 
 
 #id_header #global-links a
@@ -61,7 +61,7 @@
 	float: right;
 	padding: 10px 10px 0px 0px;
 	margin: 0px;
-	color: #cccccc;
+	color: #3e3e3e;
 	text-align: right;
 }
 

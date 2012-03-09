@@ -1,7 +1,7 @@
-
-<div id="subgroup-panel">
 {% if tpl_si_org %}
-	<div id="subgroup-panel-orgname-title"><a href="{% url org-single kwargs.oid %}">{{ tpl_si_org }}</a></div>
-{% endif %}
+<div id="subgroup-panel">
+	<div id="subgroup-panel-inner">
+		<div id="subgroup-panel-orgname-title"><a href="{% url org-single kwargs.oid %}">{{ tpl_si_org }}</a></div>
+	</div>
 </div>
-
+{% endif %}
