@@ -9,6 +9,8 @@ from base import Base
 
 from common.exceptions import BLE_DevError
 
+import inspect
+
 
 class ModalLogic( object ):
 
@@ -27,9 +29,6 @@ class ModalLogic( object ):
 
 class ModalView( Base ):
 
-	logic_class = None
-
-
 	# ************** Support methods
 
 	def _expand_modal_name( self, modal_name ):
@@ -37,12 +36,10 @@ class ModalView( Base ):
 
 	# ************** Thunking operation
 
-	def _fetch_call( self, request, modal_name, fmt, dmap, *args, **kwargs ):
-		logic = self.logic_class( self.url_kwargs )
-
+	def _fetch_call( self, request, logic, modal_name, fmt, dmap, *args, **kwargs ):
 		ob = logic.get_object( request, dmap, *args, **kwargs )
 		if ob is None:
-			raise BLE_DevError( 'None from logic_class.get_object' )
+			raise BLE_DevError( 'None from logic.get_object' )
 
 		extra = logic.get_extra( request, dmap, *args, **kwargs )
 
@@ -64,18 +61,16 @@ class ModalView( Base ):
 			)
 
 
-	def _apply_call( self, request, modal_name, fmt, dmap, *args, **kwargs ):
-		logic = self.logic_class( self.url_kwargs )
-
+	def _apply_call( self, request, logic, modal_name, fmt, dmap, *args, **kwargs ):
 		ob = logic.get_object( request, dmap, *args, **kwargs )
 		if ob is None:
-			raise BLE_DevError( 'None from logic_class.get_object' )
+			raise BLE_DevError( 'None from logic.get_object' )
 
 		extra = logic.get_extra( request, dmap, *args, **kwargs )
 
 		ans = logic.perform( request, dmap, ob, extra, fmt, *args, **kwargs )
 		if ans is None:
-			raise BLE_DevError( 'None from logic_class.perform_action' )
+			raise BLE_DevError( 'None from logic.perform_action' )
 
 		if fmt == 'html':
 			return ans
@@ -83,13 +78,32 @@ class ModalView( Base ):
 		return api_resp( ans, fmt )
 
 
+	def _load_class( self, modal_name ):
+		parts = modal_name.split('.')
+		parts.insert( 1, 'modals' )
+		module = ".".join(parts[0:2])
+
+		classname = ""
+		for mystr in parts[2:]:
+			classname = "{}{}".format( classname, mystr.capitalize() )
+
+		m = __import__( module )
+		for comp in parts[1:2]:
+			m = getattr(m, comp)
+
+		m = getattr(m, classname )
+		return m
+
 
 	def _thunk( self, request, modal_name, fmt, dmap, *args, **kwargs ):
 
-		if dmap.get( 'meta.action', 'fetch' ) == 'apply':
-			return self._apply_call( request, modal_name, fmt, dmap, *args, **kwargs )
+		logic_class = self._load_class( modal_name )
+		logic = logic_class( self.url_kwargs )
 
-		return self._fetch_call( request, modal_name, fmt, dmap, *args, **kwargs )
+		if dmap.get( 'meta.action', 'fetch' ) == 'apply':
+			return self._apply_call( request, logic, modal_name, fmt, dmap, *args, **kwargs )
+
+		return self._fetch_call( request, logic, modal_name, fmt, dmap, *args, **kwargs )
 
 
 	# ************** HTTP Operations

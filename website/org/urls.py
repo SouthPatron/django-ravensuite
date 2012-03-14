@@ -6,6 +6,9 @@ from django.conf import settings
 from views import *
 
 
+from common.views.modal import ModalView
+
+
 urlpatterns = patterns('',
 
 # ------- ORGANIZATION -------------------------
@@ -101,10 +104,7 @@ urlpatterns = patterns('',
 	url( r'^(?P<oid>\d+)/activity/(?P<actid>\d+)/task/(?P<taskid>\d+)$', login_required( TaskSingle.as_view() ), name = 'org-activity-task-single' ),
 
 
-
-# ------ MODALS -----------------------------
-
-	url(r'^modals/', include('org.urls_modal')),
+	url( r'^modals/(?P<modal_name>.*)$', login_required( ModalView.as_view() ) ),
 
 )
 
