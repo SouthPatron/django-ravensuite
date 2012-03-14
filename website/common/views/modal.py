@@ -87,17 +87,24 @@ class ModalView( Base ):
 		for mystr in parts[2:]:
 			classname = "{}{}".format( classname, mystr.capitalize() )
 
-		m = __import__( module )
-		for comp in parts[1:2]:
-			m = getattr(m, comp)
+		try:
+			m = __import__( module )
+			for comp in parts[1:2]:
+				m = getattr(m, comp)
 
-		m = getattr(m, classname )
+			m = getattr(m, classname )
+		except AttributeError:
+			return None
+
 		return m
 
 
 	def _thunk( self, request, modal_name, fmt, dmap, *args, **kwargs ):
 
 		logic_class = self._load_class( modal_name )
+		if logic_class is None:
+			return self.not_found()
+
 		logic = logic_class( self.url_kwargs )
 
 		if dmap.get( 'meta.action', 'fetch' ) == 'apply':
