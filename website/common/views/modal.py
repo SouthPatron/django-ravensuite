@@ -24,7 +24,7 @@ class ModalLogic( object ):
 		return None
 
 	def perform( self, request, dmap, obj, extra, fmt, *args, **kwargs ):
-		return HttpResponseForbidden()
+		return None
 
 
 class ModalView( Base ):
@@ -33,6 +33,13 @@ class ModalView( Base ):
 
 	def _expand_modal_name( self, modal_name ):
 		return '{}'.format( '/'.join( modal_name.split( '.' ) ) )
+
+	def get_template_name( self, modal_name, action, fmt ):
+		return 'modals/{}.{}.{}'.format(
+					self._expand_modal_name( modal_name ),
+					action,
+					fmt
+				),
 
 	# ************** Thunking operation
 
@@ -53,12 +60,9 @@ class ModalView( Base ):
 							}
 						)
 		return render_to_response(
-				'modals/{}.{}'.format(
-					self._expand_modal_name( modal_name ),
-					fmt
-				),
-				context
-			)
+					self.get_template_name( modal_name, "fetch", fmt ), 
+					context
+				)
 
 
 	def _apply_call( self, request, logic, modal_name, fmt, dmap, *args, **kwargs ):
@@ -69,13 +73,22 @@ class ModalView( Base ):
 		extra = logic.get_extra( request, dmap, *args, **kwargs )
 
 		ans = logic.perform( request, dmap, ob, extra, fmt, *args, **kwargs )
-		if ans is None:
-			raise BLE_DevError( 'None from logic.perform_action' )
-
-		if fmt == 'html':
+		if ans is not None:
 			return ans
-			
-		return api_resp( ans, fmt )
+
+		context = RequestContext(
+							request,
+							{
+								'instance' : ob,
+								'extra' : extra,
+								'kwargs' : self.url_kwargs,
+								'data' : dmap
+							}
+						)
+		return render_to_response(
+					self.get_template_name( modal_name, "apply", fmt ), 
+					context
+				)
 
 
 	def _load_class( self, modal_name ):

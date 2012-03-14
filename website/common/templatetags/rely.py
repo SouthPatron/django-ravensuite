@@ -117,8 +117,10 @@ rely_graph = {
 			'js' : [
 				pi( 'modeload/modeload.js' ),
 			],
-			'css' : [],
-			'deps' : [ 'jquery' ]
+			'css' : [
+				pi( 'modeload/css/modeload.css' ),
+			],
+			'deps' : [ 'jquery', 'crypto.md5' ]
 		},
 
 	'sitekit' : {
@@ -133,7 +135,15 @@ rely_graph = {
 				pc( 'sitekit/css/smktools.css' ),
 			],
 			'deps' : [ 'jquery' ]
-		}
+		},
+
+
+	'crypto.md5' : {
+			'js' : [ pe( 'crypto.js/crypto-md5/crypto-md5.js' ), ],
+			'css' : [ ],
+			'deps' : [ ]
+		},
+
 }
 
 

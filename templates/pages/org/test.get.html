@@ -5,9 +5,23 @@
 {% load rely %}
 {% rely modeload %}
 
+<script type="text/javascript">
+$(document).ready( function() {
+
+	modeload.html.setStaticPostData( { 'csrfmiddlewaretoken' : '{{ csrf_token }}', 'oid' : 1 } );
+
+	$("#id_button").click( function() {
+		modeload.html.load( '/org/modals/org.new.organization' );
+	});
+});
+</script>
+
 </head>
 <body>
 <h1>Leroy Jeeeennnnkkins!!</h1>
+
+<button id="id_button" type="button">Load Modal Window</button>
+
 </body>
 </html>
 

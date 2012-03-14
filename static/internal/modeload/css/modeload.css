@@ -1,0 +1,30 @@
+
+
+.modeload_container {
+}
+
+
+.modeload_container .ml_background
+{
+	position: absolute;
+	left: 0px;
+	top: 0px;
+	right: 0px;
+	bottom: 0px;
+
+	filter: alpha(opacity=55);
+	-moz-opacity: .55;
+	opacity: 0.55;
+	background-color: #EEE;
+}
+
+.modeload_container .ml_box
+{
+	position: absolute;
+	left: 50%;
+	top: 50%;
+	background-color: orange;
+	visibility: hidden;
+}
+
+

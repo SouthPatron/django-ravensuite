@@ -13,13 +13,11 @@ class NewOrganization( ModalLogic ):
 		return None
 
 	def get_object( self, request, dmap, *args, **kwargs ):
-
 		obj = Organization.objects.get( id = dmap[ 'oid' ] )
-
 		return obj
 
 	def perform( self, request, dmap, obj, extra, fmt, *args, **kwargs ):
-		return HttpResponseForbidden()
+		return None
 
 
 

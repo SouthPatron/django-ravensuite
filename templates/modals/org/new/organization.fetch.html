@@ -1,0 +1,25 @@
+<div style="width: 400px; height: 400px;">
+	<h1>Hello</h1>
+	<button id="id_hello" type="button">Hola</button>
+
+	<form id="sammy" method="POST" action="/org/modals/org.new.organization">
+		{% csrf_token %}
+		<input type="text" name="name" />
+		<input type="hidden" name="oid" value="{{ data.oid }}" />
+		<input type="hidden" name="meta.action" value="apply" />
+		<input type="hidden" name="meta.action" value="apply" />
+		<input type="hidden" name="meta.action" value="apply" />
+		<input type="hidden" name="meta.action" value="apply" />
+		<button type="submit">Submit me, biatch</button>
+	</form>
+</div>
+
+<script type="text/javascript">
+
+$("#id_hello").click( function() {
+	$( "#sammy" ).submit();
+});
+
+//@ sourceURL=modalScript.js
+
+</script>
