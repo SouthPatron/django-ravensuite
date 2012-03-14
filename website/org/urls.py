@@ -14,18 +14,6 @@ urlpatterns = patterns('',
 	url( r'^(?P<oid>\d+)$', login_required( OrgSingle.as_view() ), name = 'org-single' ),
 
 
-	url(
-			r'^(?P<oid>\d+)/clients.pc.add_new_client$',
-			login_required(
-				components.OrgComponents.as_view(
-					template_name = 'components/org/client/add_new_client'
-				)
-			),
-			name = 'org-component-add-new-client'
-		),
-
-
-
 	url( r'^(?P<oid>\d+)/test$', login_required( OrgTestSingle.as_view() ), name = 'org-test-single' ),
 
 # ------ USERS -------------------------------
@@ -55,27 +43,6 @@ urlpatterns = patterns('',
 
 	url( r'^(?P<oid>\d+)/client/(?P<cid>\d+)/account$', login_required( AccountSingle.as_view() ), name = 'org-client-account-single' ),
 
-	url( 
-			r'^(?P<oid>\d+)/client/(?P<cid>\d+)/account.pc.receive-payment$',
-			login_required(
-				components.AccountComponents.as_view(
-					template_name = 'components/org/account/receive_payment'
-				)
-			),
-			name = 'org-client-account-component-receive-payment'
-		),
-
-	url( 
-			r'^(?P<oid>\d+)/client/(?P<cid>\d+)/account.pc.refund$',
-			login_required(
-				components.AccountComponents.as_view(
-					template_name = 'components/org/account/refund'
-				)
-			),
-			name = 'org-client-account-component-refund'
-		),
-
-
 	url( r'^(?P<oid>\d+)/client/(?P<cid>\d+)/account/transactions$', login_required( AccountTransactionList.as_view() ), name = 'org-client-account-transaction-list' ),
 	url( r'^(?P<oid>\d+)/client/(?P<cid>\d+)/account/transaction/(?P<tid>\d+)$', login_required( account_transaction_router ), name = 'org-client-account-transaction-single' ),
 
@@ -100,25 +67,6 @@ urlpatterns = patterns('',
 
 	url( r'^(?P<oid>\d+)/client/(?P<cid>\d+)/account/payment/(?P<sdid>\d+)$', login_required( PaymentSingle.as_view() ), name = 'org-client-account-payment-single' ),
 
-	url( 
-			r'^(?P<oid>\d+)/client/(?P<cid>\d+)/account/payment/(?P<sdid>\d+).pc.allocate$',
-			login_required( components.PcAllocatePayment.as_view() ),
-			name = 'org-client-account-payment-component-allocate'
-		),
-
-	url( 
-			r'^(?P<oid>\d+)/client/(?P<cid>\d+)/account/payment/(?P<sdid>\d+)/allocation/(?P<alocid>\d+)\.pc\.deallocate$',
-			login_required( components.PcDeallocatePayment.as_view() ),
-			name = 'org-client-account-payment-component-deallocate'
-		),
-
-	url( 
-			r'^(?P<oid>\d+)/client/(?P<cid>\d+)/account/payment/(?P<sdid>\d+).pc.refund$',
-			login_required( components.PcRefundPayment.as_view() ),
-			name = 'org-client-account-payment-component-refund'
-		),
-
-
 
 # ------ CLIENTS / ACCOUNT / CREDIT NOTES ------------------
 
@@ -128,13 +76,6 @@ urlpatterns = patterns('',
 
 	url( r'^(?P<oid>\d+)/client/(?P<cid>\d+)/account/credit-notes/draft$', login_required( CreditNoteDraftList.as_view() ), name = 'org-client-account-credit-note-draft-list' ),
 	url( r'^(?P<oid>\d+)/client/(?P<cid>\d+)/account/credit-notes/unallocated$', login_required( CreditNoteUnallocatedList.as_view() ), name = 'org-client-account-credit-note-unallocated-list' ),
-
-	url( 
-			r'^(?P<oid>\d+)/client/(?P<cid>\d+)/account/credit-note/(?P<sdid>\d+).pc.refund$',
-			login_required( components.PcRefundPayment.as_view() ),
-			name = 'org-client-account-credit-note-component-refund'
-		),
-
 
 
 
@@ -149,14 +90,6 @@ urlpatterns = patterns('',
 	url( r'^(?P<oid>\d+)/client/(?P<cid>\d+)/account/refund/(?P<sdid>\d+)$', login_required( RefundSingle.as_view() ), name = 'org-client-account-refund-single' ),
 
 
-	url( 
-			r'^(?P<oid>\d+)/client/(?P<cid>\d+)/account/refund/(?P<sdid>\d+).pc.allocate$',
-			login_required( components.PcAllocateRefund.as_view() ),
-			name = 'org-client-account-refund-component-allocate'
-		),
-
-
-
 # ------ ACTIVITIES -----------------------------
 
 
@@ -167,6 +100,11 @@ urlpatterns = patterns('',
 	url( r'^(?P<oid>\d+)/activity/(?P<actid>\d+)/tasks$', login_required( TaskList.as_view() ), name = 'org-activity-task-list' ),
 	url( r'^(?P<oid>\d+)/activity/(?P<actid>\d+)/task/(?P<taskid>\d+)$', login_required( TaskSingle.as_view() ), name = 'org-activity-task-single' ),
 
+
+
+# ------ MODALS -----------------------------
+
+	url(r'^modals/', include('org.urls_modal')),
 
 )
 

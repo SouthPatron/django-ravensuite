@@ -1,0 +1,20 @@
+
+
+dictmap map:
+
+obj {
+
+	dimensions : {
+		width: xxx px
+		height: xxx px
+	},
+
+	resources : {
+		javascripts: [ ],
+		html: [ ],
+		stylesheets: [ ],
+	},
+
+}
+
+

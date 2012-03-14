@@ -262,20 +262,20 @@ msgstr ""
 "The user <a href='%(url)s'>%(first_name)s %(last_name)s</a> was successfully "
 "created."
 
-#: org/views/components/payment.py:59
+#: org/views/modals/payment.py:59
 msgid "VMG_21001"
 msgstr "Payment was successfully allocated."
 
-#: org/views/components/payment.py:89
+#: org/views/modals/payment.py:89
 msgid "VMG_21002"
 msgstr "Payment was successfully deallocated."
 
-#: org/views/components/payment.py:112
+#: org/views/modals/payment.py:112
 msgid "NIL"
 msgstr ""
 "Debugging message. Just for testing. Nothing to see here. Move along. :)"
 
-#: org/views/components/refund.py:53
+#: org/views/modals/refund.py:53
 msgid "VMG_21003"
 msgstr "Refund was successfully allocated."
 

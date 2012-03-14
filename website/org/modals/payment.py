@@ -34,7 +34,7 @@ class PaymentComponents( ComponentView ):
 
 
 class PcAllocatePayment( PaymentComponents ):
-	template_name = 'components/org/payment/allocate'
+	template_name = 'modals/org/payment/allocate'
 
 	def post_html( self, request, obj, data, *args, **kwargs ):
 
@@ -61,7 +61,7 @@ class PcAllocatePayment( PaymentComponents ):
 
 
 class PcDeallocatePayment( PaymentComponents ):
-	template_name = 'components/org/payment/deallocate'
+	template_name = 'modals/org/payment/deallocate'
 
 	def get_object( self, request, *args, **kwargs ):
 		return get_object_or_404(
@@ -91,7 +91,7 @@ class PcDeallocatePayment( PaymentComponents ):
 
 
 class PcRefundPayment( PaymentComponents ):
-	template_name = 'components/org/payment/refund'
+	template_name = 'modals/org/payment/refund'
 
 	def post_html( self, request, obj, data, *args, **kwargs ):
 

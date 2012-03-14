@@ -19,7 +19,7 @@ Available classes:
 
 	. ListView	- Display a list of objects
 	. SingleObjectView - Display a single object
-	. ComponentView - Retrieve a particular component from the
+	. ModalView - Retrieve a particular modal from the
 		system for display purposes on a page.
 
 """

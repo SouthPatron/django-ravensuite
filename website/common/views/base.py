@@ -59,11 +59,15 @@ class Base( View ):
 		return fmt
 
 	def _get_query_data( self, request ):
-		return request.GET
+		if request.GET is not None:
+			return request.GET
+		return {}
 
 	def _get_body_data( self, request, fmt ):
 		if fmt == 'html':
-			return request.POST
+			if request.POST is not None:
+				return request.POST
+			return {}
 
 		if fmt == 'json':
 			data = request.read()

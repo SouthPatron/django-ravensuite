@@ -113,6 +113,14 @@ rely_graph = {
 		},
 
 
+	'modeload' : {
+			'js' : [
+				pi( 'modeload/modeload.js' ),
+			],
+			'css' : [],
+			'deps' : [ 'jquery' ]
+		},
+
 	'sitekit' : {
 			'js' : [
 				pc( 'sitekit/string.js' ),

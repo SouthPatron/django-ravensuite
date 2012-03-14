@@ -28,7 +28,7 @@ class RefundComponents( ComponentView ):
 
 
 class PcAllocateRefund( RefundComponents ):
-	template_name = 'components/org/refund/allocate'
+	template_name = 'modals/org/refund/allocate'
 
 	def post_html( self, request, obj, data, *args, **kwargs ):
 
