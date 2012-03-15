@@ -1,17 +1,31 @@
-<div style="width: 400px; height: 400px;">
-	<h1>Hello</h1>
-	<button id="id_hello" type="button">Hola</button>
+<div style="width: 400px; min-height: 100px;">
 
-	<form id="sammy" method="POST" action="/org/modals/org.new.organization">
-		{% csrf_token %}
-		<input type="text" name="name" />
-		<input type="hidden" name="oid" value="{{ data.oid }}" />
-		<input type="hidden" name="meta.action" value="apply" />
-		<input type="hidden" name="meta.action" value="apply" />
-		<input type="hidden" name="meta.action" value="apply" />
-		<input type="hidden" name="meta.action" value="apply" />
-		<button type="submit">Submit me, biatch</button>
-	</form>
+	<div class="ml_dialog_titlebar ml_clear">
+		<span class="ml_dialog_title">Add a new Organization</span>
+		<a class="ml_dialog_titlebar_close ml_action_close">
+			<span>close</span>
+		</a>
+	</div>
+
+
+	<div class="ml_dialog_content ml_clear">
+		<h1>Hello</h1>
+		<button id="id_hello" type="button">Hola</button>
+
+		<form id="sammy" method="POST" action="{{ request.META.PATH_INFO }}">
+			{% csrf_token %}
+			<input type="text" name="name" />
+			<input type="hidden" name="oid" value="{{ data.oid }}" />
+			<input type="hidden" name="meta.action" value="apply" />
+			<button type="submit">Submit me, biatch</button>
+		</form>
+
+	</div>
+
+	<div class="ml_dialog_buttonbar ml_clear">
+		<button type="button" class="ml_action_close">Cancel</button>
+		<button type="submit" class="ml_action_submit">Add Organization</button>
+	</div>
 </div>
 
 <script type="text/javascript">

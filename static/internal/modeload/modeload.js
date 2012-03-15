@@ -114,9 +114,21 @@ modeload.html.updateContainer = function( url, newhtml ) {
 	mybox.css( 'margin-left' , mleft ).css( 'margin-top', mtop );
 }
 
+modeload.html.resizeContainerContent = function( url ) {
+	var digest = Crypto.MD5( url );
+	var mybox = $(document).find( "#" + digest ).find( ".ml_box" );
+	var content = mybox.find( ".ml_dialog_content" );
+
+	mybox.find( ".ml_dialog_buttonbar" ).each( function() {
+		var buttonbar_height = $(this).outerHeight( true );
+		mybox.find( ".ml_dialog_content" ).css( 'margin-bottom', buttonbar_height + 'px' );
+	});
+}
+
 modeload.html.fetchContainer = function( url, pdata, success ) {
 	modeload.html.fetchObject( url, pdata, function( obj ) {
 		modeload.html.updateContainer( url, obj );
+		modeload.html.resizeContainerContent( url );
 		success( url );
 	});
 }
@@ -128,10 +140,23 @@ modeload.html.applyContainer = function( url, pdata, success ) {
 	});
 }
 
+
+
+
 modeload.html.hookContainer = function( url ) {
 	var digest = Crypto.MD5( url );
-
 	var mybox = $(document).find( "#" + digest ).find( ".ml_box" );
+
+	// Draggable
+
+	mybox.draggable( 
+		{
+			handle: '.ml_dialog_titlebar',
+			opacity: 0.90
+		}
+	);
+
+	// Form submission
 
 	mybox.find( "form" ).submit( function( ev ) {
 		ev.preventDefault();
@@ -145,6 +170,17 @@ modeload.html.hookContainer = function( url ) {
 
 		return false;
 	});
+
+	// Actions
+
+	mybox.find( ".ml_action_close" ).click( function() {
+		modeload.html.destroyContainer( url );
+	});
+
+	mybox.find( ".ml_action_submit" ).click( function() {
+		mybox.find( "form" ).submit();
+	});
+
 }
 
 
@@ -154,19 +190,26 @@ modeload.html.getContainer = function( url ) {
 	return mybox;
 }
 
+modeload.html.keyUpHook = function( e ) {
+	if (e.keyCode == 27)
+	{
+		var url = e.data.url;
+		modeload.html.destroyContainer( url );
+		$(document).unbind( "keyup", modeload.html.keyUpHook );
+	} 
+}
+
 modeload.html.load = function( url, pdata ) {
 
 	if ( ! pdata ) var pdata = {};
 
 	var newdiv = modeload.html.createContainer( url );
 
-	newdiv.find( ".ml_background" ).click( function() {
-		modeload.html.destroyContainer( url );
-	});
-
 	modeload.html.fetchContainer( url, pdata, function( url ) {
 		modeload.html.showContainer( url );
 		modeload.html.hookContainer( url );
+
+		$(document).keyup( { 'url' : url }, modeload.html.keyUpHook );
 	});
 
 }

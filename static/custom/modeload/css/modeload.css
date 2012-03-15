@@ -1,0 +1,119 @@
+
+/* SUPPORT */
+
+.modeload_container .ml_clear
+{
+	display: block;
+}
+
+.modeload_container .ml_clear:after
+{
+	clear: both;
+	content: ".";
+	display: block;
+	height: 0px;
+	visibility: hidden;
+}
+
+
+/* PRESENTATION */
+
+
+.modeload_container .ml_box
+{
+	-moz-box-shadow: 0px 0px 10px #000000;
+	-webkit-box-shadow: 0px 0px 10px #000000;
+	box-shadow: 0px 0px 10px #000000;
+	overflow: hidden;
+}
+
+/* -------- Title bar ---------------- */
+
+.modeload_container div.ml_dialog_titlebar
+{
+	position: relative;
+	padding: 5px;
+	background-color: #202020;
+	margin: 2px;
+	cursor: move;
+}
+
+
+.modeload_container div.ml_dialog_titlebar .ml_dialog_title
+{
+	font-size: 1.3em;
+	color: white;
+	float: left;
+}
+
+.modeload_container div.ml_dialog_titlebar .ml_dialog_titlebar_close
+{
+	position: absolute;
+	right: 0.3em;
+	top: 50%;
+	width: 19px;
+	margin: -10px 0 0 0;
+	padding: 1px;
+	height: 18px;
+	cursor: auto;
+}
+
+.modeload_container div.ml_dialog_titlebar .ml_dialog_titlebar_close span
+{
+	display: block;
+	margin: 1px;
+	background-image: url( '../images/icons.png' );
+	background-position: -96px -128px;
+	width: 16px;
+	height: 16px;
+	text-indent: -9999px;
+	overflow: hidden;
+	background-repeat: no-repeat;
+}
+
+
+/* -------- Content bar ---------------- */
+
+.modeload_container div.ml_dialog_content
+{
+	overflow: hidden;
+}
+
+
+/* -------- Button bar ---------------- */
+
+
+.modeload_container div.ml_dialog_buttonbar
+{
+	position: absolute;
+	left: 0px;
+	bottom: 0px;
+	right: 0px;
+	padding: 5px;
+	background-color: #202020;
+	margin: 2px;
+	text-align: right;
+}
+
+
+.modeload_container div.ml_dialog_buttonbar button
+{
+}
+
+
+/* --------- ACTIONS -------------- */
+
+
+.modeload_container .ml_action_close
+{
+}
+
+.modeload_container .ml_action_submit
+{
+}
+
+
+
+
+
+

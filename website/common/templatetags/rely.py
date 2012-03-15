@@ -119,8 +119,9 @@ rely_graph = {
 			],
 			'css' : [
 				pi( 'modeload/css/modeload.css' ),
+				pc( 'modeload/css/modeload.css' ),
 			],
-			'deps' : [ 'jquery', 'crypto.md5' ]
+			'deps' : [ 'jquery', 'jquery.ui', 'crypto.md5' ]
 		},
 
 	'sitekit' : {
