@@ -111,7 +111,7 @@ modeload.html.updateContainer = function( url, newhtml ) {
 	var mleft = "-" + (mybox.outerWidth()/2) + "px";
 	var mtop = "-" + (mybox.outerHeight()/2) + "px";
 
-	mybox.css( 'margin-left' , mleft ).css( 'margin-top', mtop );
+	mybox.css( 'margin-left' , mleft ).css( 'margin-top', mtop ).css( 'top', '50%' ).css( 'left', '50%' );
 }
 
 modeload.html.resizeContainerContent = function( url ) {

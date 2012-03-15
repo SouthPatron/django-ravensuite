@@ -3,6 +3,19 @@
 .modeload_container {
 }
 
+.modeload_container .ml_clear
+{
+	display: block;
+}
+
+.modeload_container .ml_clear:after
+{
+	clear: both;
+	content: ".";
+	display: block;
+	height: 0px;
+	visibility: hidden;
+}
 
 .modeload_container .ml_background
 {
@@ -23,8 +36,72 @@
 	position: absolute;
 	left: 50%;
 	top: 50%;
-	background-color: white;
 	visibility: hidden;
+	overflow: hidden;
 }
+
+
+/* ----------------------- PRESENTATION -------------------------------- */
+
+/* -------- Title bar ---------------- */
+
+.modeload_container div.ml_dialog_titlebar
+{
+	position: relative;
+	cursor: move;
+}
+
+
+.modeload_container div.ml_dialog_titlebar .ml_dialog_title
+{
+	float: left;
+}
+
+.modeload_container div.ml_dialog_titlebar .ml_dialog_titlebar_close
+{
+	cursor: auto;
+}
+
+
+/* -------- Content bar ---------------- */
+
+.modeload_container div.ml_dialog_content
+{
+	overflow: hidden;
+}
+
+
+/* -------- Button bar ---------------- */
+
+
+.modeload_container div.ml_dialog_buttonbar
+{
+	position: absolute;
+	left: 0px;
+	bottom: 0px;
+	right: 0px;
+	overflow: hidden;
+}
+
+
+.modeload_container div.ml_dialog_buttonbar button
+{
+}
+
+
+/* --------- ACTIONS -------------- */
+
+
+.modeload_container .ml_action_close
+{
+}
+
+.modeload_container .ml_action_submit
+{
+}
+
+
+
+
 
 
