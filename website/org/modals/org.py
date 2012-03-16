@@ -18,9 +18,6 @@ from common.exceptions import *
 
 class NewOrganization( ModalLogic ):
 
-	def prepare( self, *args, **kwargs ):
-		pass
-
 	def get_extra( self, request, dmap, *args, **kwargs ):
 		return None
 
@@ -28,11 +25,6 @@ class NewOrganization( ModalLogic ):
 		return {}
 
 	def perform( self, request, dmap, obj, extra, fmt, *args, **kwargs ):
-
-		messages.success( request, 'We rule the world!' )
-		self.easy.make_get()
-		return
-
 		try:
 			neworg = OrgBusLog.create( request.user, dmap[ 'trading_name' ] )
 			UserBusLog.grant( request.user, neworg, UserCategory.OWNER )
@@ -42,6 +34,8 @@ class NewOrganization( ModalLogic ):
 			return
 
 		messages.success( request, _('VMG_20005') % { 'url' : neworg.get_single_url(), 'name' : neworg.trading_name } )
+
+		self.easy.notice();
 		return neworg
 
 

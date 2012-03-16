@@ -87,6 +87,8 @@ SingleObjectView (Derived from Base)
 		. update_object_<format>( self, request, obj, data, *args, **kwargs )
 
 
+TODO: Update ModalView!!!
+
 ModalView (Derived from Base)
 
 	This is reponsible for:

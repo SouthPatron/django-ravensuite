@@ -1,17 +1,11 @@
 from __future__ import unicode_literals
 
-from copy import deepcopy
-
-from django.http import HttpResponse, HttpResponseForbidden
-from django.template import loader, TemplateDoesNotExist, RequestContext
-from django.shortcuts import render_to_response, redirect
+from django.http import HttpResponseForbidden
+from django.template import RequestContext
+from django.shortcuts import render_to_response
 from base import Base
 
-from common.exceptions import BLE_DevError
-
 import inspect
-
-from common.utils.enum import enum
 
 
 class ModalLogic( object ):
@@ -103,9 +97,6 @@ class ModalView( Base ):
 		logic.prepare( request, modal_name, fmt, dmap, *args, **kwargs )
 
 		ob = logic.get_object( request, dmap, *args, **kwargs )
-		if ob is None:
-			raise BLE_DevError( 'None from logic.get_object' )
-
 		extra = logic.get_extra( request, dmap, *args, **kwargs )
 
 		if request.method == 'POST':
@@ -118,7 +109,6 @@ class ModalView( Base ):
 								logic.method or request.method.lower(),
 								fmt
 							)
-
 
 		context = RequestContext(
 							request,
