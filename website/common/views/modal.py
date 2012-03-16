@@ -11,11 +11,39 @@ from common.exceptions import BLE_DevError
 
 import inspect
 
+from common.utils.enum import enum
+
 
 class ModalLogic( object ):
 
-	def __init__( self, kwargs ):
+	class Easy( object ):
+		def __init__( self, parent ):
+			super( ModalLogic.Easy, self ).__init__()
+			self.parent = parent
+
+		def redirect( self ):
+			self.parent.template_name = 'modals/_common/redirect.{}.{}'.format( self.parent.method, self.parent.fmt )
+
+		def notice( self ):
+			self.parent.template_name = 'modals/_common/notice.{}.{}'.format( self.parent.method, self.parent.fmt )
+
+		def make_get( self ):
+			self.parent.method = 'get'
+
+		def make_post( self ):
+			self.parent.method = 'post'
+
+
+	def __init__( self, request, fmt, kwargs ):
+		super( ModalLogic, self ).__init__()
 		self.url_kwargs = kwargs
+		self.method = request.method.lower()
+		self.fmt = fmt
+		self.template_name = None
+		self.easy = ModalLogic.Easy( self )
+
+	def prepare( self, *args, **kwargs ):
+		pass
 
 	def get_extra( self, request, dmap, *args, **kwargs ):
 		return None
@@ -42,53 +70,6 @@ class ModalView( Base ):
 				),
 
 	# ************** Thunking operation
-
-	def _fetch_call( self, request, logic, modal_name, fmt, dmap, *args, **kwargs ):
-		ob = logic.get_object( request, dmap, *args, **kwargs )
-		if ob is None:
-			raise BLE_DevError( 'None from logic.get_object' )
-
-		extra = logic.get_extra( request, dmap, *args, **kwargs )
-
-		context = RequestContext(
-							request,
-							{
-								'instance' : ob,
-								'extra' : extra,
-								'kwargs' : self.url_kwargs,
-								'data' : dmap
-							}
-						)
-		return render_to_response(
-					self.get_template_name( modal_name, "fetch", fmt ), 
-					context
-				)
-
-
-	def _apply_call( self, request, logic, modal_name, fmt, dmap, *args, **kwargs ):
-		ob = logic.get_object( request, dmap, *args, **kwargs )
-		if ob is None:
-			raise BLE_DevError( 'None from logic.get_object' )
-
-		extra = logic.get_extra( request, dmap, *args, **kwargs )
-
-		ans = logic.perform( request, dmap, ob, extra, fmt, *args, **kwargs )
-		if ans is not None:
-			return ans
-
-		context = RequestContext(
-							request,
-							{
-								'instance' : ob,
-								'extra' : extra,
-								'kwargs' : self.url_kwargs,
-								'data' : dmap
-							}
-						)
-		return render_to_response(
-					self.get_template_name( modal_name, "apply", fmt ), 
-					context
-				)
 
 
 	def _load_class( self, modal_name ):
@@ -118,12 +99,38 @@ class ModalView( Base ):
 		if logic_class is None:
 			return self.not_found()
 
-		logic = logic_class( self.url_kwargs )
+		logic = logic_class( request, fmt, self.url_kwargs )
+		logic.prepare( request, modal_name, fmt, dmap, *args, **kwargs )
 
-		if dmap.get( 'meta.action', 'fetch' ) == 'apply':
-			return self._apply_call( request, logic, modal_name, fmt, dmap, *args, **kwargs )
+		ob = logic.get_object( request, dmap, *args, **kwargs )
+		if ob is None:
+			raise BLE_DevError( 'None from logic.get_object' )
 
-		return self._fetch_call( request, logic, modal_name, fmt, dmap, *args, **kwargs )
+		extra = logic.get_extra( request, dmap, *args, **kwargs )
+
+		if request.method == 'POST':
+			result = logic.perform( request, dmap, ob, extra, fmt, *args, **kwargs )
+		else:
+			result = None
+
+		template_name = logic.template_name or self.get_template_name(
+								modal_name,
+								logic.method or request.method.lower(),
+								fmt
+							)
+
+
+		context = RequestContext(
+							request,
+							{
+								'instance' : ob,
+								'extra' : extra,
+								'kwargs' : self.url_kwargs,
+								'data' : dmap,
+								'result' : result
+							}
+						)
+		return render_to_response( template_name, context )
 
 
 	# ************** HTTP Operations

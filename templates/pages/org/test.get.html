@@ -3,12 +3,10 @@
 	<title>Test me Out!</title>
 
 {% load rely %}
-{% rely modeload %}
+{% rely modeload sitekit %}
 
 <script type="text/javascript">
 $(document).ready( function() {
-
-	modeload.html.setStaticPostData( { 'csrfmiddlewaretoken' : '{{ csrf_token }}', 'oid' : 1 } );
 
 	$("#id_button").click( function() {
 		modeload.html.load( '/org/modals/org.new.organization' );

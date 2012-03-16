@@ -1,0 +1,28 @@
+
+<div style="width: 200px; min-height: 200px;">
+
+	<div class="ml_dialog_titlebar ml_clear">
+		<span class="ml_dialog_title">Notice</span>
+		<a class="ml_dialog_titlebar_close ml_action_close">
+			<span>close</span>
+		</a>
+	</div>
+
+	<div class="ml_dialog_content ml_clear">
+
+		{% if messages %}
+		<div id="message-block">
+			{% for message in messages %}
+			<div class="message-notice {{ message.tags }}"><span>{{ message|safe }}</span></div>
+			{% endfor %}
+		</div> <!-- #message-block -->
+		{% endif %}
+
+	</div>
+
+	<div class="ml_dialog_buttonbar ml_clear">
+		<button type="button" class="ml_action_close">Okay</button>
+	</div>
+
+</div>
+

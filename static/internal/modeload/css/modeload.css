@@ -34,8 +34,6 @@
 .modeload_container .ml_box
 {
 	position: absolute;
-	left: 50%;
-	top: 50%;
 	visibility: hidden;
 	overflow: hidden;
 }

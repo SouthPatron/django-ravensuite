@@ -52,20 +52,12 @@ if (typeof Crypto.MD5 == 'undefined') {
 /* ------------------------------------------------------- */
 
 modeload = {}
-
 modeload.version = '1.0.0';
 
-
 modeload.html = {}
-modeload.html.static_post_data = {};
-
-modeload.html.setStaticPostData = function( mydict ) {
-	modeload.html.static_post_data = jQuery.extend( true, {}, mydict );
-}
 
 modeload.html.fetchObject = function( url, pdata, success ) {
-	var newpdata = jQuery.extend( true, {}, modeload.html.static_post_data, pdata );
-	jQuery.post( url, newpdata, function(data, textStatus, x) {
+	jQuery.get( url, pdata, function(data, textStatus, x) {
 		success( data );
 	});
 }
@@ -111,7 +103,12 @@ modeload.html.updateContainer = function( url, newhtml ) {
 	var mleft = "-" + (mybox.outerWidth()/2) + "px";
 	var mtop = "-" + (mybox.outerHeight()/2) + "px";
 
-	mybox.css( 'margin-left' , mleft ).css( 'margin-top', mtop ).css( 'top', '50%' ).css( 'left', '50%' );
+	mybox.css( 'margin-left' , mleft ).css( 'margin-top', mtop );
+
+	var wleft = "" + ($(window).width() / 2) + "px";
+	var wtop = "" + ($(window).height() / 2) + "px";
+	
+	mybox.css( 'top', wtop ).css( 'left', wleft );
 }
 
 modeload.html.resizeContainerContent = function( url ) {
@@ -160,6 +157,8 @@ modeload.html.hookContainer = function( url ) {
 
 	mybox.find( "form" ).submit( function( ev ) {
 		ev.preventDefault();
+
+		mybox.find( ".ml_dialog_buttonbar button" ).attr("disabled", "true");
 
 		var newdata = $(this).serializeArray();
 
