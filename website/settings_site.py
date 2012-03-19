@@ -14,9 +14,9 @@ WEBSITE_BASE = os.path.dirname( os.path.dirname( __file__ ) )
 
 DATABASES = {
 	'default': {
-		'ENGINE': 'django.db.backends.sqlite3',
-		'NAME': WEBSITE_BASE + '/db/southpatron.db',
-			'USER': '',
+		'ENGINE': 'django.db.backends.postgresql_psycopg2',
+		'NAME': 'southpatron',
+		'USER': 'postgres',
 		'PASSWORD': '',
 		'HOST': '',
 		'PORT': '',
