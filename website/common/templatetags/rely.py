@@ -116,6 +116,7 @@ rely_graph = {
 	'ral' : {
 			'js' : [
 				pi( 'ral/ral.js' ),
+				pc( 'ral/ral.js' ),
 			],
 			'css' : [
 				pi( 'ral/css/ral.css' ),

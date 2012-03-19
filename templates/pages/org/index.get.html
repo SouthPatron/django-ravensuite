@@ -1,50 +1,10 @@
 {% extends 'layouts/member-base-full.html' %}
 
-{% block tpl_ps_rely %}jquery.ui datatables sitekit{% endblock %}
+{% block tpl_ps_rely %}datatables ral sitekit{% endblock %}
 
 {% block tpl_si_section %}Choose an Organization{% endblock %}
 
 {% block tpl_bl_head_onready %}
-
-	$(function() {
-		
-		var trading_name = $( "#id_trading_name" ),
-			allFields = $( [] ).add( trading_name ),
-			tips = $( ".validateTips" );
-
-
-		$( "#dialog-form" ).dialog({
-			autoOpen: false,
-			height: 400,
-			width: 550,
-			modal: true,
-			buttons: {
-				"Create new Organization": function() {
-					var bValid = true;
-					allFields.removeClass( "ui-state-error" );
-
-					bValid = bValid && validation.length( tips, trading_name, "Trading Name", 3, 192 );
-
-					if ( bValid ) {
-						$( "#create-new-form" ).submit();
-					}
-				},
-				Cancel: function() {
-					$( this ).dialog( "close" );
-				}
-			},
-			close: function() {
-				allFields.val( "" ).removeClass( "ui-state-error" );
-			}
-		});
-
-		$( "#org-create-new-org" )
-			.click(function() {
-				$( "#dialog-form" ).dialog( "open" );
-			});
-	});
-
-
 	$('#company_list_table').dataTable( {
 		"iDisplayLength" : 25,
 		"bFilter" : false,
@@ -57,26 +17,13 @@
 		],
 		"sDom" : 't<"bottom"ip><"clear">'
 	});
-
-
 {% endblock %}
 
 
 {% block tpl_bl_body_content_right %}
 <ul>
-	<li><a href="#" id="org-create-new-org">Add a new Organization</a></li>
+	<li><a href="#" class="raltag_modal_org_new_organization">Add a new Organization</a></li>
 </ul>
-
-<div id="dialog-form" title="Create new organization">
-	<p class="validateTips">All form fields are required</p>
-	<form id="create-new-form" method="POST" action="">
-		{% csrf_token %}
-		<fieldset>
-			<label for="trading_name">Trading Name</label>
-			<input type="text" name="trading_name" id="id_trading_name" class="text ui-widget-content ui-corner-all" />
-		</fieldset>
-	</form>
-</div>
 {% endblock %}
 
 

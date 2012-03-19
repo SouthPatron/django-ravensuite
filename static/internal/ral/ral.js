@@ -14,6 +14,7 @@
  * Requires:
  * 
  * 		. jQuery
+ * 		. jQuery UI
  * 		. Crypto-JS.MD5
  */
 
