@@ -4,4 +4,3 @@ autom4te.cache
 /media
 *.resp
 /website/settings_local.py
-/db
