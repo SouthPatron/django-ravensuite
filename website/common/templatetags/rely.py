@@ -113,13 +113,13 @@ rely_graph = {
 		},
 
 
-	'modeload' : {
+	'ral' : {
 			'js' : [
-				pi( 'modeload/modeload.js' ),
+				pi( 'ral/ral.js' ),
 			],
 			'css' : [
-				pi( 'modeload/css/modeload.css' ),
-				pc( 'modeload/css/modeload.css' ),
+				pi( 'ral/css/ral.css' ),
+				pc( 'ral/css/ral.css' ),
 			],
 			'deps' : [ 'jquery', 'jquery.ui', 'crypto.md5' ]
 		},

@@ -1,14 +1,14 @@
 
 
-.modeload_container {
+.ral_container {
 }
 
-.modeload_container .ml_clear
+.ral_container .ral_clear
 {
 	display: block;
 }
 
-.modeload_container .ml_clear:after
+.ral_container .ral_clear:after
 {
 	clear: both;
 	content: ".";
@@ -17,7 +17,7 @@
 	visibility: hidden;
 }
 
-.modeload_container .ml_background
+.ral_container .ral_background
 {
 	position: absolute;
 	left: 0px;
@@ -31,7 +31,7 @@
 	background-color: #EEE;
 }
 
-.modeload_container .ml_box
+.ral_container .ral_box
 {
 	position: absolute;
 	visibility: hidden;
@@ -43,19 +43,19 @@
 
 /* -------- Title bar ---------------- */
 
-.modeload_container div.ml_dialog_titlebar
+.ral_container div.ral_dialog_titlebar
 {
 	position: relative;
 	cursor: move;
 }
 
 
-.modeload_container div.ml_dialog_titlebar .ml_dialog_title
+.ral_container div.ral_dialog_titlebar .ral_dialog_title
 {
 	float: left;
 }
 
-.modeload_container div.ml_dialog_titlebar .ml_dialog_titlebar_close
+.ral_container div.ral_dialog_titlebar .ral_dialog_titlebar_close
 {
 	cursor: auto;
 }
@@ -63,7 +63,7 @@
 
 /* -------- Content bar ---------------- */
 
-.modeload_container div.ml_dialog_content
+.ral_container div.ral_dialog_content
 {
 	overflow: hidden;
 }
@@ -72,7 +72,7 @@
 /* -------- Button bar ---------------- */
 
 
-.modeload_container div.ml_dialog_buttonbar
+.ral_container div.ral_dialog_buttonbar
 {
 	position: absolute;
 	left: 0px;
@@ -82,7 +82,7 @@
 }
 
 
-.modeload_container div.ml_dialog_buttonbar button
+.ral_container div.ral_dialog_buttonbar button
 {
 }
 
@@ -90,11 +90,11 @@
 /* --------- ACTIONS -------------- */
 
 
-.modeload_container .ml_action_close
+.ral_container .ral_action_close
 {
 }
 
-.modeload_container .ml_action_submit
+.ral_container .ral_action_submit
 {
 }
 

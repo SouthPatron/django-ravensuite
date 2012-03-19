@@ -2,7 +2,7 @@
 /* PRESENTATION */
 
 
-.modeload_container .ml_box
+.ral_container .ral_box
 {
 	-moz-box-shadow: 0px 0px 10px #000000;
 	-webkit-box-shadow: 0px 0px 10px #000000;
@@ -12,7 +12,7 @@
 
 /* -------- Title bar ---------------- */
 
-.modeload_container div.ml_dialog_titlebar
+.ral_container div.ral_dialog_titlebar
 {
 	padding: 5px;
 	background-color: #202020;
@@ -20,13 +20,13 @@
 }
 
 
-.modeload_container div.ml_dialog_titlebar .ml_dialog_title
+.ral_container div.ral_dialog_titlebar .ral_dialog_title
 {
 	font-size: 1.3em;
 	color: white;
 }
 
-.modeload_container div.ml_dialog_titlebar .ml_dialog_titlebar_close
+.ral_container div.ral_dialog_titlebar .ral_dialog_titlebar_close
 {
 	position: absolute;
 	right: 0.3em;
@@ -37,7 +37,7 @@
 	height: 18px;
 }
 
-.modeload_container div.ml_dialog_titlebar .ml_dialog_titlebar_close span
+.ral_container div.ral_dialog_titlebar .ral_dialog_titlebar_close span
 {
 	display: block;
 	margin: 1px;
@@ -53,7 +53,7 @@
 /* -------- Button bar ---------------- */
 
 
-.modeload_container div.ml_dialog_buttonbar
+.ral_container div.ral_dialog_buttonbar
 {
 	background-color: #202020;
 	margin: 2px;

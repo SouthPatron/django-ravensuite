@@ -1,19 +1,19 @@
 
 <div style="width: 400px; height: 300px;">
 
-	<div class="ml_dialog_titlebar ml_clear">
-		<span class="ml_dialog_title">Create new Organization</span>
-		<a class="ml_dialog_titlebar_close ml_action_close">
+	<div class="ral_dialog_titlebar ral_clear">
+		<span class="ral_dialog_title">Create new Organization</span>
+		<a class="ral_dialog_titlebar_close ral_action_close">
 			<span>close</span>
 		</a>
 	</div>
 
-	<div class="ml_dialog_content ml_clear">
+	<div class="ral_dialog_content ral_clear">
 		<h1>Successfully applied!</h1>
 	</div>
 
-	<div class="ml_dialog_buttonbar ml_clear">
-		<button type="button" class="ml_action_close">Cancel</button>
+	<div class="ral_dialog_buttonbar ral_clear">
+		<button type="button" class="ral_action_close">Cancel</button>
 		<button type="button" id="id_submit_button">Create new Organization</button>
 	</div>
 
@@ -23,10 +23,10 @@
 
 var modal_name = "{{ request.META.PATH_INFO }}";
 
-var mycont = modeload.html.getContainer( modal_name );
+var mycont = ral.html.getContainer( modal_name );
 
 $( mycont ).fadeOut( 1500, function() {
-	modeload.html.destroyContainer( modal_name );
+	ral.html.destroyContainer( modal_name );
 });
 
 //@ sourceURL=modalScript.js
