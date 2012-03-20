@@ -1,16 +1,42 @@
 from __future__ import unicode_literals
 
-from django.shortcuts import get_object_or_404
-from common.views.component import ComponentView
+from django.utils.translation import ugettext as _
+
+from django.shortcuts import redirect
+from django.contrib import messages
+
+from common.views.modal import ModalLogic
 from common.models import *
 
+from common.buslog.org import ProjectBusLog
+from common.exceptions import *
 
-class ClientComponents( ComponentView ):
 
-	def get_object( self, request, *args, **kwargs ):
-		return get_object_or_404(
-					Client,
-					refnum = self.url_kwargs.cid,
-					organization__refnum = self.url_kwargs.oid,
-				)
+class ClientNewProject( ModalLogic ):
+
+	def get_extra( self, request, dmap, *args, **kwargs ):
+		return None
+
+	def get_object( self, request, dmap, *args, **kwargs ):
+		return None
+
+	def perform( self, request, dmap, obj, extra, fmt, *args, **kwargs ):
+		try:
+			client = Client.objects.get( refnum = dmap[ 'cid' ], organization__refnum = dmap[ 'oid' ] )
+
+			newo = ProjectBusLog.create(
+						client,
+						dmap[ 'status' ],
+						dmap[ 'name' ],
+						dmap[ 'description'],
+					)
+		except BLE_Error, berror:
+			messages.error( request, berror.message )
+			self.easy.notice();
+			return
+
+		self.easy.redirect();
+		return newo.get_single_url();
+
+
 

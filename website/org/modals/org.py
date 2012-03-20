@@ -23,7 +23,7 @@ class NewOrganization( ModalLogic ):
 		return None
 
 	def get_object( self, request, dmap, *args, **kwargs ):
-		return {}
+		return None
 
 	def perform( self, request, dmap, obj, extra, fmt, *args, **kwargs ):
 		try:
@@ -46,11 +46,14 @@ class NewClient( ModalLogic ):
 		return None
 
 	def get_object( self, request, dmap, *args, **kwargs ):
-		return Organization.objects.get( refnum = dmap[ 'oid' ] )
+		return None
 
 	def perform( self, request, dmap, obj, extra, fmt, *args, **kwargs ):
+
+		org = Organization.objects.get( refnum = dmap[ 'oid' ] )
+
 		try:
-			newo = ClientBusLog.create( obj, dmap[ 'trading_name' ] )
+			newo = ClientBusLog.create( org, dmap[ 'trading_name' ] )
 		except BLE_Error, berror:
 			messages.error( request, berror.message )
 			self.easy.make_get()

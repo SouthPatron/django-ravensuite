@@ -1,6 +1,6 @@
 {% extends 'layouts/member-base-full.html' %}
 
-{% block tpl_ps_rely %}sitekit{% endblock %}
+{% block tpl_ps_rely %}ral sitekit{% endblock %}
 
 {% load decshift %}
 
@@ -20,75 +20,29 @@
 
 {% block tpl_bl_head_onready %}
 
-	$( "#invoice-create" ).click(function() {
+	var cdata = {
+		csrfmiddlewaretoken : '{{ csrf_token }}',
+		oid: {{ kwargs.oid }},
+		cid: {{ kwargs.cid }}
+	};
 
-		invoice_list_url = OOD.URL.Invoices( 
-							{{ instance.get_org.refnum }}, 
-							{{ instance.get_client.refnum }}
-						)
-						+ '?format=json';
-
-		$.post( invoice_list_url, function( data ) {
-				window.location.href = data[ 'url' ];
-			}
-		);
-	});
-
-	$( "#payment-create" ).click(function() {
-
-		payment_list_url = OOD.URL.Payments( 
-							{{ instance.get_org.refnum }}, 
-							{{ instance.get_client.refnum }}
-						)
-						+ '?format=json';
-
-		$.post( payment_list_url, function( data ) {
-				window.location.href = data[ 'url' ];
-			}
-		);
-	});
-
-	$( "#credit-note-create" ).click(function() {
-
-		credit_note_list_url = OOD.URL.CreditNotes( 
-							{{ instance.get_org.refnum }}, 
-							{{ instance.get_client.refnum }}
-						)
-						+ '?format=json';
-
-		$.post( credit_note_list_url, function( data ) {
-				window.location.href = data[ 'url' ];
-			}
-		);
-	});
-
-	$( "#refund-create" ).click(function() {
-
-		refund_list_url = OOD.URL.Refunds( 
-							{{ instance.get_org.refnum }}, 
-							{{ instance.get_client.refnum }}
-						)
-						+ '?format=json';
-
-		$.post( refund_list_url, function( data ) {
-				window.location.href = data[ 'url' ];
-			}
-		);
-	});
-
-
-
-
+	ral.html.custom.attach_post( '#id_ral_modal_org_account_new_invoice', 'org.account.new.invoice', cdata );
+	ral.html.custom.attach_post( '#id_ral_modal_org_account_new_payment', 'org.account.new.payment', cdata );
+	ral.html.custom.attach_post( '#id_ral_modal_org_account_new_creditnote', 'org.account.new.creditnote', cdata );
+	ral.html.custom.attach_post( '#id_ral_modal_org_account_new_refund', 'org.account.new.refund', cdata );
 {% endblock %}
 
 {% block tpl_bl_body_content_right %}
 
+<div class="widget">
+<h3>Clients</h3>
 <ul>
-	<li><a href="#" id="invoice-create">New Invoice</a></li>
-	<li><a href="#" id="payment-create">Receive Payment</a></li>
-	<li><a href="#" id="credit-note-create">Create a Credit Note</a></li>
-	<li><a href="#" id="refund-create">Create a Refund</a></li>
+	<li><a id="id_ral_modal_org_account_new_invoice">New Invoice</a></li>
+	<li><a id="id_ral_modal_org_account_new_payment">Receive Payment</a></li>
+	<li><a id="id_ral_modal_org_account_new_creditnote">Create a Credit Note</a></li>
+	<li><a id="id_ral_modal_org_account_new_refund">Create a Refund</a></li>
 </ul>
+</div>
 
 {% endblock %}
 

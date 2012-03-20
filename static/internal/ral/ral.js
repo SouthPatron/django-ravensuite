@@ -180,7 +180,6 @@ ral.html.hookContainer = function( url ) {
 	mybox.find( ".ral_action_submit" ).click( function() {
 		mybox.find( "form" ).submit();
 	});
-
 }
 
 
@@ -199,7 +198,7 @@ ral.html.keyUpHook = function( e ) {
 	} 
 }
 
-ral.html.load = function( url, pdata ) {
+ral.html.fetch = function( url, pdata ) {
 
 	if ( ! pdata ) var pdata = {};
 
@@ -211,7 +210,24 @@ ral.html.load = function( url, pdata ) {
 
 		$(document).keyup( { 'url' : url }, ral.html.keyUpHook );
 	});
+}
 
+ral.html.post = function( url, pdata ) {
+
+	if ( ! pdata ) var pdata = {};
+
+	var newdiv = ral.html.createContainer( url );
+
+	ral.html.applyContainer( url, pdata, function( url ) {
+		ral.html.showContainer( url );
+		ral.html.hookContainer( url );
+
+		$(document).keyup( { 'url' : url }, ral.html.keyUpHook );
+	});
+}
+
+ral.html.load = function( url, pdata ) {
+	ral.html.fetch( url, pdata );
 }
 
 
