@@ -19,5 +19,11 @@ urlpatterns = patterns('',
 			RedirectView.as_view( url='/static/local/images/favicon.ico' )
 		),
 
+	url(r'^restart$',
+			'common.views.helps.restart'
+		),
+
+
+
 )
 
