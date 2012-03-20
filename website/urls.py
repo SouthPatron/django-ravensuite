@@ -14,5 +14,10 @@ urlpatterns = patterns('',
 	url(r'^home/', include('home.urls')),
 
 	url(r'^admin/', include('admin.urls')),
+
+	url(r'^favicon\.ico$',
+			RedirectView.as_view( url='/static/local/images/favicon.ico' )
+		),
+
 )
 
