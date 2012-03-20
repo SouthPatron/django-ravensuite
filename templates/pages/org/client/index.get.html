@@ -1,6 +1,6 @@
 {% extends 'layouts/member-base-full.html' %}
 
-{% block tpl_ps_rely %}datatables sitekit{% endblock %}
+{% block tpl_ps_rely %}ral datatables sitekit{% endblock %}
 
 {% block tpl_si_org %}{{ extra.trading_name }}{% endblock %}
 {% block tpl_si_section %}Clients{% endblock %}
@@ -25,21 +25,21 @@
 		"sDom" : 't<"bottom"ip><"clear">'
 	});
 
-	$( '#org-add-new-client' ).smkTools(
-			'click_modal',
-			OOD.URL.Component(
-				OOD.URL.Clients( {{ kwargs.oid }} ),
-				'add_new_client'
-			)
-		);
+	ral.html.custom.attach( '#id_ral_modal_org_new_client', 'org.new.client',
+				{ oid: {{ kwargs.oid }} } );
 
 {% endblock %}
 
 
 {% block tpl_bl_body_content_right %}
+
+<div class="widget">
+<h3>Clients</h3>
 <ul>
-	<li><a href="#" id="org-add-new-client">Add a new Client</a></li>
+	<li><a id="id_ral_modal_org_new_client">Add a new Client</a></li>
 </ul>
+</div>
+
 {% endblock %}
 
 

@@ -1,0 +1,54 @@
+<div style="width: 400px; height: 300px;">
+
+	<div class="ral_dialog_titlebar ral_clear">
+		<span class="ral_dialog_title">Add a new Client</span>
+		<a class="ral_dialog_titlebar_close ral_action_close">
+			<span>close</span>
+		</a>
+	</div>
+
+
+	<div class="ral_dialog_content ral_clear">
+		<p class="validateTips">All form fields are required</p>
+
+		<form id="create-new-form" method="POST" action="{{ request.META.PATH_INFO }}">
+			{% csrf_token %}
+			<label for="trading_name">Trading Name</label>
+			<input type="text" id="id_trading_name" name="trading_name" />
+			<input type="hidden" name="oid" value="{{ data.oid }}" />
+			<input type="hidden" name="meta.action" value="apply" />
+		</form>
+
+	</div>
+
+	<div class="ral_dialog_buttonbar ral_clear">
+		<button type="button" class="ral_action_close">Cancel</button>
+		<button type="button" id="id_submit_button">Add a new Client</button>
+	</div>
+</div>
+
+<script type="text/javascript">
+
+$(function() {
+		
+	var trading_name = $( "#id_trading_name" ),
+		allFields = $( [] ).add( trading_name ),
+		tips = $( ".validateTips" );
+
+
+	$( "#id_submit_button" ).click(function(e) {
+			var bValid = true;
+			allFields.removeClass( "ui-state-error" );
+
+			bValid = bValid && validation.length( tips, trading_name, "Trading Name", 3, 192 );
+
+			if ( bValid ) {
+				$( "#create-new-form" ).submit();
+			}
+	});
+});
+
+//@ sourceURL=modalScript.js
+
+</script>
+

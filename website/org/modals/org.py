@@ -11,6 +11,7 @@ from django.core.urlresolvers import reverse
 from common.views.modal import ModalLogic
 from common.models import *
 
+from common.buslog.org.client import *
 from common.buslog.org.org import *
 from common.buslog.org.user import *
 from common.exceptions import *
@@ -37,5 +38,27 @@ class NewOrganization( ModalLogic ):
 
 		self.easy.notice();
 		return neworg
+
+
+class NewClient( ModalLogic ):
+
+	def get_extra( self, request, dmap, *args, **kwargs ):
+		return None
+
+	def get_object( self, request, dmap, *args, **kwargs ):
+		return Organization.objects.get( refnum = dmap[ 'oid' ] )
+
+	def perform( self, request, dmap, obj, extra, fmt, *args, **kwargs ):
+		try:
+			newo = ClientBusLog.create( obj, dmap[ 'trading_name' ] )
+		except BLE_Error, berror:
+			messages.error( request, berror.message )
+			self.easy.make_get()
+			return
+
+		messages.success( request, _('VMG_20002') % { 'url' : newo.get_single_url(), 'name' : newo.trading_name } )
+
+		self.easy.notice();
+		return newo
 
 
