@@ -24,7 +24,7 @@ from common.models import *
 class RefundList( ListView ):
 	template_name = 'pages/org/client/account/refund/index'
 
-	def get_extra( self, request, obj_list, fmt, *args, **kwargs ):
+	def get_object( self, request, obj_list, fmt, *args, **kwargs ):
 		return Client.objects.get( refnum = self.url_kwargs.cid, organization__refnum = self.url_kwargs.oid )
 
 	def get_object_list( self, request, *args, **kwargs ):
@@ -65,7 +65,7 @@ class RefundList( ListView ):
 class RefundDraftList( ListView ):
 	template_name = 'pages/org/client/account/refund/draft-index'
 
-	def get_extra( self, request, obj_list, fmt, *args, **kwargs ):
+	def get_object( self, request, obj_list, fmt, *args, **kwargs ):
 		return Client.objects.get( refnum = self.url_kwargs.cid, organization__refnum = self.url_kwargs.oid )
 
 	def get_object_list( self, request, *args, **kwargs ):
@@ -76,7 +76,7 @@ class RefundDraftList( ListView ):
 class RefundUnallocatedList( RefundList ):
 	template_name = 'pages/org/client/account/refund/unallocated-index'
 
-	def get_extra( self, request, obj_list, fmt, *args, **kwargs ):
+	def get_object( self, request, obj_list, fmt, *args, **kwargs ):
 		return Client.objects.get( refnum = self.url_kwargs.cid, organization__refnum = self.url_kwargs.oid )
 
 	def get_object_list( self, request, *args, **kwargs ):

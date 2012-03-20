@@ -24,7 +24,7 @@ from common.models import *
 class PaymentList( ListView ):
 	template_name = 'pages/org/client/account/payment/index'
 
-	def get_extra( self, request, obj_list, fmt, *args, **kwargs ):
+	def get_object( self, request, obj_list, fmt, *args, **kwargs ):
 		return Client.objects.get( refnum = self.url_kwargs.cid, organization__refnum = self.url_kwargs.oid )
 
 	def get_object_list( self, request, *args, **kwargs ):
@@ -65,7 +65,7 @@ class PaymentList( ListView ):
 class PaymentDraftList( ListView ):
 	template_name = 'pages/org/client/account/payment/draft-index'
 
-	def get_extra( self, request, obj_list, fmt, *args, **kwargs ):
+	def get_object( self, request, obj_list, fmt, *args, **kwargs ):
 		return Client.objects.get( refnum = self.url_kwargs.cid, organization__refnum = self.url_kwargs.oid )
 
 	def get_object_list( self, request, *args, **kwargs ):
@@ -76,7 +76,7 @@ class PaymentDraftList( ListView ):
 class PaymentUnallocatedList( PaymentList ):
 	template_name = 'pages/org/client/account/payment/unallocated-index'
 
-	def get_extra( self, request, obj_list, fmt, *args, **kwargs ):
+	def get_object( self, request, obj_list, fmt, *args, **kwargs ):
 		return Client.objects.get( refnum = self.url_kwargs.cid, organization__refnum = self.url_kwargs.oid )
 
 	def get_object_list( self, request, *args, **kwargs ):

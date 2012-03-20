@@ -17,7 +17,7 @@ from ..forms import activity as forms
 class ActivityList( ListView ):
 	template_name = 'pages/org/activity/index'
 
-	def get_extra( self, request, obj_list, fmt, *args, **kwargs ):
+	def get_object( self, request, obj_list, fmt, *args, **kwargs ):
 		return Organization.objects.get( refnum = self.url_kwargs.oid )
 
 	def get_object_list( self, request, *args, **kwargs ):

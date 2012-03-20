@@ -22,7 +22,7 @@ from common.models import *
 class CreditNoteList( ListView ):
 	template_name = 'pages/org/client/account/credit_note/index'
 
-	def get_extra( self, request, obj_list, fmt, *args, **kwargs ):
+	def get_object( self, request, obj_list, fmt, *args, **kwargs ):
 		return Client.objects.get( refnum = self.url_kwargs.cid, organization__refnum = self.url_kwargs.oid )
 
 	def get_object_list( self, request, *args, **kwargs ):
@@ -65,7 +65,7 @@ class CreditNoteList( ListView ):
 class CreditNoteDraftList( ListView ):
 	template_name = 'pages/org/client/account/credit_note/draft-index'
 
-	def get_extra( self, request, obj_list, fmt, *args, **kwargs ):
+	def get_object( self, request, obj_list, fmt, *args, **kwargs ):
 		return Client.objects.get( refnum = self.url_kwargs.cid, organization__refnum = self.url_kwargs.oid )
 
 	def get_object_list( self, request, *args, **kwargs ):
@@ -76,7 +76,7 @@ class CreditNoteDraftList( ListView ):
 class CreditNoteUnallocatedList( ListView ):
 	template_name = 'pages/org/client/account/credit_note/unallocated-index'
 
-	def get_extra( self, request, obj_list, fmt, *args, **kwargs ):
+	def get_object( self, request, obj_list, fmt, *args, **kwargs ):
 		return Client.objects.get( refnum = self.url_kwargs.cid, organization__refnum = self.url_kwargs.oid )
 
 	def get_object_list( self, request, *args, **kwargs ):

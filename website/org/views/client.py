@@ -17,7 +17,7 @@ from ..forms import client as forms
 class ClientList( ListView ):
 	template_name = 'pages/org/client/index'
 
-	def get_extra( self, request, obj_list, fmt, *args, **kwargs ):
+	def get_object( self, request, obj_list, fmt, *args, **kwargs ):
 		return Organization.objects.get( refnum = self.url_kwargs.oid )
 
 	def get_object_list( self, request, *args, **kwargs ):

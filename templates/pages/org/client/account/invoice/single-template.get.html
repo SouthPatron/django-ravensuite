@@ -1,22 +1,10 @@
-{% extends 'layouts/member-base-full.html' %}
+{% extends 'pages/org/client/account/invoice/base.html' %}
 
 {% block tpl_ps_rely %}sitekit date afes-table jquery.tools{% endblock %}
 
 {% load decshift %}
 
-{% block tpl_si_org %}{{ instance.get_org.trading_name }}{% endblock %}
-{% block tpl_si_client %}{{ instance.get_client.trading_name }}{% endblock %}
 {% block tpl_si_section %}Invoice {{ instance.refnum }}{% endblock %}
-
-{% block tpl_bl_body_functions_page %}
-{% include 'menus/org/client_top.html' with instance=instance %}
-{% endblock  %}
-
-{% block tpl_bl_body_functions_sub %}
-{% include 'menus/org/account_sub.html' with instance=instance %}
-{% include 'menus/org/account_transactions_sub.html' with instance=instance %}
-{% include 'menus/org/invoice_filter.html' with instance=instance.get_client.get_account %}
-{% endblock %}
 
 
 {% block tpl_bl_head_inner %}

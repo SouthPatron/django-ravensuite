@@ -3,5 +3,25 @@
 	<div id="subgroup-panel-inner">
 		<div id="subgroup-panel-orgname-title"><a href="{% url org-single kwargs.oid %}">{{ tpl_si_org }}</a></div>
 	</div>
+
+{% if messages %}
+<div id="message-block">
+{% for message in messages %}
+	<div class="message-notice {{ message.tags }}"><span>{{ message|safe }}</span></div>
+{% endfor %}
+</div> <!-- #message-block -->
+{% endif %}
+
+
+
+{% if page_functions_content %}
+	<div id="page-functions-div">
+		<div id="page-functions-proper">
+			{{ page_functions_content }}
+		</div> <!-- page-functions-proper -->
+	</div> <!-- page-functions-div -->
+{% endif %}
+
+
 </div>
 {% endif %}

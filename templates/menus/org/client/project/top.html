@@ -1,0 +1,8 @@
+{% load active %}
+
+<div>
+<ul>
+	<li class="label-item {% active request '\/project\/\d+$' %}"><a href="{{ instance.get_project.get_single_url }}">{{ instance.get_project.name }}</a></li>
+</ul>
+</div>
+

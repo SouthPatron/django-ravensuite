@@ -23,7 +23,7 @@ from common.models import *
 class InvoiceList( ListView ):
 	template_name = 'pages/org/client/account/invoice/index'
 
-	def get_extra( self, request, obj_list, fmt, *args, **kwargs ):
+	def get_object( self, request, obj_list, fmt, *args, **kwargs ):
 		return Client.objects.get( refnum = self.url_kwargs.cid, organization__refnum = self.url_kwargs.oid )
 
 	def get_object_list( self, request, *args, **kwargs ):
@@ -66,7 +66,7 @@ class InvoiceList( ListView ):
 class InvoiceDraftList( ListView ):
 	template_name = 'pages/org/client/account/invoice/draft-index'
 
-	def get_extra( self, request, obj_list, fmt, *args, **kwargs ):
+	def get_object( self, request, obj_list, fmt, *args, **kwargs ):
 		return Client.objects.get( refnum = self.url_kwargs.cid, organization__refnum = self.url_kwargs.oid )
 
 	def get_object_list( self, request, *args, **kwargs ):
@@ -77,7 +77,7 @@ class InvoiceDraftList( ListView ):
 class InvoiceUnpaidList( ListView ):
 	template_name = 'pages/org/client/account/invoice/unpaid-index'
 
-	def get_extra( self, request, obj_list, fmt, *args, **kwargs ):
+	def get_object( self, request, obj_list, fmt, *args, **kwargs ):
 		return Client.objects.get( refnum = self.url_kwargs.cid, organization__refnum = self.url_kwargs.oid )
 
 	def get_object_list( self, request, *args, **kwargs ):

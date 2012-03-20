@@ -123,6 +123,9 @@ class Organization( models.Model ):
 
 	def get_user_list_url( self ):
 		return reverse( 'org-user-list', kwargs = { 'oid' : self.refnum } )
+
+	def get_org( self ):
+		return self
 		
 
 class OrganizationAccount( models.Model ):
@@ -164,6 +167,9 @@ class Client( models.Model ):
 
 	def get_org( self ):
 		return self.organization
+	
+	def get_client( self ):
+		return self
 
 	def get_single_url( self ):
 		return reverse( 'org-client-single', kwargs = { 'oid' : self.organization.refnum, 'cid' : self.refnum } )
@@ -343,6 +349,9 @@ class Account( models.Model ):
 	def get_client( self ):
 		return self.client
 
+	def get_account( self ):
+		return self
+
 	def get_single_url( self ):
 		return reverse( 'org-client-account-single', kwargs = { 'oid' : self.client.organization.refnum, 'cid' : self.client.refnum } )
 	
@@ -433,6 +442,9 @@ class Project( models.Model ):
 
 	def get_client( self ):
 		return self.client
+
+	def get_project( self ):
+		return self
 
 	def get_single_url( self ):
 		return reverse( 'org-client-project-single', kwargs = { 'oid' : self.get_org().refnum, 'cid' : self.get_client().refnum, 'pid' : self.refnum } )

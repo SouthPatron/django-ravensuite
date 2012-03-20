@@ -1,22 +1,10 @@
-{% extends 'layouts/member-base-full.html' %}
+{% extends 'pages/org/client/account/transaction/base.html' %}
 
 {% block tpl_ps_rely %}datatables{% endblock %}
 
 {% load decshift %}
 
-{% block tpl_si_org %}{{ extra.get_org.trading_name }}{% endblock %}
-{% block tpl_si_client %}{{ extra.get_client.trading_name }}{% endblock %}
 {% block tpl_si_section %}Account{% endblock %}
-
-
-{% block tpl_bl_body_functions_page %}
-{% include 'menus/org/client_top.html' with instance=extra.get_client %}
-{% endblock %}
-
-{% block tpl_bl_body_functions_sub %}
-{% include 'menus/org/account_sub.html' with instance=extra %}
-{% include 'menus/org/account_transactions_sub.html' with instance=extra %}
-{% endblock %}
 
 
 {% block tpl_bl_head_onready %}

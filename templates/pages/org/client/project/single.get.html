@@ -1,17 +1,6 @@
-{% extends 'layouts/member-base-full.html' %}
+{% extends 'pages/org/client/project/base.html' %}
 
-{% block tpl_si_org %}{{ instance.get_org.trading_name }}{% endblock %}
-{% block tpl_si_client %}{{ instance.get_client.trading_name }}{% endblock %}
 {% block tpl_si_section %}Dashboard{% endblock %}
-
-
-{% block tpl_bl_body_functions_page %}
-
-<ul>
-	<li class=""><a href="{{ instance.get_single_url }}">Dashboard</a></li>
-</ul>
-
-{% endblock  %}
 
 
 {% block tpl_bl_body_content_center %}

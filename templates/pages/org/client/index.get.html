@@ -1,14 +1,8 @@
-{% extends 'layouts/member-base-full.html' %}
+{% extends 'pages/org/base.html' %}
 
 {% block tpl_ps_rely %}ral datatables sitekit{% endblock %}
 
-{% block tpl_si_org %}{{ extra.trading_name }}{% endblock %}
 {% block tpl_si_section %}Clients{% endblock %}
-
-
-{% block tpl_bl_body_functions_page %}
-{% include 'menus/org/org_top.html' with instance=extra %}
-{% endblock  %}
 
 
 {% block tpl_bl_head_onready %}

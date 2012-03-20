@@ -18,6 +18,9 @@ class ListView( Base ):
 	def get_extra( self, request, obj_list, fmt, *args, **kwargs ):
 		return None
 
+	def get_object( self, request, obj_list, fmt, *args, **kwargs ):
+		return None
+
 	def get_object_list( self, request, *args, **kwargs ):
 		return None
 	
@@ -34,12 +37,14 @@ class ListView( Base ):
 		if obj_list is None:
 			self.not_found()
 
+		obj = self.get_object( request, obj_list, fmt, *args, **kwargs )
 		extra = self.get_extra( request, obj_list, fmt, *args, **kwargs )
 		ntn = self.get_template_name( 'get', fmt )
 
 		response = render_to_response(
 					ntn,
 					{
+						'instance' : obj,
 						'object_list' : obj_list,
 						'extra' : extra,
 						'kwargs' : self.url_kwargs,

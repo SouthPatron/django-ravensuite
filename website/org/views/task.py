@@ -16,7 +16,7 @@ from ..forms import task as forms
 class TaskList( ListView ):
 	template_name = 'pages/org/activity/task/index'
 
-	def get_extra( self, request, obj_list, fmt, *args, **kwargs ):
+	def get_object( self, request, obj_list, fmt, *args, **kwargs ):
 		return Activity.objects.get( id = self.url_kwargs.actid )
 
 	def get_object_list( self, request, *args, **kwargs ):
