@@ -1,15 +1,8 @@
-{% extends 'layouts/member-base-full.html' %}
+{% extends 'pages/org/base.html' %}
 
 {% block tpl_ps_rely %}datatables jquery.ui formfit sitekit{% endblock %}
 
-{% block tpl_si_org %}{{ extra.trading_name }}{% endblock %}
 {% block tpl_si_section %}Activities{% endblock %}
-
-
-{% block tpl_bl_body_functions_page %}
-{% include 'menus/org/top.html' with instance=extra %}
-{% endblock  %}
-
 
 
 {% block tpl_bl_head_onready %}
@@ -71,9 +64,15 @@
 
 
 {% block tpl_bl_body_content_right %}
+<div class="widget">
+<h3>Activities</h3>
 <ul>
-	<li><a href="#" id="org-create-new-activity">Add a new Activity</a></li>
+	<li><a id="org-create-new-activity">Add a new Activity</a></li>
+	<li><a id="id_ral_modal_org_new_activity">Add a new Activity</a></li>
 </ul>
+</div>
+
+
 
 <div id="dialog-form" title="Add a new activity">
 	<p class="validateTips">All form fields are required</p>

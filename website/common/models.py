@@ -148,6 +148,9 @@ class UserMembership( models.Model ):
 
 	def get_org( self ):
 		return self.organization
+	
+	def get_usermembership( self ):
+		return self
 
 	def get_single_url( self ):
 		return reverse( 'org-user-single', kwargs = { 'oid' : self.organization.refnum, 'uid' : self.id } )
@@ -285,6 +288,9 @@ class SourceDocument( models.Model ):
 	def get_client( self ):
 		return self.client
 
+	def get_account( self ):
+		return self.get_client().account
+
 
 	def get_single_url( self ):
 		my_route = None
@@ -404,6 +410,9 @@ class Activity( models.Model ):
 
 	def get_org( self ):
 		return self.organization
+	
+	def get_activity( self ):
+		return self
 
 	def get_task_list_url( self ):
 		return reverse( 'org-activity-task-list', kwargs = { 'oid' : self.get_org().refnum, 'actid' : self.id } )
@@ -422,6 +431,9 @@ class Task( models.Model ):
 
 	def get_activity( self ):
 		return self.activity
+	
+	def get_task( self ):
+		return self
 
 	def get_single_url( self ):
 		return reverse( 'org-activity-task-single', kwargs = { 'oid' : self.get_org().refnum, 'actid' : self.get_activity().id, 'taskid' : self.id } )

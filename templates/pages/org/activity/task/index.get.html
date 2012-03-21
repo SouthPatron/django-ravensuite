@@ -1,15 +1,8 @@
-{% extends 'layouts/member-base-full.html' %}
+{% extends 'pages/org/activity/base.html' %}
 
 {% block tpl_ps_rely %}datatables jquery.ui sitekit{% endblock %}
 
-
-{% block tpl_si_org %}{{ extra.get_org.trading_name }}{% endblock %}
 {% block tpl_si_section %}Tasks{% endblock %}
-
-
-{% block tpl_bl_body_functions_page %}
-{% include 'menus/org/activity_top.html' with instance=extra %}
-{% endblock %}
 
 
 {% block tpl_bl_head_onready %}
@@ -71,9 +64,12 @@
 
 
 {% block tpl_bl_body_content_right %}
+<div class="widget">
+<h3>Tasks</h3>
 <ul>
 	<li><a href="#" id="org-create-new-task">Add a new Task</a></li>
 </ul>
+</div>
 
 <div id="dialog-form" title="Add a new task">
 	<p class="validateTips">All form fields are required</p>

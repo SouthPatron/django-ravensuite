@@ -1,0 +1,10 @@
+{% load active %}
+
+<div>
+<ul>
+	<li class="{% active request '\/tasks$' %}"><a href="{{ instance.get_task.get_single_url }}">{{ instance.name }}</a></li>
+</ul>
+</div>
+
+
+
