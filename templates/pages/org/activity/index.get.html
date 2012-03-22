@@ -1,50 +1,11 @@
 {% extends 'pages/org/base.html' %}
 
-{% block tpl_ps_rely %}datatables jquery.ui formfit sitekit{% endblock %}
+{% block tpl_ps_rely %}datatables ral jquery.ui formfit sitekit{% endblock %}
 
 {% block tpl_si_section %}Activities{% endblock %}
 
 
 {% block tpl_bl_head_onready %}
-
-	$(function() {
-		
-		var name = $( "#id_name" ),
-			description = $( "#id_description" ),
-			allFields = $( [] ).add( name ).add( description ),
-			tips = $( ".validateTips" );
-
-		$( "#dialog-form" ).dialog({
-			autoOpen: false,
-			height: 400,
-			width: 550,
-			modal: true,
-			buttons: {
-				"Add a new Activity": function() {
-					var bValid = true;
-					allFields.removeClass( "ui-state-error" );
-
-					bValid = bValid && validation.length( tips, name, "Name", 3, 192 );
-
-					if ( bValid ) {
-						$( "#create-new-form" ).submit();
-					}
-				},
-				Cancel: function() {
-					$( this ).dialog( "close" );
-				}
-			},
-			close: function() {
-				allFields.val( "" ).removeClass( "ui-state-error" );
-			}
-		});
-
-		$( "#org-create-new-activity" )
-			.click(function() {
-				$( "#dialog-form" ).dialog( "open" );
-			});
-	});
-
 
 	$('#activity_list_table').dataTable( {
 		"iDisplayLength" : 25,
@@ -59,6 +20,9 @@
 		"sDom" : 't<"bottom"ip><"clear">'
 	});
 
+	ral.html.custom.attach_fetch( '#id_ral_modal_org_new_activity', 'org.new.activity',
+				{ oid: {{ kwargs.oid }} } );
+
 
 {% endblock %}
 
@@ -67,24 +31,8 @@
 <div class="widget">
 <h3>Activities</h3>
 <ul>
-	<li><a id="org-create-new-activity">Add a new Activity</a></li>
 	<li><a id="id_ral_modal_org_new_activity">Add a new Activity</a></li>
 </ul>
-</div>
-
-
-
-<div id="dialog-form" title="Add a new activity">
-	<p class="validateTips">All form fields are required</p>
-	<form id="create-new-form" method="POST" action="">
-		{% csrf_token %}
-		<fieldset>
-			<label for="name">Name</label>
-			<input type="text" name="name" id="id_name" class="text ui-widget-content ui-corner-all" />
-			<label for="name">Description</label>
-			<textarea name="description" id="id_description" class="text ui-widget-content ui-corner-all"></textarea>
-		</fieldset>
-	</form>
 </div>
 {% endblock %}
 

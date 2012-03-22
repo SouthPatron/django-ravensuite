@@ -1,52 +1,9 @@
 {% extends 'pages/org/base.html' %}
 
-{% block tpl_ps_rely %}datatables jquery.ui sitekit{% endblock %}
+{% block tpl_ps_rely %}datatables ral jquery.ui sitekit{% endblock %}
 
 
 {% block tpl_bl_head_onready %}
-
-	$(function() {
-		
-		var first_name = $( "#id_first_name" ),
-			last_name = $( "#id_last_name" ),
-			email_address = $( "#id_email_address" ),
-			category = $( "#id_category" ),
-			allFields = $( [] ).add( first_name ).add( last_name ).add( email_address ).add( category ),
-			tips = $( ".validateTips" );
-
-		$( "#dialog-form" ).dialog({
-			autoOpen: false,
-			height: 400,
-			width: 550,
-			modal: true,
-			buttons: {
-				"Add a new User": function() {
-					var bValid = true;
-					allFields.removeClass( "ui-state-error" );
-
-					bValid = bValid && validation.length( tips, first_name, "First Name", 2, 32 );
-					bValid = bValid && validation.length( tips, last_name, "Last Name", 2, 32 );
-					bValid = bValid && validation.email( tips, email_address );
-
-					if ( bValid ) {
-						$( "#create-new-form" ).submit();
-					}
-				},
-				Cancel: function() {
-					$( this ).dialog( "close" );
-				}
-			},
-			close: function() {
-				allFields.val( "" ).removeClass( "ui-state-error" );
-			}
-		});
-
-		$( "#org-add-new-user" )
-			.click(function() {
-				$( "#dialog-form" ).dialog( "open" );
-			});
-	});
-
 
 	$('#user_list_table').dataTable( {
 		"iDisplayLength" : 25,
@@ -64,6 +21,8 @@
 	});
 
 
+	ral.html.custom.attach_fetch( '#id_ral_modal_org_new_user', 'org.new.user',
+				{ oid: {{ kwargs.oid }} } );
 
 
 {% endblock %}
@@ -73,37 +32,8 @@
 <div class="widget">
 <h3>Activities</h3>
 <ul>
-	<li><a href="#" id="org-add-new-user">Add a new User</a></li>
 	<li><a id="id_ral_modal_org_new_user">Add a new User</a></li>
 </ul>
-</div>
-
-
-
-<div id="dialog-form" title="Add a new user">
-	<p class="validateTips">All form fields are required</p>
-	<form id="create-new-form" method="POST" action="">
-		{% csrf_token %}
-		<fieldset>
-			<label for="first_name">First Name</label>
-			<input type="text" name="first_name" id="id_first_name" class="text ui-widget-content ui-corner-all" />
-			<label for="last_name">Last Name</label>
-			<input type="text" name="last_name" id="id_last_name" class="text ui-widget-content ui-corner-all" />
-			<label for="email_address">Email Address</label>
-			<input type="text" name="email_address" id="id_email_address" class="text ui-widget-content ui-corner-all" />
-
-			<label for="category">Category</label>
-			<select name="category" id="id_category" class="select ui-widget-content ui-corner-all">
-				<option value="0">Owner</option>
-				<option value="10">Administrator</option>
-				<option value="20">Employee</option>
-				<option value="30">Contractor</option>
-				<option value="40">Client</option>
-				<option value="50" SELECTED="1">Guest</option>
-			</select>
-
-		</fieldset>
-	</form>
 </div>
 {% endblock %}
 

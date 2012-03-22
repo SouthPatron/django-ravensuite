@@ -2,7 +2,7 @@
 
 <div>
 <ul>
-	<li class="{% active request '\/activity/\d+$' %}"><a href="{{ instance.get_activity.get_single_url }}">Dashboard</a></li>
+	<li class="{% active request '\/activity/\d+$' %}"><a href="{{ instance.get_activity.get_single_url }}">{{ instance.get_activity.name }}</a></li>
 	<li class="{% active request '\/tasks$' %}"><a href="{{ instance.get_activity.get_task_list_url }}">Tasks</a></li>
 </ul>
 </div>
