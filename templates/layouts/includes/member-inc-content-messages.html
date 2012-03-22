@@ -1,0 +1,20 @@
+{% if messages %}
+<div id="message-block">
+{% for message in messages %}
+	<div class="message-notice {{ message.tags }}">
+		<div class="close-button">&nbsp;</div>
+		<div>{{ message|safe }}</div>
+	</div>
+{% endfor %}
+
+<script type="text/javascript">
+	$("#message-block .message-notice .close-button" ).click(function(){
+		$(this).parent( "div" ).fadeOut( 500, function(){
+			$(this).detach();
+			if ( $("#message-block .message-notice").count() == 0 )
+				$( "#message-block" ).detach();
+		} );
+	});
+</script>
+</div> <!-- #message-block -->
+{% endif %}

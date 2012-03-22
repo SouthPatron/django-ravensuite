@@ -9,6 +9,7 @@
 </div> <!-- #content-menu-left -->
 
 <div id="content" class="with-menu-left">
+{% include 'layouts/includes/member-inc-content-messages.html' %}
 {{ content }}
 </div> <!-- #content -->
 {% endif %}
@@ -21,6 +22,7 @@
 </div> <!-- #content-menu-right -->
 
 <div id="content" class="with-menu-right">
+{% include 'layouts/includes/member-inc-content-messages.html' %}
 {{ content }}
 </div> <!-- #content -->
 {% endif %}
@@ -37,6 +39,7 @@
 </div> <!-- #content-menu-right -->
 
 <div id="content" class="with-menu-both">
+{% include 'layouts/includes/member-inc-content-messages.html' %}
 {{ content }}
 </div> <!-- #content -->
 {% endif %}
@@ -45,6 +48,7 @@
 
 {% if not content_menu_left and not content_menu_right %}
 <div id="content" class="without-menu">
+{% include 'layouts/includes/member-inc-content-messages.html' %}
 {{ content }}
 </div> <!-- #content -->
 {% endif %}
