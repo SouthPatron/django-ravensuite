@@ -1,0 +1,61 @@
+{% extends 'pages/org/client/account/transaction/base.html' %}
+
+{% block tpl_ps_rely %}datatables{% endblock %}
+
+{% load decshift %}
+{% load sourcedoc %}
+
+
+{% block tpl_bl_body_functions_sub %}
+{{ block.super }}
+{% include 'pages/org/client/account/transaction/invoice/menu_filter.html' %}
+{% endblock %}
+
+{% block tpl_bl_head_onready %}
+
+	$('#invoice_list_table').dataTable( {
+		"iDisplayLength" : 25,
+		"bFilter" : false,
+		"bSort" : false,
+		"sPaginationType" : "full_numbers",
+		"aaSortingFixed" : [[ 0, "asc" ]],
+		"sDom" : 't<"bottom"ip><"clear">'
+	});
+
+{% endblock %}
+
+
+{% block tpl_bl_body_content_center %}
+
+
+<table
+	id="invoice_list_table"
+	style=' text-align: left; '
+	>
+<thead>
+	<tr>
+		<th>Ref</th>
+		<th>Invoice Date</th>
+		<th>Due Date</th>
+		<th>Amount</th>
+	</tr>
+</thead>
+<tbody>
+{% for obj in object_list %}
+
+	{% get_document_obj obj as doc %}
+
+	<tr>
+		<td><a href='{{ obj.get_single_url }}'>{{ obj.refnum }}</a></td>
+		<td><a href='{{ obj.get_single_url }}'>{{ doc.getSpecs.getInvoiceDate|date:"d M Y" }}</a></td>
+		<td><a href='{{ obj.get_single_url }}'>{{ doc.getSpecs.getDueDate|date:"d M Y" }}</a></td>
+		<td><a href='{{ obj.get_single_url }}'>{{ doc.getTotals.getTotal|decsplay }}</a></td>
+	</tr>
+
+{% endfor %}
+</tbody>
+</table>
+
+{% endblock %}
+
+

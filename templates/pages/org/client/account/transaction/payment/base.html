@@ -1,0 +1,10 @@
+{% extends 'pages/org/client/account/transaction/base.html' %}
+
+{% block tpl_ps_rely %}datatables{% endblock %}
+
+{% block tpl_bl_body_functions_sub %}
+{{ block.super }}
+{% include 'pages/org/client/account/transaction/payment/menu_filter.html' %}
+{% endblock %}
+
+

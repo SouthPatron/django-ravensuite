@@ -20,7 +20,7 @@ from common.models import *
 
 
 class CreditNoteList( ListView ):
-	template_name = 'pages/org/client/account/credit_note/index'
+	template_name = 'pages/org/client/account/transaction/credit_note/index'
 
 	def get_object( self, request, obj_list, fmt, *args, **kwargs ):
 		return Client.objects.get( refnum = self.url_kwargs.cid, organization__refnum = self.url_kwargs.oid )
@@ -63,7 +63,7 @@ class CreditNoteList( ListView ):
 
 
 class CreditNoteDraftList( ListView ):
-	template_name = 'pages/org/client/account/credit_note/draft-index'
+	template_name = 'pages/org/client/account/transaction/credit_note/draft-index'
 
 	def get_object( self, request, obj_list, fmt, *args, **kwargs ):
 		return Client.objects.get( refnum = self.url_kwargs.cid, organization__refnum = self.url_kwargs.oid )
@@ -74,7 +74,7 @@ class CreditNoteDraftList( ListView ):
 
 
 class CreditNoteUnallocatedList( ListView ):
-	template_name = 'pages/org/client/account/credit_note/unallocated-index'
+	template_name = 'pages/org/client/account/transaction/credit_note/unallocated-index'
 
 	def get_object( self, request, obj_list, fmt, *args, **kwargs ):
 		return Client.objects.get( refnum = self.url_kwargs.cid, organization__refnum = self.url_kwargs.oid )
@@ -86,18 +86,18 @@ class CreditNoteUnallocatedList( ListView ):
 
 
 class CreditNoteSingle( SingleObjectView ):
-	template_name = 'pages/org/client/account/credit_note/single'
+	template_name = 'pages/org/client/account/transaction/credit_note/single'
 
 
 	def get_object( self, request, *args, **kwargs ):
 		obj = get_object_or_404( SourceDocument, refnum = self.url_kwargs.sdid, client__refnum = self.url_kwargs.cid, client__organization__refnum = self.url_kwargs.oid )
 
 		if obj.document_state == SourceDocumentState.DRAFT:
-			self.template_name = 'pages/org/client/account/credit_note/single-draft'
+			self.template_name = 'pages/org/client/account/transaction/credit_note/single-draft'
 		elif obj.document_state == SourceDocumentState.FINAL:
-			self.template_name = 'pages/org/client/account/credit_note/single-final'
+			self.template_name = 'pages/org/client/account/transaction/credit_note/single-final'
 		elif obj.document_state == SourceDocumentState.VOID:
-			self.template_name = 'pages/org/client/account/credit_note/single-void'
+			self.template_name = 'pages/org/client/account/transaction/credit_note/single-void'
 
 		return obj
 

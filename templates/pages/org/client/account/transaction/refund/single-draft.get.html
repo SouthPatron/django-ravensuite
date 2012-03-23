@@ -1,0 +1,106 @@
+{% extends 'pages/org/client/account/transaction/refund/single-template.get.html' %}
+
+{% load decshift %}
+{% load sourcedoc %}
+
+{% block tpl_si_section %}Refund{% endblock %}
+
+
+{% block tpl_bl_head_onready %}
+	$( "#id_delete_refund" ).click( function() {
+		$( "#id_refund_state" ).val( 99 );
+		$( "#id_refund_form" ).submit();
+	});
+
+
+	$( "#id_save_refund" ).click( function() {
+		$( "#id_refund_form" ).submit();
+	});
+
+	$( "#id_finalize_refund" ).click( function() {
+		$( "#id_refund_state" ).val( 10 );
+		$( "#id_refund_form" ).submit();
+	});
+{% endblock %}
+
+
+
+{% block document_type %}Refund{% endblock %}
+
+{% block document_status %}
+{% get_document_obj instance as doc %}
+<div style="font-size: 2em;">{{ doc.getObj.get_document_state_display }}</div>
+{% endblock %}
+
+
+
+
+{% block document_body %}
+
+{% get_document_obj instance as doc %}
+
+
+<style>
+.itol-refund-table.allocation th {
+	text-align: left;
+	font-weight: bold;
+	padding-bottom: 20px;
+}
+	
+</style>
+
+
+<div style="
+	padding-left: 20px;
+	font-size: 1.3em;
+	">
+	<div style="
+		padding: 20px 0px;
+	">
+		<div style="
+				float: left;
+			">
+			Amount: <input type="text" name="amount" id="id_amount" value="{{ doc.getTotals.getTotal|decsplay|escape }}" />
+		</div>
+
+		<div style="
+				float: right;
+				padding-right: 20px;
+			">
+			Date of Refund Receipt:
+			<input type="text" id="id_refund_date" name="refund_date" value="{{ doc.getSpecs.getRefundDate|date:"j M Y"|escape }}" />
+		</div>
+	</div>
+
+	<div style="
+		padding: 10px 0px;
+		">
+		<div style="
+				padding: 10px 0px;
+			">Comment:</div>
+		<textarea style="
+			resize: none;
+			width: 350px;
+			height: 60px;
+			border: 1px solid #e2e2e2;
+			margin-top: 10px;
+			"
+			maxlength="255"
+			name="refund_comment">{{ doc.getSpecs.getComment|escape }}</textarea>
+	</div>
+</div>
+
+{% endblock %}
+
+{% block document_button_row_left %}
+	<button id="id_delete_refund" type="button">Delete Refund</button>
+{% endblock %}
+
+{% block document_button_row_right %}
+	<button id="id_finalize_refund" type="button">Approve Refund</button>
+	<button id="id_save_refund" type="button">Save Draft</button>
+{% endblock %}
+
+
+
+

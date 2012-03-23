@@ -1,0 +1,52 @@
+{% extends 'pages/org/client/account/transaction/credit_note/base.html' %}
+
+
+{% load decshift %}
+{% load sourcedoc %}
+
+
+{% block tpl_bl_head_onready %}
+
+	$('#credit_note_list_table').dataTable( {
+		"iDisplayLength" : 25,
+		"bFilter" : false,
+		"bSort" : false,
+		"sPaginationType" : "full_numbers",
+		"aaSortingFixed" : [[ 0, "asc" ]],
+		"sDom" : 't<"bottom"ip><"clear">'
+	});
+
+{% endblock %}
+
+
+{% block tpl_bl_body_content_center %}
+
+<table
+	id="credit_note_list_table"
+	style=' text-align: left; '
+	>
+<thead>
+	<tr>
+		<th>Ref</th>
+		<th>Date</th>
+		<th>Amount</th>
+	</tr>
+</thead>
+<tbody>
+{% for obj in object_list %}
+
+	{% get_document_obj obj as doc %}
+
+	<tr>
+		<td><a href='{{ obj.get_single_url }}'>{{ obj.refnum }}</a></td>
+		<td><a href='{{ obj.get_single_url }}'>{{ doc.getSpecs.getCreditNoteDate|date:"d M Y" }}</a></td>
+		<td><a href='{{ obj.get_single_url }}'>{{ doc.getTotals.getTotal|decsplay }}</a></td>
+	</tr>
+
+{% endfor %}
+</tbody>
+</table>
+
+{% endblock %}
+
+

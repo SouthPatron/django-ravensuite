@@ -1,9 +1,0 @@
-{% load active %}
-<div>
-<ul>
-	<li class="{% active request '\/account\/credit-notes$' %}"><a href="{% url org-client-account-credit-note-list instance.get_org.refnum instance.get_client.refnum %}">All</a></li>
-	<li class="{% active request '\/account\/credit-notes\/draft$' %}"><a href="{% url org-client-account-credit-note-draft-list instance.get_org.refnum instance.get_client.refnum %}">Draft{% if instance.get_client.get_draft_credit_note_list.count > 0 %} <strong>({{ instance.get_client.get_draft_credit_note_list.count }} draft{{ instance.get_client.get_draft_credit_note_list.count|pluralize }})</strong>{% endif %}</a></li>
-	<li class="{% active request '\/account\/credit-notes/unallocated$' %}"><a href="{% url org-client-account-credit-note-unallocated-list instance.get_org.refnum instance.get_client.refnum %}">Unallocated{% if instance.get_client.get_unallocated_credit_note_count > 0 %} <strong>({{ instance.get_client.get_unallocated_credit_note_count }} unallocated)</strong>{% endif %}</a></li>
-</ul>
-</div>
-

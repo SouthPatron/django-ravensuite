@@ -1,9 +1,0 @@
-{% load active %}
-<div>
-<ul>
-	<li class="{% active request '\/account\/refunds$' %}"><a href="{% url org-client-account-refund-list instance.get_org.refnum instance.get_client.refnum %}">All</a></li>
-	<li class="{% active request '\/account\/refunds\/draft$' %}"><a href="{% url org-client-account-refund-draft-list instance.get_org.refnum instance.get_client.refnum %}">Draft{% if instance.get_client.get_draft_refund_count > 0 %} <strong>({{ instance.get_client.get_draft_refund_count }} draft{{ instance.get_client.get_draft_refund_count|pluralize }})</strong>{% endif %}</a></li>
-	<li class="{% active request '\/account\/refunds\/unallocated$' %}"><a href="{% url org-client-account-refund-unallocated-list instance.get_org.refnum instance.get_client.refnum %}">Unallocated{% if instance.get_client.get_unallocated_refund_count > 0 %} <strong>({{ instance.get_client.get_unallocated_refund_count }} unallocated)</strong>{% endif %}</a></li>
-</ul>
-</div>
-

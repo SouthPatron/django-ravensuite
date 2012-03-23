@@ -1,0 +1,155 @@
+{% extends 'pages/org/client/account/transaction/invoice/single-template.get.html' %}
+
+{% load decshift %}
+{% load sourcedoc %}
+
+{% block tpl_bl_head_inner %}
+
+
+	<style>
+#id_table tbody .afes-table-body-cell-type-currency { text-align: right; }
+#id_table thead .head-description { width: 235px; }
+#id_table thead .head-qty { width: 103px; }
+#id_table thead .head-unit-price { width: 147px; }
+#id_table thead .head-tax-rate { width: 165px; }
+#id_table thead .head-tax-amount { width: 90px; }
+#id_table thead .head-amount { width: 138px; }
+	</style>
+
+{% endblock %}
+
+{% block tpl_bl_head_onready %}
+
+	afes.ex.table.init(
+		$( "#id_table" ),
+		{
+			initial_rows : 0,
+			columns : [
+				{ editable : false, class: "description" },
+				{ editable : false, class: "qty" },
+				{ editable : false, class: "unit-price" },
+				{ editable : false, class: "tax-rate" },
+				{ editable : false, class: "tax-amount" },
+				{ editable : false, class: "amount" }
+			]
+		}
+	);
+
+	{% get_document_obj instance as doc %}
+
+	{% for li in doc.getLines.all %}
+		afes.ex.table.appendRow(
+			"#id_table",
+			[
+				"{{ li.description|escapejs }}",
+				"{{ li.units|decsplay }}",
+				"{{ li.perunit|decsplay }}",
+				"{{ li.get_tax_rate_display|escapejs }}",
+				"{{ li.tax_amount|decsplay }}",
+				"{{ li.total|decsplay }}"
+			]
+		);
+	{% endfor %}
+
+
+	$( "#id_button_save" ).click( function() {
+		$( "#id_invoice_form" ).submit();
+	});
+
+
+
+{% endblock %}
+
+
+{% block document_type %}TAX INVOICE{% endblock %}
+{% block document_status %}
+{% include 'pages/org/client/account/transaction/invoice/status-label.html' with instance=instance %}
+{% endblock %}
+
+
+{% block document_dates %}
+
+	{% get_document_obj instance as doc %}
+
+<fieldset>
+	<label for="name">Invoice Date</label>
+	<input type="text" name="invoice_date" id="id_itol_date" class="text ui-widget-content ui-corner-all" value="{{ doc.getSpecs.getInvoiceDate|date:"j M Y" }}" />
+	<label for="name">Due Date</label>
+	<input type="text" name="due_date" id="id_due_date" class="text ui-widget-content ui-corner-all" value="{{ doc.getSpecs.getDueDate|date:"j M Y" }}" />
+</fieldset>
+{% endblock %}
+
+
+{% block document_body %}
+
+	{% get_document_obj instance as doc %}
+
+
+<div class="item-list">
+<table id="id_table">
+<thead>
+	<th class="head-description">Description</th>
+	<th class="head-qty">Qty</th>
+	<th class="head-unit-price">Unit Price</th>
+	<th class="head-tax-rate">Tax Rate</th>
+	<th class="head-tax-amount">Tax</th>
+	<th class="head-amount">Amount</th>
+</thead>
+<tbody>
+</tbody>
+</table>
+</div>
+
+	<div class="summary-row">
+
+		<div class="add-row-portion">
+			<div>
+				<div class="comment-title">
+					<span>Comments:</span>
+				</div>
+				<div class="comment-block">
+					<textarea maxlength="255" name="invoice_comment">{{ doc.getSpecs.getComment|escape }}</textarea>
+				</div>
+			</div>
+		</div>
+
+		<div class="summary-portion">
+
+			<div class="inner-amount">
+				<div class="inner-amount-label">
+					Amount
+				</div>
+				<div class="inner-amount-amount">
+					<span id="summary_amount">{{ doc.getTotals.getAmount|decsplay }}</span>
+				</div>
+			</div>
+
+			<div class="inner-tax">
+				<div class="inner-tax-label">
+					Sales Tax
+				</div>
+				<div class="inner-tax-amount">
+					<span id="summary_tax">{{ doc.getTotals.getTax|decsplay }}</span>
+				</div>
+			</div>
+
+			<div class="inner-total">
+				<div class="inner-total-label">
+					Total
+				</div>
+				<div class="inner-total-amount">
+					<span id="summary_total">{{ doc.getTotals.getTotal|decsplay }}</span>
+				</div>
+			</div>
+
+		</div>
+
+		<div style="clear: both;">&nbsp;</div>
+	</div>
+{% endblock %}
+
+
+{% block document_button_row_left %}
+	<button id="id_button_save" type="button">Save</button>
+{% endblock %}
+

@@ -22,7 +22,7 @@ from common.models import *
 
 
 class PaymentList( ListView ):
-	template_name = 'pages/org/client/account/payment/index'
+	template_name = 'pages/org/client/account/transaction/payment/index'
 
 	def get_object( self, request, obj_list, fmt, *args, **kwargs ):
 		return Client.objects.get( refnum = self.url_kwargs.cid, organization__refnum = self.url_kwargs.oid )
@@ -63,7 +63,7 @@ class PaymentList( ListView ):
 
 
 class PaymentDraftList( ListView ):
-	template_name = 'pages/org/client/account/payment/draft-index'
+	template_name = 'pages/org/client/account/transaction/payment/draft-index'
 
 	def get_object( self, request, obj_list, fmt, *args, **kwargs ):
 		return Client.objects.get( refnum = self.url_kwargs.cid, organization__refnum = self.url_kwargs.oid )
@@ -74,7 +74,7 @@ class PaymentDraftList( ListView ):
 
 
 class PaymentUnallocatedList( PaymentList ):
-	template_name = 'pages/org/client/account/payment/unallocated-index'
+	template_name = 'pages/org/client/account/transaction/payment/unallocated-index'
 
 	def get_object( self, request, obj_list, fmt, *args, **kwargs ):
 		return Client.objects.get( refnum = self.url_kwargs.cid, organization__refnum = self.url_kwargs.oid )
@@ -88,18 +88,18 @@ class PaymentUnallocatedList( PaymentList ):
 
 
 class PaymentSingle( SingleObjectView ):
-	template_name = 'pages/org/client/account/payment/single'
+	template_name = 'pages/org/client/account/transaction/payment/single'
 
 
 	def get_object( self, request, *args, **kwargs ):
 		obj = get_object_or_404( SourceDocument, refnum = self.url_kwargs.sdid, client__refnum = self.url_kwargs.cid, client__organization__refnum = self.url_kwargs.oid )
 
 		if obj.document_state == SourceDocumentState.DRAFT:
-			self.template_name = 'pages/org/client/account/payment/single-draft'
+			self.template_name = 'pages/org/client/account/transaction/payment/single-draft'
 		elif obj.document_state == SourceDocumentState.FINAL:
-			self.template_name = 'pages/org/client/account/payment/single-final'
+			self.template_name = 'pages/org/client/account/transaction/payment/single-final'
 		elif obj.document_state == SourceDocumentState.VOID:
-			self.template_name = 'pages/org/client/account/payment/single-void'
+			self.template_name = 'pages/org/client/account/transaction/payment/single-void'
 
 		return obj
 

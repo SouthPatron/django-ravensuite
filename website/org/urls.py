@@ -52,45 +52,45 @@ urlpatterns = patterns('',
 
 # ------ CLIENTS / ACCOUNT / INVOICES ------------------
 
-	url( r'^(?P<oid>\d+)/client/(?P<cid>\d+)/account/invoices$', login_required( InvoiceList.as_view() ), name = 'org-client-account-invoice-list' ),
-	url( r'^(?P<oid>\d+)/client/(?P<cid>\d+)/account/invoice/(?P<sdid>\d+)$', login_required( InvoiceSingle.as_view() ), name = 'org-client-account-invoice-single' ),
+	url( r'^(?P<oid>\d+)/client/(?P<cid>\d+)/account/transactions/invoices$', login_required( InvoiceList.as_view() ), name = 'org-client-account-transaction-invoice-list' ),
+	url( r'^(?P<oid>\d+)/client/(?P<cid>\d+)/account/transactions/invoice/(?P<sdid>\d+)$', login_required( InvoiceSingle.as_view() ), name = 'org-client-account-transaction-invoice-single' ),
 
 
-	url( r'^(?P<oid>\d+)/client/(?P<cid>\d+)/account/invoices/draft$', login_required( InvoiceDraftList.as_view() ), name = 'org-client-account-invoice-draft-list' ),
-	url( r'^(?P<oid>\d+)/client/(?P<cid>\d+)/account/invoices/unpaid$', login_required( InvoiceUnpaidList.as_view() ), name = 'org-client-account-invoice-unpaid-list' ),
+	url( r'^(?P<oid>\d+)/client/(?P<cid>\d+)/account/transactions/invoices/draft$', login_required( InvoiceDraftList.as_view() ), name = 'org-client-account-transaction-invoice-draft-list' ),
+	url( r'^(?P<oid>\d+)/client/(?P<cid>\d+)/account/transactions/invoices/unpaid$', login_required( InvoiceUnpaidList.as_view() ), name = 'org-client-account-transaction-invoice-unpaid-list' ),
 
 
 # ------ CLIENTS / ACCOUNT / PAYMENT ------------------
 
-	url( r'^(?P<oid>\d+)/client/(?P<cid>\d+)/account/payments$', login_required( PaymentList.as_view() ), name = 'org-client-account-payment-list' ),
+	url( r'^(?P<oid>\d+)/client/(?P<cid>\d+)/account/transactions/payments$', login_required( PaymentList.as_view() ), name = 'org-client-account-transaction-payment-list' ),
 
-	url( r'^(?P<oid>\d+)/client/(?P<cid>\d+)/account/payments/draft$', login_required( PaymentDraftList.as_view() ), name = 'org-client-account-payment-draft-list' ),
+	url( r'^(?P<oid>\d+)/client/(?P<cid>\d+)/account/transactions/payments/draft$', login_required( PaymentDraftList.as_view() ), name = 'org-client-account-transaction-payment-draft-list' ),
 
-	url( r'^(?P<oid>\d+)/client/(?P<cid>\d+)/account/payments/unallocated$', login_required( PaymentUnallocatedList.as_view() ), name = 'org-client-account-payment-unallocated-list' ),
+	url( r'^(?P<oid>\d+)/client/(?P<cid>\d+)/account/transactions/payments/unallocated$', login_required( PaymentUnallocatedList.as_view() ), name = 'org-client-account-transaction-payment-unallocated-list' ),
 
-	url( r'^(?P<oid>\d+)/client/(?P<cid>\d+)/account/payment/(?P<sdid>\d+)$', login_required( PaymentSingle.as_view() ), name = 'org-client-account-payment-single' ),
+	url( r'^(?P<oid>\d+)/client/(?P<cid>\d+)/account/transactions/payment/(?P<sdid>\d+)$', login_required( PaymentSingle.as_view() ), name = 'org-client-account-transaction-payment-single' ),
 
 
 # ------ CLIENTS / ACCOUNT / CREDIT NOTES ------------------
 
-	url( r'^(?P<oid>\d+)/client/(?P<cid>\d+)/account/credit-notes$', login_required( CreditNoteList.as_view() ), name = 'org-client-account-credit-note-list' ),
-	url( r'^(?P<oid>\d+)/client/(?P<cid>\d+)/account/credit-note/(?P<sdid>\d+)$', login_required( CreditNoteSingle.as_view() ), name = 'org-client-account-credit-note-single' ),
+	url( r'^(?P<oid>\d+)/client/(?P<cid>\d+)/account/transactions/credit-notes$', login_required( CreditNoteList.as_view() ), name = 'org-client-account-transaction-credit-note-list' ),
+	url( r'^(?P<oid>\d+)/client/(?P<cid>\d+)/account/transactions/credit-note/(?P<sdid>\d+)$', login_required( CreditNoteSingle.as_view() ), name = 'org-client-account-transaction-credit-note-single' ),
 
 
-	url( r'^(?P<oid>\d+)/client/(?P<cid>\d+)/account/credit-notes/draft$', login_required( CreditNoteDraftList.as_view() ), name = 'org-client-account-credit-note-draft-list' ),
-	url( r'^(?P<oid>\d+)/client/(?P<cid>\d+)/account/credit-notes/unallocated$', login_required( CreditNoteUnallocatedList.as_view() ), name = 'org-client-account-credit-note-unallocated-list' ),
+	url( r'^(?P<oid>\d+)/client/(?P<cid>\d+)/account/transactions/credit-notes/draft$', login_required( CreditNoteDraftList.as_view() ), name = 'org-client-account-transaction-credit-note-draft-list' ),
+	url( r'^(?P<oid>\d+)/client/(?P<cid>\d+)/account/transactions/credit-notes/unallocated$', login_required( CreditNoteUnallocatedList.as_view() ), name = 'org-client-account-transaction-credit-note-unallocated-list' ),
 
 
 
 # ------ CLIENTS / ACCOUNT / REFUNDS ------------------
 
-	url( r'^(?P<oid>\d+)/client/(?P<cid>\d+)/account/refunds$', login_required( RefundList.as_view() ), name = 'org-client-account-refund-list' ),
+	url( r'^(?P<oid>\d+)/client/(?P<cid>\d+)/account/transactions/refunds$', login_required( RefundList.as_view() ), name = 'org-client-account-transaction-refund-list' ),
 
-	url( r'^(?P<oid>\d+)/client/(?P<cid>\d+)/account/refunds/draft$', login_required( RefundDraftList.as_view() ), name = 'org-client-account-refund-draft-list' ),
+	url( r'^(?P<oid>\d+)/client/(?P<cid>\d+)/account/transactions/refunds/draft$', login_required( RefundDraftList.as_view() ), name = 'org-client-account-transaction-refund-draft-list' ),
 
-	url( r'^(?P<oid>\d+)/client/(?P<cid>\d+)/account/refunds/unallocated$', login_required( RefundUnallocatedList.as_view() ), name = 'org-client-account-refund-unallocated-list' ),
+	url( r'^(?P<oid>\d+)/client/(?P<cid>\d+)/account/transactions/refunds/unallocated$', login_required( RefundUnallocatedList.as_view() ), name = 'org-client-account-transaction-refund-unallocated-list' ),
 
-	url( r'^(?P<oid>\d+)/client/(?P<cid>\d+)/account/refund/(?P<sdid>\d+)$', login_required( RefundSingle.as_view() ), name = 'org-client-account-refund-single' ),
+	url( r'^(?P<oid>\d+)/client/(?P<cid>\d+)/account/transactions/refund/(?P<sdid>\d+)$', login_required( RefundSingle.as_view() ), name = 'org-client-account-transaction-refund-single' ),
 
 
 # ------ ACTIVITIES -----------------------------
