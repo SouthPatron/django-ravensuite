@@ -206,13 +206,13 @@ class Client( models.Model ):
 	# Invoices ------------
 
 	def get_invoice_list_url( self ):
-		return reverse( 'org-client-account-invoice-list', kwargs = { 'oid' : self.organization.refnum, 'cid' : self.refnum } )
+		return reverse( 'org-client-account-transaction-invoice-list', kwargs = { 'oid' : self.organization.refnum, 'cid' : self.refnum } )
 
 	def get_draft_invoice_list_url( self ):
-		return reverse( 'org-client-account-invoice-draft-list', kwargs = { 'oid' : self.organization.refnum, 'cid' : self.refnum } )
+		return reverse( 'org-client-account-transaction-invoice-draft-list', kwargs = { 'oid' : self.organization.refnum, 'cid' : self.refnum } )
 
 	def get_unpaid_invoice_list_url( self ):
-		return reverse( 'org-client-account-invoice-unpaid-list', kwargs = { 'oid' : self.organization.refnum, 'cid' : self.refnum } )
+		return reverse( 'org-client-account-transaction-invoice-unpaid-list', kwargs = { 'oid' : self.organization.refnum, 'cid' : self.refnum } )
 
 	def get_unpaid_invoice_list( self ):
 		return SourceDocument.objects.filter( client = self, document_type = SourceDocumentType.INVOICE, document_state = SourceDocumentState.FINAL, total__gt = F( 'allocated' ) )
@@ -225,10 +225,10 @@ class Client( models.Model ):
 	# Credit Notes --------
 
 	def get_draft_credit_note_list_url( self ):
-		return reverse( 'org-client-account-credit-note-draft-list', kwargs = { 'oid' : self.organization.refnum, 'cid' : self.refnum } )
+		return reverse( 'org-client-account-transaction-credit-note-draft-list', kwargs = { 'oid' : self.organization.refnum, 'cid' : self.refnum } )
 
 	def get_unallocated_credit_note_list_url( self ):
-		return reverse( 'org-client-account-credit-note-unallocated-list', kwargs = { 'oid' : self.organization.refnum, 'cid' : self.refnum } )
+		return reverse( 'org-client-account-transaction-credit-note-unallocated-list', kwargs = { 'oid' : self.organization.refnum, 'cid' : self.refnum } )
 
 	def get_unallocated_credit_note_count( self ):
 		return SourceDocument.objects.filter( client = self, document_type = SourceDocumentType.CREDIT_NOTE, document_state = SourceDocumentState.FINAL, total__gt = F( 'allocated' ) ).count()
@@ -237,10 +237,10 @@ class Client( models.Model ):
 	# Payments ------------
 
 	def get_unallocated_payment_list_url( self ):
-		return reverse( 'org-client-account-payment-unallocated-list', kwargs = { 'oid' : self.organization.refnum, 'cid' : self.refnum } )
+		return reverse( 'org-client-account-transaction-payment-unallocated-list', kwargs = { 'oid' : self.organization.refnum, 'cid' : self.refnum } )
 
 	def get_draft_payment_list_url( self ):
-		return reverse( 'org-client-account-payment-draft-list', kwargs = { 'oid' : self.organization.refnum, 'cid' : self.refnum } )
+		return reverse( 'org-client-account-transaction-payment-draft-list', kwargs = { 'oid' : self.organization.refnum, 'cid' : self.refnum } )
 
 	def get_draft_payment_count( self ):
 		return SourceDocument.objects.filter( client = self, document_type = SourceDocumentType.PAYMENT, document_state = SourceDocumentState.DRAFT ).count()
@@ -254,10 +254,10 @@ class Client( models.Model ):
 
 
 	def get_refund_list_url( self ):
-		return reverse( 'org-client-account-refund-list', kwargs = { 'oid' : self.organization.refnum, 'cid' : self.refnum } )
+		return reverse( 'org-client-account-transaction-refund-list', kwargs = { 'oid' : self.organization.refnum, 'cid' : self.refnum } )
 
 	def get_unallocated_refund_list_url( self ):
-		return reverse( 'org-client-account-refund-unallocated-list', kwargs = { 'oid' : self.organization.refnum, 'cid' : self.refnum } )
+		return reverse( 'org-client-account-transaction-refund-unallocated-list', kwargs = { 'oid' : self.organization.refnum, 'cid' : self.refnum } )
 
 	def get_unallocated_refund_count( self ):
 		return SourceDocument.objects.filter( client = self, document_type = SourceDocumentType.REFUND, document_state = SourceDocumentState.FINAL, total__gt = F( 'allocated' ) ).count()
@@ -296,16 +296,16 @@ class SourceDocument( models.Model ):
 		my_route = None
 
 		if self.document_type == SourceDocumentType.INVOICE:
-			my_route = 'org-client-account-invoice-single'
+			my_route = 'org-client-account-transaction-invoice-single'
 
 		if self.document_type == SourceDocumentType.PAYMENT:
-			my_route = 'org-client-account-payment-single'
+			my_route = 'org-client-account-transaction-payment-single'
 
 		if self.document_type == SourceDocumentType.CREDIT_NOTE:
-			my_route = 'org-client-account-credit-note-single'
+			my_route = 'org-client-account-transaction-credit-note-single'
 
 		if self.document_type == SourceDocumentType.REFUND:
-			my_route = 'org-client-account-refund-single'
+			my_route = 'org-client-account-transaction-refund-single'
 
 		return reverse( my_route,
 					kwargs = {

@@ -1,7 +1,11 @@
 
-input:focus {
+input:focus,
+select:focus,
+textarea:focus
+{
 	outline: none;
 }
+
 
 #id_tpl_bl_body_wrap
 {

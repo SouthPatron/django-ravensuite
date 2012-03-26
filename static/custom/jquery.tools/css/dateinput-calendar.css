@@ -11,15 +11,11 @@
 	border:1px solid #ccc;
 	border-width:0 1px 1px;
 	padding-top:10px;
-	height:160px;
 	width:227px;	
 	display:none;
 	margin:0 0 0 -7px;
 	
-	-moz-border-radius-topleft:0;
-	-moz-border-radius-topright:0;	
-	-webkit-border-top-left-radius:0;
-	-webkit-border-top-right-radius:0;		
+	border-radius: 0px 0px 5px 5px;
 }
 
 /* head. contains title, prev/next month controls and possible month/year selectors */
@@ -27,6 +23,7 @@
 	padding:2px 0;
 	height:22px;
 } 
+
 
 #caltitle {
 	font-size:14px;
@@ -81,6 +78,7 @@
 #calweeks {
 	background-color:#fff;
 	margin-top:4px;
+	border-radius: 0px 0px 5px 5px;
 }
 
 /* single week */

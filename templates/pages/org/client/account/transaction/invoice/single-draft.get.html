@@ -18,10 +18,10 @@
 	</style>
 
 	<!-- wrapper, inputs and labels  -->
-	<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}custom/jquery.tools/css/flight.css"/>
+	<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}custom/jquery.tools/css/dateinput.css"/>
 
 	<!-- calendar styling -->
-	<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}custom/jquery.tools/css/flight-calendar.css"/>
+	<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}custom/jquery.tools/css/dateinput-calendar.css"/>
 
 {% endblock %}
 
@@ -94,7 +94,7 @@
 			}
 			values.push( my_value );
 
-			$(this).find( ".tax-amount" ).text( my_value[4] );
+			$(this).find( ".tax-amount" ).text( (new Number(my_value[4])).toFixed(2) );
 		});
 
 		total_amount = new Number( 0 );
@@ -302,14 +302,14 @@
 
 {% block document_type %}TAX INVOICE{% endblock %}
 {% block document_status %}
-{% include 'pages/org/client/account/transaction/invoice/status-label.html' with instance=instance %}
+{% include 'pages/org/client/account/transaction/_common/status-label.html' %}
 {% endblock %}
 
 {% block document_dates %}
 
 {% get_document_obj instance as sdoc %}
 
-<fieldset id="flight">
+<fieldset class="dateinput_tool">
 	<label for="name">
 		Invoice Date <br />
 		<input class="date_input" type="text" name="invoice_date" value="{{ sdoc.getSpecs.getInvoiceDate|date:"j M Y" }}" />
@@ -322,20 +322,9 @@
 </fieldset>
 {% endblock %}
 
-{% block document_tax_row %}
-	<div style="float: right;">
-		<label for="name">Amounts are</label>
-		<select name="default_tax" id="id_default_tax">
-			<option value="No Tax">No Tax</option>
-			<option value="Tax Inclusive" SELECTED="1">Tax Inclusive</option>
-			<option value="Tax Exclusive">Tax Exclusive</option>
-			<option value="Tax Exempt">Tax Exempt</option>
-		</select>
-	</div>
-	<div style="clear: both;">&nbsp;</div>
+{% block document_payment_status %}
+{% include 'pages/org/client/account/transaction/invoice/paid-label.html' %}
 {% endblock %}
-
-
 
 
 {% block document_body %}
@@ -362,19 +351,25 @@
 <tbody>
 </tbody>
 </table>
+
 </div>
+
+
 
 
 	<div class="summary-row">
 
-		<div class="add-row-portion">
+		<div class="comment-portion">
+
 			<div>
 				<button id="id_itol_add_item_row" type="button">Add a new line</button>
 			</div>
 
+
+
 			<div>
 				<div class="comment-title">
-					<span>Comments:</span>
+					<span>Comment:</span>
 				</div>
 				<div class="comment-block">
 					<textarea maxlength="255" name="invoice_comment">{{ sdoc.getSpecs.getComment }}</textarea>

@@ -1,37 +1,51 @@
 .itol
 {
-	margin: 10px 10px;
-	background-color: #f2f2f2;
-	border: 1px solid #a2a2a2;
-	box-shadow: 1px 1px 2px #cccccc;
+	position: relative;
+	margin: 15px;
+	background-color: white;
+	border: 1px solid #dedbd1;
+	box-shadow: 0px 1px 10px #cccccc;
+}
+
+
+.itol .clearfix {
+}
+
+.itol .clearfix:after {
+	content: "\0020";
+	display: block;
+	height: 0;
+	clear: both;
+	visibility: hidden;
+	overflow: hidden;
 }
 
 .itol .itol-header
 {
-	padding: 0px 0px 20px 0px;
-	margin: 15px 15px;
+	border-bottom: 1px solid #dedbd1;
+	background-color: #E2E2EF;
 }
 
 .itol .itol-type
 {
 	float: left;
 	font-size: 2.3em;
+	margin: 10px;
 }
 
 .itol .itol-type-status
 {
 	float: right;
-	padding-right: 20px;
-	padding-top: 5px;
+	margin: 10px;
+	font-size: 2.3em;
 }
-
-
 
 .itol .itol-status
 {
 	border-bottom: 1px solid #e2e2e2;
-	padding: 0px 0px 20px 0px;
-	margin: 15px 15px;
+	padding-left: 20px;
+	padding-top: 20px;
+/*	margin-bottom: 40px; */
 }
 
 .itol .itol-dates
@@ -42,8 +56,6 @@
 .itol .itol-payment-status
 {
 	float: right;
-	padding-right: 20px;
-	padding-top: 5px;
 }
 
 
@@ -64,18 +76,9 @@
 }
 
 
-
-.itol .itol-status-label
-{
-	font-size: 2em;
-}
-
 .itol .itol-header input
 {
-	padding-left: 5px;
 }
-
-
 
 .itol .tax-row
 {
@@ -84,7 +87,8 @@
 
 .itol .item-list
 {
-	padding: 0px 15px;
+	padding: 15px 15px 0px 15px;
+	background-color: #f0f0f0;
 }
 
 .itol .item-list table
@@ -92,17 +96,6 @@
 	width: 100%;
 }
 
-.itol .item-list thead tr
-{
-	border-bottom: 1px solid #707070;
-}
-
-.itol .item-list thead th
-{
-	text-align: left;
-	padding: 5px 5px;
-	background-color: #ffffff;
-}
 
 .itol .item-list thead .head-description { width: 235px; }
 .itol .item-list thead .head-qty { width: 123px; }
@@ -110,30 +103,6 @@
 .itol .item-list thead .head-tax-rate { width: 195px; }
 .itol .item-list thead .head-amount { width: 158px; }
 .itol .item-list thead .head-delete { width: 20px; }
-
-
-.itol .item-list tbody tr
-{
-	border-left: 1px solid #d8d8d8;
-}
-
-.itol .item-list tbody td
-{
-	text-align: left;
-	padding: 5px 5px;
-	background-color: #ffffff;
-	border-right: 1px solid #d8d8d8;
-	border-bottom: 1px solid #c8c8c8;
-	overflow: hidden;
-}
-
-.itol .item-list tbody input
-{
-	border: 0px;
-	background-color: #f0f0f0;
-	width: 100%;
-}
-
 
 
 .itol .item-list tbody td.item-qty
@@ -163,8 +132,6 @@
 	width: 100%;
 }
 
-
-
 .itol .item-list tbody td.item-amount
 {
 	text-align: right;
@@ -180,19 +147,27 @@
 }
 
 
-.itol .summary-row
+.itol .item-list .below-item-list
 {
-	margin: 20px 20px;
+	margin-top: 10px;
 }
 
 
-.itol .summary-row .add-row-portion
+
+.itol .summary-row
+{
+	padding: 20px 20px;
+	background-color: #f0f0f0;
+}
+
+
+.itol .summary-row .comment-portion
 {
 	float: left;
 	max-width: 440px;
 }
 
-.itol .summary-row .add-row-portion .comment-title
+.itol .summary-row .comment-portion .comment-title
 {
 	margin-top: 10px;
 	margin-bottom: 5px;
@@ -200,11 +175,11 @@
 	color: #525252;
 }
 
-.itol .summary-row .add-row-portion .comment-block
+.itol .summary-row .comment-portion .comment-block
 {
 }
 
-.itol .summary-row .add-row-portion .comment-block textarea
+.itol .summary-row .comment-portion .comment-block textarea
 {
 	width: 350px;
 	height: 60px;
