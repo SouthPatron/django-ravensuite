@@ -1,0 +1,227 @@
+<style type="text/css">
+
+.modialft {
+	height: 100%;
+}
+
+.modialft-left-menu {
+	position: absolute;
+	width: 180px;
+	height: 100%;
+	margin-left: 2px;
+	background-color: #afbfaf;
+}
+
+.modialft-left-menu ul {
+	list-type: none;
+	margin-top: 15px;
+}
+
+.modialft-left-menu ul li {
+}
+
+.modialft-left-menu li.modialft-left-menu-active {
+	background-color: white;
+}
+
+
+.modialft-left-menu li.modialft-left-menu-active a {
+	color: black;
+}
+
+.modialft-left-menu li.modialft-left-menu-section-error a {
+	color: #7E2217;
+}
+
+
+.modialft-left-menu ul li a {
+	display: block;
+	padding: 10px;
+	color: white;
+	font-size: 1.3em;
+	cursor: pointer;
+}
+
+.modialft-right-panel {
+	margin-left: 200px;
+	margin-right: 20px;
+	padding-top: 20px;
+	overflow: auto;
+	height: 100%;
+}
+
+.modialft-right-panel .error-message-block {
+	position: relative;
+}
+
+.modialft-right-panel .error-message {
+	position: relative;
+	margin-bottom: 20px;
+	padding: 5px;
+
+	border-radius: 0px;
+	border-width: 1px;
+	border-style: solid;
+
+	color: black;
+	background-color: #fff2f2;
+	border-color: orange;
+}
+
+.modialft-right-panel label
+{
+	font-size: 1.2em;
+	clear: both;
+	float: left;
+	text-align: right;
+	width: 180px;
+	margin-right: 20px;
+	word-wrap: break-word;
+}
+
+.modialft-right-panel label.field-required:after
+{
+	content: "*";
+	color: red;
+}
+
+.modialft-right-panel input,
+.modialft-right-panel select,
+.modialft-right-panel textarea
+{
+	border: 1px solid #dedbd1;
+	float: left;
+	margin-top: -2px;
+	margin-bottom: 10px;
+}
+
+.modialft-right-panel textarea
+{
+	resize: none;
+}
+
+.modialft-right-panel label.field-error
+{
+	color: #7E2217;
+}
+
+.modialft-right-panel input.field-error,
+.modialft-right-panel select.field-error,
+.modialft-right-panel textarea.field-error
+{
+	background-color: #fff8f8;
+	border: 1px solid darkred;
+}
+
+.modialft-form-error-tip {
+	background-color: #991111;
+	border: 1px solid #fff;
+	padding: 10px 15px;
+	width: 200px;
+	display: none;
+	color: #fff;
+	text-align: left;
+	font-size: 12px;
+	-moz-box-shadow: 0 0 10px #000;
+	-webkit-box-shadow: 0 0 10px #000;
+}
+
+</style>
+
+
+<div style="{% block dialog_style %}{% endblock %}">
+
+	<div class="ral_dialog_titlebar ral_clear">
+		<span class="ral_dialog_title">{% block dialog_title %}{% endblock %}</span>
+		<a class="ral_dialog_titlebar_close ral_action_close">
+			<span>close</span>
+		</a>
+	</div>
+
+	{% block dialog_post_title %}
+	{% endblock %}
+
+	<div class="ral_dialog_content ral_clear">
+
+		<div class="modialft">
+
+			<div class="modialft-left-menu">
+				{% block dialog_left_menu %}{% endblock %}
+			</div>
+
+			<div class="modialft-right-panel">
+
+				{% block dialog_right_panel %}{% endblock %}
+
+			</div>
+
+			<div class="error-message-block" style="visibility: hidden; display: none">
+				<div class="error-message">There are some errors on this page. Please review the information and fix it up.</div>
+			</div>
+
+		</div>
+
+	</div> <!-- .ral_dialog_content -->
+
+	</form>
+
+	<div class="ral_dialog_buttonbar ral_clear">
+		{% block dialog_buttons %}{% endblock %}
+	</div>
+</div>
+
+
+<script type="text/javascript">
+
+$(function() {
+
+	$(".modialft .modialft-right-panel > div").hide().eq(0).show();
+
+	$(".modialft .modialft-left-menu li").eq(0).addClass( "modialft-left-menu-active" );
+
+	$( ".modialft" ).each( function() {
+
+		$( ".modialft-left-menu li a" ).click(function(){
+
+				$(".modialft .modialft-left-menu li.modialft-left-menu-active").removeClass( "modialft-left-menu-active" );
+
+				$(this).parent("li").addClass( "modialft-left-menu-active" );
+				
+				var count = $(".modialft-left-menu a").index( this );
+
+				$(".modialft .modialft-right-panel > div").hide().eq(count).show();
+				
+			});
+	});
+
+	$(this).find( ".modialft .modialft-right-panel > div" ).has(":input[title]").each( function() {
+		var mydiv = $(this);
+		var pos = $(this).index();
+
+		var notice = $( ".modialft .error-message-block" ).clone();
+		$(this).prepend( notice );
+		notice.css( 'visibility', 'visible' );
+		notice.css( 'display', 'block' );
+
+
+		$( ".modialft .modialft-left-menu li" ).eq( pos ).addClass( 'modialft-left-menu-section-error' );
+	});
+
+	$(this).find( ".modialft .modialft-right-panel :input[title]" ).tooltip({
+		position: "top center",
+		offset: [-30, 10],
+		effect: "fade",
+		opacity: 0.9,
+		tipClass: "modialft-form-error-tip"
+	});
+
+
+{% block dialog_javascript %}{% endblock %}
+
+});
+
+
+//@ sourceURL=modalScript.js
+
+</script>
+

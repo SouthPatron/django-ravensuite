@@ -1,190 +1,47 @@
-<style type="text/css">
+{% extends 'modals/_common/types/left_tabbed.html' %}
 
-.dialog {
-	height: 100%;
-}
+{% block dialog_title %}Add a new Client{% endblock %}
 
-.dialog-left-menu {
-	position: absolute;
-	width: 180px;
-	height: 100%;
-	margin-left: 2px;
-	background-color: #afbfaf;
-}
-
-.dialog-left-menu ul {
-	list-type: none;
-	margin-top: 15px;
-}
-
-.dialog-left-menu ul li {
-}
-
-.dialog-left-menu li.dialog-left-menu-active {
-	background-color: white;
-}
-
-.dialog-left-menu li.dialog-left-menu-active a {
-	color: black;
-}
-
-.dialog-left-menu ul li a {
-	display: block;
-	padding: 10px;
-	color: white;
-	font-size: 1.3em;
-	cursor: pointer;
-}
-
-.dialog-right-panel {
-	margin-left: 200px;
-	padding-top: 20px;
-	overflow: auto;
-	height: 100%;
-}
-
-.dialog-right-panel label
-{
-	font-size: 1.2em;
-	clear: both;
-	float: left;
-	text-align: right;
-	width: 180px;
-	margin-right: 20px;
-	word-wrap: break-word;
-}
-
-.dialog-right-panel input,
-.dialog-right-panel select,
-.dialog-right-panel textarea
-{
-	border: 1px solid #dedbd1;
-	float: left;
-	margin-top: -2px;
-	margin-bottom: 10px;
-}
+{% block dialog_style %}width: 800px; height: 500px;{% endblock %}
 
 
-
-</style>
-
-
-<div style="width: 800px; height: 500px;">
-
-	<div class="ral_dialog_titlebar ral_clear">
-		<span class="ral_dialog_title">Add a new Client</span>
-		<a class="ral_dialog_titlebar_close ral_action_close">
-			<span>close</span>
-		</a>
-	</div>
+{% block dialog_post_title %}
+<form id="create-new-form" method="POST" action="{{ request.META.PATH_INFO }}">
+{% csrf_token %}
+<input type="hidden" name="oid" value="{{ data.oid }}" />
+<input type="hidden" name="meta.action" value="apply" />
+{% endblock %}
 
 
-	<form id="create-new-form" method="POST" action="{{ request.META.PATH_INFO }}">
-	{% csrf_token %}
-	<input type="hidden" name="oid" value="{{ data.oid }}" />
-	<input type="hidden" name="meta.action" value="apply" />
+{% block dialog_left_menu %}
+<ul>
+	<li><a>Information</a></li>
+	<li><a>Contact Details</a></li>
+</ul>
+{% endblock %}
 
 
-	<div class="ral_dialog_content ral_clear">
-
-		<div class="dialog">
-
-			<div class="dialog-left-menu">
-				<ul>
-					<li><a>Information</a></li>
-					<li><a>Contact Details</a></li>
-				</ul>
-			</div>
-
-			<div class="dialog-right-panel">
-
-				<div>
-					<p class="validateTips">All form fields are required</p>
-
-					<label for="trading_name">Trading Name</label>
-					<input type="text" id="id_trading_name" name="trading_name" />
-
-				</div>
-
-				<div>
-					<p class="validateTips">All form fields are required</p>
-
-					<label for="telephone_number">Telephone Number</label>
-					<input type="text" id="id_telephone_number" name="telephone_number" />
-
-					<label for="fax_number">Fax Number</label>
-					<input type="text" id="id_fax_number" name="fax_number" />
-
-					<label for="email_address">Email Address</label>
-					<input type="text" id="id_email_address" name="email_address" />
-
-					<label for="postal_address">Postal Address</label>
-					<textarea id="id_postal_address" name="postal_address" cols="40" rows="5" style="resize: none;"></textarea><br/>
-					<label for="physical_address">Physical Address</label>
-					<textarea id="id_physical_address" name="physical_address" cols="40" rows="5" style="resize: none;"></textarea>
-				</div>
-
-			</div>
-		</div>
-
-	</div> <!-- .ral_dialog_content -->
-
-	</form>
-
-	<div class="ral_dialog_buttonbar ral_clear">
-		<button type="button" class="ral_action_close">Cancel</button>
-		<button type="button" id="id_submit_button">Add a new Client</button>
-	</div>
+{% block dialog_right_panel %}
+<div>
+	{% include 'modals/_common/forms/input.html' with field=extra.form.trading_name %}
 </div>
 
-<script type="text/javascript">
+<div>
+	{% include 'modals/_common/forms/input.html' with field=extra.form.telephone_number %}
+	{% include 'modals/_common/forms/input.html' with field=extra.form.fax_number %}
+	{% include 'modals/_common/forms/input.html' with field=extra.form.email_address %}
+	{% include 'modals/_common/forms/textarea.html' with field=extra.form.postal_address %}
+	{% include 'modals/_common/forms/textarea.html' with field=extra.form.physical_address %}
+</div>
+{% endblock %}
 
-$(function() {
+{% block dialog_post_content %}
+	</form>
+{% endblock %}
 
-	$(".dialog .dialog-right-panel div").hide().eq(0).show();
+{% block dialog_buttons %}
+<button type="button" class="ral_action_close">Cancel</button>
+<button type="button" class="ral_action_submit">Add a new Client</button>
+{% endblock %}
 
-	$(".dialog .dialog-left-menu li").eq(0).addClass( "dialog-left-menu-active" );
-
-	$( ".dialog" ).each( function() {
-
-		$( ".dialog-left-menu li a" ).click(function(){
-
-				$(".dialog .dialog-left-menu li.dialog-left-menu-active").removeClass( "dialog-left-menu-active" );
-
-				$(this).parent("li").addClass( "dialog-left-menu-active" );
-				
-				var count = $(".dialog-left-menu a").index( this );
-
-				$(".dialog .dialog-right-panel div").hide().eq(count).show();
-				
-			});
-	});
-		
-});
-
-
-/* ---------- Validation functions -------------------- */
-
-$(function() {
-		
-	var trading_name = $( "#id_trading_name" ),
-		allFields = $( [] ).add( trading_name ),
-		tips = $( ".validateTips" );
-
-
-	$( "#id_submit_button" ).click(function(e) {
-			var bValid = true;
-			allFields.removeClass( "ui-state-error" );
-
-			bValid = bValid && validation.length( tips, trading_name, "Trading Name", 3, 192 );
-
-			if ( bValid ) {
-				$( "#create-new-form" ).submit();
-			}
-	});
-});
-
-//@ sourceURL=modalScript.js
-
-</script>
 

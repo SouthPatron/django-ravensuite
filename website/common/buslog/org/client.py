@@ -19,10 +19,10 @@ class ClientBusLog( object ):
 
 
 	@staticmethod
-	def create( org, trading_name ):
+	def create( org, data ):
 
 		try:
-			newclient = Client.objects.get( trading_name = trading_name, organization = org )
+			newclient = Client.objects.get( trading_name = data[ 'trading_name' ], organization = org )
 
 			raise BLE_ConflictError( _('BLE_50002') )
 		except Client.DoesNotExist:
@@ -34,8 +34,14 @@ class ClientBusLog( object ):
 		newclient = Client()
 		newclient.organization = org
 		newclient.refnum = refnum
-		newclient.trading_name = trading_name
+		newclient.trading_name = data[ 'trading_name' ]
+		newclient.telephone_number = data.get( 'telephone_number', '' )
+		newclient.fax_number = data.get( 'fax_number', '' )
+		newclient.email_address = data.get( 'email_address', '' )
+		newclient.postal_address = data.get( 'postal_address', '' )
+		newclient.physical_address = data.get( 'physical_address', '' )
 		newclient.save()
+
 
 		account = Account()
 		account.client = newclient

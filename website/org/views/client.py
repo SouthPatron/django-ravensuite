@@ -26,7 +26,7 @@ class ClientList( ListView ):
 	
 	def _create_object( self, request, data, *args, **kwargs ):
 		org = Organization.objects.get( refnum = self.url_kwargs.oid )
-		return ClientBusLog.create( org, data[ 'trading_name' ] )
+		return ClientBusLog.create( org, data )
 
 
 	def create_object_html( self, request, data, *args, **kwargs ):

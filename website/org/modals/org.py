@@ -16,6 +16,8 @@ from common.buslog.org.org import *
 from common.buslog.org.user import *
 from common.exceptions import *
 
+from ..forms.client import AddClient
+
 
 class NewOrganization( ModalLogic ):
 
@@ -43,7 +45,8 @@ class NewOrganization( ModalLogic ):
 class NewClient( ModalLogic ):
 
 	def get_extra( self, request, dmap, *args, **kwargs ):
-		return None
+		myobj = { 'form' : AddClient() }
+		return myobj
 
 	def get_object( self, request, dmap, *args, **kwargs ):
 		return None
@@ -52,8 +55,13 @@ class NewClient( ModalLogic ):
 
 		org = Organization.objects.get( refnum = dmap[ 'oid' ] )
 
+		extra[ 'form' ] = AddClient( dmap )
+		if extra[ 'form' ].is_valid() is False:
+			self.easy.make_get()
+			return
+
 		try:
-			newo = ClientBusLog.create( org, dmap[ 'trading_name' ] )
+			newo = ClientBusLog.create( org, dmap )
 		except BLE_Error, berror:
 			messages.error( request, berror.message )
 			self.easy.make_get()

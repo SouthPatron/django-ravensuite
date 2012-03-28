@@ -4,6 +4,7 @@ from __future__ import unicode_literals
 from django.db import models
 from django.db.models import F,Q
 from django.contrib.auth.models import User
+from django.core.validators import validate_email, MinLengthValidator
 
 from django.core.urlresolvers import reverse
 
@@ -166,7 +167,13 @@ class UserPermissions( models.Model ):
 class Client( models.Model ):
 	organization = models.ForeignKey( Organization )
 	refnum = models.BigIntegerField()
-	trading_name = models.CharField( max_length = 192 )
+	trading_name = models.CharField( max_length = 192, validators = [MinLengthValidator(1)] )
+
+	telephone_number = models.CharField( max_length = 64, blank = True, default = '' )
+	fax_number = models.CharField( max_length = 64, blank = True, default = '' )
+	email_address = models.CharField( max_length = 256, blank = True, default = '', validators=[validate_email] )
+	postal_address = models.TextField( blank = True, default = '' )
+	physical_address = models.TextField( blank = True, default = '' )
 
 	def get_org( self ):
 		return self.organization

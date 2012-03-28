@@ -15,11 +15,14 @@ class ModalLogic( object ):
 			super( ModalLogic.Easy, self ).__init__()
 			self.parent = parent
 
+		def _makename( self, name ):
+			self.parent.template_name = 'modals/_common/standard/{}.{}.{}'.format( name, self.parent.method, self.parent.fmt )
+
 		def redirect( self ):
-			self.parent.template_name = 'modals/_common/redirect.{}.{}'.format( self.parent.method, self.parent.fmt )
+			self._makename( 'redirect' )
 
 		def notice( self ):
-			self.parent.template_name = 'modals/_common/notice.{}.{}'.format( self.parent.method, self.parent.fmt )
+			self._makename( 'notice' )
 
 		def make_get( self ):
 			self.parent.method = 'get'

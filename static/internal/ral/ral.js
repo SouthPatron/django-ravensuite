@@ -116,17 +116,19 @@ ral.html.resizeContainerContent = function( url ) {
 	var digest = Crypto.MD5( url );
 	var mybox = $(document).find( "#" + digest ).find( ".ral_box" );
 
-	var availableHeight = mybox.height();
+	if ( mybox ) {
+		var availableHeight = mybox.height();
 
-	mybox.find( ".ral_dialog_titlebar" ).each( function() {
-		availableHeight -= $(this).outerHeight( true );
-	});
+		mybox.find( ".ral_dialog_titlebar" ).each( function() {
+			availableHeight -= $(this).outerHeight( true );
+		});
 
-	mybox.find( ".ral_dialog_buttonbar" ).each( function() {
-		availableHeight -= $(this).outerHeight( true );
-	});
+		mybox.find( ".ral_dialog_buttonbar" ).each( function() {
+			availableHeight -= $(this).outerHeight( true );
+		});
 
-	mybox.find( ".ral_dialog_content" ).height( availableHeight  );
+		mybox.find( ".ral_dialog_content" ).height( availableHeight  );
+	}
 }
 
 ral.html.fetchContainer = function( url, pdata, success ) {
@@ -140,10 +142,10 @@ ral.html.fetchContainer = function( url, pdata, success ) {
 ral.html.applyContainer = function( url, pdata, success ) {
 	ral.html.applyObject( url, pdata, function( obj ) {
 		ral.html.updateContainer( url, obj );
+		ral.html.resizeContainerContent( url );
 		success( url );
 	});
 }
-
 
 
 
