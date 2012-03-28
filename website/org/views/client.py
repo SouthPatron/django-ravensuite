@@ -30,7 +30,7 @@ class ClientList( ListView ):
 
 
 	def create_object_html( self, request, data, *args, **kwargs ):
-		form = forms.AddClient( data or None )
+		form = forms.EditClient( data or None )
 		if form.is_valid() is False:
 			return redirect( 'org-client-list', oid = self.url_kwargs.oid )
 
@@ -62,7 +62,7 @@ class ClientSingle( SingleObjectView ):
 		return redirect( 'org-client-list', oid = ob.organization.refnum )
 
 	def update_object_json( self, request, obj, data, *args, **kwargs ):
-		obj.trading_name = data.get( 'trading_name', obj.trading_name )
+		ClientBusLog.update( obj, data )
 		obj.save()
 		return redirect( 'org-client-single', oid = obj.organization.refnum, cid = obj.refnum )
 

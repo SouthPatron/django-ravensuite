@@ -42,7 +42,7 @@ class ModalLogic( object ):
 	def prepare( self, *args, **kwargs ):
 		pass
 
-	def get_extra( self, request, dmap, *args, **kwargs ):
+	def get_extra( self, request, dmap, obj, *args, **kwargs ):
 		return None
 
 	def get_object( self, request, dmap, *args, **kwargs ):
@@ -100,7 +100,7 @@ class ModalView( Base ):
 		logic.prepare( request, modal_name, fmt, dmap, *args, **kwargs )
 
 		ob = logic.get_object( request, dmap, *args, **kwargs )
-		extra = logic.get_extra( request, dmap, *args, **kwargs )
+		extra = logic.get_extra( request, dmap, ob, *args, **kwargs )
 
 		if request.method == 'POST':
 			result = logic.perform( request, dmap, ob, extra, fmt, *args, **kwargs )

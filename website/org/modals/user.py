@@ -11,7 +11,7 @@ from common.exceptions import *
 
 class NewUser( ModalLogic ):
 
-	def get_extra( self, request, dmap, *args, **kwargs ):
+	def get_extra( self, request, dmap, obj, *args, **kwargs ):
 		return None
 
 	def get_object( self, request, dmap, *args, **kwargs ):

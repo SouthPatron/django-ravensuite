@@ -1,0 +1,48 @@
+{% extends 'modals/_common/types/left_tabbed.html' %}
+
+{% block dialog_title %}Edit Client{% endblock %}
+
+{% block dialog_style %}width: 800px; height: 500px;{% endblock %}
+
+
+{% block dialog_post_title %}
+<form method="POST" action="{{ request.META.PATH_INFO }}">
+{% csrf_token %}
+<input type="hidden" name="oid" value="{{ data.oid }}" />
+<input type="hidden" name="cid" value="{{ data.cid }}" />
+<input type="hidden" name="meta.action" value="apply" />
+{% endblock %}
+
+
+{% block dialog_left_menu %}
+<ul>
+	<li><a>Information</a></li>
+	<li><a>Contact Details</a></li>
+</ul>
+{% endblock %}
+
+
+{% block dialog_right_panel %}
+<div>
+	{% include 'modals/_common/forms/input.html' with field=extra.form.trading_name %}
+</div>
+
+<div>
+	{% include 'modals/_common/forms/input.html' with field=extra.form.telephone_number %}
+	{% include 'modals/_common/forms/input.html' with field=extra.form.fax_number %}
+	{% include 'modals/_common/forms/input.html' with field=extra.form.email_address %}
+	{% include 'modals/_common/forms/textarea.html' with field=extra.form.postal_address %}
+	{% include 'modals/_common/forms/textarea.html' with field=extra.form.physical_address %}
+</div>
+{% endblock %}
+
+{% block dialog_post_content %}
+	</form>
+{% endblock %}
+
+{% block dialog_buttons %}
+<button type="button" class="ral_action_close">Cancel</button>
+<button type="button" class="ral_action_submit">Save</button>
+{% endblock %}
+
+

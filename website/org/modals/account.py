@@ -14,7 +14,7 @@ from common.exceptions import *
 
 class AccountNewInvoice( ModalLogic ):
 
-	def get_extra( self, request, dmap, *args, **kwargs ):
+	def get_extra( self, request, dmap, obj, *args, **kwargs ):
 		return None
 
 	def get_object( self, request, dmap, *args, **kwargs ):
@@ -38,7 +38,7 @@ class AccountNewInvoice( ModalLogic ):
 
 class AccountNewPayment( ModalLogic ):
 
-	def get_extra( self, request, dmap, *args, **kwargs ):
+	def get_extra( self, request, dmap, obj, *args, **kwargs ):
 		return None
 
 	def get_object( self, request, dmap, *args, **kwargs ):
@@ -62,7 +62,7 @@ class AccountNewPayment( ModalLogic ):
 
 class AccountNewCreditnote( ModalLogic ):
 
-	def get_extra( self, request, dmap, *args, **kwargs ):
+	def get_extra( self, request, dmap, obj, *args, **kwargs ):
 		return None
 
 	def get_object( self, request, dmap, *args, **kwargs ):
@@ -86,7 +86,7 @@ class AccountNewCreditnote( ModalLogic ):
 
 class AccountNewRefund( ModalLogic ):
 
-	def get_extra( self, request, dmap, *args, **kwargs ):
+	def get_extra( self, request, dmap, obj, *args, **kwargs ):
 		return None
 
 	def get_object( self, request, dmap, *args, **kwargs ):

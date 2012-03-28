@@ -1,5 +1,7 @@
 {% extends 'pages/org/client/base.html' %}
 
+{% block tpl_ps_rely %}ral jquery.tools{% endblock %}
+
 {% block tpl_si_section %}Dashboard{% endblock %}
 
 {% block tpl_bl_body_content_center %}
@@ -17,6 +19,26 @@
 </table>
 
 {% endblock %}
+
+
+{% block tpl_bl_head_onready %}
+	ral.html.custom.attach_fetch( '#id_ral_modal_org_edit_client', 'org.edit.client',
+				{ oid: {{ kwargs.oid }}, cid: {{ kwargs.cid }} } );
+
+{% endblock %}
+
+
+{% block tpl_bl_body_content_right %}
+
+<div class="widget">
+<h3>Clients</h3>
+<ul>
+	<li><a id="id_ral_modal_org_edit_client">Edit Client Details</a></li>
+</ul>
+</div>
+
+{% endblock %}
+
 
 
 

@@ -16,12 +16,12 @@ from common.buslog.org.org import *
 from common.buslog.org.user import *
 from common.exceptions import *
 
-from ..forms.client import AddClient
+from ..forms.client import EditClient as EditClientForm
 
 
 class NewOrganization( ModalLogic ):
 
-	def get_extra( self, request, dmap, *args, **kwargs ):
+	def get_extra( self, request, dmap, obj, *args, **kwargs ):
 		return None
 
 	def get_object( self, request, dmap, *args, **kwargs ):
@@ -44,18 +44,16 @@ class NewOrganization( ModalLogic ):
 
 class NewClient( ModalLogic ):
 
-	def get_extra( self, request, dmap, *args, **kwargs ):
-		myobj = { 'form' : AddClient() }
+	def get_extra( self, request, dmap, obj, *args, **kwargs ):
+		myobj = { 'form' : EditClientForm() }
 		return myobj
 
-	def get_object( self, request, dmap, *args, **kwargs ):
-		return None
 
 	def perform( self, request, dmap, obj, extra, fmt, *args, **kwargs ):
 
 		org = Organization.objects.get( refnum = dmap[ 'oid' ] )
 
-		extra[ 'form' ] = AddClient( dmap )
+		extra[ 'form' ] = EditClientForm( dmap )
 		if extra[ 'form' ].is_valid() is False:
 			self.easy.make_get()
 			return
@@ -71,5 +69,35 @@ class NewClient( ModalLogic ):
 
 		self.easy.notice();
 		return newo
+
+
+class EditClient( ModalLogic ):
+
+	def get_extra( self, request, dmap, obj, *args, **kwargs ):
+		myobj = { 'form' : EditClientForm( instance = obj ) }
+		return myobj
+
+	def get_object( self, request, dmap, *args, **kwargs ):
+		return Client.objects.get( refnum = dmap[ 'cid' ], organization__refnum = dmap[ 'oid' ] )
+
+	def perform( self, request, dmap, obj, extra, fmt, *args, **kwargs ):
+
+		extra[ 'form' ] = EditClientForm( dmap )
+		if extra[ 'form' ].is_valid() is False:
+			self.easy.make_get()
+			return
+
+		try:
+			ClientBusLog.update( obj, dmap )
+			obj.save()
+		except BLE_Error, berror:
+			messages.error( request, berror.message )
+			self.easy.make_get()
+			return
+
+		messages.success( request, _('VMG_20002') % { 'url' : obj.get_single_url(), 'name' : obj.trading_name } )
+
+		self.easy.notice();
+		return obj
 
 
