@@ -115,12 +115,18 @@ ral.html.updateContainer = function( url, newhtml ) {
 ral.html.resizeContainerContent = function( url ) {
 	var digest = Crypto.MD5( url );
 	var mybox = $(document).find( "#" + digest ).find( ".ral_box" );
-	var content = mybox.find( ".ral_dialog_content" );
+
+	var availableHeight = mybox.height();
+
+	mybox.find( ".ral_dialog_titlebar" ).each( function() {
+		availableHeight -= $(this).outerHeight( true );
+	});
 
 	mybox.find( ".ral_dialog_buttonbar" ).each( function() {
-		var buttonbar_height = $(this).outerHeight( true );
-		mybox.find( ".ral_dialog_content" ).css( 'margin-bottom', buttonbar_height + 'px' );
+		availableHeight -= $(this).outerHeight( true );
 	});
+
+	mybox.find( ".ral_dialog_content" ).height( availableHeight  );
 }
 
 ral.html.fetchContainer = function( url, pdata, success ) {

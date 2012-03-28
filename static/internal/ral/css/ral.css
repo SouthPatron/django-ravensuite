@@ -65,6 +65,7 @@
 
 .ral_container div.ral_dialog_content
 {
+	position: relative;
 	overflow: hidden;
 }
 

@@ -17,7 +17,7 @@
 .ral_container div.ral_dialog_titlebar
 {
 	padding: 5px;
-	background-color: #202020;
+	background-color: #4E5E4E;
 	margin: 2px;
 	border-radius: 5px 5px 0px 0px;
 }
@@ -58,7 +58,7 @@
 
 .ral_container div.ral_dialog_buttonbar
 {
-	background-color: #202020;
+	background-color: #4E5E4E;
 	margin: 2px;
 	padding: 5px;
 	text-align: right;
