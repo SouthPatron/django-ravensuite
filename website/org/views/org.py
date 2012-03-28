@@ -36,7 +36,7 @@ class OrgList( ListView ):
 		return newobj_list
 
 	def create_object_html( self, request, data, *args, **kwargs ):
-		form = forms.CreateOrganization( data or None )
+		form = forms.EditOrganization( data or None )
 		if form.is_valid() is False:
 			return redirect( 'org-list' )
 
@@ -57,7 +57,7 @@ class OrgList( ListView ):
 
 
 	def _create_object( self, request, data, *args, **kwargs ):
-		neworg = OrgBusLog.create( request.user, data[ 'trading_name' ] )
+		neworg = OrgBusLog.create( request.user )
 		UserBusLog.grant( request.user, neworg, UserCategory.OWNER )
 		return neworg
 
@@ -84,7 +84,7 @@ class OrgSingle( SingleObjectView ):
 		return self.api_resp( resp )
 
 	def _update_object( self, request, obj, data, *args, **kwargs ):
-		obj.trading_name = data.get( 'trading_name', obj.trading_name )
+		OrgBusLog( obj, data )
 		obj.save()
 
 

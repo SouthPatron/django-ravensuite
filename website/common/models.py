@@ -113,6 +113,13 @@ class Organization( models.Model ):
 	trading_name = models.CharField( max_length = 192 )
 	refnum = models.BigIntegerField( unique = True )
 
+	telephone_number = models.CharField( max_length = 64, blank = True, default = '' )
+	fax_number = models.CharField( max_length = 64, blank = True, default = '' )
+	email_address = models.CharField( max_length = 256, blank = True, default = '', validators=[validate_email] )
+	postal_address = models.TextField( blank = True, default = '' )
+	physical_address = models.TextField( blank = True, default = '' )
+
+
 	def get_single_url( self ):
 		return reverse( 'org-single', kwargs = { 'oid' : self.refnum } )
 	

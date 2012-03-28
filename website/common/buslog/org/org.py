@@ -16,12 +16,22 @@ class OrgBusLog( object ):
 		sc.save()
 		return refnum
 
+	@staticmethod
+	def update( org, data ):
+		org.trading_name = data.get( 'trading_name', org.trading_name )
+		org.telephone_number = data.get( 'telephone_number', org.telephone_number )
+		org.fax_number = data.get( 'fax_number', org.fax_number )
+		org.email_address = data.get( 'email_address', org.email_address )
+		org.postal_address = data.get( 'postal_address', org.postal_address )
+		org.physical_address = data.get( 'physical_address', org.physical_address )
+
+
 
 	@staticmethod
-	def create( user, trading_name ):
+	def create( user, data ):
 
 		try:
-			neworg = Organization.objects.get( trading_name = trading_name, usermembership__user = user )
+			neworg = Organization.objects.get( trading_name = data[ 'trading_name' ], usermembership__user = user )
 
 			raise BLE_ConflictError( _('BLE_50003') )
 		except Organization.DoesNotExist:
@@ -30,8 +40,10 @@ class OrgBusLog( object ):
 		refnum = OrgBusLog.get_next_refnum()
 
 		neworg = Organization()
-		neworg.trading_name = trading_name
 		neworg.refnum = refnum
+
+		OrgBusLog.update( neworg, data )
+
 		neworg.save()
 
 		OrganizationCounter.objects.create( organization = neworg )

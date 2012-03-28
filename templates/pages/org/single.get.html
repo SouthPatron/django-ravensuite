@@ -1,5 +1,7 @@
 {% extends 'pages/org/base.html' %}
 
+{% block tpl_ps_rely %}datatables ral sitekit jquery.tools{% endblock %}
+
 {% block tpl_si_section %}Dashboard{% endblock %}
 
 {% block tpl_bl_body_content_center %}
@@ -17,5 +19,26 @@
 </table>
 
 {% endblock %}
+
+
+{% block tpl_bl_head_onready %}
+	ral.html.custom.attach_fetch( '#id_ral_modal_org_edit_organization', 'org.edit.organization',
+				{ oid: {{ kwargs.oid }} } );
+
+{% endblock %}
+
+
+{% block tpl_bl_body_content_right %}
+
+<div class="widget">
+<h3>Organization</h3>
+<ul>
+	<li><a id="id_ral_modal_org_edit_organization">Edit Details</a></li>
+</ul>
+</div>
+
+{% endblock %}
+
+
 
 
