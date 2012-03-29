@@ -156,21 +156,6 @@ var mapping = {
 
 	{% get_document_obj instance as sdoc %}
 
-	{% for li in sdoc.getLines.all %}
-		afes.ex.table.appendRow(
-			"#id_table",
-			[
-				"{{ li.description|escapejs }}",
-				"{{ li.units|decsplay }}",
-				"{{ li.perunit|decsplay }}",
-				"{{ li.get_tax_rate_display|escapejs }}",
-				"{{ li.tax_amount|decsplay }}",
-				"{{ li.amount|decsplay }}",
-				$( "#click_me_div" ).html(),
-			]
-		);
-	{% endfor %}
-
 
 	function installDeleteHooks()
 	{
@@ -185,6 +170,8 @@ var mapping = {
 		installDeleteHooks();
 	});
 
+
+	afes.ex.table.appendDefaultRow( "#id_table" );
 
 	installDeleteHooks();
 
@@ -203,9 +190,6 @@ var mapping = {
 	});
 
 
-
-
-	afes.ex.table.appendDefaultRow( "#id_table" );
 
 {% endblock %}
 
@@ -259,12 +243,26 @@ var mapping = {
 	<th class="head-delete">&nbsp;</th>
 </thead>
 <tbody>
+
+
+{% for li in sdoc.getLines.all %}
+<tr>
+	<td>{{ li.description|escapejs }}</td>
+	<td>{{ li.units|decsplay }}</td>
+	<td>{{ li.perunit|decsplay }}</td>
+	<td>{{ li.get_tax_rate_display|escapejs }}</td>
+	<td>{{ li.tax_amount|decsplay }}</td>
+	<td>{{ li.amount|decsplay }}</td>
+	<td><img class="item-delete-link" src='{{ STATIC_URL }}local/images/icons/line_delete_grey.png' /></td>
+</tr>
+{% endfor %}
+
+
+
 </tbody>
 </table>
 
 </div>
-
-
 
 
 	<div class="summary-row">

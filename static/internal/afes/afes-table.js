@@ -166,16 +166,35 @@ afes.ex.table.init = function( elem, settings ) {
 	$( elem ).find( "thead tr td, thead tr th" ).last().addClass( "afes-table-head-cell-last" );
 	$( elem ).find( "thead tr td, thead tr th" ).addClass( "afes-table-head-cell" );
 
+	// Import any initial data within the table
+
+	afes.ex.table.importInitialData( elem, settings );
+
 	// Set up the initial rows
 
 	var ds = data.settings;
-	var initial_rows = ds.initial_rows;
+	var initial_rows = ds.initial_rows - afes.ex.table.getRowCount( elem );
 
 	for ( var i = 0; i < initial_rows; i++ )
 		afes.ex.table.appendDefaultRow( elem );
 
 }
 
+afes.ex.table.importInitialData = function( elem, settings ) {
+
+	var count = 0;
+
+	$( elem ).find( "tbody tr" ).each( function() {
+
+		var values = new Array();
+		$(this).find("td").each( function() {
+			values.push( $(this).html() );
+		});
+
+		afes.ex.table.insertRow( elem, values, count++ );
+		$(this).remove();
+	});
+}
 
 
 afes.ex.table.getCellNum = function( cell )
@@ -514,12 +533,13 @@ afes.ex.table.insertRow = function( elem, values, pos ) {
 
 	// CSS Classes
 
-	if ( $(elem).find( "tbody tr" ).length == 1 )
-		$( row ).addClass( "afes-table-body-row-first" );
+	$( elem ).find( ".afes-table-body-row-first" ).removeClass( "afes-table-body-row-first" );
+	$( elem ).find( "tbody tr" ).first().addClass( "afes-table-body-row-first" );
 
 	$( elem ).find( ".afes-table-body-row-last" ).removeClass( "afes-table-body-row-last" );
-	$( row ).addClass( "afes-table-body-row-last afes-table-body-row" );
+	$( elem ).find( "tbody tr" ).last().addClass( "afes-table-body-row-last" );
 
+	$( row ).addClass( "afes-table-body-row" );
 	$( row ).find("td").first().addClass( "afes-table-body-cell-first" );
 	$( row ).find("td").last().addClass( "afes-table-body-cell-last" );
 	$( row ).find("td").addClass( "afes-table-body-cell" );
