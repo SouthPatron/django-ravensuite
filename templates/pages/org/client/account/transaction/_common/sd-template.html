@@ -1,0 +1,73 @@
+{% extends 'pages/org/client/account/transaction/base.html' %}
+
+{% block tpl_ps_rely %}sitekit date afes-table jquery.tools{% endblock %}
+
+
+{% block tpl_bl_head_inner %}
+	{{ block.super }}
+
+	<!-- wrapper, inputs and labels  -->
+	<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}custom/jquery.tools/css/dateinput.css"/>
+
+	<!-- calendar styling -->
+	<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}custom/jquery.tools/css/dateinput-calendar.css"/>
+
+
+{% include 'pages/org/client/account/transaction/_common/css/afes.css' %}
+{% include 'pages/org/client/account/transaction/_common/css/itol.css' %}
+
+{% endblock %}
+
+
+
+{% block tpl_bl_body_content_center %}
+
+
+<div class="itol">
+
+	<form method="POST" id="id_sd_form">
+	{% csrf_token %}
+
+	<div class="itol-header clearfix">
+		<div class="itol-type">{% block document_type %}{% endblock %}</div>
+
+		<div class="itol-type-status">
+		{% block document_status %}{% endblock %}
+		</div>
+	</div>
+
+	<div class="itol-status clearfix">
+		<div class="itol-dates">
+			{% block document_dates %}{% endblock %}
+		</div>
+
+		<div class="itol-payment-status">
+			{% block document_payment_status %}{% endblock %}
+		</div>
+	</div>
+
+	{% block document_body %}{% endblock %}
+
+
+	<div class="button-row clearfix">
+		<div class="button-row-left">
+			{% block document_button_row_left %}{% endblock %}
+		</div>
+
+		<div class="button-row-right">
+			{% block document_button_row_right %}{% endblock %}
+		</div>
+	</div>
+
+	<input type="hidden" id="id_sd_state" name="sd_state" value="{{ instance.document_state }}" />
+	</form>
+
+</div>
+
+
+{% block document_addendum %}{% endblock %}
+
+{% endblock %}
+
+
+

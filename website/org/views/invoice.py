@@ -113,7 +113,7 @@ class InvoiceSingle( SingleObjectView ):
 
 		invoice_data = {}
 
-		invoice_data[ 'state' ] = data.get( 'invoice_state' )
+		invoice_data[ 'state' ] = data.get( 'sd_state' )
 
 		if invoice_data[ 'state' ] is not None and long(invoice_data['state']) == SourceDocumentState.DELETE:
 			rc = self.delete_object( request, obj, *args, **kwargs )

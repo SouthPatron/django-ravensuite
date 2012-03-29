@@ -7,6 +7,20 @@ textarea:focus
 }
 
 
+.clearfix {
+	display: block;
+}
+
+.clearfix:after {
+	clear: both;
+	content: ".";
+	display: block;
+	height: 0px;
+	visibility: hidden;
+	overflow: hidden;
+}
+
+
 #id_tpl_bl_body_wrap
 {
 	min-width: 960px;

@@ -1,27 +1,28 @@
-{% extends 'pages/org/client/account/transaction/invoice/single-template.get.html' %}
+{% extends 'pages/org/client/account/transaction/_common/sd-template.html' %}
 
 {% load decshift %}
 {% load sourcedoc %}
+
+{% block tpl_bl_body_functions_sub %}
+{{ block.super }}
+{% include 'pages/org/client/account/transaction/invoice/menu_filter.html' %}
+{% endblock %}
+
+
 
 {% block tpl_bl_head_inner %}
 	{{ block.super }}
 
 	<style>
-#id_table tbody .afes-table-body-cell-type-currency { text-align: right; }
-#id_table thead .head-description { width: 235px; }
-#id_table thead .head-qty { width: 103px; }
-#id_table thead .head-unit-price { width: 147px; }
-#id_table thead .head-tax-rate { width: 165px; }
-#id_table thead .head-tax-amount { width: 80px; }
-#id_table thead .head-amount { width: 128px; }
+#id_table thead .head-description { width: 320px; }
+#id_table thead .head-qty { width: 100px; }
+#id_table thead .head-unit-price { width: 100px; }
+#id_table thead .head-tax-rate { width: 100px; }
+#id_table thead .head-tax-amount { width: 100px; }
+#id_table thead .head-amount { width: 140px; }
 #id_table thead .head-delete { width: 20px; }
 	</style>
 
-	<!-- wrapper, inputs and labels  -->
-	<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}custom/jquery.tools/css/dateinput.css"/>
-
-	<!-- calendar styling -->
-	<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}custom/jquery.tools/css/dateinput-calendar.css"/>
 
 {% endblock %}
 
@@ -35,10 +36,6 @@
 		$(this).parent().toggleClass("active"); 
 	});
 
-	var bob = $('.date_input');
-	var sam = bob.first();
-	var garth = sam.data("dateinput");
-	
 	// when first date input is changed
 	$('.date_input').first().data("dateinput").change(function() {
 			
@@ -46,127 +43,37 @@
 		$('.date_input').last().data("dateinput").setMin(this.getValue(), true);
 	});
 	
+// -------------------------- JavaScript Invoicing ------------------
 
-	function update_totals()
-	{
-		var values = new Array();
+var mapping = {
 
-		$( "#id_table tbody tr" ).each( function() {
-			var my_value = [];
+	amount : [ 'div.qty input', 'div.unit-price input' ],
 
-			// my_value[] = 
-			//		0 = qty
-			//		1 = unit-price
-			//		2 = tax-rate
-			//		3 = tax-amount
-			//		4 = amount
-			//		5 = total
-
-			my_value[0] = $(this).find( "div.qty input" ).attr( "value" );
-			my_value[1] = $(this).find( "div.unit-price input" ).attr( "value" );
-			my_value[2] = $(this).find( "div.tax-rate input" ).attr( "value" );
-
-			if ( (isNaN( my_value[0] )) || (isNaN( my_value[1])) || (isNaN( my_value[2] )) )
-				return;
-
-			my_value[5] = ((new Number( my_value[0] )) * (new Number( my_value[1] )) );
-
-			var rate = ( new Number( "0.14" ) );
-
-			if ( my_value[2] == 1 )
-			{
-				my_value[3] = (new Number(my_value[5] / (rate + 1))).toFixed(2);
-				my_value[4] = (new Number(my_value[5])) - (new Number(my_value[3]));
-			}
-			else
-			{
-				if ( my_value[2] == 2 )
-				{
-					my_value[3] = my_value[5];
-					my_value[4] = (new Number(my_value[3] * rate)).toFixed(2);
-					my_value[5] = ((new Number(my_value[3])) + (new Number(my_value[4])));
-				}
-				else
-				{
-					my_value[3] = my_value[5];
-					my_value[4] = "0.00";
-				}
-			}
-			values.push( my_value );
-
-			$(this).find( ".tax-amount" ).text( (new Number(my_value[4])).toFixed(2) );
-		});
-
-		total_amount = new Number( 0 );
-		total_tax = new Number( 0 );
-		total_total = new Number( 0 );
-
-		for ( var i = 0; i < values.length; i++ )
-		{
-			total_amount += (new Number(values[i][3]));
-			total_tax += (new Number(values[i][4]));
-			total_total += (new Number(values[i][5]));
+	tax : {
+		selector : 'div.tax-rate input',
+		rates : {
+			'0' : false,
+			'1' : [ true, '0.14' ],
+			'2' : [ false, '0.14' ],
+			'3' : false,
 		}
+	},
 
-
-		$( "#summary_amount" ).empty().append( total_amount.toFixed(2) );
-		$( "#summary_tax" ).empty().append( total_tax.toFixed(2) );
-		$( "#summary_total" ).empty().append( total_total.toFixed(2) );
-
-		$( "#id_itol_amount" ).val( total_amount.toFixed(2) );
-		$( "#id_itol_tax" ).val( total_tax.toFixed(2) );
-		$( "#id_itol_total" ).val( total_total.toFixed(2) );
+	display : {
+		row : {
+			tax : '.tax-amount',
+			amount : '.amount'
+		},
+		total : {
+			tax : '#summary_tax',
+			amount : '#summary_amount',
+			total : '#summary_total'
+		}
 	}
+};
 
-	var qtyHooks = {
-		onUpdate : function( event, oldVal, newVal ) {
 
-			var priceElem = $(this).parents( ".afes-table-body-row" ).first().find( "td.unit-price" );
-
-			var amountTd = $(this).parents( ".afes-table-body-row" ).first().find( "td.amount" );
-			var amountInput = $(this).parents( ".afes-table-body-row" ).first().find( "div.amount input" );
-
-			var qty = new Number( newVal );
-			var price = new Number( priceElem.text() );
-
-			var amt = qty * price;
-
-			amountTd.html( amt.toFixed(2) );
-			amountInput.val( amt.toFixed(2) );
-			return true;
-		},
-		onFocusOut : function( event, val ) {
-			update_totals();
-		}
-	};
-
-	var perUnitHooks = {
-		onUpdate : function( event, oldVal, newVal ) {
-
-			var qtyElem = $(this).parents( ".afes-table-body-row" ).first().find( "td.qty" );
-
-			var amountTd = $(this).parents( ".afes-table-body-row" ).first().find( "td.amount" );
-			var amountInput = $(this).parents( ".afes-table-body-row" ).first().find( "div.amount input" );
-
-			var qty = new Number( qtyElem.text() );
-			var price = new Number( newVal );
-
-			var amt = qty * price;
-
-			amountTd.html( amt.toFixed(2) );
-			amountInput.val( amt.toFixed(2) );
-			return true;
-		},
-		onFocusOut : function( event, val ) {
-			update_totals();
-		}
-	};
-
-	var taxRateHooks = {
-		onFocusOut : function( event, val ) {
-			update_totals();
-		}
-	};
+{% include 'pages/org/client/account/transaction/_common/sd-column-tally.js' %}
 
 
 	afes.ex.table.init(
@@ -182,6 +89,7 @@
 					type: "text",
 					initial: "",
 					class: "description",
+					callbacks : updateHooks,
 					form_name : "description"
 				},
 
@@ -189,7 +97,7 @@
 					type: "currency",
 					initial: "0.00",
 					class: "qty",
-					callbacks : qtyHooks,
+					callbacks : updateHooks,
 					form_name : "units"
 				},
 
@@ -197,7 +105,7 @@
 					type: "currency",
 					initial: "0.00",
 					class: "unit-price",
-					callbacks : perUnitHooks,
+					callbacks : updateHooks,
 					form_name : "perunit"
 				},
 
@@ -211,7 +119,7 @@
 					},
 					initial: "Tax Inclusive",
 					class: "tax-rate",
-					callbacks : taxRateHooks,
+					callbacks : updateHooks,
 					form_name : "tax_rate"
 				},
 
@@ -227,8 +135,7 @@
 					type: "currency",
 					initial: "0.00",
 					class: "amount",
-					editable : false,
-					form_name : "amount"
+					editable : false
 				},
 
 				{
@@ -244,6 +151,9 @@
 	);
 
 
+
+// -------------------------- END: JavaScript Invoicing -------------
+
 	{% get_document_obj instance as sdoc %}
 
 	{% for li in sdoc.getLines.all %}
@@ -255,7 +165,7 @@
 				"{{ li.perunit|decsplay }}",
 				"{{ li.get_tax_rate_display|escapejs }}",
 				"{{ li.tax_amount|decsplay }}",
-				"{{ li.total|decsplay }}",
+				"{{ li.amount|decsplay }}",
 				$( "#click_me_div" ).html(),
 			]
 		);
@@ -279,17 +189,17 @@
 	installDeleteHooks();
 
 	$( "#id_button_save" ).click( function() {
-		$( "#id_invoice_form" ).submit();
+		$( "#id_sd_form" ).submit();
 	});
 
 	$( "#id_button_delete" ).click( function() {
-		$( "#id_invoice_state" ).val( 99 );
-		$( "#id_invoice_form" ).submit();
+		$( "#id_sd_state" ).val( 99 );
+		$( "#id_sd_form" ).submit();
 	});
 
 	$( "#id_button_approve" ).click( function() {
-		$( "#id_invoice_state" ).val( 10 );
-		$( "#id_invoice_form" ).submit();
+		$( "#id_sd_state" ).val( 10 );
+		$( "#id_sd_form" ).submit();
 	});
 
 
@@ -365,8 +275,6 @@
 				<button id="id_itol_add_item_row" type="button">Add a new line</button>
 			</div>
 
-
-
 			<div>
 				<div class="comment-title">
 					<span>Comment:</span>
@@ -385,7 +293,6 @@
 				</div>
 				<div class="inner-amount-amount">
 					<span id="summary_amount">{{ sdoc.getTotals.getAmount|decsplay }}</span>
-					<input type="hidden" id="id_itol_amount" name="invoice_amount" value="{{ sdoc.getTotals.getAmount|decshow }}" />
 				</div>
 			</div>
 
@@ -395,7 +302,6 @@
 				</div>
 				<div class="inner-tax-amount">
 					<span id="summary_tax">{{ sdoc.getTotals.getTax|decsplay }}</span>
-					<input type="hidden" id="id_itol_tax" name="invoice_tax" value="{{ sdoc.getTotals.getTax|decshow }}" />
 				</div>
 			</div>
 
@@ -405,7 +311,6 @@
 				</div>
 				<div class="inner-total-amount">
 					<span id="summary_total">{{ sdoc.getTotals.getTotal|decsplay }}</span>
-					<input type="hidden" id="id_itol_total" name="invoice_total" value="{{ sdoc.getTotals.getTotal|decshow }}" />
 				</div>
 			</div>
 		</div>

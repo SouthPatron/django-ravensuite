@@ -1,3 +1,5 @@
+<style type='text/css'>
+
 .itol
 {
 	position: relative;
@@ -7,18 +9,6 @@
 	box-shadow: 0px 1px 10px #cccccc;
 }
 
-
-.itol .clearfix {
-}
-
-.itol .clearfix:after {
-	content: "\0020";
-	display: block;
-	height: 0;
-	clear: both;
-	visibility: hidden;
-	overflow: hidden;
-}
 
 .itol .itol-header
 {
@@ -138,9 +128,6 @@
 	padding-right: 8px;
 }
 
-
-
-
 .itol .item-list tbody td.item-delete
 {
 	background-color: inherit;
@@ -152,14 +139,11 @@
 	margin-top: 10px;
 }
 
-
-
 .itol .summary-row
 {
 	padding: 20px 20px;
 	background-color: #f0f0f0;
 }
-
 
 .itol .summary-row .comment-portion
 {
@@ -214,7 +198,6 @@
 	text-align: right;
 }
 
-
 .itol .summary-row .summary-portion .inner-tax
 {
 	border-bottom: 1px solid black;
@@ -257,8 +240,6 @@
 	text-align: right;
 }
 
-
-
 .itol .summary-row .summary-portion .inner-paid
 {
 	border-bottom: 1px solid black;
@@ -279,9 +260,6 @@
 	width: 200px;
 	text-align: right;
 }
-
-
-
 
 .itol .summary-row .summary-portion .inner-outstanding
 {
@@ -304,9 +282,6 @@
 	text-align: right;
 }
 
-
-	
-
 .itol .button-row
 {
 	background-color: #a2a2a8;
@@ -328,6 +303,5 @@
 	width: 100%;
 }
 
-
-
+</style>
 
