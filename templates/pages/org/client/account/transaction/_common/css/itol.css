@@ -1,13 +1,19 @@
 <style type='text/css'>
 
+.itol-wrap
+{
+	position: relative;
+	padding: 15px;
+}
+
 .itol
 {
 	position: relative;
-	margin: 15px;
 	background-color: white;
 	border: 1px solid #dedbd1;
 	box-shadow: 0px 1px 10px #cccccc;
 }
+
 
 
 .itol .itol-header
