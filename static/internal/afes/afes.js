@@ -100,8 +100,10 @@ var afes = new function() {
 
 
 	this.numberize = function( val ) {
-		if ( isNaN( val ) ) return (new Number( '0.00')).toFixed(2);
-		return (new Number(val)).toFixed(2);
+		var fixed = val + '';
+		fixed = fixed.replace( /,/g, '' );
+		if ( isNaN( fixed ) ) return (new Number( '0.00')).toFixed(2);
+		return (new Number( fixed )).toFixed(2);
 	}
 
 	// ----------------- Stubs ------------------------------------------

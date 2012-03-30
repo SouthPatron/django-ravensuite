@@ -43,7 +43,6 @@
 		$('.date_input').last().data("dateinput").setMin(this.getValue(), true);
 	});
 	
-// -------------------------- JavaScript Invoicing ------------------
 
 var mapping = {
 
@@ -72,8 +71,7 @@ var mapping = {
 	}
 };
 
-
-{% include 'pages/org/client/account/transaction/_common/sd-column-tally.js' %}
+	afes.cust.bill.init( mapping );
 
 
 	afes.ex.table.init(
@@ -89,7 +87,7 @@ var mapping = {
 					type: "text",
 					initial: "",
 					class: "description",
-					callbacks : updateHooks,
+					callbacks : afes.cust.bill.hooks,
 					form_name : "description"
 				},
 
@@ -97,7 +95,7 @@ var mapping = {
 					type: "currency",
 					initial: "0.00",
 					class: "qty",
-					callbacks : updateHooks,
+					callbacks : afes.cust.bill.hooks,
 					form_name : "units"
 				},
 
@@ -105,7 +103,7 @@ var mapping = {
 					type: "currency",
 					initial: "0.00",
 					class: "unit-price",
-					callbacks : updateHooks,
+					callbacks : afes.cust.bill.hooks,
 					form_name : "perunit"
 				},
 
@@ -119,7 +117,7 @@ var mapping = {
 					},
 					initial: "Tax Inclusive",
 					class: "tax-rate",
-					callbacks : updateHooks,
+					callbacks : afes.cust.bill.hooks,
 					form_name : "tax_rate"
 				},
 
@@ -151,8 +149,6 @@ var mapping = {
 	);
 
 
-
-// -------------------------- END: JavaScript Invoicing -------------
 
 	{% get_document_obj instance as sdoc %}
 

@@ -13,7 +13,8 @@
 .itol .itol-header
 {
 	border-bottom: 1px solid #dedbd1;
-	background-color: #E2E2EF;
+	background-color: #a2a2d2;
+	color: white;
 }
 
 .itol .itol-type
@@ -33,9 +34,7 @@
 .itol .itol-status
 {
 	border-bottom: 1px solid #e2e2e2;
-	padding-left: 20px;
-	padding-top: 20px;
-/*	margin-bottom: 40px; */
+	padding: 5px 20px;
 }
 
 .itol .itol-dates
@@ -46,6 +45,8 @@
 .itol .itol-payment-status
 {
 	float: right;
+	padding-top: 15px;
+	padding-right: 10px;
 }
 
 
