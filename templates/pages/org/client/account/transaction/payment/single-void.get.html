@@ -1,96 +1,24 @@
-{% extends 'pages/org/client/account/transaction/payment/single-template.get.html' %}
+{% extends 'pages/org/client/account/transaction/payment/single-base.html' %}
 
 {% load decshift %}
 {% load sourcedoc %}
 
-{% block tpl_si_section %}Payment{% endblock %}
+{% block local_javascript %}
 
+$( "#id_button_save" ).click( function() {
+	$( "#id_sd_form" ).submit();
+});
 
-{% block tpl_bl_head_onready %}
-
-	$( "#id_void_payment" ).click( function() {
-		$( "#id_payment_state" ).val( 20 );
-		$( "#id_payment_form" ).submit();
-	});
-
-	$( "#id_save_payment" ).click( function() {
-		$( "#id_payment_form" ).submit();
-	});
 
 {% endblock %}
 
 
-
-{% block document_type %}Payment{% endblock %}
-
-{% block document_status %}
+{% block payment_amount %}
 {% get_document_obj instance as doc %}
-<div style="font-size: 2em;">{{ doc.getObj.get_document_state_display }}</div>
-{% endblock %}
-
-
-
-
-{% block document_body %}
-
-{% get_document_obj instance as doc %}
-
-
-<style>
-.itol-payment-table.allocation th {
-	text-align: left;
-	font-weight: bold;
-	padding-bottom: 20px;
-}
-	
-</style>
-
-
-<div style="
-	padding-left: 20px;
-	font-size: 1.3em;
-	">
-	<div style="
-		padding: 20px 0px;
-	">
-		<div style="
-				float: left;
-			">
-			Amount: {{ doc.getTotals.getTotal|decsplay|escape }}
-		</div>
-
-		<div style="
-				float: right;
-				padding-right: 20px;
-			">
-			Date of Payment Receipt: {{ doc.getSpecs.getPaymentDate|date:"j M Y"|escape }}
-		</div>
-	</div>
-
-	<div style="
-		padding: 10px 0px;
-		">
-		<div style="
-				padding: 10px 0px;
-			">Comment:</div>
-		<textarea style="
-			resize: none;
-			width: 350px;
-			height: 60px;
-			border: 1px solid #e2e2e2;
-			margin-top: 10px;
-			"
-			maxlength="255"
-			name="payment_comment">{{ doc.getSpecs.getComment|escape }}</textarea>
-	</div>
-</div>
-
+Amount: {{ doc.getTotals.getTotal|decsplay|escape }}
 {% endblock %}
 
 {% block document_button_row_right %}
-	<button id="id_back_payment" type="button">Back</button>
+	<button id="id_button_save" type="button">Save Payment</button>
 {% endblock %}
-
-
-
 

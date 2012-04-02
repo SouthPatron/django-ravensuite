@@ -1,211 +1,33 @@
-{% extends 'pages/org/client/account/transaction/payment/single-template.get.html' %}
+{% extends 'pages/org/client/account/transaction/payment/single-base.html' %}
 
 {% load decshift %}
 {% load sourcedoc %}
 
-{% block tpl_si_section %}Payment{% endblock %}
+{% block local_javascript %}
+
+$( "#id_button_save" ).click( function() {
+	$( "#id_sd_form" ).submit();
+});
 
 
-{% block tpl_bl_head_onready %}
-
-	$( "#id_void_payment" ).click( function() {
-		$( "#id_payment_state" ).val( 20 );
-		$( "#id_payment_form" ).submit();
-	});
-
-	$( "#id_save_payment" ).click( function() {
-		$( "#id_payment_form" ).submit();
-	});
-
-
-	$( '#id_allocate' ).smkTools(
-		'click_modal',
-		OOD.URL.Component(
-			OOD.URL.Payment( {{ kwargs.oid }}, {{ kwargs.cid }}, {{ kwargs.sdid }} ),
-			'allocate'
-		)
-	);
-
-
-	$( '#id_refund' ).smkTools(
-		'click_modal',
-		OOD.URL.Component(
-			OOD.URL.Payment( {{ kwargs.oid }}, {{ kwargs.cid }}, {{ kwargs.sdid }} ),
-			'refund'
-		)
-	);
-
-
-
-	$( ".item-delete-link" ).click( function() {
-
-		var myid = $(this).parents("tr").find("input").val();
-
-		$(document).smkTools(
-			'load_modal',
-			'item-delete-link',
-			OOD.URL.Component(
-				OOD.URL.PaymentAllocation( {{ kwargs.oid }}, {{ kwargs.cid }}, {{ kwargs.sdid }}, myid )
-			)
-		);
-	});
-
+$( "#id_button_void" ).click( function() {
+	$( "#id_sd_state" ).val( 20 );
+	$( "#id_sd_form" ).submit();
+});
 
 {% endblock %}
 
 
-
-{% block document_type %}Payment{% endblock %}
-
-{% block document_status %}
+{% block payment_amount %}
 {% get_document_obj instance as doc %}
-<div style="font-size: 2em;">{{ doc.getObj.get_document_state_display }}</div>
-{% endblock %}
-
-
-{% block document_dates %}
-{% get_document_obj instance as doc %}
-<div style="
-	font-size: 1.3em;
-	">
-Date of Payment Receipt: {{ doc.getSpecs.getPaymentDate|date:"j M Y"|escape }}
-</div>
-{% endblock %}
-
-{% block document_payment_status %}
-<div style="
-		font-size: 1.3em;
-	">
-{% get_document_obj instance as doc %}
-{% if doc.getTotals.getUnallocated == 0 %}
-<span style=" color: green; ">Fully Allocated</span>
-{% else %}
-<span style=" color: darkred; ">Available for Allocation</span>
-{% endif %}
-</div>
-{% endblock %}
-
-
-
-{% block document_body %}
-
-{% get_document_obj instance as doc %}
-
-
-<style>
-.itol-payment-table.allocation th {
-	text-align: left;
-	font-weight: bold;
-	padding-bottom: 20px;
-}
-	
-</style>
-
-	<div class="summary-row">
-
-		<div class="add-row-portion">
-
-			{% if doc.getTotals.getUnallocated > 0 %}
-			<div>
-				<button id="id_allocate" type="button">Allocate to an Invoice</button>
-				<button id="id_refund" type="button">Refund Portion to Client</button>
-			</div>
-			{% endif %}
-
-			<div>
-				<div class="comment-title">
-					<span>Comments:</span>
-				</div>
-				<div class="comment-block">
-					<textarea maxlength="255" name="payment_comment">{{ doc.getSpecs.getComment|escape }}</textarea>
-				</div>
-			</div>
-		</div>
-
-		<div class="summary-portion">
-
-			<div class="inner-total">
-				<div class="inner-total-label">
-					Total
-				</div>
-				<div class="inner-total-amount">
-					<span id="summary_total">{{ doc.getTotals.getTotal|decsplay }}</span>
-				</div>
-			</div>
-
-
-			<div class="inner-paid">
-				<div class="inner-paid-label">
-					Allocated
-				</div>
-				<div class="inner-paid-amount">
-					<span id="summary_paid">{{ doc.getTotals.getAllocated|decsplay }}</span>
-				</div>
-			</div>
-
-
-			<div class="inner-outstanding">
-				<div class="inner-outstanding-label">
-					Available
-				</div>
-				<div class="inner-outstanding-amount">
-					<span id="summary_outstanding">{{ doc.getTotals.getUnallocated|decsplay }}</span>
-				</div>
-			</div>
-
-		</div>
-
-		<div style="clear: both;">&nbsp;</div>
-	</div>
-
-
-
-{% if doc.getTotals.getAllocated > 0 %}
-
-<div style="
-	border-top: 1px solid #c0c0c0;
-	font-size: 2em;
-	padding: 20px 0px 0px 20px;
-	margin: 20px 0px;
-	">
-Allocations
-</div>
-
-<div class="item-list" style="
-	margin-bottom: 20px;
-	">
-<table id="id_table">
-<thead>
-	<th class="head-description">Description</th>
-	<th class="head-amount">Amount</th>
-	<th class="head-delete">Delete</th>
-</thead>
-<tbody>
-{% for sda in doc.getAllocations.all %}
-	<tr>
-		<td><a href="{{ sda.destination.get_single_url }}">{{ sda.destination.get_document_type_display }} {{ sda.destination.refnum }}</a></td>
-		<td><a href="{{ sda.destination.get_single_url }}">{{ sda.amount|decsplay }}</a></td>
-		<td><img class="item-delete-link" src='{{ STATIC_URL }}local/images/icons/line_delete_grey.png' /><input type="hidden" name="sub_allocation" value="{{ sda.id }}" /></td>
-	</tr>
-{% endfor %}
-</tbody>
-</table>
-</div>
-
-{% endif %}
-
-
+Amount: {{ doc.getTotals.getTotal|decsplay|escape }}
 {% endblock %}
 
 {% block document_button_row_left %}
-	<button id="id_void_payment" type="button">Void Payment</button>
+	<button id="id_button_void" type="button">Void Payment</button>
 {% endblock %}
 
 {% block document_button_row_right %}
-	<button id="id_save_payment" type="button">Save</button>
-	<button id="id_back_payment" type="button">Back</button>
+	<button id="id_button_save" type="button">Save Payment</button>
 {% endblock %}
-
-
-
 

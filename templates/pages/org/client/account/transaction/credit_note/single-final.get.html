@@ -1,25 +1,20 @@
-{% extends 'pages/org/client/account/transaction/credit_note/single-template.get.html' %}
+{% extends 'pages/org/client/account/transaction/credit_note/single-base.html' %}
 
 {% load decshift %}
 {% load sourcedoc %}
 
 
-{% block tpl_bl_head_inner %}
-	{{ block.super }}
-
-	<style>
-#id_table tbody .afes-table-body-cell-type-currency { text-align: right; }
+{% block local_headings %}
 #id_table thead .head-description { width: 235px; }
 #id_table thead .head-qty { width: 103px; }
 #id_table thead .head-unit-price { width: 147px; }
 #id_table thead .head-tax-rate { width: 165px; }
 #id_table thead .head-tax-amount { width: 90px; }
 #id_table thead .head-amount { width: 138px; }
-	</style>
-
 {% endblock %}
 
-{% block tpl_bl_head_onready %}
+
+{% block local_javascript %}
 
 	afes.ex.table.init(
 		$( "#id_table" ),
@@ -36,95 +31,20 @@
 		}
 	);
 
-
-	{% get_document_obj instance as doc %}
-
-	{% for li in doc.getLines.all %}
-		afes.ex.table.appendRow(
-			"#id_table",
-			[
-				"{{ li.description|escapejs }}",
-				"{{ li.units|decsplay }}",
-				"{{ li.perunit|decsplay }}",
-				"{{ li.get_tax_rate_display|escapejs }}",
-				"{{ li.tax_amount|decsplay }}",
-				"{{ li.total|decsplay }}"
-			]
-		);
-	{% endfor %}
-
-
 	$( "#id_button_save" ).click( function() {
-		$( "#id_credit_note_form" ).submit();
+		$( "#id_sd_form" ).submit();
 	});
 
 
 	$( "#id_button_void" ).click( function() {
-		$( "#id_credit_note_state" ).val( 20 );
-		$( "#id_credit_note_form" ).submit();
+		$( "#id_sd_state" ).val( 20 );
+		$( "#id_sd_form" ).submit();
 	});
 
-
-	$( '#id_allocate' ).smkTools(
-		'click_modal',
-		OOD.URL.Component(
-			OOD.URL.Payment( {{ kwargs.oid }}, {{ kwargs.cid }}, {{ kwargs.sdid }} ),
-			'allocate-payment'
-		)
-	);
-
-	$( '#id_refund' ).smkTools(
-		'click_modal',
-		OOD.URL.Component(
-			OOD.URL.CreditNote( {{ kwargs.oid }}, {{ kwargs.cid }}, {{ kwargs.sdid }} ),
-			'refund'
-		)
-	);
-
-
-
-	$( ".item-delete-link" ).click( function() {
-
-		var myid = $(this).parents("tr").find("input").val();
-
-		$(document).smkTools(
-			'load_modal',
-			'item-delete-link',
-			OOD.URL.Component(
-				OOD.URL.PaymentAllocation( {{ kwargs.oid }}, {{ kwargs.cid }}, {{ kwargs.sdid }}, myid ),
-				'delete'
-			)
-		);
-	});
-
-
-
-
 {% endblock %}
 
 
-{% block document_type %}CREDIT NOTE{% endblock %}
-{% block document_status %}
-{% include 'pages/org/client/account/transaction/_common/status-label.html' %}
-{% endblock %}
-
-
-{% block document_dates %}
-
-{% get_document_obj instance as doc %}
-
-<fieldset>
-	<label for="name">Credit Date</label>
-	<input type="text" name="credit_note_date" id="id_itol_date" class="text ui-widget-content ui-corner-all" value="{{ doc.getSpecs.getCreditNoteDate|date:"j M Y" }}" />
-</fieldset>
-{% endblock %}
-
-{% block document_body %}
-
-{% get_document_obj instance as doc %}
-
-
-<div class="item-list">
+{% block local_table %}
 <table id="id_table">
 <thead>
 	<th class="head-description">Description</th>
@@ -135,106 +55,21 @@
 	<th class="head-amount">Amount</th>
 </thead>
 <tbody>
-</tbody>
-</table>
-</div>
 
+{% get_document_obj instance as sdoc %}
 
-
-
-	<div class="summary-row">
-
-		<div class="add-row-portion">
-			{% if doc.getTotals.getUnallocated > 0 %}
-			<div>
-				<button id="id_allocate" type="button">Allocate to an Invoice</button>
-				<button id="id_refund" type="button">Refund Portion to Client</button>
-			</div>
-			{% endif %}
-
-			<div>
-				<div class="comment-title">
-					<span>Comments:</span>
-				</div>
-				<div class="comment-block">
-					<textarea maxlength="255" name="payment_comment">{{ doc.getSpecs.getComment|escape }}</textarea>
-				</div>
-			</div>
-		</div>
-
-		<div class="summary-portion">
-
-			<div class="inner-total">
-				<div class="inner-total-label">
-					Total
-				</div>
-				<div class="inner-total-amount">
-					<span id="summary_total">{{ doc.getTotals.getTotal|decsplay }}</span>
-				</div>
-			</div>
-
-
-			<div class="inner-paid">
-				<div class="inner-paid-label">
-					Allocated
-				</div>
-				<div class="inner-paid-amount">
-					<span id="summary_paid">{{ doc.getTotals.getAllocated|decsplay }}</span>
-				</div>
-			</div>
-
-
-			<div class="inner-outstanding">
-				<div class="inner-outstanding-label">
-					Available
-				</div>
-				<div class="inner-outstanding-amount">
-					<span id="summary_outstanding">{{ doc.getTotals.getUnallocated|decsplay }}</span>
-				</div>
-			</div>
-
-		</div>
-
-		<div style="clear: both;">&nbsp;</div>
-	</div>
-
-
-
-{% if doc.getTotals.getAllocated > 0 %}
-
-<div style="
-	border-top: 1px solid #c0c0c0;
-	font-size: 2em;
-	padding: 20px 0px 0px 20px;
-	margin: 20px 0px;
-	">
-Allocations
-</div>
-
-<div class="item-list" style="
-	margin-bottom: 20px;
-	">
-<table id="id_table">
-<thead>
-	<th class="head-description">Description</th>
-	<th class="head-amount">Amount</th>
-	<th class="head-delete">Delete</th>
-</thead>
-<tbody>
-{% for sda in doc.getAllocations.all %}
-	<tr>
-		<td><a href="{{ sda.destination.get_single_url }}">{{ sda.destination.get_document_type_display }} {{ sda.destination.refnum }}</a></td>
-		<td><a href="{{ sda.destination.get_single_url }}">{{ sda.amount|decsplay }}</a></td>
-		<td><img class="item-delete-link" src='{{ STATIC_URL }}local/images/icons/line_delete_grey.png' /><input type="hidden" name="sub_allocation" value="{{ sda.id }}" /></td>
-	</tr>
+{% for li in sdoc.getLines.all %}
+<tr>
+	<td>{{ li.description|escapejs }}</td>
+	<td>{{ li.units|decsplay }}</td>
+	<td>{{ li.perunit|decsplay }}</td>
+	<td>{{ li.get_tax_rate_display|escapejs }}</td>
+	<td>{{ li.tax_amount|decsplay }}</td>
+	<td>{{ li.amount|decsplay }}</td>
+</tr>
 {% endfor %}
 </tbody>
 </table>
-</div>
-
-{% endif %}
-
-
 {% endblock %}
 
 
@@ -245,5 +80,6 @@ Allocations
 {% block document_button_row_right %}
 	<button id="id_button_save" type="button">Save</button>
 {% endblock %}
+
 
 

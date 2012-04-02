@@ -112,7 +112,7 @@ class CreditNoteSingle( SingleObjectView ):
 
 		credit_note_data = {}
 
-		credit_note_data[ 'state' ] = data.get( 'credit_note_state' )
+		credit_note_data[ 'state' ] = data.get( 'sd_state' )
 
 		if credit_note_data[ 'state' ] is not None and long(credit_note_data['state']) == SourceDocumentState.DELETE:
 			rc = self.delete_object( request, obj, *args, **kwargs )

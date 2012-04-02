@@ -112,7 +112,7 @@ class RefundSingle( SingleObjectView ):
 
 	def update_object_html( self, request, obj, data, *args, **kwargs ):
 
-		state = long( data.get( 'refund_state', obj.document_state ) )
+		state = long( data.get( 'sd_state', obj.document_state ) )
 
 		if state == SourceDocumentState.DELETE:
 			rc = self.delete_object( request, obj, *args, **kwargs )
