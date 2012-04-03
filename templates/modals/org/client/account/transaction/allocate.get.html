@@ -1,0 +1,117 @@
+{% extends 'modals/_common/types/single_pane_list.html' %}
+
+{% load sourcedoc %}
+{% load decshift %}
+
+{% block dialog_title %}Allocate{% endblock %}
+
+{% block dialog_style %}width: 800px; height: 600px;{% endblock %}
+
+
+{% block dialog_post_title %}
+<form method="POST" action="{{ request.META.PATH_INFO }}">
+{% csrf_token %}
+<input type="hidden" name="meta.action" value="apply" />
+<input type="hidden" name="oid" value="{{ data.oid }}" />
+<input type="hidden" name="cid" value="{{ data.cid }}" />
+<input type="hidden" name="sdid" value="{{ data.sdid }}" />
+{% endblock %}
+
+{% block dialog_javascript %}
+	$('#id_table').dataTable( {
+		"iDisplayLength" : 25,
+		"bFilter" : false,
+		"bSort" : false,
+		"sPaginationType" : "full_numbers",
+		"aaSortingFixed" : [[ 0, "asc" ]],
+		"sDom" : 't<"bottom"ip><"clear">'
+	});
+{% endblock %}
+
+
+{% block dialog_left_menu %}
+<ul>
+	<li><a>Allocation</a></li>
+</ul>
+{% endblock %}
+
+
+{% block dialog_right_panel %}
+
+{% get_document_obj instance as doc %}
+
+<div>
+	<div class="clearfix" style="
+		background: #f8f8f8;
+		margin: 15px;
+		padding: 10px;
+		box-shadow: 1px 0px 5px #dedbd1;
+		border: 1px solid #dedbd1;
+	">
+		<label for="amount">Total:</label>
+		<input type="text" name="amount" id="id_sd_total" value="{{ doc.getTotals.getTotal|decsplay }}" />
+		<label for="amount">Already allocated:</label>
+		<input type="text" name="amount" id="id_sd_allocated" value="{{ doc.getTotals.getAllocated|decsplay }}" />
+		<label for="amount">Available:</label>
+		<input type="text" name="amount" id="id_sd_available" value="{{ doc.getTotals.getUnallocated|decsplay }}" />
+	</div>
+
+	<div class="clearfix" style="
+		margin: 15px;
+		padding: 10px;
+		box-shadow: 1px 0px 5px #dedbd1;
+		border: 1px solid #dedbd1;
+	">
+		<label for="amount">Amount to Allocate</label>
+		<input type="text" name="amount" id="id_amount" value="{{ extra.available|decsplay }}" />
+	</div>
+
+
+	<div>
+		<table id="id_table">
+			<thead>
+				<tr>
+					<th>Document</th>
+					<th>Date</th>
+					<th>Amount</th>
+					<th>Oustanding</th>
+				</tr>
+			</thead>
+			<tbody>
+			{% for prov in extra.outstanding.invoices.all %}
+				{% get_document_obj prov as sdo %}
+				<tr>
+					<td><a>Invoice {{ sdo.getObj.refnum }}</a></td>
+					<td><a>{{ sdo.getDates.getEventTime|date:"j M Y" }}</a></td>
+					<td><a>{{ sdo.getTotals.getTotal|decsplay }}</a></td>
+					<td><a>{{ sdo.getTotals.getUnallocated|decsplay }}</a></td>
+				</td>
+			{% endfor %}
+
+			{% for prov in extra.outstanding.refunds.all %}
+				{% get_document_obj prov as sdo %}
+				<tr>
+					<td><a>Refund {{ sdo.getObj.refnum }}</a></td>
+					<td><a>{{ sdo.getDates.getEventTime|date:"j M Y" }}</a></td>
+					<td><a>{{ sdo.getTotals.getTotal|decsplay }}</a></td>
+					<td><a>{{ sdo.getTotals.getUnallocated|decsplay }}</a></td>
+				</td>
+			{% endfor %}
+
+			</tbody>
+		</table>
+	</div>
+
+</div>
+{% endblock %}
+
+{% block dialog_post_content %}
+	</form>
+{% endblock %}
+
+{% block dialog_buttons %}
+<button type="button" class="ral_action_close">Cancel</button>
+<button type="button" class="ral_action_submit">Allocate</button>
+{% endblock %}
+
+
