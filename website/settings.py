@@ -3,7 +3,7 @@
 DEBUG = False
 TEMPLATE_DEBUG = False
 
-WSGI_APPLICATION = "website.wsgi.application"
+WSGI_APPLICATION = "wsgi.application"
 
 AUTH_PROFILE_MODULE = "common.UserProfile"
 
@@ -15,6 +15,7 @@ SEND_BROKEN_LINK_EMAILS = True
 
 
 TIME_ZONE = 'Africa/Johannesburg'
+USE_TZ=True
 
 
 USE_I18N = True
@@ -44,12 +45,13 @@ MIDDLEWARE_CLASSES = (
 	'django.middleware.common.CommonMiddleware',
 	'django.contrib.sessions.middleware.SessionMiddleware',
 	'django.middleware.csrf.CsrfViewMiddleware',
+	'django.middleware.clickjacking.XFrameOptionsMiddleware',
 	'django.contrib.auth.middleware.AuthenticationMiddleware',
 	'django.middleware.transaction.TransactionMiddleware',
 	'django.contrib.messages.middleware.MessageMiddleware',
 )
 
-ROOT_URLCONF = 'website.urls'
+ROOT_URLCONF = 'urls'
 
 
 TEMPLATE_CONTEXT_PROCESSORS = (
@@ -92,12 +94,21 @@ EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 LOGGING = {
 	'version': 1,
 	'disable_existing_loggers': False,
+
+	'filters': {
+		'require_debug_false': {
+			'()': 'django.utils.log.RequireDebugFalse'
+		}
+	},
+
 	'handlers': {
 		'mail_admins': {
 			'level': 'ERROR',
+			'filters': ['require_debug_false'],
 			'class': 'django.utils.log.AdminEmailHandler'
 		}
 	},
+
 	'loggers': {
 		'django.request': {
 			'handlers': ['mail_admins'],
