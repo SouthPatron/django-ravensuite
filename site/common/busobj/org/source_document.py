@@ -16,8 +16,7 @@ class SourceDocumentObj( object ):
 	
 	def initialize( self, client, document_type, document_state ):
 
-		# TODO: select_for_update()
-		sc = OrganizationCounter.objects.get( organization__refnum = client.get_org().refnum )
+		sc = OrganizationCounter.objects.select_for_update().get( organization__refnum = client.get_org().refnum )
 		refnum = sc.source_document_no
 		sc.source_document_no += 1
 		sc.save()

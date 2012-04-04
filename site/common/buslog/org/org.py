@@ -9,8 +9,7 @@ class OrgBusLog( object ):
 
 	@staticmethod
 	def get_next_refnum():
-		# TODO: select_for_update()
-		sc = SystemCounter.objects.get( id = 1 )
+		sc = SystemCounter.objects.select_for_update().get( id = 1 )
 		refnum = sc.organization_no
 		sc.organization_no += 1
 		sc.save()
