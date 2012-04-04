@@ -42,6 +42,9 @@ class AuthenticationCode( models.Model ):
 	creation_time = models.DateTimeField()
 	authentication_code = models.CharField( blank=True, max_length=16, unique=True )
 
+	def __unicode__( self ):
+		return '{} - {}'.format( self.user.email, self.authentication_code )
+
 
 
 
@@ -119,7 +122,14 @@ class Organization( models.Model ):
 	postal_address = models.TextField( blank = True, default = '' )
 	physical_address = models.TextField( blank = True, default = '' )
 
+	def __unicode__( self ):
+		return self.trading_name
 
+	@models.permalink
+	def get_absolute_url(self):
+		return ('org-single', (), { 'oid' : self.refnum } )
+
+		
 	def get_single_url( self ):
 		return reverse( 'org-single', kwargs = { 'oid' : self.refnum } )
 	
@@ -134,6 +144,8 @@ class Organization( models.Model ):
 
 	def get_org( self ):
 		return self
+
+	
 		
 
 class OrganizationAccount( models.Model ):

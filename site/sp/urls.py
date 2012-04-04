@@ -1,6 +1,9 @@
 from django.conf.urls import patterns, include, url
 from django.views.generic import RedirectView
 
+from django.contrib import admin
+admin.autodiscover()
+
 
 urlpatterns = patterns('',
 
@@ -11,7 +14,6 @@ urlpatterns = patterns('',
 	url(r'^org/', include('sp.org.urls')),
 	url(r'^timesheet/', include('sp.timesheet.urls')),
 	url(r'^home/', include('sp.home.urls')),
-	url(r'^admin/', include('sp.admin.urls')),
 
 	url(r'^favicon\.ico$',
 			RedirectView.as_view( url='/static/local/images/favicon.ico' )
@@ -22,6 +24,9 @@ urlpatterns = patterns('',
 		),
 
 
+	#url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
+	# Uncomment the next lines to enable the admin:
+	url(r'^admin/', include(admin.site.urls))
 
 )
 
