@@ -24,8 +24,8 @@ urlpatterns = patterns('',
 		),
 
 
-	#url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
-	# Uncomment the next lines to enable the admin:
+	# Built-in Django admin tools
+	url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
 	url(r'^admin/', include(admin.site.urls))
 
 )
