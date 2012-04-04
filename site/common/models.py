@@ -176,7 +176,7 @@ class UserMembership( models.Model ):
 		return reverse( 'org-user-single', kwargs = { 'oid' : self.organization.refnum, 'uid' : self.id } )
 
 
-class UserPermissions( models.Model ):
+class UserPermission( models.Model ):
 	user_membership = models.ForeignKey( UserMembership )
 	entity = models.CharField( max_length = 255 )
 	refnum = models.BigIntegerField()
