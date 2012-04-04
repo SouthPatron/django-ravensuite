@@ -3,4 +3,4 @@ autom4te.cache
 *.swp
 /media
 *.resp
-/website/settings_local.py
+/site/sp/settings_local.py

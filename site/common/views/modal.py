@@ -70,20 +70,44 @@ class ModalView( Base ):
 
 
 	def _load_class( self, modal_name ):
+		""" Loads a class from a modal name.
+
+		So, takes "sp.org.modals.new.organization" ...
+
+		Splits it by .'s
+
+		Loads each module at a time until the attribute isn't found.
+		Takes the leftover components, makes a capitalized name out
+		of it and tries to load the class.
+
+		sp.org.modals.new.organization
+
+		with
+
+		sp/org/modals/ with NewOrganization in namespace
+
+		"""
 		parts = modal_name.split('.')
-		parts.insert( 1, 'modals' )
-		module = ".".join(parts[0:2])
+
+		try:
+			m = __import__( parts[0] )
+			del parts[0]
+		except ImportError:
+			return None
+
+		try:
+			while len( parts ) > 0:
+				m = getattr( m, parts[0] )
+				del parts[0]
+		except AttributeError:
+			pass
 
 		classname = ""
-		for mystr in parts[2:]:
+		for mystr in parts:
 			classname = "{}{}".format( classname, mystr.capitalize() )
 
 		try:
-			m = __import__( module )
-			for comp in parts[1:2]:
-				m = getattr(m, comp)
-
-			m = getattr(m, classname )
+			m = getattr( m, classname )
 		except AttributeError:
 			return None
 
@@ -92,7 +116,13 @@ class ModalView( Base ):
 
 	def _thunk( self, request, modal_name, fmt, dmap, *args, **kwargs ):
 
-		logic_class = self._load_class( modal_name )
+		# TODO: This is hardcoded for SP module. So maybe work it out.
+		parts = modal_name.split('.')
+		parts.insert( 0, 'sp' )
+		parts.insert( 2, 'modals' )
+		full_modal_path = '.'.join( parts )
+
+		logic_class = self._load_class( full_modal_path )
 		if logic_class is None:
 			return self.not_found()
 

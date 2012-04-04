@@ -7,10 +7,11 @@ TEMPLATE_DEBUG = True
 # --- the databases.
 
 import os
+from os.path import dirname
 
 SITE_ID = 1
 
-WEBSITE_BASE = os.path.dirname( os.path.dirname( __file__ ) )
+WEBSITE_BASE = dirname( dirname( dirname( __file__ ) ) )
 
 DATABASES = {
 	'default': {
@@ -23,7 +24,7 @@ DATABASES = {
 	}
 }
 
-STATIC_BASE = WEBSITE_BASE + '/static'
+STATIC_BASE = WEBSITE_BASE + '/static/static'
 
 TEMPLATE_DIRS = (
 	WEBSITE_BASE + '/templates',

@@ -17,6 +17,9 @@
 		],
 		"sDom" : 't<"bottom"ip><"clear">'
 	});
+
+	ral.html.custom.attach_fetch( '#id_ral_new_org', 'org.new.organization' );
+
 {% endblock %}
 
 
@@ -25,7 +28,7 @@
 <div class="widget">
 <h3>Organizations</h3>
 <ul>
-	<li><a href="#" class="raltag_modal_org_new_organization">Add a new Organization</a></li>
+	<li><a id='id_ral_new_org' href="#">Add a new Organization</a></li>
 </ul>
 </div>
 

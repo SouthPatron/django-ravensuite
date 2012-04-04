@@ -1,5 +1,5 @@
 """
-WSGI config for website project.
+WSGI config for sp project.
 
 This module contains the WSGI application used by Django's development server
 and any production WSGI deployments. It should expose a module-level variable
@@ -13,14 +13,10 @@ middleware here, or combine a Django application with an application of another
 framework.
 
 """
-import os,sys
+import os
 
-WEBSITE_BASE = os.path.dirname( os.path.dirname( __file__ ) )
+MODULE_NAME = 'sp'
 
-MODULE_NAME = 'website'
-
-sys.path.append( WEBSITE_BASE )
-sys.path.append( WEBSITE_BASE + '/' + MODULE_NAME )
 os.environ.setdefault( "DJANGO_SETTINGS_MODULE", MODULE_NAME + '.settings' )
 
 from django.core.wsgi import get_wsgi_application

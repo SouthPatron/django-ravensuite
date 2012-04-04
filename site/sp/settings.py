@@ -3,7 +3,7 @@
 DEBUG = False
 TEMPLATE_DEBUG = False
 
-WSGI_APPLICATION = "wsgi.application"
+WSGI_APPLICATION = "sp.wsgi.application"
 
 AUTH_PROFILE_MODULE = "common.UserProfile"
 
@@ -14,7 +14,7 @@ LOGIN_REDIRECT_URL = '/org/'
 SEND_BROKEN_LINK_EMAILS = True
 
 
-TIME_ZONE = 'Africa/Johannesburg'
+TIME_ZONE = 'UTC'
 USE_TZ=True
 
 
@@ -51,7 +51,7 @@ MIDDLEWARE_CLASSES = (
 	'django.contrib.messages.middleware.MessageMiddleware',
 )
 
-ROOT_URLCONF = 'urls'
+ROOT_URLCONF = 'sp.urls'
 
 
 TEMPLATE_CONTEXT_PROCESSORS = (
@@ -76,11 +76,12 @@ INSTALLED_APPS = (
 
 	'south',
 
-	'home',
-	'account',
-	'org',
 	'common',
-	'timesheet',
+
+	'sp.home',
+	'sp.account',
+	'sp.org',
+	'sp.timesheet',
 )
 
 
