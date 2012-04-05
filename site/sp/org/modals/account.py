@@ -12,7 +12,7 @@ from common.busobj.org import InvoiceObj, PaymentObj, CreditNoteObj, RefundObj
 from common.exceptions import *
 
 
-class AccountNewInvoice( ModalLogic ):
+class NewInvoice( ModalLogic ):
 
 	def get_extra( self, request, dmap, obj, *args, **kwargs ):
 		return None
@@ -36,7 +36,7 @@ class AccountNewInvoice( ModalLogic ):
 		return inv.get_absolute_url();
 
 
-class AccountNewPayment( ModalLogic ):
+class NewPayment( ModalLogic ):
 
 	def get_extra( self, request, dmap, obj, *args, **kwargs ):
 		return None
@@ -60,7 +60,7 @@ class AccountNewPayment( ModalLogic ):
 		return pmt.get_absolute_url();
 
 
-class AccountNewCreditnote( ModalLogic ):
+class NewCreditnote( ModalLogic ):
 
 	def get_extra( self, request, dmap, obj, *args, **kwargs ):
 		return None
@@ -84,7 +84,7 @@ class AccountNewCreditnote( ModalLogic ):
 		return pmt.get_absolute_url();
 
 
-class AccountNewRefund( ModalLogic ):
+class NewRefund( ModalLogic ):
 
 	def get_extra( self, request, dmap, obj, *args, **kwargs ):
 		return None

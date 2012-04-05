@@ -9,7 +9,7 @@ from common.buslog.org import TaskBusLog
 from common.exceptions import *
 
 
-class ActivityNewTask( ModalLogic ):
+class NewTask( ModalLogic ):
 
 	def get_extra( self, request, dmap, obj, *args, **kwargs ):
 		return None
