@@ -147,6 +147,10 @@ class Organization( models.Model ):
 class OrganizationAccount( models.Model ):
 	organization = models.OneToOneField( Organization )
 
+	def __unicode__( self ):
+		return self.organization.trading_name
+
+
 class OrganizationCounter( models.Model ):
 	organization = models.OneToOneField( Organization )
 
@@ -154,6 +158,11 @@ class OrganizationCounter( models.Model ):
 
 	client_no = models.BigIntegerField( default = 1 )
 	project_no = models.BigIntegerField( default = 1 )
+
+	def __unicode__( self ):
+		return self.organization.trading_name
+
+
 
 
 class UserMembership( models.Model ):
@@ -171,6 +180,9 @@ class UserMembership( models.Model ):
 	@models.permalink
 	def get_absolute_url( self ):
 		return ( 'org-user-single', (), { 'oid' : self.organization.refnum, 'uid' : self.id } )
+
+	def __unicode__( self ):
+		return UserCategory.get( self.category )[1]
 
 
 class UserPermission( models.Model ):
@@ -405,6 +417,9 @@ class Account( models.Model ):
 	@models.permalink
 	def get_transaction_list_url( self ):
 		return ( 'org-client-account-transaction-list', (), { 'oid' : self.client.organization.refnum, 'cid' : self.client.refnum } )
+
+	def __unicode__( self ):
+		return self.client.__unicode__()
 
 
 class AccountTransaction( models.Model ):
