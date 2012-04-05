@@ -46,7 +46,7 @@ class OrgList( ListView ):
 			messages.error( request, berror.message )
 			return redirect( 'org-list' )
 
-		messages.success( request, _('VMG_20005') % { 'url' : neworg.get_single_url(), 'name' : neworg.trading_name } )
+		messages.success( request, _('VMG_20005') % { 'url' : neworg.get_absolute_url(), 'name' : neworg.trading_name } )
 
 		return redirect( 'org-list' )
 

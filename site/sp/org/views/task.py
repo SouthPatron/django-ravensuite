@@ -44,14 +44,14 @@ class TaskList( ListView ):
 			messages.error( request, berror.message )
 			return redirect( 'org-activity-task-list', oid = self.url_kwargs.oid, actid = self.url_kwargs.actid )
 
-		messages.success( request, _('VMG_20009') % { 'url' : newo.get_single_url(), 'name' : newo.name } )
+		messages.success( request, _('VMG_20009') % { 'url' : newo.get_absolute_url(), 'name' : newo.name } )
 		return redirect( 'org-activity-task-list', oid = self.url_kwargs.oid, actid = self.url_kwargs.actid )
 
 
 
 	def create_object_json( self, request, data, *args, **kwargs ):
 		newo = self._create_object( request, data, *args, **kwargs )
-		resp = { 'url' : newo.get_single_url() }
+		resp = { 'url' : newo.get_absolute_url() }
 		return self.api_resp( resp )
 
 
@@ -71,6 +71,6 @@ class TaskSingle( SingleObjectView ):
 		obj.name = data.get( 'name', obj.name )
 		obj.description = data.get( 'description', obj.description )
 		obj.save()
-		return redirect( obj.get_single_url() )
+		return redirect( obj.get_absolute_url() )
 
 

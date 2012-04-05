@@ -6,8 +6,6 @@ from django.db.models import F,Q
 from django.contrib.auth.models import User
 from django.core.validators import validate_email, MinLengthValidator
 
-from django.core.urlresolvers import reverse
-
 from common.utils.enum import ChoicesEnum
 
 import uuid
@@ -127,19 +125,15 @@ class Organization( models.Model ):
 	@models.permalink
 	def get_absolute_url(self):
 		return ('org-single', (), { 'oid' : self.refnum } )
-
-		
-	def get_single_url( self ):
-		return reverse( 'org-single', kwargs = { 'oid' : self.refnum } )
 	
 	def get_client_list_url( self ):
-		return reverse( 'org-client-list', kwargs = { 'oid' : self.refnum } )
+		return ( 'org-client-list', (), { 'oid' : self.refnum } )
 
 	def get_activity_list_url( self ):
-		return reverse( 'org-activity-list', kwargs = { 'oid' : self.refnum } )
+		return ( 'org-activity-list', (), { 'oid' : self.refnum } )
 
 	def get_user_list_url( self ):
-		return reverse( 'org-user-list', kwargs = { 'oid' : self.refnum } )
+		return ( 'org-user-list', (), { 'oid' : self.refnum } )
 
 	def get_org( self ):
 		return self
@@ -171,8 +165,9 @@ class UserMembership( models.Model ):
 	def get_usermembership( self ):
 		return self
 
-	def get_single_url( self ):
-		return reverse( 'org-user-single', kwargs = { 'oid' : self.organization.refnum, 'uid' : self.id } )
+	@models.permalink
+	def get_absolute_url( self ):
+		return ( 'org-user-single', (), { 'oid' : self.organization.refnum, 'uid' : self.id } )
 
 
 class UserPermission( models.Model ):
@@ -202,14 +197,15 @@ class Client( models.Model ):
 	def get_client( self ):
 		return self
 
-	def get_single_url( self ):
-		return reverse( 'org-client-single', kwargs = { 'oid' : self.organization.refnum, 'cid' : self.refnum } )
+	@models.permalink
+	def get_absolute_url( self ):
+		return ( 'org-client-single', (), { 'oid' : self.organization.refnum, 'cid' : self.refnum } )
 
 	def get_project_list_url( self ):
-		return reverse( 'org-client-project-list', kwargs = { 'oid' : self.organization.refnum, 'cid' : self.refnum } )
+		return ( 'org-client-project-list', (), { 'oid' : self.organization.refnum, 'cid' : self.refnum } )
 
 	def get_account_single_url( self ):
-		return reverse( 'org-client-account-single', kwargs = { 'oid' : self.organization.refnum, 'cid' : self.refnum } )
+		return ( 'org-client-account-single', (), { 'oid' : self.organization.refnum, 'cid' : self.refnum } )
 
 	def get_account( self ):
 		return Account.objects.get( client = self )
@@ -234,13 +230,13 @@ class Client( models.Model ):
 	# Invoices ------------
 
 	def get_invoice_list_url( self ):
-		return reverse( 'org-client-account-transaction-invoice-list', kwargs = { 'oid' : self.organization.refnum, 'cid' : self.refnum } )
+		return ( 'org-client-account-transaction-invoice-list', (), { 'oid' : self.organization.refnum, 'cid' : self.refnum } )
 
 	def get_draft_invoice_list_url( self ):
-		return reverse( 'org-client-account-transaction-invoice-draft-list', kwargs = { 'oid' : self.organization.refnum, 'cid' : self.refnum } )
+		return ( 'org-client-account-transaction-invoice-draft-list', (), { 'oid' : self.organization.refnum, 'cid' : self.refnum } )
 
 	def get_unpaid_invoice_list_url( self ):
-		return reverse( 'org-client-account-transaction-invoice-unpaid-list', kwargs = { 'oid' : self.organization.refnum, 'cid' : self.refnum } )
+		return ( 'org-client-account-transaction-invoice-unpaid-list', (), { 'oid' : self.organization.refnum, 'cid' : self.refnum } )
 
 	def get_unpaid_invoice_list( self ):
 		return SourceDocument.objects.filter( client = self, document_type = SourceDocumentType.INVOICE, document_state = SourceDocumentState.FINAL, total__gt = F( 'allocated' ) )
@@ -253,10 +249,10 @@ class Client( models.Model ):
 	# Credit Notes --------
 
 	def get_draft_credit_note_list_url( self ):
-		return reverse( 'org-client-account-transaction-credit-note-draft-list', kwargs = { 'oid' : self.organization.refnum, 'cid' : self.refnum } )
+		return ( 'org-client-account-transaction-credit-note-draft-list', (), { 'oid' : self.organization.refnum, 'cid' : self.refnum } )
 
 	def get_unallocated_credit_note_list_url( self ):
-		return reverse( 'org-client-account-transaction-credit-note-unallocated-list', kwargs = { 'oid' : self.organization.refnum, 'cid' : self.refnum } )
+		return ( 'org-client-account-transaction-credit-note-unallocated-list', (), { 'oid' : self.organization.refnum, 'cid' : self.refnum } )
 
 	def get_unallocated_credit_note_count( self ):
 		return SourceDocument.objects.filter( client = self, document_type = SourceDocumentType.CREDIT_NOTE, document_state = SourceDocumentState.FINAL, total__gt = F( 'allocated' ) ).count()
@@ -265,10 +261,10 @@ class Client( models.Model ):
 	# Payments ------------
 
 	def get_unallocated_payment_list_url( self ):
-		return reverse( 'org-client-account-transaction-payment-unallocated-list', kwargs = { 'oid' : self.organization.refnum, 'cid' : self.refnum } )
+		return ( 'org-client-account-transaction-payment-unallocated-list', (), { 'oid' : self.organization.refnum, 'cid' : self.refnum } )
 
 	def get_draft_payment_list_url( self ):
-		return reverse( 'org-client-account-transaction-payment-draft-list', kwargs = { 'oid' : self.organization.refnum, 'cid' : self.refnum } )
+		return ( 'org-client-account-transaction-payment-draft-list', (), { 'oid' : self.organization.refnum, 'cid' : self.refnum } )
 
 	def get_draft_payment_count( self ):
 		return SourceDocument.objects.filter( client = self, document_type = SourceDocumentType.PAYMENT, document_state = SourceDocumentState.DRAFT ).count()
@@ -282,10 +278,10 @@ class Client( models.Model ):
 
 
 	def get_refund_list_url( self ):
-		return reverse( 'org-client-account-transaction-refund-list', kwargs = { 'oid' : self.organization.refnum, 'cid' : self.refnum } )
+		return ( 'org-client-account-transaction-refund-list', (), { 'oid' : self.organization.refnum, 'cid' : self.refnum } )
 
 	def get_unallocated_refund_list_url( self ):
-		return reverse( 'org-client-account-transaction-refund-unallocated-list', kwargs = { 'oid' : self.organization.refnum, 'cid' : self.refnum } )
+		return ( 'org-client-account-transaction-refund-unallocated-list', (), { 'oid' : self.organization.refnum, 'cid' : self.refnum } )
 
 	def get_unallocated_refund_count( self ):
 		return SourceDocument.objects.filter( client = self, document_type = SourceDocumentType.REFUND, document_state = SourceDocumentState.FINAL, total__gt = F( 'allocated' ) ).count()
@@ -327,7 +323,8 @@ class SourceDocument( models.Model ):
 		return self.get_client().account
 
 
-	def get_single_url( self ):
+	@models.permalink
+	def get_absolute_url( self ):
 		my_route = None
 
 		if self.document_type == SourceDocumentType.INVOICE:
@@ -342,13 +339,7 @@ class SourceDocument( models.Model ):
 		if self.document_type == SourceDocumentType.REFUND:
 			my_route = 'org-client-account-transaction-refund-single'
 
-		return reverse( my_route,
-					kwargs = {
-						'oid' : self.get_org().refnum,
-						'cid' : self.get_client().refnum,
-						'sdid' : self.refnum
-					}
-				)
+		return ( my_route, (), { 'oid' : self.get_org().refnum, 'cid' : self.get_client().refnum, 'sdid' : self.refnum } )
 
 
 	class Meta:
@@ -393,11 +384,12 @@ class Account( models.Model ):
 	def get_account( self ):
 		return self
 
-	def get_single_url( self ):
-		return reverse( 'org-client-account-single', kwargs = { 'oid' : self.client.organization.refnum, 'cid' : self.client.refnum } )
+	@models.permalink
+	def get_absolute_url( self ):
+		return ( 'org-client-account-single', (), { 'oid' : self.client.organization.refnum, 'cid' : self.client.refnum } )
 	
 	def get_transaction_list_url( self ):
-		return reverse( 'org-client-account-transaction-list', kwargs = { 'oid' : self.client.organization.refnum, 'cid' : self.client.refnum } )
+		return ( 'org-client-account-transaction-list', (), { 'oid' : self.client.organization.refnum, 'cid' : self.client.refnum } )
 
 
 class AccountTransaction( models.Model ):
@@ -423,8 +415,9 @@ class AccountTransaction( models.Model ):
 	def get_account( self ):
 		return self.account
 
-	def get_single_url( self ):
-		return reverse( 'org-client-account-transaction-single', kwargs = { 'oid' : self.get_org().refnum, 'cid' : self.get_client().refnum, 'tid' : self.refnum } )
+	@models.permalink
+	def get_absolute_url( self ):
+		return ( 'org-client-account-transaction-single', (), { 'oid' : self.get_org().refnum, 'cid' : self.get_client().refnum, 'tid' : self.refnum } )
 
 	class Meta:
 		ordering = [ '-event_time', '-creation_time' ]
@@ -456,10 +449,11 @@ class Activity( models.Model ):
 		return self
 
 	def get_task_list_url( self ):
-		return reverse( 'org-activity-task-list', kwargs = { 'oid' : self.get_org().refnum, 'actid' : self.id } )
+		return ( 'org-activity-task-list', (), { 'oid' : self.get_org().refnum, 'actid' : self.id } )
 
-	def get_single_url( self ):
-		return reverse( 'org-activity-single', kwargs = { 'oid' : self.get_org().refnum, 'actid' : self.id } )
+	@models.permalink
+	def get_absolute_url( self ):
+		return ( 'org-activity-single', (), { 'oid' : self.get_org().refnum, 'actid' : self.id } )
 
 
 class Task( models.Model ):
@@ -479,8 +473,9 @@ class Task( models.Model ):
 	def get_task( self ):
 		return self
 
-	def get_single_url( self ):
-		return reverse( 'org-activity-task-single', kwargs = { 'oid' : self.get_org().refnum, 'actid' : self.get_activity().id, 'taskid' : self.id } )
+	@models.permalink
+	def get_absolute_url( self ):
+		return ( 'org-activity-task-single', (), { 'oid' : self.get_org().refnum, 'actid' : self.get_activity().id, 'taskid' : self.id } )
 
 
 
@@ -506,8 +501,9 @@ class Project( models.Model ):
 	def get_project( self ):
 		return self
 
-	def get_single_url( self ):
-		return reverse( 'org-client-project-single', kwargs = { 'oid' : self.get_org().refnum, 'cid' : self.get_client().refnum, 'pid' : self.refnum } )
+	@models.permalink
+	def get_absolute_url( self ):
+		return ( 'org-client-project-single', (), { 'oid' : self.get_org().refnum, 'cid' : self.get_client().refnum, 'pid' : self.refnum } )
 
 
 
@@ -554,8 +550,9 @@ class TimesheetTimer( models.Model ):
 	def get_activity( self ):
 		return self.task.activity
 
-	def get_single_url( self ):
-		return reverse( 'timesheet-timer-single', kwargs = { 'timerid' : self.id } )
+	@models.permalink
+	def get_absolute_url( self ):
+		return ( 'timesheet-timer-single', (), { 'timerid' : self.id } )
 
 
 	class Meta:

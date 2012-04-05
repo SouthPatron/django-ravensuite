@@ -24,5 +24,5 @@ class AccountTransactionList( ListView ):
 def account_transaction_router( request, oid, cid, tid ):
 	actrans = AccountTransaction.objects.get( refnum = tid, account__client__refnum = cid, account__client__organization__refnum = oid )
 	newobj = actrans.source_document
-	return redirect( newobj.get_single_url() )
+	return redirect( newobj.get_absolute_url() )
 

@@ -29,6 +29,6 @@ class NewActivity( ModalLogic ):
 			return
 
 		self.easy.redirect();
-		return newact.get_single_url();
+		return newact.get_absolute_url();
 
 

@@ -55,8 +55,8 @@
 
 	{% if obj.membership.is_enabled %}
 	<tr class="tablerow_enabled">
-		<td><a href='{{ obj.get_single_url }}'>{{ obj.trading_name }}</a></td>
-		<td><a href='{{ obj.get_single_url }}'>{{ obj.membership.get_category_display }}</a></td>
+		<td><a href='{{ obj.get_absolute_url }}'>{{ obj.trading_name }}</a></td>
+		<td><a href='{{ obj.get_absolute_url }}'>{{ obj.membership.get_category_display }}</a></td>
 	</tr>
 	{% else %}
 	<tr class="tablerow_disabled">

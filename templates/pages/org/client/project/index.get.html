@@ -56,9 +56,9 @@
 {% for obj in object_list %}
 
 	<tr>
-		<td><a href='{{ obj.get_single_url }}'>{{ obj.name }}</a></td>
-		<td><a href='{{ obj.get_single_url }}'>{{ obj.description }}</a></td>
-		<td><a href='{{ obj.get_single_url }}'>{{ obj.get_status_display }}</a></td>
+		<td><a href='{{ obj.get_absolute_url }}'>{{ obj.name }}</a></td>
+		<td><a href='{{ obj.get_absolute_url }}'>{{ obj.description }}</a></td>
+		<td><a href='{{ obj.get_absolute_url }}'>{{ obj.get_status_display }}</a></td>
 	</tr>
 {% endfor %}
 </tbody>

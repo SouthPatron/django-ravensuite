@@ -53,12 +53,12 @@ class RefundList( ListView ):
 			client = Client.objects.get( refnum = self.url_kwargs.cid, organization__refnum = self.url_kwargs.oid )
 			return redirect( client.get_account_single_url() )
 
-		return redirect( newo.get_single_url() )
+		return redirect( newo.get_absolute_url() )
 
 
 	def create_object_json( self, request, data, *args, **kwargs ):
 		newo = self._create_object( request, *args, **kwargs )
-		resp = { 'url' : newo.get_single_url() }
+		resp = { 'url' : newo.get_absolute_url() }
 		return self.api_resp( resp )
 
 
@@ -159,7 +159,7 @@ class RefundSingle( SingleObjectView ):
 			if state == SourceDocumentState.VOID:
 				acf.void()
 
-		return redirect( pmt.get_single_url() )
+		return redirect( pmt.get_absolute_url() )
 
 
 

@@ -41,7 +41,7 @@ class ActivityList( ListView ):
 			messages.error( request, berror.message )
 			return redirect( 'org-activity-list', oid = self.url_kwargs.oid )
 
-		messages.success( request, _('VMG_20001') % { 'url' : newo.get_single_url(), 'name' : newo.name } )
+		messages.success( request, _('VMG_20001') % { 'url' : newo.get_absolute_url(), 'name' : newo.name } )
 		return redirect( 'org-activity-list', oid = self.url_kwargs.oid )
 
 

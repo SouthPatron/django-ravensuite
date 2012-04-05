@@ -48,10 +48,10 @@ class PcAllocateRefund( RefundComponents ):
 
 		except BLE_Error, berror:
 			messages.error( request, berror.message )
-			return redirect( obj.get_single_url() )
+			return redirect( obj.get_absolute_url() )
 
 		messages.success( request, _('VMG_21003') )
-		return redirect( obj.get_single_url() )
+		return redirect( obj.get_absolute_url() )
 
 
 

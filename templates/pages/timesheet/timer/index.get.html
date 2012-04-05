@@ -203,21 +203,21 @@
 
 	<div class="info">
 
-		<div class="title-div"><a href='{{ obj.get_client.get_single_url }}'>{{ obj.get_client.trading_name }}</a> : <a href='{{ obj.project.get_single_url }}'>{{ obj.project.name }}</a></div>
-		<div><a href='{{ obj.get_org.get_single_url }}'>{{ obj.get_org.trading_name }}</a></div>
-		<div><a href='{{ obj.get_activity.get_single_url }}'>{{ obj.get_activity.name }}</a> : <a href='{{ obj.task.get_single_url }}'>{{ obj.task.name }}</a></div>
+		<div class="title-div"><a href='{{ obj.get_client.get_absolute_url }}'>{{ obj.get_client.trading_name }}</a> : <a href='{{ obj.project.get_absolute_url }}'>{{ obj.project.name }}</a></div>
+		<div><a href='{{ obj.get_org.get_absolute_url }}'>{{ obj.get_org.trading_name }}</a></div>
+		<div><a href='{{ obj.get_activity.get_absolute_url }}'>{{ obj.get_activity.name }}</a> : <a href='{{ obj.task.get_absolute_url }}'>{{ obj.task.name }}</a></div>
 		<div class="description-div">{{ obj.description }}</div>
 	</div> <!-- .info -->
 
 	<div class="left-side">&nbsp;</div> <!-- .left-side -->
 
 	<div class="right-side">
-		<form action="{{ obj.get_single_url }}" method="POST">
+		<form action="{{ obj.get_absolute_url }}" method="POST">
 			{% csrf_token %}
 			<input type="hidden" name="action" value="delete" />
 			<button type="submit">DELETE</button>
 		</form>
-		<form action="{{ obj.get_single_url }}" method="POST">
+		<form action="{{ obj.get_absolute_url }}" method="POST">
 			{% csrf_token %}
 			<input type="hidden" name="action" value="stop" />
 			<button type="submit">STOP</button>

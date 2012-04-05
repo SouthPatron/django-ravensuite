@@ -40,7 +40,7 @@ class ProjectList( ListView ):
 
 	def create_object_json( self, request, data, *args, **kwargs ):
 		newo = self._create_object( self, request, data, *args, **kwargs )
-		resp = { 'url' : newo.get_single_url() }
+		resp = { 'url' : newo.get_absolute_url() }
 		return self.api_resp( resp )
 
 	def create_object_html( self, request, data, *args, **kwargs ):
@@ -56,7 +56,7 @@ class ProjectList( ListView ):
 			messages.error( request, berror.message )
 			return redirect( 'org-client-project-list', oid = self.url_kwargs.oid, cid = self.url_kwargs.cid )
 
-		messages.success( request, _('VMG_20007') % { 'url' : newo.get_single_url(), 'name' : newo.name } )
+		messages.success( request, _('VMG_20007') % { 'url' : newo.get_absolute_url(), 'name' : newo.name } )
 		return redirect( 'org-client-project-list', oid = self.url_kwargs.oid, cid = self.url_kwargs.cid )
 
 

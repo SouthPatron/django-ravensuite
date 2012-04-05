@@ -44,7 +44,7 @@ class NewOrganization( ModalLogic ):
 			self.easy.make_get()
 			return
 
-		messages.success( request, _('VMG_20005') % { 'url' : neworg.get_single_url(), 'name' : neworg.trading_name } )
+		messages.success( request, _('VMG_20005') % { 'url' : neworg.get_absolute_url(), 'name' : neworg.trading_name } )
 
 		self.easy.notice();
 		return neworg
@@ -74,7 +74,7 @@ class EditOrganization( ModalLogic ):
 			self.easy.make_get()
 			return
 
-		messages.success( request, _('VMG_20005') % { 'url' : obj.get_single_url(), 'name' : obj.trading_name } )
+		messages.success( request, _('VMG_20005') % { 'url' : obj.get_absolute_url(), 'name' : obj.trading_name } )
 
 		self.easy.notice();
 		return obj
@@ -104,7 +104,7 @@ class NewClient( ModalLogic ):
 			self.easy.make_get()
 			return
 
-		messages.success( request, _('VMG_20002') % { 'url' : newo.get_single_url(), 'name' : newo.trading_name } )
+		messages.success( request, _('VMG_20002') % { 'url' : newo.get_absolute_url(), 'name' : newo.trading_name } )
 
 		self.easy.notice();
 		return newo
@@ -134,7 +134,7 @@ class EditClient( ModalLogic ):
 			self.easy.make_get()
 			return
 
-		messages.success( request, _('VMG_20002') % { 'url' : obj.get_single_url(), 'name' : obj.trading_name } )
+		messages.success( request, _('VMG_20002') % { 'url' : obj.get_absolute_url(), 'name' : obj.trading_name } )
 
 		self.easy.notice();
 		return obj

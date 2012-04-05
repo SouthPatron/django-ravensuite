@@ -40,7 +40,7 @@ class ClientList( ListView ):
 			messages.error( request, berror.message )
 			return redirect( 'org-client-list', oid = self.url_kwargs.oid )
 
-		messages.success( request, _('VMG_20002') % { 'url' : newo.get_single_url(), 'name' : newo.trading_name } )
+		messages.success( request, _('VMG_20002') % { 'url' : newo.get_absolute_url(), 'name' : newo.trading_name } )
 		return redirect( 'org-client-list', oid = self.url_kwargs.oid )
 
 	def create_object_json( self, request, data, *args, **kwargs ):

@@ -2,7 +2,7 @@
 
 <div>
 <ul>
-	<li class="label-item {% active request '\/client\/\d+$' %}"><a href="{{ instance.get_client.get_single_url }}">{{ instance.get_client.trading_name }}</a></li>
+	<li class="label-item {% active request '\/client\/\d+$' %}"><a href="{{ instance.get_client.get_absolute_url }}">{{ instance.get_client.trading_name }}</a></li>
 	<li class="{% active request '\/project[s\/]' %}"><a href="{{ instance.get_client.get_project_list_url }}">Projects</a></li>
 	<li class="{% active request 'client\/\d+\/account' %}"><a href="{{ instance.get_client.get_account_single_url }}">Account</a></li>
 </ul>

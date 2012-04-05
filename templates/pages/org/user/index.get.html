@@ -56,10 +56,10 @@
 {% for obj in object_list %}
 
 	<tr>
-		<td><a href='{{ obj.get_single_url }}'>{{ obj.user.first_name }} {{ obj.user.last_name }}</a></td>
-		<td><a href='{{ obj.get_single_url }}'>{{ obj.user.email }}</a></td>
-		<td><a href='{{ obj.get_single_url }}'>{{ obj.user.get_profile.last_seen }}</a></td>
-		<td><a href='{{ obj.get_single_url }}'>{{ obj.get_category_display }}</a></td>
+		<td><a href='{{ obj.get_absolute_url }}'>{{ obj.user.first_name }} {{ obj.user.last_name }}</a></td>
+		<td><a href='{{ obj.get_absolute_url }}'>{{ obj.user.email }}</a></td>
+		<td><a href='{{ obj.get_absolute_url }}'>{{ obj.user.get_profile.last_seen }}</a></td>
+		<td><a href='{{ obj.get_absolute_url }}'>{{ obj.get_category_display }}</a></td>
 	</tr>
 
 {% endfor %}

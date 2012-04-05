@@ -45,8 +45,8 @@ class SourceDocumentObj( object ):
 	def save( self ):
 		self.sdo.save()
 
-	def get_single_url( self ):
-		return self.sdo.get_single_url()
+	def get_absolute_url( self ):
+		return self.sdo.get_absolute_url()
 
 	class Dates( object ):
 		def __init__( self, parent ):

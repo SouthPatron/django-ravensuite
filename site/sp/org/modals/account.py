@@ -33,7 +33,7 @@ class AccountNewInvoice( ModalLogic ):
 			return
 
 		self.easy.redirect();
-		return inv.get_single_url();
+		return inv.get_absolute_url();
 
 
 class AccountNewPayment( ModalLogic ):
@@ -57,7 +57,7 @@ class AccountNewPayment( ModalLogic ):
 			return
 
 		self.easy.redirect();
-		return pmt.get_single_url();
+		return pmt.get_absolute_url();
 
 
 class AccountNewCreditnote( ModalLogic ):
@@ -81,7 +81,7 @@ class AccountNewCreditnote( ModalLogic ):
 			return
 
 		self.easy.redirect();
-		return pmt.get_single_url();
+		return pmt.get_absolute_url();
 
 
 class AccountNewRefund( ModalLogic ):
@@ -105,7 +105,7 @@ class AccountNewRefund( ModalLogic ):
 			return
 
 		self.easy.redirect();
-		return pmt.get_single_url();
+		return pmt.get_absolute_url();
 
 
 

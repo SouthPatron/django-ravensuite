@@ -45,7 +45,7 @@ class UserList( ListView ):
 			request,
 			_( 'VMG_20010' ) % 
 			{
-				'url' : escape(newgrant.get_single_url()),
+				'url' : escape(newgrant.get_absolute_url()),
 				'first_name' : newgrant.user.first_name,
 				'last_name' : newgrant.user.last_name
 			}
@@ -63,7 +63,7 @@ class UserList( ListView ):
 
 	def create_object_json( self, request, data, *args, **kwargs ):
 		newo = self._create_object( request, data, *args, **kwargs )
-		resp = { 'url' : newo.get_single_url() }
+		resp = { 'url' : newo.get_absolute_url() }
 		return self.api_resp( resp )
 
 
@@ -82,6 +82,6 @@ class UserSingle( SingleObjectView ):
 		obj.category = data.get( 'category', obj.category )
 		obj.is_enabled = data.get( 'is_enabled', obj.is_enabled )
 		obj.save()
-		return redirect( obj.get_single_url() )
+		return redirect( obj.get_absolute_url() )
 
 

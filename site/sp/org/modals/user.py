@@ -33,6 +33,6 @@ class NewUser( ModalLogic ):
 			return
 
 		self.easy.redirect();
-		return newgrant.get_single_url();
+		return newgrant.get_absolute_url();
 
 

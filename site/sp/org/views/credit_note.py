@@ -53,12 +53,12 @@ class CreditNoteList( ListView ):
 		except Exception, error:
 			print error
 
-		return redirect( newo.get_single_url() )
+		return redirect( newo.get_absolute_url() )
 
 
 	def create_object_json( self, request, data, *args, **kwargs ):
 		newo = self._create_object( request, data, *args, **kwargs )
-		resp = { 'url' : newo.get_single_url() }
+		resp = { 'url' : newo.get_absolute_url() }
 		return self.api_resp( resp )
 
 
@@ -135,7 +135,7 @@ class CreditNoteSingle( SingleObjectView ):
 			CreditNoteHelper.update( obj, credit_note_data )
 		except BLE_Error, berror:
 			messages.error( request, berror.message )
-			return redirect( obj.get_single_url() )
+			return redirect( obj.get_absolute_url() )
 
 		if obj.document_state == SourceDocumentState.DRAFT:
 			return redirect( obj.get_client().get_draft_credit_note_list_url() )

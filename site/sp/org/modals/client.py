@@ -39,7 +39,7 @@ class ClientNewProject( ModalLogic ):
 			return
 
 		self.easy.redirect();
-		return newo.get_single_url();
+		return newo.get_absolute_url();
 
 
 class ClientAccountTransactionAllocate( ModalLogic ):
@@ -89,6 +89,6 @@ class ClientAccountTransactionAllocate( ModalLogic ):
 		return sd
 
 	def perform( self, request, dmap, obj, extra, fmt, *args, **kwargs ):
-		return pmt.get_single_url();
+		return pmt.get_absolute_url();
 
 

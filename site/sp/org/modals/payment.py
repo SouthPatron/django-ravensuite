@@ -54,10 +54,10 @@ class PcAllocatePayment( PaymentComponents ):
 
 		except BLE_Error, berror:
 			messages.error( request, berror.message )
-			return redirect( obj.get_single_url() )
+			return redirect( obj.get_absolute_url() )
 
 		messages.success( request, _('VMG_21001') )
-		return redirect( obj.get_single_url() )
+		return redirect( obj.get_absolute_url() )
 
 
 class PcDeallocatePayment( PaymentComponents ):
@@ -84,10 +84,10 @@ class PcDeallocatePayment( PaymentComponents ):
 
 		except BLE_Error, berror:
 			messages.error( request, berror.message )
-			return redirect( obj.source.get_single_url() )
+			return redirect( obj.source.get_absolute_url() )
 
 		messages.success( request, _('VMG_21002') )
-		return redirect( obj.source.get_single_url() )
+		return redirect( obj.source.get_absolute_url() )
 
 
 class PcRefundPayment( PaymentComponents ):
@@ -107,10 +107,10 @@ class PcRefundPayment( PaymentComponents ):
 
 		except BLE_Error, berror:
 			messages.error( request, berror.message )
-			return redirect( obj.get_single_url() )
+			return redirect( obj.get_absolute_url() )
 
 		messages.success( request, _('NIL') )
-		return redirect( obj.get_single_url() )
+		return redirect( obj.get_absolute_url() )
 
 
 

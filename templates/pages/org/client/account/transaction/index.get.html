@@ -40,10 +40,10 @@
 {% for obj in object_list %}
 
 	<tr>
-		<td><a href='{{ obj.get_single_url }}'>{{ obj.refnum }}</a></td>
-		<td><a href='{{ obj.get_single_url }}'>{{ obj.event_time }}</a></td>
-		<td><a href='{{ obj.get_single_url }}'>{{ obj.description }}</a></td>
-		<td><a href='{{ obj.get_single_url }}'>{{ obj.amount|decsplay }}</a></td>
+		<td><a href='{{ obj.get_absolute_url }}'>{{ obj.refnum }}</a></td>
+		<td><a href='{{ obj.get_absolute_url }}'>{{ obj.event_time }}</a></td>
+		<td><a href='{{ obj.get_absolute_url }}'>{{ obj.description }}</a></td>
+		<td><a href='{{ obj.get_absolute_url }}'>{{ obj.amount|decsplay }}</a></td>
 	</tr>
 {% endfor %}
 </tbody>

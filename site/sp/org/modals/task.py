@@ -32,6 +32,6 @@ class ActivityNewTask( ModalLogic ):
 			return
 
 		self.easy.redirect();
-		return newtask.get_single_url();
+		return newtask.get_absolute_url();
 
 

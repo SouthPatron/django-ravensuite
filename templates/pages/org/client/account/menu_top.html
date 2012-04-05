@@ -2,7 +2,7 @@
 
 <div>
 <ul>
-	<li class="{% active request '\/account$' %}"><a href="{{ instance.get_account.get_single_url }}">Account</a></li>
+	<li class="{% active request '\/account$' %}"><a href="{{ instance.get_account.get_absolute_url }}">Account</a></li>
 	<li class="{% active request '\/account\/transactions' %}"><a href="{{ instance.get_account.get_transaction_list_url }}">Transactions</a></li>
 </ul>
 </div>

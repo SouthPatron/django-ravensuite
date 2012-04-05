@@ -47,11 +47,11 @@
 	{% get_document_obj obj as doc %}
 
 	<tr>
-		<td><a href='{{ obj.get_single_url }}'>{{ obj.refnum }}</a></td>
-		<td><a href='{{ obj.get_single_url }}'>{{ doc.getSpecs.getInvoiceDate|date:"d M Y" }}</a></td>
-		<td><a href='{{ obj.get_single_url }}'>{{ doc.getSpecs.getDueDate|date:"d M Y" }}</a></td>
-		<td><a href='{{ obj.get_single_url }}'>{{ obj.get_document_state_display }}</a></td>
-		<td><a href='{{ obj.get_single_url }}'>{{ doc.getTotals.getTotal|decsplay }}</a></td>
+		<td><a href='{{ obj.get_absolute_url }}'>{{ obj.refnum }}</a></td>
+		<td><a href='{{ obj.get_absolute_url }}'>{{ doc.getSpecs.getInvoiceDate|date:"d M Y" }}</a></td>
+		<td><a href='{{ obj.get_absolute_url }}'>{{ doc.getSpecs.getDueDate|date:"d M Y" }}</a></td>
+		<td><a href='{{ obj.get_absolute_url }}'>{{ obj.get_document_state_display }}</a></td>
+		<td><a href='{{ obj.get_absolute_url }}'>{{ doc.getTotals.getTotal|decsplay }}</a></td>
 	</tr>
 
 {% endfor %}
