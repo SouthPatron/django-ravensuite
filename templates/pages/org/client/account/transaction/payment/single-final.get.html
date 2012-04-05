@@ -21,7 +21,7 @@ $( "#id_button_void" ).click( function() {
 
 ral.html.custom.attach_fetch( '#id_ral_modal_org_client_account_transaction_allocate', 'org.client.account.transaction.allocate', 
 	{
-		oid: {{ kwargs.oid }},
+		oid: '{{ kwargs.oid }}',
 		cid: {{ kwargs.cid }},
 		sdid: {{ kwargs.sdid }}
 	}

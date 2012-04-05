@@ -7,7 +7,15 @@ from common.models import *
 
 # ------------- Admin Classes go here. Automatically loaded by autoregister
 
+
+#class UserProfileAdmin( admin.ModelAdmin ):
+#	readonly_fields = ( 'user', )
+#	list_display = ( 'user', )
+#	list_display_links = ( 'user', )
+
+
 class OrganizationAdmin( admin.ModelAdmin ):
+	readonly_fields = ( 'refnum', )
 	fieldsets = [
 		( 'Howdy',
 			{ 'fields': [ 'refnum', 'trading_name' ] } ),
@@ -18,10 +26,27 @@ class OrganizationAdmin( admin.ModelAdmin ):
 
 
 class AuthenticationCodeAdmin( admin.ModelAdmin ):
+	readonly_fields = ( 'user', )
 	list_display = ( 'user', 'creation_time', 'authentication_code' )
 
 
+class SourceDocumentAdmin( admin.ModelAdmin ):
+	readonly_fields = ( 'client', 'refnum', 'creation_time', 'event_time', 'document_type', 'document_state', 'amount', 'tax', 'total', 'allocated' )
+	list_display = ( 'refnum', 'client', 'document_type', 'document_state', 'total'  )
+	list_display_links = ( 'refnum', )
 
+
+
+class ActivityAdmin( admin.ModelAdmin ):
+	readonly_fields = ( 'organization', )
+	list_display = ( 'organization', 'name' )
+	list_display_links = ( 'name', )
+
+
+class TaskAdmin( admin.ModelAdmin ):
+	readonly_fields = ( 'activity', )
+	list_display = ( 'activity', 'name' )
+	list_display_links = ( 'name', )
 
 # ------------- AutoRegister the common app ----------------------
 

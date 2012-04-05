@@ -7,14 +7,6 @@ from common.models import *
 
 class AccountSupport( object ):
 
-	@staticmethod
-	def get_next_refnum():
-		sc = SystemCounter.objects.select_for_update().get( id = 1 )
-		refnum = sc.profile_no
-		sc.profile_no += 1
-		sc.save()
-		return refnum
-
 
 	@staticmethod
 	def create( username, password, firstname, lastname ):
@@ -26,7 +18,6 @@ class AccountSupport( object ):
 		luser.save()
 
 		luser_profile = UserProfile( user = luser )
-		luser_profile.refnum = AccountSupport.get_next_refnum()
 		luser_profile.state = ProfileState.UNAUTHENTICATED
 		luser_profile.creation_time = datetime.datetime.now()
 		luser_profile.last_seen = datetime.datetime.now()

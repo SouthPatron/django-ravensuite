@@ -10,6 +10,8 @@ from django.core.urlresolvers import reverse
 
 from common.utils.enum import ChoicesEnum
 
+import uuid
+
 
 # --- DEBUG -----------------------------------------------------
 
@@ -31,10 +33,12 @@ ProfileState = ChoicesEnum(
 
 class UserProfile( models.Model ):
 	user = models.OneToOneField( User, unique=True )
-	refnum = models.BigIntegerField()
 	state = models.CharField( max_length = 16, choices = ProfileState.choices(), default = 'unauthenticated' )
 	creation_time = models.DateTimeField()
 	last_seen = models.DateTimeField()
+
+	def __unicode__( self ):
+		return '{}'.format( self.user )
 
 
 class AuthenticationCode( models.Model ):
@@ -107,14 +111,9 @@ SourceDocumentState = ChoicesEnum(
 
 
 
-
-class SystemCounter( models.Model ):
-	profile_no = models.BigIntegerField( default = 1 )
-	organization_no = models.BigIntegerField( default = 1 )
-
 class Organization( models.Model ):
 	trading_name = models.CharField( max_length = 192 )
-	refnum = models.BigIntegerField( unique = True )
+	refnum = models.CharField( max_length = 32, unique = True, default = uuid.uuid4().get_hex() )
 
 	telephone_number = models.CharField( max_length = 64, blank = True, default = '' )
 	fax_number = models.CharField( max_length = 64, blank = True, default = '' )
@@ -193,6 +192,9 @@ class Client( models.Model ):
 	email_address = models.CharField( max_length = 256, blank = True, default = '', validators=[validate_email] )
 	postal_address = models.TextField( blank = True, default = '' )
 	physical_address = models.TextField( blank = True, default = '' )
+
+	def __unicode__( self ):
+		return self.trading_name
 
 	def get_org( self ):
 		return self.organization
@@ -306,6 +308,13 @@ class SourceDocument( models.Model ):
 
 
 	allocated = models.BigIntegerField( default = 0 )
+
+
+	def __unicode__( self ):
+		return '{} {}'.format(
+			SourceDocumentType.get( self.document_type )[1],
+			self.refnum
+			)
 
 
 	def get_org( self ):
@@ -430,9 +439,15 @@ class AccountTransactionData( models.Model ):
 
 
 class Activity( models.Model ):
+	class Meta:
+		verbose_name_plural = 'Activities'
+
 	organization = models.ForeignKey( Organization )
 	name = models.CharField( max_length = 32 )
 	description = models.TextField( blank = True )
+
+	def __unicode__( self ):
+		return self.name
 
 	def get_org( self ):
 		return self.organization
@@ -451,6 +466,9 @@ class Task( models.Model ):
 	activity = models.ForeignKey( Activity )
 	name = models.CharField( max_length = 32 )
 	description = models.TextField( blank = True )
+
+	def __unicode__( self ):
+		return self.name
 
 	def get_org( self ):
 		return self.activity.organization
@@ -475,6 +493,10 @@ class Project( models.Model ):
 	name = models.CharField( max_length = 32 )
 	description = models.TextField( blank = True )
 
+	def __unicode__( self ):
+		return self.name
+
+
 	def get_org( self ):
 		return self.client.organization
 
@@ -494,6 +516,10 @@ class Project( models.Model ):
 
 
 class TimesheetEntry( models.Model ):
+	class Meta:
+		verbose_name_plural = 'Timesheet Entries'
+		ordering = [ '-start_time' ]
+
 	user = models.ForeignKey( User )
 	project = models.ForeignKey( Project )
 	task = models.ForeignKey( Task )
@@ -510,9 +536,6 @@ class TimesheetEntry( models.Model ):
 	def get_activity( self ):
 		return self.task.activity
 
-
-	class Meta:
-		ordering = [ '-start_time' ]
 
 
 class TimesheetTimer( models.Model ):

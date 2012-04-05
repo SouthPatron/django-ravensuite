@@ -23,7 +23,7 @@
 
 {% block tpl_bl_head_onready %}
 	ral.html.custom.attach_fetch( '#id_ral_modal_org_edit_organization', 'org.edit.organization',
-				{ oid: {{ kwargs.oid }} } );
+				{ oid: '{{ kwargs.oid }}' } );
 
 {% endblock %}
 

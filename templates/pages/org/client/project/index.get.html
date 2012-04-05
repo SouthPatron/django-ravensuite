@@ -22,7 +22,7 @@
 	});
 
 	ral.html.custom.attach_fetch( '#id_ral_modal_org_client_new_project', 'org.client.new.project',
-                { oid: {{ kwargs.oid }}, cid: {{ kwargs.cid }} } );
+                { oid: '{{ kwargs.oid }}', cid: {{ kwargs.cid }} } );
 
 {% endblock %}
 

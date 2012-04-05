@@ -8,14 +8,6 @@ from common.models import *
 class OrgBusLog( object ):
 
 	@staticmethod
-	def get_next_refnum():
-		sc = SystemCounter.objects.select_for_update().get( id = 1 )
-		refnum = sc.organization_no
-		sc.organization_no += 1
-		sc.save()
-		return refnum
-
-	@staticmethod
 	def update( org, data ):
 		org.trading_name = data.get( 'trading_name', org.trading_name )
 		org.telephone_number = data.get( 'telephone_number', org.telephone_number )
@@ -36,13 +28,8 @@ class OrgBusLog( object ):
 		except Organization.DoesNotExist:
 			pass
 
-		refnum = OrgBusLog.get_next_refnum()
-
 		neworg = Organization()
-		neworg.refnum = refnum
-
 		OrgBusLog.update( neworg, data )
-
 		neworg.save()
 
 		OrganizationCounter.objects.create( organization = neworg )
