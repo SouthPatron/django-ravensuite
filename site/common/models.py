@@ -126,12 +126,15 @@ class Organization( models.Model ):
 	def get_absolute_url(self):
 		return ('org-single', (), { 'oid' : self.refnum } )
 	
+	@models.permalink
 	def get_client_list_url( self ):
 		return ( 'org-client-list', (), { 'oid' : self.refnum } )
 
+	@models.permalink
 	def get_activity_list_url( self ):
 		return ( 'org-activity-list', (), { 'oid' : self.refnum } )
 
+	@models.permalink
 	def get_user_list_url( self ):
 		return ( 'org-user-list', (), { 'oid' : self.refnum } )
 
@@ -201,9 +204,11 @@ class Client( models.Model ):
 	def get_absolute_url( self ):
 		return ( 'org-client-single', (), { 'oid' : self.organization.refnum, 'cid' : self.refnum } )
 
+	@models.permalink
 	def get_project_list_url( self ):
 		return ( 'org-client-project-list', (), { 'oid' : self.organization.refnum, 'cid' : self.refnum } )
 
+	@models.permalink
 	def get_account_single_url( self ):
 		return ( 'org-client-account-single', (), { 'oid' : self.organization.refnum, 'cid' : self.refnum } )
 
@@ -229,12 +234,15 @@ class Client( models.Model ):
 
 	# Invoices ------------
 
+	@models.permalink
 	def get_invoice_list_url( self ):
 		return ( 'org-client-account-transaction-invoice-list', (), { 'oid' : self.organization.refnum, 'cid' : self.refnum } )
 
+	@models.permalink
 	def get_draft_invoice_list_url( self ):
 		return ( 'org-client-account-transaction-invoice-draft-list', (), { 'oid' : self.organization.refnum, 'cid' : self.refnum } )
 
+	@models.permalink
 	def get_unpaid_invoice_list_url( self ):
 		return ( 'org-client-account-transaction-invoice-unpaid-list', (), { 'oid' : self.organization.refnum, 'cid' : self.refnum } )
 
@@ -248,9 +256,11 @@ class Client( models.Model ):
 
 	# Credit Notes --------
 
+	@models.permalink
 	def get_draft_credit_note_list_url( self ):
 		return ( 'org-client-account-transaction-credit-note-draft-list', (), { 'oid' : self.organization.refnum, 'cid' : self.refnum } )
 
+	@models.permalink
 	def get_unallocated_credit_note_list_url( self ):
 		return ( 'org-client-account-transaction-credit-note-unallocated-list', (), { 'oid' : self.organization.refnum, 'cid' : self.refnum } )
 
@@ -260,9 +270,11 @@ class Client( models.Model ):
 
 	# Payments ------------
 
+	@models.permalink
 	def get_unallocated_payment_list_url( self ):
 		return ( 'org-client-account-transaction-payment-unallocated-list', (), { 'oid' : self.organization.refnum, 'cid' : self.refnum } )
 
+	@models.permalink
 	def get_draft_payment_list_url( self ):
 		return ( 'org-client-account-transaction-payment-draft-list', (), { 'oid' : self.organization.refnum, 'cid' : self.refnum } )
 
@@ -277,9 +289,11 @@ class Client( models.Model ):
 	# Refunds -------------
 
 
+	@models.permalink
 	def get_refund_list_url( self ):
 		return ( 'org-client-account-transaction-refund-list', (), { 'oid' : self.organization.refnum, 'cid' : self.refnum } )
 
+	@models.permalink
 	def get_unallocated_refund_list_url( self ):
 		return ( 'org-client-account-transaction-refund-unallocated-list', (), { 'oid' : self.organization.refnum, 'cid' : self.refnum } )
 
@@ -388,6 +402,7 @@ class Account( models.Model ):
 	def get_absolute_url( self ):
 		return ( 'org-client-account-single', (), { 'oid' : self.client.organization.refnum, 'cid' : self.client.refnum } )
 	
+	@models.permalink
 	def get_transaction_list_url( self ):
 		return ( 'org-client-account-transaction-list', (), { 'oid' : self.client.organization.refnum, 'cid' : self.client.refnum } )
 
@@ -448,6 +463,7 @@ class Activity( models.Model ):
 	def get_activity( self ):
 		return self
 
+	@models.permalink
 	def get_task_list_url( self ):
 		return ( 'org-activity-task-list', (), { 'oid' : self.get_org().refnum, 'actid' : self.id } )
 
