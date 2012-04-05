@@ -15,7 +15,7 @@ from common.busobj.org import SourceDocumentObj
 from common.exceptions import *
 
 
-class ClientNewProject( ModalLogic ):
+class NewProject( ModalLogic ):
 
 	def get_extra( self, request, dmap, obj, *args, **kwargs ):
 		return None
@@ -42,7 +42,7 @@ class ClientNewProject( ModalLogic ):
 		return newo.get_absolute_url();
 
 
-class ClientAccountTransactionAllocate( ModalLogic ):
+class AccountTransactionAllocate( ModalLogic ):
 
 	def get_extra( self, request, dmap, obj, *args, **kwargs ):
 		

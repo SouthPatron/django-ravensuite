@@ -1,0 +1,14 @@
+{% load sourcedoc %}
+{% load decshift %}
+{% get_document_obj prov as sdo %}
+<tr class="sub_sd_line">
+	<td><a>{{ sdo.getObj.get_document_type_display }} {{ sdo.getObj.refnum }}</a></td>
+	<td><a>{{ sdo.getDates.getEventTime|date:"j M Y" }}</a></td>
+	<td><a>{{ sdo.getTotals.getTotal|decsplay }}</a></td>
+	<td>
+		<a>{{ sdo.getTotals.getUnallocated|decsplay }}</a>
+		<input class="sub_unallocated" type="hidden" value="{{ sdo.getTotals.getUnallocated|decshift }}" />
+		<input class="sub_total" type="hidden" value="{{ sdo.getTotals.getTotal|decshift }}" />
+	</td>
+</td>
+

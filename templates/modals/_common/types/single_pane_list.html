@@ -88,10 +88,13 @@
 	-webkit-box-shadow: 0 0 10px #000;
 }
 
+
+{% block dialog_style %}{% endblock %}
+
 </style>
 
 
-<div style="{% block dialog_style %}{% endblock %}">
+<div style="{% block dialog_div_style %}{% endblock %}">
 
 	<div class="ral_dialog_titlebar ral_clear">
 		<span class="ral_dialog_title">{% block dialog_title %}{% endblock %}</span>

@@ -5,7 +5,7 @@
 
 {% block dialog_title %}Allocate{% endblock %}
 
-{% block dialog_style %}width: 800px; height: 600px;{% endblock %}
+{% block dialog_div_style %}width: 800px; height: 600px;{% endblock %}
 
 
 {% block dialog_post_title %}
@@ -17,6 +17,15 @@
 <input type="hidden" name="sdid" value="{{ data.sdid }}" />
 {% endblock %}
 
+{% block dialog_style %}
+
+.dataTables_wrapper tr.odd.selected_line,
+.dataTables_wrapper tr.even.selected_line
+{
+	background-color: #DEDBF1;
+}
+{% endblock %}
+
 {% block dialog_javascript %}
 	$('#id_table').dataTable( {
 		"iDisplayLength" : 25,
@@ -25,6 +34,18 @@
 		"sPaginationType" : "full_numbers",
 		"aaSortingFixed" : [[ 0, "asc" ]],
 		"sDom" : 't<"bottom"ip><"clear">'
+	});
+
+	$( ".sub_sd_line" ).click(function() {
+		$( ".selected_line" ).removeClass( 'selected_line' );
+		$( this ).addClass( 'selected_line' );
+
+
+		var unallocated = $(this).find( ".sub_unallocated" ).first().attr( 'value' );
+		var total = $(this).find( ".sub_total" ).first().attr( 'value' );
+
+		$( '#id_sel_unallocated' ).attr( 'value', unallocated );
+		$( '#id_sel_total' ).attr( 'value', total );
 	});
 {% endblock %}
 
@@ -64,6 +85,12 @@
 	">
 		<label for="amount">Amount to Allocate</label>
 		<input type="text" name="amount" id="id_amount" value="{{ extra.available|decsplay }}" />
+
+		<label for="amount">Amount Outstanding</label>
+		<input type="text" name="amount" id="id_sel_unallocated" value="0.00" />
+
+		<label for="amount">Total Amount</label>
+		<input type="text" name="amount" id="id_sel_total" value="0.00" />
 	</div>
 
 
@@ -79,23 +106,11 @@
 			</thead>
 			<tbody>
 			{% for prov in extra.outstanding.invoices.all %}
-				{% get_document_obj prov as sdo %}
-				<tr>
-					<td><a>Invoice {{ sdo.getObj.refnum }}</a></td>
-					<td><a>{{ sdo.getDates.getEventTime|date:"j M Y" }}</a></td>
-					<td><a>{{ sdo.getTotals.getTotal|decsplay }}</a></td>
-					<td><a>{{ sdo.getTotals.getUnallocated|decsplay }}</a></td>
-				</td>
+				{% include 'modals/org/client/account/transaction/allocate_inner.html' with prov=prov %}
 			{% endfor %}
 
 			{% for prov in extra.outstanding.refunds.all %}
-				{% get_document_obj prov as sdo %}
-				<tr>
-					<td><a>Refund {{ sdo.getObj.refnum }}</a></td>
-					<td><a>{{ sdo.getDates.getEventTime|date:"j M Y" }}</a></td>
-					<td><a>{{ sdo.getTotals.getTotal|decsplay }}</a></td>
-					<td><a>{{ sdo.getTotals.getUnallocated|decsplay }}</a></td>
-				</td>
+				{% include 'modals/org/client/account/transaction/allocate_inner.html' with prov=prov%}
 			{% endfor %}
 
 			</tbody>

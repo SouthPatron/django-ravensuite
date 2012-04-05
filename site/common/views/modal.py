@@ -7,6 +7,11 @@ from base import Base
 
 import inspect
 
+import logging
+
+logger = logging.getLogger( __name__ )
+
+
 
 class ModalLogic( object ):
 
@@ -109,13 +114,13 @@ class ModalView( Base ):
 		try:
 			m = getattr( m, classname )
 		except AttributeError:
+			logger.warning( 'unable to load class {}'.format( classname ) )
 			return None
 
 		return m
 
 
 	def _thunk( self, request, modal_name, fmt, dmap, *args, **kwargs ):
-
 		# TODO: This is hardcoded for SP module. So maybe work it out.
 		parts = modal_name.split('.')
 		parts.insert( 0, 'sp' )
