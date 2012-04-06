@@ -107,9 +107,16 @@ SourceDocumentState = ChoicesEnum(
 	DELETE = ( 99, 'Delete' ),
 )
 
+ObjectState = ChoicesEnum(
+	ACTIVE = ( 0, 'Active' ),
+	ARCHIVED = ( 10, 'Archived' )
+)
+
 
 
 class Organization( models.Model ):
+	state = models.IntegerField( choices = ObjectState.choices() ) 
+
 	trading_name = models.CharField( max_length = 192 )
 	refnum = models.CharField( max_length = 32, unique = True, default = uuid.uuid4().get_hex() )
 
@@ -204,6 +211,8 @@ class UserPermission( models.Model ):
 
 
 class Client( models.Model ):
+	state = models.IntegerField( choices = ObjectState.choices() ) 
+
 	organization = models.ForeignKey( Organization )
 	refnum = models.BigIntegerField()
 	trading_name = models.CharField( max_length = 192, validators = [MinLengthValidator(1)] )
