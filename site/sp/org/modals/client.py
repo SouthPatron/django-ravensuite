@@ -93,22 +93,4 @@ class AccountTransactionAllocate( ModalLogic ):
 
 
 
-class DeleteClient( ModalLogic ):
-
-	def get_extra( self, request, dmap, obj, *args, **kwargs ):
-		return None
-
-	def get_object( self, request, dmap, *args, **kwargs ):
-		return Client.objects.get( refnum = dmap[ 'cid' ], organization__refnum = dmap[ 'oid' ] )
-
-	def get( self, request, dmap, obj, extra, fmt, *args, **kwargs ):
-		self.easy.confirm()
-		self.additional = {
-			'message' : _( 'Are you sure you want to delete this client? This can not be undone' )
-		}
-
-	def perform( self, request, dmap, obj, extra, fmt, *args, **kwargs ):
-		messages.success( request, _( 'Client was deleted' ) )
-		self.easy.notice();
-
 
