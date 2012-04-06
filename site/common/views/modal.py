@@ -29,6 +29,9 @@ class ModalLogic( object ):
 		def notice( self ):
 			self._makename( 'notice' )
 
+		def confirm( self ):
+			self._makename( 'confirm' )
+
 		def make_get( self ):
 			self.parent.method = 'get'
 
@@ -51,6 +54,9 @@ class ModalLogic( object ):
 		return None
 
 	def get_object( self, request, dmap, *args, **kwargs ):
+		return None
+
+	def get( self, request, dmap, obj, extra, fmt, *args, **kwargs ):
 		return None
 
 	def perform( self, request, dmap, obj, extra, fmt, *args, **kwargs ):
@@ -140,13 +146,18 @@ class ModalView( Base ):
 		if request.method == 'POST':
 			result = logic.perform( request, dmap, ob, extra, fmt, *args, **kwargs )
 		else:
-			result = None
+			result = logic.get( request, dmap, ob, extra, fmt, *args, **kwargs )
 
 		template_name = logic.template_name or self.get_template_name(
 								modal_name,
 								logic.method or request.method.lower(),
 								fmt
 							)
+
+		try:
+			additional = logic.additional
+		except AttributeError:
+			additional = None
 
 		context = RequestContext(
 							request,
@@ -155,7 +166,8 @@ class ModalView( Base ):
 								'extra' : extra,
 								'kwargs' : self.url_kwargs,
 								'data' : dmap,
-								'result' : result
+								'result' : result,
+								'additional' : additional
 							}
 						)
 		return render_to_response( template_name, context )

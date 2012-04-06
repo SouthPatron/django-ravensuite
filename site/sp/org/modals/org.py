@@ -106,7 +106,15 @@ class NewClient( ModalLogic ):
 
 		messages.success( request, _('VMG_20002') % { 'url' : newo.get_absolute_url(), 'name' : newo.trading_name } )
 
-		self.easy.notice();
+		self.easy.notice()
+
+		self.additional = {
+			'buttons' : (
+					{ 'label' : _('VMG_20002_BUTTON_0001'), 'url' : org.get_client_list_url() },
+					{ 'label' : _('VMG_20002_BUTTON_0002'), 'url' : newo.get_absolute_url() },
+				)
+		}
+
 		return newo
 
 
@@ -139,23 +147,5 @@ class EditClient( ModalLogic ):
 		self.easy.notice();
 		return obj
 
-
-
-class EditTest( ModalLogic ):
-
-	def get_extra( self, request, dmap, obj, *args, **kwargs ):
-		myobj = { 'form' : EditClientForm( instance = obj ) }
-		messages.success( request, _('VMG_20002') % { 'url' : obj.get_absolute_url(), 'name' : obj.trading_name } )
-		self.easy.make_post();
-		self.easy.notice();
-		return myobj
-
-	def get_object( self, request, dmap, *args, **kwargs ):
-		return Client.objects.get( refnum = dmap[ 'cid' ], organization__refnum = dmap[ 'oid' ] )
-
-	def perform( self, request, dmap, obj, extra, fmt, *args, **kwargs ):
-		messages.success( request, _('VMG_20002') % { 'url' : obj.get_absolute_url(), 'name' : obj.trading_name } )
-		self.easy.notice();
-		return obj
 
 

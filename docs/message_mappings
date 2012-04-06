@@ -48,6 +48,12 @@ VMG_10001	- Password changed successfully
 
 VMG_20001	- Activity created. [ url, name ]
 VMG_20002	- Client created. [ url, name ]
+
+
+VMG_20002_BUTTON_0001		-	Option to return to list
+VMG_20002_BUTTON_0002		-	Option to go to client
+
+
 VMG_20003	- Draft credit note deleted.
 VMG_20004	- Draft invoice deleted.
 VMG_20005	- Organization created. [ url, name ]

@@ -117,6 +117,13 @@ ral.html.resizeContainerContent = function( url ) {
 	var mybox = $(document).find( "#" + digest ).find( ".ral_box" );
 
 	if ( mybox ) {
+		// Set Margin if buttonbar is present
+		var botmargin = 0;
+		mybox.find( ".ral_dialog_buttonbar" ).each( function() {
+			botmargin += $(this).outerHeight( true );
+		});
+		mybox.find( ".ral_dialog_content" ).css( 'margin-bottom', botmargin + 'px' );
+
 		// Set Height
 		var availableHeight = mybox.height();
 
@@ -129,13 +136,6 @@ ral.html.resizeContainerContent = function( url ) {
 		});
 
 		mybox.find( ".ral_dialog_content" ).height( availableHeight  );
-
-		// Set Margin if buttonbar is present
-		var botmargin = 0;
-		mybox.find( ".ral_dialog_buttonbar" ).each( function() {
-			botmargin += $(this).outerHeight( true );
-		});
-		mybox.find( ".ral_dialog_content" ).css( 'margin-bottom', botmargin + 'px' );
 	}
 }
 

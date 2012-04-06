@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-03-08 19:14+0200\n"
+"POT-Creation-Date: 2012-04-06 13:32+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -16,217 +16,56 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: settings.py:26
+#: settings.py:27
 msgid "English"
 msgstr ""
+
+#: account/forms.py:73
+msgid "TMP_00001"
+msgstr ""
+"This is a closed alpha development for a select few. Thanks for trying, "
+"though. Your information was not saved, just deleted."
 
 #: account/views/profile.py:42
 msgid "VMG_10001"
 msgstr "Your password was changed successfully."
 
-#: account/views/registration.py:29
-msgid "TMP_00001"
-msgstr "This is a closed alpha development for a select few. Thanks for trying, though. Your information was not saved, just deleted."
+#: org/modals/org.py:47 org/modals/org.py:77 org/views/org.py:49
+msgid "VMG_20005"
+msgstr "Organization <a href='%(url)s'>%(name)s</a> was successfully created."
 
-#: common/bushelp/org/actions.py:16
-msgid "BLE_40001"
-msgstr "You can not delete this invoice. It has already been finalized."
+#: org/modals/org.py:107 org/modals/org.py:145 org/views/client.py:43
+msgid "VMG_20002"
+msgstr "<a href='%(url)s'>%(name)s</a> was successfully added as a client."
 
-#: common/bushelp/org/actions.py:18
-msgid "BLE_40002"
-msgstr "You can not delete this invoice. It has already been voided."
+#: org/modals/org.py:113
+msgid "VMG_20002_BUTTON_0001"
+msgstr "Back to Client List"
 
-#: common/bushelp/org/actions.py:27
-msgid "BLE_40003"
-msgstr "You can not finalize this invoice. It is not a draft."
+#: org/modals/org.py:114
+msgid "VMG_20002_BUTTON_0002"
+msgstr "Go to Client"
 
-#: common/bushelp/org/actions.py:35
-msgid "BNAV_40101"
-msgstr "INVOICE"
+#: org/modals/payment.py:59
+msgid "VMG_21001"
+msgstr "Payment was successfully allocated."
 
-#: common/bushelp/org/actions.py:45
-msgid "BLE_40004"
-msgstr "There are still allocations for this invoice. It can not be voided."
+#: org/modals/payment.py:89
+msgid "VMG_21002"
+msgstr "Payment was successfully deallocated."
 
-#: common/bushelp/org/actions.py:51
-msgid "BLE_40005"
-msgstr "You can not void this invoice. It is not yet finalized."
-
-#: common/bushelp/org/actions.py:59 common/bushelp/org/actions.py:119
-#: common/bushelp/org/actions.py:178 common/bushelp/org/actions.py:237
-msgid "BNAV_40105"
-msgstr "VOID"
-
-#: common/bushelp/org/actions.py:75
-msgid "BLE_40101"
-msgstr "You can not delete this payment. It has already been finalized."
-
-#: common/bushelp/org/actions.py:77
-msgid "BLE_40102"
-msgstr "You can not delete this payment. It has already been voided."
-
-#: common/bushelp/org/actions.py:85
-msgid "BLE_40103"
-msgstr "You can not finalize this payment. It is not a draft."
-
-#: common/bushelp/org/actions.py:88
-msgid "BLE_40104"
-msgstr "The amount must be greater than zero."
-
-#: common/bushelp/org/actions.py:96
-msgid "BNAV_40103"
-msgstr "PAYMENT"
-
-#: common/bushelp/org/actions.py:105
-msgid "BLE_40105"
-msgstr "There are still allocations for this payment. Delete them first."
-
-#: common/bushelp/org/actions.py:111
-msgid "BLE_40106"
-msgstr "You can not void this invoice. It is not yet finalized."
-
-#: common/bushelp/org/actions.py:134
-msgid "BLE_40201"
-msgstr "You can not delete this refund. It has already been finalized."
-
-#: common/bushelp/org/actions.py:136
-msgid "BLE_40202"
-msgstr "You can not delete this refund. It has already been voided."
-
-#: common/bushelp/org/actions.py:144
-msgid "BLE_40203"
-msgstr "You can not finalize this refund. It is not a draft."
-
-#: common/bushelp/org/actions.py:147
-msgid "BLE_40204"
-msgstr "The amount must be greater than zero."
-
-#: common/bushelp/org/actions.py:155
-msgid "BNAV_40104"
-msgstr "REFUND"
-
-#: common/bushelp/org/actions.py:164
-msgid "BLE_40205"
-msgstr "You can not void this refund. There are still allocations present."
-
-#: common/bushelp/org/actions.py:170
-msgid "BLE_40206"
-msgstr "This refund has not been finalized. It can not be voided."
-
-#: common/bushelp/org/actions.py:196
-msgid "BLE_40301"
-msgstr "You can not delete this credit note. It has already been finalized."
-
-#: common/bushelp/org/actions.py:198
-msgid "BLE_40302"
-msgstr "You can not delete this credit note. It has already been voided."
-
-#: common/bushelp/org/actions.py:206
-msgid "BLE_40303"
-msgstr "You can not finalize this credit note. It is not a draft."
-
-#: common/bushelp/org/actions.py:214
-msgid "BNAV_40102"
-msgstr "CREDIT NOTE"
-
-#: common/bushelp/org/actions.py:223
-msgid "BLE_40305"
+#: org/modals/payment.py:112
+msgid "NIL"
 msgstr ""
-"You can not void this credit note. There are still allocations present."
+"Debugging message. Just for testing. Nothing to see here. Move along. :)"
 
-#: common/bushelp/org/actions.py:229
-msgid "BLE_40306"
-msgstr "You can not void this credit note. It is not yet finalized."
-
-#: common/bushelp/org/actions.py:268 common/busobj/org/factory.py:26
-msgid "BLE_80002"
-msgstr "Unknown SourceDocumentType"
-
-#: common/bushelp/org/allocator.py:41
-msgid "BLE_30001"
-msgstr "No such allocation was found."
-
-#: common/bushelp/org/allocator.py:54
-msgid "BLE_80003"
-msgstr ""
-"The allocation failed because the destination is not a valid recipient "
-"document type."
-
-#: common/bushelp/org/allocator.py:58
-msgid "BLE_80004"
-msgstr ""
-"The allocation failed because the source is not an allocatable source "
-"document type."
-
-#: common/bushelp/org/allocator.py:63
-msgid "BLE_20001"
-msgstr "The allocation amount exceeds the funds required."
-
-#: common/bushelp/org/allocator.py:68
-msgid "BLE_20002"
-msgstr "The allocation amount exceeds the funds available."
-
-#: common/bushelp/org/credit_note.py:36
-msgid "BLE_10001"
-msgstr "The credit note date is invalid."
-
-#: common/bushelp/org/credit_note.py:47
-msgid "BLE_10002"
-msgstr "An unknown state was requested for the credit note."
-
-#: common/bushelp/org/credit_note.py:54
-msgid "BLE_11401"
-msgstr "The tax rate was invalid."
-
-#: common/bushelp/org/credit_note.py:137 common/bushelp/org/invoice.py:64
-#: common/bushelp/org/invoice.py:148
-msgid "BLE_11402"
-msgstr "An invalid state change was requested for the document."
-
-#: common/bushelp/org/invoice.py:36 common/bushelp/org/invoice.py:47
-msgid "BLE_10102"
-msgstr "The due date is before the invoice date."
-
-#: common/bushelp/org/invoice.py:57
-msgid "BLE_10103"
-msgstr "An unknown state was requested for the invoice."
-
-#: common/buslog/org/activity.py:16
-msgid "BLE_50001"
-msgstr "There already is an activity with that name."
-
-#: common/buslog/org/client.py:27
-msgid "BLE_50002"
-msgstr "There already is a client with that name."
-
-#: common/buslog/org/org.py:26
-msgid "BLE_50003"
-msgstr "There already is an organization with the same name."
-
-#: common/buslog/org/project.py:27
-msgid "BLE_50004"
-msgstr "There already is a project with the same name."
-
-#: common/buslog/org/task.py:16
-msgid "BLE_50005"
-msgstr "There already is a task with the same name."
-
-#: common/buslog/org/user.py:17
-msgid "BLE_50006"
-msgstr "The user already has access to the organization."
-
-#: common/buslog/org/user.py:20
-msgid "BLE_50007"
-msgstr ""
-"The user already has access to another organization with the same name."
+#: org/modals/refund.py:53
+msgid "VMG_21003"
+msgstr "Refund was successfully allocated."
 
 #: org/views/activity.py:44
 msgid "VMG_20001"
 msgstr "Activity <a href='%(url)s'>%(name)s</a> was successfully created."
-
-#: org/views/client.py:43
-msgid "VMG_20002"
-msgstr "<a href='%(url)s'>%(name)s</a> was successfully added as a client."
 
 #: org/views/credit_note.py:119
 msgid "VMG_20003"
@@ -235,10 +74,6 @@ msgstr "The draft credit note was deleted."
 #: org/views/invoice.py:120
 msgid "VMG_20004"
 msgstr "The draft invoice was deleted."
-
-#: org/views/org.py:49
-msgid "VMG_20005"
-msgstr "Organization <a href='%(url)s'>%(name)s</a> was successfully created."
 
 #: org/views/payment.py:119
 msgid "VMG_20006"
@@ -262,23 +97,6 @@ msgstr ""
 "The user <a href='%(url)s'>%(first_name)s %(last_name)s</a> was successfully "
 "created."
 
-#: org/views/modals/payment.py:59
-msgid "VMG_21001"
-msgstr "Payment was successfully allocated."
-
-#: org/views/modals/payment.py:89
-msgid "VMG_21002"
-msgstr "Payment was successfully deallocated."
-
-#: org/views/modals/payment.py:112
-msgid "NIL"
-msgstr ""
-"Debugging message. Just for testing. Nothing to see here. Move along. :)"
-
-#: org/views/modals/refund.py:53
-msgid "VMG_21003"
-msgstr "Refund was successfully allocated."
-
 #: timesheet/views/timer.py:54
 msgid "VMG_30001"
 msgstr "The timer was started."
@@ -290,3 +108,147 @@ msgstr "The timer was deleted."
 #: timesheet/views/timer.py:96
 msgid "VMG_30003"
 msgstr "The timer was updated."
+
+#~ msgid "BLE_40001"
+#~ msgstr "You can not delete this invoice. It has already been finalized."
+
+#~ msgid "BLE_40002"
+#~ msgstr "You can not delete this invoice. It has already been voided."
+
+#~ msgid "BLE_40003"
+#~ msgstr "You can not finalize this invoice. It is not a draft."
+
+#~ msgid "BNAV_40101"
+#~ msgstr "INVOICE"
+
+#~ msgid "BLE_40004"
+#~ msgstr "There are still allocations for this invoice. It can not be voided."
+
+#~ msgid "BLE_40005"
+#~ msgstr "You can not void this invoice. It is not yet finalized."
+
+#~ msgid "BNAV_40105"
+#~ msgstr "VOID"
+
+#~ msgid "BLE_40101"
+#~ msgstr "You can not delete this payment. It has already been finalized."
+
+#~ msgid "BLE_40102"
+#~ msgstr "You can not delete this payment. It has already been voided."
+
+#~ msgid "BLE_40103"
+#~ msgstr "You can not finalize this payment. It is not a draft."
+
+#~ msgid "BLE_40104"
+#~ msgstr "The amount must be greater than zero."
+
+#~ msgid "BNAV_40103"
+#~ msgstr "PAYMENT"
+
+#~ msgid "BLE_40105"
+#~ msgstr "There are still allocations for this payment. Delete them first."
+
+#~ msgid "BLE_40106"
+#~ msgstr "You can not void this invoice. It is not yet finalized."
+
+#~ msgid "BLE_40201"
+#~ msgstr "You can not delete this refund. It has already been finalized."
+
+#~ msgid "BLE_40202"
+#~ msgstr "You can not delete this refund. It has already been voided."
+
+#~ msgid "BLE_40203"
+#~ msgstr "You can not finalize this refund. It is not a draft."
+
+#~ msgid "BLE_40204"
+#~ msgstr "The amount must be greater than zero."
+
+#~ msgid "BNAV_40104"
+#~ msgstr "REFUND"
+
+#~ msgid "BLE_40205"
+#~ msgstr "You can not void this refund. There are still allocations present."
+
+#~ msgid "BLE_40206"
+#~ msgstr "This refund has not been finalized. It can not be voided."
+
+#~ msgid "BLE_40301"
+#~ msgstr "You can not delete this credit note. It has already been finalized."
+
+#~ msgid "BLE_40302"
+#~ msgstr "You can not delete this credit note. It has already been voided."
+
+#~ msgid "BLE_40303"
+#~ msgstr "You can not finalize this credit note. It is not a draft."
+
+#~ msgid "BNAV_40102"
+#~ msgstr "CREDIT NOTE"
+
+#~ msgid "BLE_40305"
+#~ msgstr ""
+#~ "You can not void this credit note. There are still allocations present."
+
+#~ msgid "BLE_40306"
+#~ msgstr "You can not void this credit note. It is not yet finalized."
+
+#~ msgid "BLE_80002"
+#~ msgstr "Unknown SourceDocumentType"
+
+#~ msgid "BLE_30001"
+#~ msgstr "No such allocation was found."
+
+#~ msgid "BLE_80003"
+#~ msgstr ""
+#~ "The allocation failed because the destination is not a valid recipient "
+#~ "document type."
+
+#~ msgid "BLE_80004"
+#~ msgstr ""
+#~ "The allocation failed because the source is not an allocatable source "
+#~ "document type."
+
+#~ msgid "BLE_20001"
+#~ msgstr "The allocation amount exceeds the funds required."
+
+#~ msgid "BLE_20002"
+#~ msgstr "The allocation amount exceeds the funds available."
+
+#~ msgid "BLE_10001"
+#~ msgstr "The credit note date is invalid."
+
+#~ msgid "BLE_10002"
+#~ msgstr "An unknown state was requested for the credit note."
+
+#~ msgid "BLE_11401"
+#~ msgstr "The tax rate was invalid."
+
+#~ msgid "BLE_11402"
+#~ msgstr "An invalid state change was requested for the document."
+
+#~ msgid "BLE_10102"
+#~ msgstr "The due date is before the invoice date."
+
+#~ msgid "BLE_10103"
+#~ msgstr "An unknown state was requested for the invoice."
+
+#~ msgid "BLE_50001"
+#~ msgstr "There already is an activity with that name."
+
+#~ msgid "BLE_50002"
+#~ msgstr "There already is a client with that name."
+
+#~ msgid "BLE_50003"
+#~ msgstr "There already is an organization with the same name."
+
+#~ msgid "BLE_50004"
+#~ msgstr "There already is a project with the same name."
+
+#~ msgid "BLE_50005"
+#~ msgstr "There already is a task with the same name."
+
+#~ msgid "BLE_50006"
+#~ msgstr "The user already has access to the organization."
+
+#~ msgid "BLE_50007"
+#~ msgstr ""
+#~ "The user already has access to another organization with the same name."

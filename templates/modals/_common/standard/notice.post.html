@@ -1,6 +1,6 @@
+{% load imageurls %}
 <style type="text/css">
-.dialogi-message-block {
-	margin: 0px 15px 15px 15px;
+.dialog-message-block {
 	position: relative;
 }
 
@@ -8,7 +8,7 @@
 {
 	position: relative;
 	color: black;
-	padding: 20px;
+	padding: 20px 20px 20px 75px;
 
 	background-repeat: no-repeat;
 	background-attachment: scroll;
@@ -36,36 +36,19 @@
 }
 
 .dialog-message-block .dialog-message-notice.success {
-	border-color: green;
-}
-
-.dialog-message-block .dialog-message-notice.success {
-	background-image: url(../images/icons/message_tick.png);
+	background-image: url( {% image_icon success %} );
 }
 
 .dialog-message-block .dialog-message-notice.error {
-	color: red;
-	border-color: darkred;
-}
-
-.dialog-message-block .dialog-message-notice.error {
-	background-image: url(../images/icons/message_error.png);
+	background-image: url( {% image_icon error %} );
 }
 
 .dialog-message-block .dialog-message-notice.info {
-	border-color: darkblue;
-}
-
-.dialog-message-block .dialog-message-notice.info {
-	background-image: url(../images/icons/message_info.png);
+	background-image: url( {% image_icon info %} );
 }
 
 .dialog-message-block .dialog-message-notice.warning {
-	border-color: orange;
-}
-
-.dialog-message-block .dialog-message-notice.warning {
-	background-image: url(../images/icons/message_warning.png);
+	background-image: url( {% image_icon warning %} );
 }
 
 </style>
@@ -82,7 +65,6 @@
 	</div>
 
 	<div class="ral_dialog_content ral_clear">
-
 		{% if messages %}
 		<div class="dialog-message-block">
 			{% for message in messages %}
@@ -90,14 +72,27 @@
 			{% endfor %}
 		</div> <!-- #message-block -->
 		{% endif %}
-
-		<p>.............................</p>
-		<p>.............................</p>
-
 	</div>
 
 	<div class="ral_dialog_buttonbar ral_clear" style='background-color: white'>
-		<button type="button" class="ral_action_close">Okay</button>
+		{% if additional.buttons %}
+			{% for but in additional.buttons %}
+			<button type="button" class="{{ but.class }}">{{ but.label }}</button>
+			{% endfor %}
+		{% else %}
+			<button type="button" class="ral_action_close">Close</button>
+		{% endif %}
 	</div>
 
 </div>
+
+<script type="text/javascript">
+{% if additional.buttons %}
+{% for but in additional.buttons %}
+	{% if but.url %}
+	$( '.ral_dialog_buttonbar button' ).eq( {{ forloop.counter0 }} ).click(function() { window.location.href = '{{ but.url }}' } );
+	{% endif %}
+{% endfor %}
+{% endif %}
+</script>
+
