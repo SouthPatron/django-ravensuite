@@ -1,5 +1,78 @@
+<style type="text/css">
+.dialogi-message-block {
+	margin: 0px 15px 15px 15px;
+	position: relative;
+}
 
-<div style="width: 200px; min-height: 200px;">
+.dialog-message-block .dialog-message-notice
+{
+	position: relative;
+	color: black;
+	padding: 20px;
+
+	background-repeat: no-repeat;
+	background-attachment: scroll;
+	background-position: 20px;
+}
+
+.dialog-message-block .dialog-message-notice .close-button {
+	position: absolute;
+	right: 5px;
+	top: 5px;
+	display: block;
+	margin: 1px;
+	background-image: url( '../images/icons/icons.png' );
+	background-position: -96px -128px;
+	width: 16px;
+	height: 16px;
+	text-indent: -9999px;
+	overflow: hidden;
+	background-repeat: no-repeat;
+}
+
+
+.dialog-message-block .dialog-message-notice div {
+	margin: 10px 50px 10px 70px;
+}
+
+.dialog-message-block .dialog-message-notice.success {
+	border-color: green;
+}
+
+.dialog-message-block .dialog-message-notice.success {
+	background-image: url(../images/icons/message_tick.png);
+}
+
+.dialog-message-block .dialog-message-notice.error {
+	color: red;
+	border-color: darkred;
+}
+
+.dialog-message-block .dialog-message-notice.error {
+	background-image: url(../images/icons/message_error.png);
+}
+
+.dialog-message-block .dialog-message-notice.info {
+	border-color: darkblue;
+}
+
+.dialog-message-block .dialog-message-notice.info {
+	background-image: url(../images/icons/message_info.png);
+}
+
+.dialog-message-block .dialog-message-notice.warning {
+	border-color: orange;
+}
+
+.dialog-message-block .dialog-message-notice.warning {
+	background-image: url(../images/icons/message_warning.png);
+}
+
+</style>
+
+
+
+<div style="width: 300px;">
 
 	<div class="ral_dialog_titlebar ral_clear">
 		<span class="ral_dialog_title">Notice</span>
@@ -11,18 +84,20 @@
 	<div class="ral_dialog_content ral_clear">
 
 		{% if messages %}
-		<div id="message-block">
+		<div class="dialog-message-block">
 			{% for message in messages %}
-			<div class="message-notice {{ message.tags }}"><span>{{ message|safe }}</span></div>
+			<div class="dialog-message-notice {{ message.tags }}"><span>{{ message|safe }}</span></div>
 			{% endfor %}
 		</div> <!-- #message-block -->
 		{% endif %}
 
+		<p>.............................</p>
+		<p>.............................</p>
+
 	</div>
 
-	<div class="ral_dialog_buttonbar ral_clear">
+	<div class="ral_dialog_buttonbar ral_clear" style='background-color: white'>
 		<button type="button" class="ral_action_close">Okay</button>
 	</div>
 
 </div>
-

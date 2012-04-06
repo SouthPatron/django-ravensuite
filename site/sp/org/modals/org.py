@@ -140,3 +140,22 @@ class EditClient( ModalLogic ):
 		return obj
 
 
+
+class EditTest( ModalLogic ):
+
+	def get_extra( self, request, dmap, obj, *args, **kwargs ):
+		myobj = { 'form' : EditClientForm( instance = obj ) }
+		messages.success( request, _('VMG_20002') % { 'url' : obj.get_absolute_url(), 'name' : obj.trading_name } )
+		self.easy.make_post();
+		self.easy.notice();
+		return myobj
+
+	def get_object( self, request, dmap, *args, **kwargs ):
+		return Client.objects.get( refnum = dmap[ 'cid' ], organization__refnum = dmap[ 'oid' ] )
+
+	def perform( self, request, dmap, obj, extra, fmt, *args, **kwargs ):
+		messages.success( request, _('VMG_20002') % { 'url' : obj.get_absolute_url(), 'name' : obj.trading_name } )
+		self.easy.notice();
+		return obj
+
+

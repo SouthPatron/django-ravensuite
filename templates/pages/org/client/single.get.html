@@ -63,8 +63,12 @@
 
 
 {% block tpl_bl_head_onready %}
-	ral.html.custom.attach_fetch( '#id_ral_modal_org_edit_client', 'org.edit.client',
-				{ oid: '{{ kwargs.oid }}', cid: {{ kwargs.cid }} } );
+
+var ref = { oid: '{{ kwargs.oid }}', cid: {{ kwargs.cid }} };
+
+ral.html.custom.attach_fetch( '#id_ral_modal_org_edit_client', 'org.edit.client', ref );
+ral.html.custom.attach_fetch( '#id_ral_modal_org_edit_test', 'org.edit.test', ref );
+ral.html.custom.attach_fetch( '#id_ral_modal_org_delete_client', 'org.delete.client', ref );
 
 {% endblock %}
 
@@ -75,6 +79,8 @@
 <h3>Client</h3>
 <ul>
 	<li><a id="id_ral_modal_org_edit_client">Edit Details</a></li>
+	<li><a id="id_ral_modal_org_edit_test">Test</a></li>
+	<li><a id="id_ral_modal_org_delete_client">Delete</a></li>
 </ul>
 </div>
 
