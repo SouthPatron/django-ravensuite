@@ -19,11 +19,18 @@ urlpatterns = patterns('',
 
 	url( r'^(?P<oid>\w{32})/test$', login_required( OrgTestSingle.as_view() ), name = 'org-test-single' ),
 
+
+# ------ SETTINGS -------------------------------
+
+
+	url( r'^(?P<oid>\w{32})/admin$', login_required( AdminSingle.as_view() ), name = 'org-admin-single' ),
+
+
 # ------ USERS -------------------------------
 
 
-	url( r'^(?P<oid>\w{32})/users$', login_required( UserList.as_view() ), name = 'org-user-list' ),
-	url( r'^(?P<oid>\w{32})/user/(?P<uid>\d+)$', login_required( UserSingle.as_view() ), name = 'org-user-single' ),
+	url( r'^(?P<oid>\w{32})/admin/users$', login_required( UserList.as_view() ), name = 'org-admin-user-list' ),
+	url( r'^(?P<oid>\w{32})/admin/user/(?P<uid>\d+)$', login_required( UserSingle.as_view() ), name = 'org-admin-user-single' ),
 
 
 

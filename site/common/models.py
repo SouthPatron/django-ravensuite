@@ -136,13 +136,24 @@ class Organization( models.Model ):
 
 	@models.permalink
 	def get_user_list_url( self ):
-		return ( 'org-user-list', (), { 'oid' : self.refnum } )
+		return ( 'org-admin-user-list', (), { 'oid' : self.refnum } )
 
 	def get_org( self ):
 		return self
 
-	
-		
+
+class OrganizationSettings( models.Model ):
+	class Meta:
+		verbose_name_plural = 'Organization Settings'
+
+	organization = models.OneToOneField( Organization )
+
+	def get_org( self ):
+		return self.organization
+
+	def __unicode__( self ):
+		return self.organization.trading_name
+
 
 class OrganizationAccount( models.Model ):
 	organization = models.OneToOneField( Organization )
@@ -179,7 +190,7 @@ class UserMembership( models.Model ):
 
 	@models.permalink
 	def get_absolute_url( self ):
-		return ( 'org-user-single', (), { 'oid' : self.organization.refnum, 'uid' : self.id } )
+		return ( 'org-admin-user-single', (), { 'oid' : self.organization.refnum, 'uid' : self.id } )
 
 	def __unicode__( self ):
 		return UserCategory.get( self.category )[1]

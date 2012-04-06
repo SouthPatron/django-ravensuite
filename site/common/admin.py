@@ -34,6 +34,12 @@ class OrganizationCounterAdmin( admin.ModelAdmin ):
 	list_display = ( 'organization', )
 
 
+class OrganizationSettingsAdmin( admin.ModelAdmin ):
+	readonly_fields = ( 'organization', )
+	list_display = ( 'organization', )
+
+
+
 class AuthenticationCodeAdmin( admin.ModelAdmin ):
 	readonly_fields = ( 'user', )
 	list_display = ( 'user', 'creation_time', 'authentication_code' )

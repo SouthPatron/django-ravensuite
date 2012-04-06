@@ -34,6 +34,7 @@ class OrgBusLog( object ):
 
 		OrganizationCounter.objects.create( organization = neworg )
 		OrganizationAccount.objects.create( organization = neworg )
+		OrganizationSettings.objects.create( organization = neworg )
 
 		return neworg
 

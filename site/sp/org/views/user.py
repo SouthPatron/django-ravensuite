@@ -18,7 +18,7 @@ from common.exceptions import *
 
 
 class UserList( ListView ):
-	template_name = 'pages/org/user/index'
+	template_name = 'pages/org/admin/user/index'
 
 	def get_object( self, request, obj_list, fmt, *args, **kwargs ):
 		return Organization.objects.get( refnum = self.url_kwargs.oid )
@@ -56,10 +56,10 @@ class UserList( ListView ):
 	def create_object_html( self, request, data, *args, **kwargs ):
 		form = forms.AddUser( data or None )
 		if form.is_valid() is False:
-			return redirect( 'org-user-list', oid = self.url_kwargs.oid )
+			return redirect( 'org-admin-user-list', oid = self.url_kwargs.oid )
 
 		newo = self._create_object( request, form.cleaned_data, *args, **kwargs )
-		return redirect( 'org-user-list', oid = self.url_kwargs.oid )
+		return redirect( 'org-admin-user-list', oid = self.url_kwargs.oid )
 
 	def create_object_json( self, request, data, *args, **kwargs ):
 		newo = self._create_object( request, data, *args, **kwargs )
@@ -69,14 +69,14 @@ class UserList( ListView ):
 
 
 class UserSingle( SingleObjectView ):
-	template_name = 'pages/org/user/single'
+	template_name = 'pages/org/admin/user/single'
 
 	def get_object( self, request, *args, **kwargs ):
 		return get_object_or_404( UserMembership, id = self.url_kwargs.uid, organization__refnum = self.url_kwargs.oid )
 
 	def delete_object( self, request, ob, *args, **kwargs ):
 		ob.delete()
-		return redirect( 'org-user-list', oid = ob.organization.refnum )
+		return redirect( 'org-admin-user-list', oid = ob.organization.refnum )
 
 	def update_object_json( self, request, obj, data, *args, **kwargs ):
 		obj.category = data.get( 'category', obj.category )

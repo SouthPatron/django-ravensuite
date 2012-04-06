@@ -1,0 +1,9 @@
+{% load active %}
+
+<div>
+<ul>
+	<li class="label-item {% active request '\/admin$' %}"><a href="{% url org-admin-single kwargs.oid %}">Dashboard</a></li>
+	<li class="{% active request '\/user[s\/]$' %}"><a href="{{ instance.get_org.get_user_list_url }}">Users</a></li>
+</ul>
+</div>
+
