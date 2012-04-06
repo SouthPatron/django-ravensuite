@@ -125,21 +125,6 @@ rely_graph = {
 			'deps' : [ 'jquery', 'jquery.ui', 'crypto.md5' ]
 		},
 
-	'sitekit' : {
-			'js' : [
-				pc( 'sitekit/string.js' ),
-				pc( 'sitekit/sitekit.js' ),
-				pc( 'sitekit/ood.js' ),
-				pc( 'sitekit/smktools.js' ),
-				pc( 'sitekit/validations.js' )
-			],
-			'css' : [
-				pc( 'sitekit/css/smktools.css' ),
-			],
-			'deps' : [ 'jquery' ]
-		},
-
-
 	'crypto.md5' : {
 			'js' : [ pe( 'crypto.js/crypto-md5/crypto-md5.js' ), ],
 			'css' : [ ],
