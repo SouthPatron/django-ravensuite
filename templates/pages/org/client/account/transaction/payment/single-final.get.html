@@ -19,6 +19,16 @@ $( "#id_button_void" ).click( function() {
 	$( "#id_sd_form" ).submit();
 });
 
+
+ral.html.custom.attach_fetch( '#id_ral_modal_org_client_account_transaction_allocations', 'org.client.account.transaction.allocations', 
+	{
+		oid: '{{ kwargs.oid }}',
+		cid: {{ kwargs.cid }},
+		sdid: {{ kwargs.sdid }}
+	}
+);
+
+
 ral.html.custom.attach_fetch( '#id_ral_modal_org_client_account_transaction_allocate', 'org.client.account.transaction.allocate', 
 	{
 		oid: '{{ kwargs.oid }}',
@@ -33,7 +43,12 @@ ral.html.custom.attach_fetch( '#id_ral_modal_org_client_account_transaction_allo
 {% block payment_amount %}
 {% get_document_obj instance as doc %}
 <div>Amount: {{ doc.getTotals.getTotal|decsplay|escape }}</div>
-<div>Allocated: {{ doc.getTotals.getAllocated|decsplay|escape }}</div>
+
+<div>
+<a href="#" id="id_ral_modal_org_client_account_transaction_allocations">Allocated</a>:
+{{ doc.getTotals.getAllocated|decsplay|escape }}
+</div>
+
 <div>Available to Allocate: {{ doc.getTotals.getUnallocated|decsplay|escape }}</div>
 <div>
 <a href="#" id="id_ral_modal_org_client_account_transaction_allocate">Allocate Payment</a>

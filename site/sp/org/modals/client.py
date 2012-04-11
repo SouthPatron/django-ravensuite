@@ -12,7 +12,10 @@ from common.models import *
 
 from common.buslog.org import ProjectBusLog
 from common.busobj.org import SourceDocumentObj
+from common.bushelp.org.allocator import Allocator
 from common.exceptions import *
+
+from common.utils.parse import *
 
 
 class NewProject( ModalLogic ):
@@ -89,8 +92,92 @@ class AccountTransactionAllocate( ModalLogic ):
 		return sd
 
 	def perform( self, request, dmap, obj, extra, fmt, *args, **kwargs ):
-		return pmt.get_absolute_url();
+
+		invoice_refnum = dmap.get( 'refnum' )
+		payment_amount = pnumparse( dmap.get( 'amount' ) )
+
+		try:
+			inv = SourceDocumentObj()
+			inv.load( invoice_refnum )
+
+			pay = SourceDocumentObj()
+			pay.wrap( obj )
+
+			alo = Allocator()
+			alo.allocate( pay, inv, payment_amount )
+
+		except BLE_Error, berror:
+			messages.error( request, berror.message )
+			self.easy.notice();
+			return
+
+		messages.success( request, _('VMG_21001') )
+		self.easy.redirect();
+		return pay.get_absolute_url();
+
+
+class AccountTransactionAllocations( ModalLogic ):
+
+	def get_extra( self, request, dmap, obj, *args, **kwargs ):
+		sdo = SourceDocumentObj()
+		sdo.wrap( obj )
+
+		extra = {
+			'allocations' : sdo.getAllocations(),
+		}
+		return extra
+
+	def get_object( self, request, dmap, *args, **kwargs ):
+
+		sd = get_object_or_404( SourceDocument,
+				document_state = SourceDocumentState.FINAL,
+				refnum = dmap[ 'sdid' ],
+				client__refnum = dmap[ 'cid' ],
+				client__organization__refnum = dmap[ 'oid' ]
+			)
+
+		return sd
 
 
 
+class AccountTransactionDeallocate( ModalLogic ):
+
+	def get_extra( self, request, dmap, obj, *args, **kwargs ):
+		sdo = SourceDocumentObj()
+		sdo.wrap( obj )
+		alloc = sdo.getAllocations().get( dmap[ 'alocid' ] );
+		extra = { 'allocation' : alloc }
+		return extra
+
+
+	def get_object( self, request, dmap, *args, **kwargs ):
+		sd = get_object_or_404( SourceDocument,
+				document_state = SourceDocumentState.FINAL,
+				refnum = dmap[ 'sdid' ],
+				client__refnum = dmap[ 'cid' ],
+				client__organization__refnum = dmap[ 'oid' ]
+			)
+
+		return sd
+
+
+
+	def perform( self, request, dmap, obj, extra, fmt, *args, **kwargs ):
+
+		alo = Allocator()
+
+		sdo = SourceDocumentObj()
+		sdo.wrap( obj )
+
+		try:
+			alo.deallocate( sdo, extra[ 'allocation' ].id )
+
+		except BLE_Error, berror:
+			messages.error( request, berror.message )
+			self.easy.notice();
+			return
+
+		messages.success( request, _('VMG_21001') )
+		self.easy.redirect();
+		return obj.get_absolute_url();
 

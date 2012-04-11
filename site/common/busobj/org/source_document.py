@@ -210,9 +210,21 @@ class SourceDocumentObj( object ):
 					Q( source = self.parent.getObj() ) | Q( destination = self.parent.getObj() )
 				)
 
+		def get( self, pk ):
+			return SourceDocumentAllocation.objects.get(
+					Q( source = self.parent.getObj() ) | Q( destination = self.parent.getObj() ),
+					id = pk
+				)
+
+
 	def getAllocations( self ):
 		return self.Allocations( self )
 
 
-
+	def isSourceOfCredit( self ):
+		return (
+			(self.getObj().document_type == SourceDocumentType.PAYMENT) or
+			(self.getObj().document_type == SourceDocumentType.CREDIT_NOTE)
+		)
+		
 

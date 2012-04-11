@@ -28,7 +28,7 @@
 {% endblock %}
 
 {% block dialog_javascript %}
-	$('#id_table').dataTable( {
+	$('#id_modal_table').dataTable( {
 		"iDisplayLength" : 4,
 		"bFilter" : false,
 		"bSort" : false,
@@ -46,7 +46,7 @@
 	}
 
 
-	$( "#id_table .deallocate_option" ).click( function() {
+	$( "#id_modal_table .deallocate_option" ).click( function() {
 
 		var theid = $( this ).parents( "tr" ).find( "input.sub_alocid" ).first().attr( 'value' );
 
@@ -87,7 +87,7 @@
 	</div>
 
 	<div>
-		<table id="id_table">
+		<table id="id_modal_table">
 			<thead>
 				<tr>
 					<th>Document</th>

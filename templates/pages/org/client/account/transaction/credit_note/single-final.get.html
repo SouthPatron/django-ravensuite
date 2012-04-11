@@ -1,5 +1,7 @@
 {% extends 'pages/org/client/account/transaction/credit_note/single-base.html' %}
 
+{% block tpl_ps_rely %}{{ block.super }} ral datatables{% endblock %}
+
 {% load decshift %}
 {% load sourcedoc %}
 
@@ -41,6 +43,26 @@
 		$( "#id_sd_form" ).submit();
 	});
 
+
+ral.html.custom.attach_fetch( '#id_ral_modal_org_client_account_transaction_allocations', 'org.client.account.transaction.allocations', 
+	{
+		oid: '{{ kwargs.oid }}',
+		cid: {{ kwargs.cid }},
+		sdid: {{ kwargs.sdid }}
+	}
+);
+
+
+ral.html.custom.attach_fetch( '#id_ral_modal_org_client_account_transaction_allocate', 'org.client.account.transaction.allocate', 
+	{
+		oid: '{{ kwargs.oid }}',
+		cid: {{ kwargs.cid }},
+		sdid: {{ kwargs.sdid }}
+	}
+);
+
+
+
 {% endblock %}
 
 
@@ -71,6 +93,35 @@
 </tbody>
 </table>
 {% endblock %}
+
+
+
+{% block allocation_details %}
+	{% get_document_obj instance as doc %}
+
+	<div class="inner-tax">
+		<div class="inner-tax-label">
+			<a href="#" id="id_ral_modal_org_client_account_transaction_allocations">Allocated</a>
+		</div>
+		<div class="inner-tax-amount">
+			<span id="summary_tax">{{ sdoc.getTotals.getAllocated|decsplay|escape }}</span>
+		</div>
+	</div>
+
+
+	<div class="inner-tax">
+		<div class="inner-tax-label">
+			Available to Allocate<br/>
+			<a href="#" id="id_ral_modal_org_client_account_transaction_allocate">Allocate Payment</a>
+		</div>
+		<div class="inner-tax-amount">
+			<span id="summary_tax">{{ sdoc.getTotals.getUnallocated|decsplay|escape }}</span>
+		</div>
+	</div>
+
+{% endblock %}
+
+
 
 
 {% block document_button_row_left %}
