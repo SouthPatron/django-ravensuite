@@ -131,6 +131,12 @@ rely_graph = {
 			'deps' : [ ]
 		},
 
+	'highcharts' : {
+			'js' : [ pe( 'jquery.highcharts/highcharts.js' ), ],
+			'css' : [ ],
+			'deps' : [ 'jquery', ]
+		},
+
 }
 
 
