@@ -7,8 +7,9 @@
 	<td><a>{{ sdo.getTotals.getTotal|decsplay }}</a></td>
 	<td>
 		<a>{{ sdo.getTotals.getUnallocated|decsplay }}</a>
-		<input class="sub_unallocated" type="hidden" value="{{ sdo.getTotals.getUnallocated|decshift }}" />
-		<input class="sub_total" type="hidden" value="{{ sdo.getTotals.getTotal|decshift }}" />
+		<input class="sub_refnum" type="hidden" value="{{ sdo.getObj.refnum }}" />
+		<input class="sub_unallocated" type="hidden" value="{{ sdo.getTotals.getUnallocated|decsplay }}" />
+		<input class="sub_total" type="hidden" value="{{ sdo.getTotals.getTotal|decsplay }}" />
 	</td>
-</td>
+</tr>
 

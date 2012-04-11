@@ -24,11 +24,17 @@
 {
 	background-color: #DEDBF1;
 }
+
+.invalid_amount {
+	background-color: red;
+	border-color: darkred;
+}
+
 {% endblock %}
 
 {% block dialog_javascript %}
 	$('#id_table').dataTable( {
-		"iDisplayLength" : 25,
+		"iDisplayLength" : 4,
 		"bFilter" : false,
 		"bSort" : false,
 		"sPaginationType" : "full_numbers",
@@ -36,25 +42,98 @@
 		"sDom" : 't<"bottom"ip><"clear">'
 	});
 
+	function parse_number( num )
+	{
+		var sam = num + '';
+		sam = sam.replace( /,/g, '' );
+		return (new Number(sam));
+	}
+
+	function format_number( num )
+	{
+		var sam = num.toFixed(2);
+		var nuwe = '';
+		var gotDecimal = false;
+		var count = 0;
+
+		for ( var i = (sam.length - 1); i >= 0; --i )
+		{
+			nuwe = sam[i] + nuwe;
+
+			if ( gotDecimal === false )
+			{
+				if ( sam[i] == '.' ) gotDecimal = true;
+				continue;
+			}
+
+			if ( i > 0 )
+			{
+				if ( (sam[i-1] == '+') || (sam[i-1] == '-') )
+				{
+					count = 0;
+					continue;
+				}
+			}
+
+			count += 1;
+
+			if ( ((count % 3) == 0) && (i != 0) )
+			{
+				nuwe = ',' + nuwe;
+			}
+		}
+
+		return nuwe;
+	}
+
+	function recalculate( event ) {
+
+		var amount_available = parse_number( $( "#id_sd_available" ).attr( 'value' ) );
+		var doc_outstanding = parse_number( $( "#id_sel_unallocated" ).attr( 'value' ) );
+		var user_suggestion = parse_number( $( "#id_amount" ).attr( 'value' ) );
+
+		if ( (isNaN( user_suggestion )) ||
+				(user_suggestion <= 0)
+				|| (user_suggestion > doc_outstanding )
+				|| (user_suggestion > amount_available )
+			)
+		{
+			$( "#id_amount" ).addClass( 'invalid_amount' );
+			return;
+		}
+		else
+		{
+			$( "#id_amount" ).removeClass( 'invalid_amount' );
+		}
+
+		var remaining = ( doc_outstanding - user_suggestion );
+		$( "#id_remaining" ).attr( 'value', format_number( remaining ) );
+	}
+
+
+
 	$( ".sub_sd_line" ).click(function() {
 		$( ".selected_line" ).removeClass( 'selected_line' );
 		$( this ).addClass( 'selected_line' );
 
 
+		var refnum = $(this).find( ".sub_refnum" ).first().attr( 'value' );
 		var unallocated = $(this).find( ".sub_unallocated" ).first().attr( 'value' );
 		var total = $(this).find( ".sub_total" ).first().attr( 'value' );
 
 		$( '#id_sel_unallocated' ).attr( 'value', unallocated );
 		$( '#id_sel_total' ).attr( 'value', total );
+		$( '#id_refnum' ).attr( 'value', refnum );
+		$( '#id_amount' ).removeAttr( 'disabled' );
+
+		recalculate();
+
+		$( '#id_amount' ).keyup( function( event ) {
+			recalculate( event );
+		});
 	});
 {% endblock %}
 
-
-{% block dialog_left_menu %}
-<ul>
-	<li><a>Allocation</a></li>
-</ul>
-{% endblock %}
 
 
 {% block dialog_right_panel %}
@@ -69,28 +148,36 @@
 		box-shadow: 1px 0px 5px #dedbd1;
 		border: 1px solid #dedbd1;
 	">
+		<h3>Payment/Credit</h3>
 		<label for="amount">Total:</label>
-		<input type="text" name="amount" id="id_sd_total" value="{{ doc.getTotals.getTotal|decsplay }}" />
+		<input type="text" id="id_sd_total" value="{{ doc.getTotals.getTotal|decsplay }}" disabled=1 />
 		<label for="amount">Already allocated:</label>
-		<input type="text" name="amount" id="id_sd_allocated" value="{{ doc.getTotals.getAllocated|decsplay }}" />
+		<input type="text" id="id_sd_allocated" value="{{ doc.getTotals.getAllocated|decsplay }}" disabled=1 />
 		<label for="amount">Available:</label>
-		<input type="text" name="amount" id="id_sd_available" value="{{ doc.getTotals.getUnallocated|decsplay }}" />
+		<input type="text" id="id_sd_available" value="{{ doc.getTotals.getUnallocated|decsplay }}" disabled=1 />
 	</div>
 
-	<div class="clearfix" style="
+	<div id="id_selected_sd_pane" class="clearfix" style="
 		margin: 15px;
 		padding: 10px;
 		box-shadow: 1px 0px 5px #dedbd1;
 		border: 1px solid #dedbd1;
+		background-color: #f0f0f0;
 	">
-		<label for="amount">Amount to Allocate</label>
-		<input type="text" name="amount" id="id_amount" value="{{ extra.available|decsplay }}" />
+		<h3>Invoice/Refund</h3>
+
+		<label for="amount">Total</label>
+		<input type="text" id="id_sel_total" value="0.00" disabled=1 />
 
 		<label for="amount">Amount Outstanding</label>
-		<input type="text" name="amount" id="id_sel_unallocated" value="0.00" />
+		<input type="text" id="id_sel_unallocated" value="0.00" disabled=1 />
 
-		<label for="amount">Total Amount</label>
-		<input type="text" name="amount" id="id_sel_total" value="0.00" />
+		<label for="amount">Amount to Allocate</label>
+		<input type="text" name="amount" id="id_amount" value="{{ extra.available|decsplay }}" disabled=1 autocomplete='off' />
+		<input type="hidden" name="refnum" id="id_refnum" value="-1" />
+
+		<label for="amount">Amount Remaining</label>
+		<input type="text" id="id_remaining" value="0.00" disabled=1 />
 	</div>
 
 
@@ -105,6 +192,7 @@
 				</tr>
 			</thead>
 			<tbody>
+
 			{% for prov in extra.outstanding.invoices.all %}
 				{% include 'modals/org/client/account/transaction/allocate_inner.html' with prov=prov %}
 			{% endfor %}
