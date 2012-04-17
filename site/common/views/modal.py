@@ -26,6 +26,9 @@ class ModalLogic( object ):
 		def redirect( self ):
 			self._makename( 'redirect' )
 
+		def refresh( self ):
+			self._makename( 'refresh' )
+
 		def notice( self ):
 			self._makename( 'notice' )
 

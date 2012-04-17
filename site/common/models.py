@@ -592,7 +592,7 @@ class TimesheetTimer( models.Model ):
 	class Meta:
 		ordering = [ '-start_time' ]
 
-	timesheet_entry = models.ForeignKey( TimesheetEntry )
+	timesheet_entry = models.OneToOneField( TimesheetEntry, unique = True )
 	start_time = models.DateTimeField()
 
 

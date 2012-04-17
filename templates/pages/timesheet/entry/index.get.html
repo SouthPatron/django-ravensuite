@@ -41,9 +41,19 @@
 
 {% block tpl_bl_body_content_center %}
 
+<style type="text/css">
+.dataTables_wrapper table#entry_list_table tbody td
+{
+	color: black;
+}
+</style>
+
 <table
 	id="entry_list_table"
-	style=' text-align: left; font-size: 0.8em;'
+	style='
+		text-align: left;
+		font-size: 0.8em;
+	'
 	>
 <thead>
 	<tr>
@@ -51,24 +61,32 @@
 		<th>Client</th>
 		<th>Comment</th>
 		<th>Duration</th>
-		<th>Delete</th>
+		<th>&nbsp;</th>
 	</tr>
 </thead>
 <tbody>
 
 {% for obj in object_list %}
 	<tr>
-		<td>{{ obj.start_time }}</td>
+		<td>{{ obj.start_time|time:"H:i" }}</td>
 		<td>
-			{{ obj.get_org.trading_name }}
-			{{ obj.get_client.trading_name }}
-			{{ obj.get_project.name }}
-			{{ obj.get_activity.name }}
-			{{ obj.task.name }}
+{{ obj.get_org.trading_name }}<br/>
+{{ obj.get_client.trading_name }}<br/>
+{{ obj.get_project.name }}<br/>
+{{ obj.get_activity.name }}<br/>
+{{ obj.task.name }}
 		</td>
 		<td>{{ obj.comment }}</td>
 		<td>{{ obj.seconds }}</td>
-		<td>&nbsp;</td>
+		<td>
+		{% if obj.timesheettimer %}
+			<button>STOP</button>
+		{% else %}
+			<button>START</button>
+		{% endif %}
+		<button>DELETE</button>
+		<button>EDIT</button>
+		</td>
 	</tr>
 {% endfor %}
 
