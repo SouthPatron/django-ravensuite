@@ -35,7 +35,7 @@ var chart1;
 function requestData()
 {
 	var mydata = {
-		days : 30
+		days : 60
 	};
 
 	jQuery.get(
@@ -44,6 +44,10 @@ function requestData()
 		function( info )
 		{
 			var initial_balance = {{ instance.balance }};
+
+			var day_seconds = (1 * 60 * 60 * 24);
+
+			var last_date = false;
 
 			for ( var i = 0; i < info.length; ++i )
 			{
@@ -87,11 +91,23 @@ function requestData()
 
 				var balance_data = [ thed, initial_balance/100 ];
 
-				initial_balance += delta;
+				if ( last_date !== false )
+				{
+					if ( last_date > thed )
+					{
+						var last_data = [ last_date, initial_balance/100 ];
+						chart1.series[0].addPoint( last_data, false, false );
+					}
+				}
+				last_date = thed - day_seconds;
 
-				chart1.series[0].addPoint( balance_data, true, false );
-				chart1.series[idx].addPoint( data, true, false );
+				chart1.series[0].addPoint( balance_data, false, false );
+				chart1.series[idx].addPoint( data, false, false );
+
+				initial_balance += delta;
 			}
+
+			chart1.redraw();
 		}
 	);
 }

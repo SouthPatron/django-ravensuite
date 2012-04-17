@@ -1,5 +1,7 @@
 {% extends 'layouts/member-base-full.html' %}
 
+{% block tpl_ps_rely %}datatables ral jquery.tools{% endblock %}
+
 {% block tpl_si_section %}Timesheet{% endblock %}
 
 {% block tpl_bl_body_functions_page %}
@@ -12,52 +14,61 @@
 	$('#entry_list_table').dataTable( {
 		"iDisplayLength" : 25,
 		"bFilter" : false,
-		"bSort" : true,
+		"bSort" : false,
 		"sPaginationType" : "full_numbers",
 		"aaSortingFixed" : [[ 0, "asc" ]],
-		"aoColumns" : [
-			{ "sType" : "html", "bSortable" : false },
-			{ "sType" : "html", "bSortable" : false },
-			{ "sType" : "html", "bSortable" : false },
-			{ "sType" : "html", "bSortable" : false },
-			{ "sType" : "html", "bSortable" : false },
-			{ "sType" : "html", "bSortable" : false },
-			{ "sType" : "html", "bSortable" : false }
-		],
 		"sDom" : 't<"bottom"ip><"clear">'
 	});
 
+	ral.html.custom.attach_fetch( '#id_ral_new_timer', 'timesheet.new.timer' );
+
 {% endblock %}
+
+
+{% block tpl_bl_body_content_right %}
+
+<div class="widget">
+<h3>Timesheets</h3>
+<ul>
+	<li><a id="id_ral_new_timer">New Timer</a></li>
+</ul>
+</div>
+
+{% endblock %}
+
+
 
 
 {% block tpl_bl_body_content_center %}
 
 <table
 	id="entry_list_table"
-	style=' text-align: left; '
+	style=' text-align: left; font-size: 0.8em;'
 	>
 <thead>
 	<tr>
-		<th>Organization</th>
-		<th>Client</th>
-		<th>Project</th>
-		<th>Activity</th>
-		<th>Task</th>
 		<th>Start Time</th>
-		<th>End Time</th>
+		<th>Client</th>
+		<th>Comment</th>
+		<th>Duration</th>
+		<th>Delete</th>
 	</tr>
 </thead>
 <tbody>
 
 {% for obj in object_list %}
 	<tr>
-		<td>{{ obj.get_org.trading_name }}</td>
-		<td>{{ obj.get_client.trading_name }}</td>
-		<td>{{ obj.project.name }}</td>
-		<td>{{ obj.get_activity.name }}</td>
-		<td>{{ obj.task.name }}</td>
 		<td>{{ obj.start_time }}</td>
-		<td>{{ obj.end_time }}</td>
+		<td>
+			{{ obj.get_org.trading_name }}
+			{{ obj.get_client.trading_name }}
+			{{ obj.get_project.name }}
+			{{ obj.get_activity.name }}
+			{{ obj.task.name }}
+		</td>
+		<td>{{ obj.comment }}</td>
+		<td>{{ obj.seconds }}</td>
+		<td>&nbsp;</td>
 	</tr>
 {% endfor %}
 
@@ -65,5 +76,9 @@
 </table>
 
 {% endblock %}
+
+
+
+
 
 

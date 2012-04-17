@@ -570,43 +570,29 @@ class TimesheetEntry( models.Model ):
 	user = models.ForeignKey( User )
 	project = models.ForeignKey( Project )
 	task = models.ForeignKey( Task )
+	comment = models.CharField( max_length = 255, blank = True )
+
 	start_time = models.DateTimeField()
-	end_time = models.DateTimeField()
-	description = models.CharField( max_length = 255, blank = True )
+	seconds =  models.BigIntegerField( default = 0 )
 
 	def get_org( self ):
 		return self.project.client.organization
+
+	def get_project( self ):
+		return self.project
 
 	def get_client( self ):
 		return self.project.client
 
 	def get_activity( self ):
 		return self.task.activity
-
 
 
 class TimesheetTimer( models.Model ):
-	user = models.ForeignKey( User )
-	project = models.ForeignKey( Project )
-	task = models.ForeignKey( Task )
-	start_time = models.DateTimeField()
-	description = models.CharField( max_length = 255, blank = True )
-
-	def get_org( self ):
-		return self.project.client.organization
-
-	def get_client( self ):
-		return self.project.client
-
-	def get_activity( self ):
-		return self.task.activity
-
-	@models.permalink
-	def get_absolute_url( self ):
-		return ( 'timesheet-timer-single', (), { 'timerid' : self.id } )
-
-
 	class Meta:
 		ordering = [ '-start_time' ]
+
+	timesheet_entry = models.ForeignKey( TimesheetEntry )
+	start_time = models.DateTimeField()
 
 

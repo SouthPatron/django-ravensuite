@@ -5,14 +5,15 @@ from django.conf import settings
 
 from views import *
 
+from common.views.modal import ModalView
+
+
 urlpatterns = patterns('',
 
-	url( r'^entries$', login_required( EntryList.as_view() ), name = 'timesheet-entry-list' ),
+	url( r'^$', login_required( TimesheetEntryList.as_view() ), name = 'timesheet-entry-list' ),
 
 
-	url( r'^timers$', login_required( TimerList.as_view() ), name = 'timesheet-timer-list' ),
-
-	url( r'^timer/(?P<timerid>\d+)$', login_required( TimerSingle.as_view() ), name = 'timesheet-timer-single' ),
+	url( r'^modals/(?P<modal_name>.*)$', login_required( ModalView.as_view() ) ),
 
 )
 

@@ -6,7 +6,7 @@
 		<ul>
 			<li class="{% active request '^/org' %}"><a href='{% url org-list %}'>Organizations</a></li>
 
-			<li class="{% active request '^/timesheet' %}"><a href='{% url timesheet-entry-list %}'>Timesheet</a>{% if request.user.timesheettimer_set.count != 0 %} (<a href='{% url timesheet-timer-list %}'>{{ request.user.timesheettimer_set.count }} active timer{{ request.user.timesheettimer_set.count|pluralize }}</a>) {% endif %}</li>
+			<li class="{% active request '^/timesheet' %}"><a href='{% url timesheet-entry-list %}'>Timesheet</a></li>
 
 			<li>&nbsp;</li>
 		</ul>

@@ -1,0 +1,44 @@
+{
+"organization" : [
+	{% for obj in extra.organization %}
+		{ "refnum" : "{{ obj.refnum|escapejs }}", "trading_name" : "{{ obj.trading_name|escapejs }}" }{% if not forloop.last %},{% endif %}
+	{% endfor %}
+]
+
+{% if extra.client %}
+, "client" : [
+	{% for obj in extra.client %}
+		{ "refnum" : "{{ obj.refnum|escapejs }}", "trading_name" : "{{ obj.trading_name|escapejs }}" }{% if not forloop.last %},{% endif %}
+	{% endfor %}
+]
+{% endif %}
+
+{% if extra.project %}
+, "project" : [
+	{% for obj in extra.project %}
+		{ "refnum" : "{{ obj.refnum|escapejs }}", "name" : "{{ obj.name|escapejs }}" }{% if not forloop.last %},{% endif %}
+	{% endfor %}
+]
+{% endif %}
+
+{% if extra.activity %}
+, "activity" : [
+	{% for obj in extra.activity %}
+		{ "id" : "{{ obj.id|escapejs }}", "name" : "{{ obj.name|escapejs }}" }{% if not forloop.last %},{% endif %}
+	{% endfor %}
+]
+{% endif %}
+
+{% if extra.task %}
+, "task" : [
+	{% for obj in extra.task %}
+		{ "id" : "{{ obj.id|escapejs }}", "name" : "{{ obj.name|escapejs }}" }{% if not forloop.last %},{% endif %}
+	{% endfor %}
+]
+{% endif %}
+
+
+
+
+}
+

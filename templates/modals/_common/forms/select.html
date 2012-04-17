@@ -1,0 +1,22 @@
+<label
+	for="{{ field.auto_id }}"
+	class="{% if field.field.required %} field-required{% endif %}{% if field.errors %} field-error{% endif %}">{{ field.label }}</label>
+
+<select
+	name="{{ field.name }}"
+	id="{{ field.auto_id }}"
+	value="{% if field.value %}{{ field.value }}{% endif %}"
+	{% if field.errors %}
+	title="{% for error in field.errors %}{{ error|escape }}{% endfor %}"
+	{% endif %}
+	{% if field.errors %}class="field-error"{% endif %}
+	>
+
+
+{% for proj in field.field.choices %}
+	<option value="{{ proj.0 }}" {% if proj.0 == "" or field.initial == proj.0 %}selected="selected"{% endif %}>{{ proj.1 }}</option>
+{% endfor %}
+
+</select>
+
+

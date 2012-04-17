@@ -1,0 +1,341 @@
+{% extends 'modals/_common/types/single_pane_list.html' %}
+
+{% block dialog_title %}Edit Timer{% endblock %}
+
+{% block dialog_style %}width: 800px; height: 500px;{% endblock %}
+
+
+{% block dialog_post_title %}
+<form method="POST" action="{{ request.META.PATH_INFO }}">
+{% csrf_token %}
+<input type="hidden" name="meta.action" value="apply" />
+{% endblock %}
+
+
+
+{% block dialog_right_panel %}
+<div>
+
+<div style="
+	position: absolute;
+	left: 2px;
+	top: 0px;
+	width: 210px;
+	bottom: 0px;
+	background-color: #4e5e4e;
+	opacity: 0.4;
+	border-right: 1px solid #2e3e2e;
+">&nbsp;
+</div>
+
+<label for="id_organization" class="field-required">Organization</label>
+<select id="id_organization" name="organization">
+	<option value="">Choose one</option>
+	{% for obj in extra.organization %}
+	<option value="{{ obj.refnum }}">{{ obj.trading_name }}</option>
+	{% endfor %}
+</select>
+
+<div id="id_select_block_client" style='visibility: hidden; '>
+<label for="id_client" class="field-required">Client</label>
+<select id="id_client" name="client">
+	<option value="">Choose one</option>
+</select>
+</div> <!-- #id_select_block_client -->
+
+<div id="id_select_block_project" style='visibility: hidden; '>
+<label for="id_project" class="field-required">Project</label>
+<select id="id_project" name="project">
+	<option value="">Choose one</option>
+</select>
+</div> <!-- #id_select_block_project -->
+
+<div id="id_select_block_activity" style='visibility: hidden; '>
+<label for="id_activity" class="field-required">Activity</label>
+<select id="id_activity" name="activity">
+	<option value="">Choose one</option>
+</select>
+</div> <!-- #id_select_block_activity -->
+
+<div id="id_select_block_task" style='visibility: hidden; '>
+<label for="id_task" class="field-required">Task</label>
+<select id="id_task" name="task">
+	<option value="">Choose one</option>
+</select>
+</div> <!-- #id_select_block_task -->
+
+<div id="id_input_block_details" style='visibility: hidden'>
+
+<label for="id_comment" class="field-required">Comment</label>
+<input type="text" id="id_comment" name="comment" value="" />
+
+<label for="id_start_time" class="field-required">Start Time</label>
+<select id="id_start_time_hour" name="start_time_hour"></select><select id="id_start_time_minute" name="start_time_minute"></select>
+
+<label for="id_running_timer" class="field-required">Running Timer</label>
+<input type="checkbox" id="id_running_timer" name="running_timer" checked="yes"  />
+
+<div id="id_input_block_end_time" style='visibility: hidden'>
+<label for="id_end_time" class="field-required">End Time</label>
+<select id="id_end_time_hour" name="end_time_hour" disabled="yes"></select><select id="id_end_time_minute" name="end_time_minute" disabled="yes"></select>
+</div>
+
+</div> <!-- #id_input_block_details -->
+
+
+
+
+
+</div>
+{% endblock %}
+
+{% block dialog_buttons %}
+<button type="button" class="ral_action_close">Cancel</button>
+<button type="button" class="ral_action_submit">Save</button>
+{% endblock %}
+
+
+{% block dialog_javascript %}
+
+var target_url = "{{ request.META.PATH_INFO }}";
+
+for ( var i = 0; i < 24; ++i )
+{
+	var val = "" + i; var str = val;
+	if ( i < 10 ) str = "0" + i;
+
+	if ( str == "{% now "H" %}" )
+	{
+		$( "#id_start_time_hour" ).append( jQuery( "<option></option>", { value: val, text: str, selected: "selected" } ) );
+		$( "#id_end_time_hour" ).append( jQuery( "<option></option>", { value: val, text: str, selected: "selected" } ) );
+	}
+	else
+	{
+		$( "#id_start_time_hour" ).append( jQuery( "<option></option>", { value: val, text: str } ) );
+		$( "#id_end_time_hour" ).append( jQuery( "<option></option>", { value: val, text: str } ) );
+	}
+}
+
+for ( var i = 0; i < 60; ++i )
+{
+	var val = "" + i; var str = val;
+	if ( i < 10 ) str = "0" + i;
+
+	if ( str == "{% now "i" %}" )
+	{
+		$( "#id_start_time_minute" ).append( jQuery( "<option></option>", { value: val, text: str, selected: 'selected' } ) );
+		$( "#id_end_time_minute" ).append( jQuery( "<option></option>", { value: val, text: str, selected: 'selected' } ) );
+	}
+	else
+	{
+		$( "#id_start_time_minute" ).append( jQuery( "<option></option>", { value: val, text: str } ) );
+		$( "#id_end_time_minute" ).append( jQuery( "<option></option>", { value: val, text: str } ) );
+	}
+}
+
+
+
+function update_view( data, level )
+{
+	var block_client = $( "#id_select_block_client" );
+	var block_project = $( "#id_select_block_project" );
+	var block_activity = $( "#id_select_block_activity" );
+	var block_task = $( "#id_select_block_task" );
+	var block_details = $( "#id_input_block_details" );
+	var block_end = $( "#id_input_block_end_time" );
+
+	if ( data[ 'task' ] )
+	{
+		var targ = $("#id_task");
+		targ.empty().append("<option value=''>Choose one</option>");
+		for ( var i = 0; i < data['task'].length; ++i )
+		{
+			var obj = data['task'][ i ];
+			targ.append( jQuery("<option></option>",
+							{
+								value : obj.id,
+								text : obj.name
+							}
+						)
+					);
+		}
+		block_details.css( 'visibility', 'hidden' );
+		block_task.css( 'visibility', 'visible' );
+	}
+	else
+	{
+		block_task.css( 'visibility', 'hidden' );
+		block_details.css( 'visibility', 'hidden' );
+		block_end.css( 'visibility', 'hidden' );
+	}
+
+
+	if ( level == 'task' ) return;
+
+	if ( data[ 'activity' ] )
+	{
+		var targ = $("#id_activity");
+		targ.empty().append("<option value=''>Choose one</option>");
+		for ( var i = 0; i < data['activity'].length; ++i )
+		{
+			var obj = data['activity'][ i ];
+			targ.append( jQuery("<option></option>",
+							{
+								value : obj.id,
+								text : obj.name
+							}
+						)
+					);
+		}
+		block_activity.css( 'visibility', 'visible' );
+	}
+	else
+	{
+		block_activity.css( 'visibility', 'hidden' );
+	}
+
+
+	if ( level == 'activity' ) return;
+
+	if ( data[ 'project' ] )
+	{
+		var targ = $("#id_project");
+		targ.empty().append("<option value=''>Choose one</option>");
+		for ( var i = 0; i < data['project'].length; ++i )
+		{
+			var obj = data['project'][ i ];
+			targ.append( jQuery("<option></option>",
+							{
+								value : obj.refnum,
+								text : obj.name
+							}
+						)
+					);
+		}
+		block_project.css( 'visibility', 'visible' );
+	}
+	else
+	{
+		block_project.css( 'visibility', 'hidden' );
+	}
+
+
+	if ( level == 'project' ) return;
+
+	if ( data[ 'client' ] )
+	{
+		var targ = $("#id_client");
+		targ.empty().append("<option value=''>Choose one</option>");
+		for ( var i = 0; i < data['client'].length; ++i )
+		{
+			var obj = data['client'][ i ];
+			targ.append( jQuery("<option></option>",
+							{
+								value : obj.refnum,
+								text : obj.trading_name
+							}
+						)
+					);
+		}
+		block_client.css( 'visibility', 'visible' );
+	}
+	else
+	{
+		block_client.css( 'visibility', 'hidden' );
+	}
+
+
+}
+
+$( 'select[name="organization"]' ).change(function() {
+	jQuery.get( target_url,
+				{
+					format : 'json',
+					oid : $(this).val()
+				},
+				function(data) { update_view( data, 'client' ); }
+			);
+});
+
+$( 'select[name="client"]' ).change(function() {
+	jQuery.get( target_url,
+				{
+					format : 'json',
+					oid : $( "#id_organization" ).val(),
+					cid : $( this ).val()
+				},
+				function(data) { update_view( data, 'project' ); }
+			);
+});
+
+$( 'select[name="project"]' ).change(function() {
+	jQuery.get( target_url,
+				{
+					format : 'json',
+					oid : $( "#id_organization" ).val(),
+					cid : $( "#id_client" ).val(),
+					pid : $( this ).val()
+				},
+				function(data) { update_view( data, 'activity' ); }
+			);
+});
+
+$( 'select[name="activity"]' ).change(function() {
+	jQuery.get( target_url,
+				{
+					format : 'json',
+					oid : $( "#id_organization" ).val(),
+					cid : $( "#id_client" ).val(),
+					pid : $( "#id_project" ).val(),
+					actid : $( this ).val()
+				},
+				function(data) { update_view( data, 'task' ); }
+			);
+});
+
+
+$( 'select[name="task"]' ).change(function() {
+
+	var block_details = $( "#id_input_block_details" );
+	var block_end = $( "#id_input_block_end_time" );
+
+	if ( $(this).val() == "" )
+	{
+		block_details.css( 'visibility', 'hidden' );
+		block_end.css( 'visibility', 'hidden' );
+	}
+	else
+	{
+		block_details.css( 'visibility', 'visible' );
+	}
+
+
+	block_details.find( "#id_running_timer" ).attr( "checked", "yes" );
+	block_details.find( "#id_end_time_hour" ).attr( "disabled", "yes" );
+	block_details.find( "#id_end_time_minute" ).attr( "disabled", "yes" );
+});
+
+
+$( "#id_running_timer" ).change(function() {
+
+	var block_details = $( "#id_input_block_details" );
+	var block_end = $( "#id_input_block_end_time" );
+
+	if ( $(this).attr( 'checked' ) )
+	{
+		block_details.find( "#id_end_time_hour" ).attr( "disabled", "yes" );
+		block_details.find( "#id_end_time_minute" ).attr( "disabled", "yes" );
+		block_end.css( "visibility", "hidden" );
+	}
+	else
+	{
+		block_details.find( "#id_end_time_hour" ).removeAttr( "disabled" );
+		block_details.find( "#id_end_time_minute" ).removeAttr( "disabled" );
+		block_end.css( "visibility", "visible" );
+	}
+});
+
+
+
+{% endblock %}
+

@@ -170,7 +170,9 @@ class ModalView( Base ):
 								'additional' : additional
 							}
 						)
-		return render_to_response( template_name, context )
+		response = render_to_response( template_name, context )
+		response[ 'Content-Type' ] = self.supported_formats[ fmt ]
+		return response
 
 
 	# ************** HTTP Operations
