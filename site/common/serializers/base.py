@@ -1,7 +1,7 @@
 
 from StringIO import StringIO
-
 from django.utils.encoding import smart_unicode
+from django.db.models import Model
 
 
 class Base( object ):
@@ -20,13 +20,16 @@ class Base( object ):
 		self.use_natural_keys = kwargs.pop( 'use_natural_keys', False)
 		self.reference_key = kwargs.pop( 'reference_key', 'id' )
 
-
 		self.start_serialization()
 
 		for i, obj in enumerate( queryset ):
 
 			if i != 0:
 				self.object_separator( obj )
+
+			if isinstance( obj, Model ) is False:
+				self.straight_serialize( obj )
+				continue
 
 			self.start_object(obj)
 

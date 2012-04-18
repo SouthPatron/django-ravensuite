@@ -1,15 +1,13 @@
 from __future__ import unicode_literals
 
-from django.http import HttpResponseForbidden
-
 from django.views.generic.base import View
 from django.views.decorators.csrf import csrf_exempt
-
-from django.shortcuts import render_to_response
-from django.template import TemplateDoesNotExist, RequestContext
 from django.http import HttpResponse, Http404, HttpResponseForbidden
 
 from common.serializers.serializer import Serializer
+
+import collections
+import json
 
 
 class RestForbidden( Exception ):
@@ -20,7 +18,6 @@ class RestfulView( View ):
 
 	# ************** Class Members
 
-	template_name = None
 	url_kwargs = None
 
 	supported_formats = {
@@ -35,46 +32,16 @@ class RestfulView( View ):
 	def delete_object( self, request, *args, **kwargs ):
 		raise RestForbidden()
 
-	def get_extra( self, request, *args, **kwargs ):
-		return None
-
 	def get_object( self, request, *args, **kwargs ):
-		return None
+		return self.not_found()
 
-	def get_object_list( self, request, *args, **kwargs ):
-		return None
-	
 	def update_object( self, request, data, *args, **kwargs ):
 		raise RestForbidden()
-
-
-	# ************** Initialization and Support Methods
-	
-	def _preload( self, request, *args, **kwargs ):
-		self.dataset[ 'kwargs' ] = self.url_kwargs
-		self.dataset[ 'instance' ] = self.get_object( request, *args, **kwargs )
-		self.dataset[ 'object_list' ] = self.get_object_list( request, *args, **kwargs )
-		self.dataset[ 'extra' ] = self.get_extra( request, *args, **kwargs )
-
-
-	def get_template_name( self, method, fmt = None ):
-		if self.template_name is None:
-			raise RuntimeError( 'template_name has not been defined in instance' )
-		ntn = '{}.{}.{}'.format( self.template_name, method, fmt or self.api_format )
-		return ntn
 
 	# ************** Overridden View methods
 
 	@csrf_exempt
 	def dispatch( self, request,  *args, **kwargs ):
-
-		# Initialize empty dataset
-		self.dataset = {
-				'instance' : None,
-				'object_list' : None,
-				'extra' : None,
-				'kwargs' : None,
-			}
 
 		# Load the API format from URL format
 		self.api_format = kwargs.get( 'api_format', 'json' )
@@ -89,8 +56,7 @@ class RestfulView( View ):
 			setattr( self.url_kwargs, nm, val )
 
 		try:
-			ans = super( RestfulView, self ).dispatch( request, *args, **kwargs )
-			return ans
+			return super( RestfulView, self ).dispatch( request, *args, **kwargs )
 		except RestForbidden:
 			return HttpResponseForbidden()
 
@@ -118,53 +84,43 @@ class RestfulView( View ):
 	# ************** HTTP Operations
 
 	def delete( self, request, *args, **kwargs ):
-		self._preload( request, *args, **kwargs )
-		newo = self.delete_object( request, *args, **kwargs )
-		self.dataset[ 'result' ] = newo
+		obj = self.delete_object( request, *args, **kwargs )
+		if isinstance( obj, collections.Iterable ) is False:
+			obj = [ obj ]
 
-		try:
-			ntn = self.get_template_name( 'delete' )
-			response = render_to_response(
-						ntn,
-						self.dataset,
-						context_instance=RequestContext(request)
-					)
-		except TemplateDoesNotExist:
-			response = HttpResponse( status = 204 )
-
+		response = HttpResponse( status = 204 )
 		response[ 'Content-Type' ] = self.supported_formats[ self.api_format ]
 		response[ 'Cache-Control' ] = 'no-cache'
+
+		if obj is not None:
+			response.status_code = 200
+			Serializer.serialize(
+					self.api_format,
+					obj,
+					stream = response,
+					reference_key = 'refnum'
+				)
 		return response
 
 
 	def get( self, request, *args, **kwargs ):
-		self._preload( request, *args, **kwargs )
+		obj = self.get_object( request, *args, **kwargs )
+		if obj is None:
+			self.not_found()
 
-		try:
-			ntn = self.get_template_name( 'get' )
-			response = render_to_response(
-						ntn,
-						self.dataset,
-						context_instance=RequestContext(request)
-					)
-		except TemplateDoesNotExist:
-			response = HttpResponse( status = 200 )
-			response[ 'Content-Type' ] = self.supported_formats[ self.api_format ]
-			response[ 'Cache-Control' ] = 'no-cache'
+		if isinstance( obj, collections.Iterable ) is False:
+			obj = [ obj ]
 
-			target = self.dataset[ 'object_list' ] or [ self.dataset[ 'instance' ] ]
-
-			Serializer.serialize(
-					self.api_format,
-					target,
-					stream = response,
-					reference_key = 'refnum'
-				)
-			return response
-
-
+		response = HttpResponse( status = 200 )
 		response[ 'Content-Type' ] = self.supported_formats[ self.api_format ]
 		response[ 'Cache-Control' ] = 'no-cache'
+
+		Serializer.serialize(
+				self.api_format,
+				obj,
+				stream = response,
+				reference_key = 'refnum'
+			)
 		return response
 
 	def post( self, request, *args, **kwargs ):
@@ -178,56 +134,51 @@ class RestfulView( View ):
 			Template should exist.
 
 		If an object is not created, then:
-			200 is returned if there is content in the template
 			204 is returned if there is no template
 		"""
-
-		self._preload( request, *args, **kwargs )
 		data = self._get_body_data( request, self.api_format )
+		obj = self.create_object( request, data, *args, **kwargs )
+		if isinstance( obj, collections.Iterable ) is False:
+			obj = [ obj ]
 
-		newo = self.create_object( request, data, *args, **kwargs )
-		self.dataset[ 'result' ] = newo
-
-		try:
-			ntn = self.get_template_name( 'post' )
-			response = render_to_response(
-						ntn,
-						self.dataset,
-						context_instance=RequestContext(request)
-					)
-
-		except TemplateDoesNotExist:
-			response = HttpResponse( status = 204 )
-
+		response = HttpResponse( status = 204 )
 		response[ 'Content-Type' ] = self.supported_formats[ self.api_format ]
 		response[ 'Cache-Control' ] = 'no-cache'
 
-		if newo is not None:
-			response[ 'Location' ] = newo.get_absolute_url()
+		if obj is not None:
+			response[ 'Location' ] = obj.get_absolute_url()
 			response.status_code = 201
+
+			Serializer.serialize(
+				self.api_format,
+				obj,
+				stream = response,
+				reference_key = 'refnum'
+			)
 
 		return response
 
 
 	def put( self, request, *args, **kwargs ):
-		self._preload( request, *args, **kwargs )
 		data = self._get_body_data( request, self.api_format )
+		obj = self.update_object( request, data, *args, **kwargs )
+		if isinstance( obj, collections.Iterable ) is False:
+			obj = [ obj ]
 
-		newo = self.update_object( request, data, *args, **kwargs )
-		self.dataset[ 'result' ] = newo
-
-		try:
-			ntn = self.get_template_name( 'put' )
-			response = render_to_response(
-						ntn,
-						self.dataset,
-						context_instance=RequestContext(request)
-					)
-		except TemplateDoesNotExist:
-			response = HttpResponse( status = 204 )
-
+		response = HttpResponse( status = 204 )
 		response[ 'Content-Type' ] = self.supported_formats[ self.api_format ]
 		response[ 'Cache-Control' ] = 'no-cache'
+
+		if obj is not None:
+			response.status_code = 200
+
+			Serializer.serialize(
+				self.api_format,
+				obj,
+				stream = response,
+				reference_key = 'refnum'
+			)
+
 		return response
 
 

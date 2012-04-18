@@ -3,7 +3,6 @@ from StringIO import StringIO
 
 from django.utils.encoding import smart_unicode
 
-
 class Serializer( object ):
 
 	@staticmethod
