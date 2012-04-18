@@ -52,8 +52,8 @@ class Base( View ):
 
 	# ************** Support methods
 
-	def _parse_format( self, request ):
-		fmt = request.GET.get( 'format', 'html' )
+	def _parse_format( self, request, default = 'html' ):
+		fmt = request.GET.get( 'format', default )
 		if fmt not in self.supported_formats:
 			return None
 		return fmt

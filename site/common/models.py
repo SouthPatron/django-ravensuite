@@ -115,10 +115,11 @@ ObjectState = ChoicesEnum(
 
 
 class Organization( models.Model ):
-	state = models.IntegerField( choices = ObjectState.choices() ) 
+	refnum = models.CharField( primary_key = True, max_length = 32,  default = uuid.uuid4().get_hex() )
+
+	state = models.IntegerField( choices = ObjectState.choices(), default = ObjectState.ACTIVE ) 
 
 	trading_name = models.CharField( max_length = 192 )
-	refnum = models.CharField( max_length = 32, unique = True, default = uuid.uuid4().get_hex() )
 
 	telephone_number = models.CharField( max_length = 64, blank = True, default = '' )
 	fax_number = models.CharField( max_length = 64, blank = True, default = '' )
@@ -211,7 +212,7 @@ class UserPermission( models.Model ):
 
 
 class Client( models.Model ):
-	state = models.IntegerField( choices = ObjectState.choices() ) 
+	state = models.IntegerField( choices = ObjectState.choices(), default = ObjectState.ACTIVE  ) 
 
 	organization = models.ForeignKey( Organization )
 	refnum = models.BigIntegerField()

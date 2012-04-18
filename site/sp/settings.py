@@ -7,9 +7,9 @@ WSGI_APPLICATION = "sp.wsgi.application"
 
 AUTH_PROFILE_MODULE = "common.UserProfile"
 
-LOGIN_URL = '/account/login'
-LOGOUT_URL = '/account/logout'
-LOGIN_REDIRECT_URL = '/org/'
+LOGIN_URL = '/v/account/login'
+LOGOUT_URL = '/v/account/logout'
+LOGIN_REDIRECT_URL = '/v/org/'
 
 SEND_BROKEN_LINK_EMAILS = True
 
@@ -80,6 +80,8 @@ INSTALLED_APPS = (
 	'south',
 
 	'common',
+
+	'sp.api',
 
 	'sp.home',
 	'sp.account',

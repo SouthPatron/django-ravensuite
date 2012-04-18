@@ -113,6 +113,7 @@ class ModalView( Base ):
 			while len( parts ) > 0:
 				m = getattr( m, parts[0] )
 				del parts[0]
+			return m
 		except AttributeError:
 			pass
 

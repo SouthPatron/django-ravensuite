@@ -30,9 +30,9 @@ class NewOrganization( ModalLogic ):
 		return None
 
 	def perform( self, request, dmap, obj, extra, fmt, *args, **kwargs ):
-
 		extra[ 'form' ] = EditOrganizationForm( dmap )
 		if extra[ 'form' ].is_valid() is False:
+			print extra['form']
 			self.easy.make_get()
 			return
 

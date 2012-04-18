@@ -29,33 +29,8 @@
 
 	<div class="ral_dialog_buttonbar ral_clear">
 		<button type="button" class="ral_action_close">Cancel</button>
-		<button type="button" id="id_submit_button">Add new Activity</button>
+		<button type="button" class="ral_action_submit">Add new Activity</button>
 	</div>
 
 </div>
-
-<script type="text/javascript">
-
-$(function() {
-		
-	var name = $( "#id_name" ),
-		allFields = $( [] ).add( name ),
-		tips = $( ".validateTips" );
-
-
-	$( "#id_submit_button" ).click(function(e) {
-			var bValid = true;
-			allFields.removeClass( "ui-state-error" );
-
-			bValid = bValid && validation.length( tips, name, "Name", 3, 192 );
-
-			if ( bValid ) {
-				$( "#create-new-form" ).submit();
-			}
-	});
-});
-
-//@ sourceURL=modalScript.js
-
-</script>
 

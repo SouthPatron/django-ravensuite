@@ -20,7 +20,6 @@ class OrgBusLog( object ):
 
 	@staticmethod
 	def create( user, data ):
-
 		try:
 			neworg = Organization.objects.get( trading_name = data[ 'trading_name' ], usermembership__user = user )
 
