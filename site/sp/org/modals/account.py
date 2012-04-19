@@ -20,7 +20,7 @@ class NewInvoice( ModalLogic ):
 	def get_object( self, request, dmap, *args, **kwargs ):
 		return None
 
-	def perform( self, request, dmap, obj, extra, fmt, *args, **kwargs ):
+	def perform( self, request, dmap, obj, extra, *args, **kwargs ):
 		try:
 			client = Client.objects.get( refnum = dmap[ 'cid' ], organization__refnum = dmap[ 'oid' ] )
 
@@ -44,7 +44,7 @@ class NewPayment( ModalLogic ):
 	def get_object( self, request, dmap, *args, **kwargs ):
 		return None
 
-	def perform( self, request, dmap, obj, extra, fmt, *args, **kwargs ):
+	def perform( self, request, dmap, obj, extra, *args, **kwargs ):
 		try:
 			client = Client.objects.get( refnum = dmap[ 'cid' ], organization__refnum = dmap[ 'oid' ] )
 
@@ -68,7 +68,7 @@ class NewCreditnote( ModalLogic ):
 	def get_object( self, request, dmap, *args, **kwargs ):
 		return None
 
-	def perform( self, request, dmap, obj, extra, fmt, *args, **kwargs ):
+	def perform( self, request, dmap, obj, extra, *args, **kwargs ):
 		try:
 			client = Client.objects.get( refnum = dmap[ 'cid' ], organization__refnum = dmap[ 'oid' ] )
 
@@ -92,7 +92,7 @@ class NewRefund( ModalLogic ):
 	def get_object( self, request, dmap, *args, **kwargs ):
 		return None
 
-	def perform( self, request, dmap, obj, extra, fmt, *args, **kwargs ):
+	def perform( self, request, dmap, obj, extra, *args, **kwargs ):
 		try:
 			client = Client.objects.get( refnum = dmap[ 'cid' ], organization__refnum = dmap[ 'oid' ] )
 

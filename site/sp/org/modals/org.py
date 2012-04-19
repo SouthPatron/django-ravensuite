@@ -29,7 +29,7 @@ class NewOrganization( ModalLogic ):
 	def get_object( self, request, dmap, *args, **kwargs ):
 		return None
 
-	def perform( self, request, dmap, obj, extra, fmt, *args, **kwargs ):
+	def perform( self, request, dmap, obj, extra, *args, **kwargs ):
 		extra[ 'form' ] = EditOrganizationForm( dmap )
 		if extra[ 'form' ].is_valid() is False:
 			print extra['form']
@@ -59,7 +59,7 @@ class EditOrganization( ModalLogic ):
 	def get_object( self, request, dmap, *args, **kwargs ):
 		return Organization.objects.get( refnum = dmap[ 'oid' ] )
 
-	def perform( self, request, dmap, obj, extra, fmt, *args, **kwargs ):
+	def perform( self, request, dmap, obj, extra, *args, **kwargs ):
 
 		extra[ 'form' ] = EditOrganizationForm( dmap )
 		if extra[ 'form' ].is_valid() is False:
@@ -88,7 +88,7 @@ class NewClient( ModalLogic ):
 		return myobj
 
 
-	def perform( self, request, dmap, obj, extra, fmt, *args, **kwargs ):
+	def perform( self, request, dmap, obj, extra, *args, **kwargs ):
 
 		org = Organization.objects.get( refnum = dmap[ 'oid' ] )
 
@@ -127,7 +127,7 @@ class EditClient( ModalLogic ):
 	def get_object( self, request, dmap, *args, **kwargs ):
 		return Client.objects.get( refnum = dmap[ 'cid' ], organization__refnum = dmap[ 'oid' ] )
 
-	def perform( self, request, dmap, obj, extra, fmt, *args, **kwargs ):
+	def perform( self, request, dmap, obj, extra, *args, **kwargs ):
 
 		extra[ 'form' ] = EditClientForm( dmap )
 		if extra[ 'form' ].is_valid() is False:

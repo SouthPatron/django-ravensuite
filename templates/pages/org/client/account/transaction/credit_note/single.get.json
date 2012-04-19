@@ -1,1 +1,0 @@
-{ "group" : "{{ instance.group }}", "description" : {{ instance.description }} }

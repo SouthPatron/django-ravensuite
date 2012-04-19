@@ -1,9 +1,7 @@
-from __future__ import unicode_literals
-
-from common.views.listview import ListView
+from common.views.pageview import PageView
 from common.models import *
 
-class TimesheetEntryList( ListView ):
+class TimesheetEntryList( PageView ):
 	template_name = 'pages/timesheet/entry/index'
 
 	def get_object_list( self, request, *args, **kwargs ):

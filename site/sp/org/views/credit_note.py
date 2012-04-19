@@ -8,8 +8,7 @@ from django.shortcuts import get_object_or_404, redirect
 from django.http import HttpResponseForbidden, HttpResponseServerError
 from django.contrib import messages
 
-from common.views.singleobjectview import SingleObjectView
-from common.views.listview import ListView
+from common.views.pageview import PageView
 
 from common.busobj.org import CreditNoteObj
 from common.bushelp.org import CreditNoteHelper
@@ -19,11 +18,11 @@ from common.exceptions import *
 from common.models import *
 
 
-class CreditNoteList( ListView ):
+class CreditNoteList( PageView ):
 	template_name = 'pages/org/client/account/transaction/credit_note/index'
 
-	def get_object( self, request, obj_list, fmt, *args, **kwargs ):
-		return Client.objects.get( refnum = self.url_kwargs.cid, organization__refnum = self.url_kwargs.oid )
+	def get_object( self, request, *args, **kwargs ):
+		return get_object_or_404( Client, refnum = self.url_kwargs.cid, organization__refnum = self.url_kwargs.oid )
 
 	def get_object_list( self, request, *args, **kwargs ):
 		obj_list = SourceDocument.objects.filter(
@@ -34,58 +33,43 @@ class CreditNoteList( ListView ):
 			)
 		return obj_list
 
-	def _create_object( self, request, data, *args, **kwargs ):
-		client = Client.objects.get( refnum = self.url_kwargs.cid, organization__refnum = self.url_kwargs.oid )
+	def update_object( self, request, data, *args, **kwargs ):
 
-		inv = CreditNoteObj()
-		inv.initialize( client )
-		return inv
-		
-	
-	def create_object_html( self, request, data, *args, **kwargs ):
+		client = self.dataset[ 'instance' ]
 
 		try:
-			newo = self._create_object( request, data, *args, **kwargs )
+			newo = CreditNoteObj()
+			newo.initialize( client )
 		except BLE_Error, berror:
 			messages.error( request, berror.message )
-			client = Client.objects.get( refnum = self.url_kwargs.cid, organization__refnum = self.url_kwargs.oid )
 			return redirect( client.get_credit_note_list_url() )
-		except Exception, error:
-			print error
 
 		return redirect( newo.get_absolute_url() )
 
 
-	def create_object_json( self, request, data, *args, **kwargs ):
-		newo = self._create_object( request, data, *args, **kwargs )
-		resp = { 'url' : newo.get_absolute_url() }
-		return self.api_resp( resp )
-
-
-class CreditNoteDraftList( ListView ):
+class CreditNoteDraftList( PageView ):
 	template_name = 'pages/org/client/account/transaction/credit_note/draft-index'
 
-	def get_object( self, request, obj_list, fmt, *args, **kwargs ):
-		return Client.objects.get( refnum = self.url_kwargs.cid, organization__refnum = self.url_kwargs.oid )
+	def get_object( self, request, *args, **kwargs ):
+		return get_object_or_404( Client, refnum = self.url_kwargs.cid, organization__refnum = self.url_kwargs.oid )
 
 	def get_object_list( self, request, *args, **kwargs ):
 		obj_list = SourceDocument.objects.filter( client__refnum = self.url_kwargs.cid, client__organization__refnum = self.url_kwargs.oid, document_type = SourceDocumentType.CREDIT_NOTE, document_state = SourceDocumentState.DRAFT )
 		return obj_list
 
 
-class CreditNoteUnallocatedList( ListView ):
+class CreditNoteUnallocatedList( PageView ):
 	template_name = 'pages/org/client/account/transaction/credit_note/unallocated-index'
 
-	def get_object( self, request, obj_list, fmt, *args, **kwargs ):
-		return Client.objects.get( refnum = self.url_kwargs.cid, organization__refnum = self.url_kwargs.oid )
+	def get_object( self, request, *args, **kwargs ):
+		return get_object_or_404( Client, refnum = self.url_kwargs.cid, organization__refnum = self.url_kwargs.oid )
 
 	def get_object_list( self, request, *args, **kwargs ):
 		obj_list = SourceDocument.objects.filter( client__refnum = self.url_kwargs.cid, client__organization__refnum = self.url_kwargs.oid, document_type = SourceDocumentType.CREDIT_NOTE, document_state = SourceDocumentState.FINAL, total__gt = F('allocated') )
 		return obj_list
 
 
-
-class CreditNoteSingle( SingleObjectView ):
+class CreditNoteSingle( PageView ):
 	template_name = 'pages/org/client/account/transaction/credit_note/single'
 
 
@@ -101,23 +85,21 @@ class CreditNoteSingle( SingleObjectView ):
 
 		return obj
 
-	def delete_object( self, request, ob, *args, **kwargs ):
-		inv = CreditNoteObj()
-		inv.wrap( ob )
-		ActionFactory.instantiate( inv ).delete()
-		return redirect( ob.get_client().get_credit_note_list_url() )
 
+	def update_object( self, request, data, *args, **kwargs ):
 
-	def update_object_html( self, request, obj, data, *args, **kwargs ):
+		obj = self.dataset[ 'instance' ]
 
 		credit_note_data = {}
 
 		credit_note_data[ 'state' ] = data.get( 'sd_state' )
 
 		if credit_note_data[ 'state' ] is not None and long(credit_note_data['state']) == SourceDocumentState.DELETE:
-			rc = self.delete_object( request, obj, *args, **kwargs )
+			inv = CreditNoteObj()
+			inv.wrap( obj )
+			ActionFactory.instantiate( inv ).delete()
 			messages.info( request, _('VMG_20003') )
-			return redirect( obj.get_client().get_draft_credit_note_list_url() )
+			return redirect( obj.get_client().get_credit_note_list_url() )
 
 		credit_note_data[ 'credit_note_date' ] = data.get( 'credit_note_date' )
 		credit_note_data[ 'comment' ] = data.get( 'credit_note_comment', "" )
@@ -141,8 +123,4 @@ class CreditNoteSingle( SingleObjectView ):
 			return redirect( obj.get_client().get_draft_credit_note_list_url() )
 	
 		return redirect( obj.get_client().get_account_single_url() )
-
-
-
-
 

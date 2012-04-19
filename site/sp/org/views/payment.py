@@ -8,8 +8,7 @@ from django.shortcuts import get_object_or_404, redirect
 from django.http import HttpResponseForbidden, HttpResponseServerError
 from django.contrib import messages
 
-from common.views.singleobjectview import SingleObjectView
-from common.views.listview import ListView
+from common.views.pageview import PageView
 
 from common.busobj.org import PaymentObj, SourceDocumentObj, RefundObj
 
@@ -21,11 +20,11 @@ from common.exceptions import *
 from common.models import *
 
 
-class PaymentList( ListView ):
+class PaymentList( PageView ):
 	template_name = 'pages/org/client/account/transaction/payment/index'
 
-	def get_object( self, request, obj_list, fmt, *args, **kwargs ):
-		return Client.objects.get( refnum = self.url_kwargs.cid, organization__refnum = self.url_kwargs.oid )
+	def get_object( self, request, *args, **kwargs ):
+		return get_object_or_404( Client, refnum = self.url_kwargs.cid, organization__refnum = self.url_kwargs.oid )
 
 	def get_object_list( self, request, *args, **kwargs ):
 		obj_list = SourceDocument.objects.filter(
@@ -36,48 +35,37 @@ class PaymentList( ListView ):
 			)
 		return obj_list
 
-	def _create_object( self, request, *args, **kwargs ):
-		client = Client.objects.get( refnum = self.url_kwargs.cid, organization__refnum = self.url_kwargs.oid )
-
-		pmt = PaymentObj()
-		pmt.initialize( client )
-		return pmt
-		
 	
-	def create_object_html( self, request, data, *args, **kwargs ):
+	def update_object( self, request, data, *args, **kwargs ):
+
+		client = self.dataset[ 'instance' ]
 
 		try:
-			newo = self._create_object( request, *args, **kwargs )
+			newo = PaymentObj()
+			newo.initialize( client )
 		except BLE_Error, berror:
 			messages.error( request, berror.message )
-			client = Client.objects.get( refnum = self.url_kwargs.cid, organization__refnum = self.url_kwargs.oid )
 			return redirect( client.get_account_single_url() )
 
 		return redirect( newo.get_absolute_url() )
 
 
-	def create_object_json( self, request, data, *args, **kwargs ):
-		newo = self._create_object( request, *args, **kwargs )
-		resp = { 'url' : newo.get_absolute_url() }
-		return self.api_resp( resp )
-
-
-class PaymentDraftList( ListView ):
+class PaymentDraftList( PageView ):
 	template_name = 'pages/org/client/account/transaction/payment/draft-index'
 
-	def get_object( self, request, obj_list, fmt, *args, **kwargs ):
-		return Client.objects.get( refnum = self.url_kwargs.cid, organization__refnum = self.url_kwargs.oid )
+	def get_object( self, request, *args, **kwargs ):
+		return get_object_or_404( Client, refnum = self.url_kwargs.cid, organization__refnum = self.url_kwargs.oid )
 
 	def get_object_list( self, request, *args, **kwargs ):
 		obj_list = SourceDocument.objects.filter( client__refnum = self.url_kwargs.cid, client__organization__refnum = self.url_kwargs.oid, document_type = SourceDocumentType.PAYMENT, document_state = SourceDocumentState.DRAFT )
 		return obj_list
 
 
-class PaymentUnallocatedList( PaymentList ):
+class PaymentUnallocatedList( PageView ):
 	template_name = 'pages/org/client/account/transaction/payment/unallocated-index'
 
-	def get_object( self, request, obj_list, fmt, *args, **kwargs ):
-		return Client.objects.get( refnum = self.url_kwargs.cid, organization__refnum = self.url_kwargs.oid )
+	def get_object( self, request, *args, **kwargs ):
+		return get_object_or_404( Client, refnum = self.url_kwargs.cid, organization__refnum = self.url_kwargs.oid )
 
 	def get_object_list( self, request, *args, **kwargs ):
 		obj_list = SourceDocument.objects.filter( client__refnum = self.url_kwargs.cid, client__organization__refnum = self.url_kwargs.oid, document_type = SourceDocumentType.PAYMENT, document_state = SourceDocumentState.FINAL, total__gt = F('allocated') )
@@ -86,10 +74,8 @@ class PaymentUnallocatedList( PaymentList ):
 
 
 
-
-class PaymentSingle( SingleObjectView ):
+class PaymentSingle( PageView ):
 	template_name = 'pages/org/client/account/transaction/payment/single'
-
 
 	def get_object( self, request, *args, **kwargs ):
 		obj = get_object_or_404( SourceDocument, refnum = self.url_kwargs.sdid, client__refnum = self.url_kwargs.cid, client__organization__refnum = self.url_kwargs.oid )
@@ -103,21 +89,20 @@ class PaymentSingle( SingleObjectView ):
 
 		return obj
 
-	def delete_object( self, request, ob, *args, **kwargs ):
-		pmt = PaymentObj()
-		pmt.wrap( ob )
-		ActionFactory.instantiate( pmt ).delete()
-		return redirect( ob.get_client().get_draft_payment_list_url() )
 
 
-	def update_object_html( self, request, obj, data, *args, **kwargs ):
+	def update_object( self, request, data, *args, **kwargs ):
+
+		obj = self.dataset[ 'instance' ]
 
 		state = long( data.get( 'sd_state', obj.document_state ) )
 
 		if state == SourceDocumentState.DELETE:
-			rc = self.delete_object( request, obj, *args, **kwargs )
+			pmt = PaymentObj()
+			pmt.wrap( obj )
+			ActionFactory.instantiate( pmt ).delete()
 			messages.info( request, _('VMG_20006') )
-			return rc
+			return redirect( obj.get_client().get_draft_payment_list_url() )
 
 
 		pmt = PaymentObj()
@@ -160,8 +145,6 @@ class PaymentSingle( SingleObjectView ):
 				acf.void()
 
 		return redirect( pmt.get_absolute_url() )
-
-
 
 
 

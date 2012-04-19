@@ -8,8 +8,7 @@ from django.shortcuts import get_object_or_404, redirect
 from django.http import HttpResponseForbidden, HttpResponseServerError
 from django.contrib import messages
 
-from common.views.singleobjectview import SingleObjectView
-from common.views.listview import ListView
+from common.views.pageview import PageView
 
 from common.busobj.org import InvoiceObj
 from common.bushelp.org import InvoiceHelper
@@ -20,11 +19,11 @@ from common.exceptions import *
 from common.models import *
 
 
-class InvoiceList( ListView ):
+class InvoiceList( PageView ):
 	template_name = 'pages/org/client/account/transaction/invoice/index'
 
-	def get_object( self, request, obj_list, fmt, *args, **kwargs ):
-		return Client.objects.get( refnum = self.url_kwargs.cid, organization__refnum = self.url_kwargs.oid )
+	def get_object( self, request, *args, **kwargs ):
+		return get_object_or_404( Client, refnum = self.url_kwargs.cid, organization__refnum = self.url_kwargs.oid )
 
 	def get_object_list( self, request, *args, **kwargs ):
 		obj_list = SourceDocument.objects.filter(
@@ -35,50 +34,38 @@ class InvoiceList( ListView ):
 			)
 		return obj_list
 
-	def _create_object( self, request, data, *args, **kwargs ):
-		client = Client.objects.get( refnum = self.url_kwargs.cid, organization__refnum = self.url_kwargs.oid )
-
-		inv = InvoiceObj()
-		inv.initialize( client )
-		return inv
-		
 	
-	def create_object_html( self, request, data, *args, **kwargs ):
+	def update_object( self, request, data, *args, **kwargs ):
+
+		client = self.dataset[ 'instance' ]
 
 		try:
-			newo = self._create_object( request, data, *args, **kwargs )
+			newo = InvoiceObj()
+			newo.initialize( client )
 		except BLE_Error, berror:
 			messages.error( request, berror.message )
-			client = Client.objects.get( refnum = self.url_kwargs.cid, organization__refnum = self.url_kwargs.oid )
 			return redirect( client.get_invoice_list_url() )
-		except Exception, error:
-			print error
 
 		return redirect( newo.get_absolute_url() )
 
 
-	def create_object_json( self, request, data, *args, **kwargs ):
-		newo = self._create_object( request, data, *args, **kwargs )
-		resp = { 'url' : newo.get_absolute_url() }
-		return self.api_resp( resp )
 
-
-class InvoiceDraftList( ListView ):
+class InvoiceDraftList( PageView ):
 	template_name = 'pages/org/client/account/transaction/invoice/draft-index'
 
-	def get_object( self, request, obj_list, fmt, *args, **kwargs ):
-		return Client.objects.get( refnum = self.url_kwargs.cid, organization__refnum = self.url_kwargs.oid )
+	def get_object( self, request, *args, **kwargs ):
+		return get_object_or_404( Client, refnum = self.url_kwargs.cid, organization__refnum = self.url_kwargs.oid )
 
 	def get_object_list( self, request, *args, **kwargs ):
 		obj_list = SourceDocument.objects.filter( client__refnum = self.url_kwargs.cid, client__organization__refnum = self.url_kwargs.oid, document_type = SourceDocumentType.INVOICE, document_state = SourceDocumentState.DRAFT )
 		return obj_list
 
 
-class InvoiceUnpaidList( ListView ):
+class InvoiceUnpaidList( PageView ):
 	template_name = 'pages/org/client/account/transaction/invoice/unpaid-index'
 
-	def get_object( self, request, obj_list, fmt, *args, **kwargs ):
-		return Client.objects.get( refnum = self.url_kwargs.cid, organization__refnum = self.url_kwargs.oid )
+	def get_object( self, request, *args, **kwargs ):
+		return get_object_or_404( Client, refnum = self.url_kwargs.cid, organization__refnum = self.url_kwargs.oid )
 
 	def get_object_list( self, request, *args, **kwargs ):
 		obj_list = SourceDocument.objects.filter( client__refnum = self.url_kwargs.cid, client__organization__refnum = self.url_kwargs.oid, document_type = SourceDocumentType.INVOICE, document_state = SourceDocumentState.FINAL, total__gt = F('allocated') )
@@ -86,7 +73,7 @@ class InvoiceUnpaidList( ListView ):
 
 
 
-class InvoiceSingle( SingleObjectView ):
+class InvoiceSingle( PageView ):
 	template_name = 'pages/org/client/account/transaction/invoice/single'
 
 
@@ -102,21 +89,20 @@ class InvoiceSingle( SingleObjectView ):
 
 		return obj
 
-	def delete_object( self, request, ob, *args, **kwargs ):
-		inv = InvoiceObj()
-		inv.wrap( ob )
-		ActionFactory.instantiate( inv ).delete()
-		return redirect( ob.get_client().get_invoice_list_url() )
 
 
-	def update_object_html( self, request, obj, data, *args, **kwargs ):
+	def update_object( self, request, data, *args, **kwargs ):
+
+		obj = self.dataset[ 'instance' ]
 
 		invoice_data = {}
 
 		invoice_data[ 'state' ] = data.get( 'sd_state' )
 
 		if invoice_data[ 'state' ] is not None and long(invoice_data['state']) == SourceDocumentState.DELETE:
-			rc = self.delete_object( request, obj, *args, **kwargs )
+			inv = InvoiceObj()
+			inv.wrap( obj )
+			ActionFactory.instantiate( inv ).delete()
 			messages.info( request, _('VMG_20004') )
 			return redirect( obj.get_client().get_draft_invoice_list_url() )
 
@@ -143,8 +129,6 @@ class InvoiceSingle( SingleObjectView ):
 			return redirect( obj.get_client().get_draft_invoice_list_url() )
 	
 		return redirect( obj.get_client().get_account_single_url() )
-
-
 
 
 

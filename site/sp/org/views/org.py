@@ -1,27 +1,9 @@
-from __future__ import unicode_literals
-
-from django.utils.translation import ugettext as _
-
 from django.shortcuts import get_object_or_404, redirect
-from django.core.urlresolvers import reverse
-from django.contrib import messages
-
-from django.conf import settings
-from django.http import HttpResponseForbidden
-
-from common.views.singleobjectview import SingleObjectView
-from common.views.listview import ListView
-
+from common.views.pageview import PageView
 from common.models import *
 
-from ..forms import org as forms
 
-from common.buslog.org.org import *
-from common.buslog.org.user import *
-from common.exceptions import *
-
-
-class OrgList( ListView ):
+class OrgList( PageView ):
 	template_name = 'pages/org/index'
 
 	def get_object_list( self, request, *args, **kwargs ):
@@ -35,65 +17,18 @@ class OrgList( ListView ):
 
 		return newobj_list
 
-	def create_object_html( self, request, data, *args, **kwargs ):
-		form = forms.EditOrganization( data or None )
-		if form.is_valid() is False:
-			return redirect( 'org-list' )
-
-		try:
-			neworg = self._create_object( request, form.cleaned_data, *args, **kwargs )
-		except BLE_Error, berror:
-			messages.error( request, berror.message )
-			return redirect( 'org-list' )
-
-		messages.success( request, _('VMG_20005') % { 'url' : neworg.get_absolute_url(), 'name' : neworg.trading_name } )
-
-		return redirect( 'org-list' )
-
-	def create_object_json( self, request, data, *args, **kwargs ):
-		neworg = self._create_object( request, data, *args, **kwargs )
-		resp = { 'url' : reverse( 'org-single', kwargs = { 'oid' : neworg.refnum } ) }
-		return self.api_resp( resp )
-
-
-	def _create_object( self, request, data, *args, **kwargs ):
-		neworg = OrgBusLog.create( request.user )
-		UserBusLog.grant( request.user, neworg, UserCategory.OWNER )
-		return neworg
-
-
-
-
-class OrgSingle( SingleObjectView ):
+class OrgSingle( PageView ):
 	template_name = 'pages/org/single'
 
 	def get_object( self, request, *args, **kwargs ):
 		return get_object_or_404( Organization, refnum = self.url_kwargs.oid )
 
-	def delete_object( self, request, ob, *args, **kwargs ):
-		ob.delete()
-		return redirect( 'org-list' )
 
-	def update_object_html( self, request, obj, data, *args, **kwargs ):
-		self._update_object( request, obj, data, *args, **kwargs )
-		return redirect( 'org-single', oid = obj.refnum )
-
-	def update_object_json( self, request, obj, data, *args, **kwargs ):
-		self._update_object( request, obj, data, *args, **kwargs )
-		resp = { 'url' : reverse( 'org-single', kwargs = { 'oid' : neworg.refnum } ) }
-		return self.api_resp( resp )
-
-	def _update_object( self, request, obj, data, *args, **kwargs ):
-		OrgBusLog( obj, data )
-		obj.save()
-
-
-class OrgTestSingle( SingleObjectView ):
+class OrgTestSingle( PageView ):
 	template_name = 'pages/org/test'
 
 	def get_object( self, request, *args, **kwargs ):
 		return { 'hello' : True }
-
 
 
 

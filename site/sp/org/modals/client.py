@@ -26,7 +26,7 @@ class NewProject( ModalLogic ):
 	def get_object( self, request, dmap, *args, **kwargs ):
 		return None
 
-	def perform( self, request, dmap, obj, extra, fmt, *args, **kwargs ):
+	def perform( self, request, dmap, obj, extra, *args, **kwargs ):
 		try:
 			client = Client.objects.get( refnum = dmap[ 'cid' ], organization__refnum = dmap[ 'oid' ] )
 
@@ -91,7 +91,7 @@ class AccountTransactionAllocate( ModalLogic ):
 
 		return sd
 
-	def perform( self, request, dmap, obj, extra, fmt, *args, **kwargs ):
+	def perform( self, request, dmap, obj, extra, *args, **kwargs ):
 
 		invoice_refnum = dmap.get( 'refnum' )
 		payment_amount = pnumparse( dmap.get( 'amount' ) )
@@ -162,7 +162,7 @@ class AccountTransactionDeallocate( ModalLogic ):
 
 
 
-	def perform( self, request, dmap, obj, extra, fmt, *args, **kwargs ):
+	def perform( self, request, dmap, obj, extra, *args, **kwargs ):
 
 		alo = Allocator()
 

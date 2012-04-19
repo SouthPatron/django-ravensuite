@@ -1,1 +1,0 @@
-{ "id" : {{ instance.id }}, "name" : "{{ instance.name }}", "description" : "{{ instance.description }}" }

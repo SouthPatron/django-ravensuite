@@ -5,7 +5,6 @@ from django.conf import settings
 
 from views import *
 
-
 from common.views.modal import ModalView
 
 

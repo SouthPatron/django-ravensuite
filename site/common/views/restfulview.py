@@ -9,10 +9,13 @@ from common.serializers.serializer import Serializer
 import collections
 import json
 
-
 class RestForbidden( Exception ):
 	pass
 
+class RestResponse( Exception ):
+	def __init__( self, response, *args, **kwargs ):
+		self.response = response
+		super( RestResponse, self ).__init__( *args, **kwargs )
 
 class RestfulView( View ):
 
@@ -59,8 +62,8 @@ class RestfulView( View ):
 			return super( RestfulView, self ).dispatch( request, *args, **kwargs )
 		except RestForbidden:
 			return HttpResponseForbidden()
-
-
+		except RestResponse, rr:
+			return rr.response
 
 
 	# ************** Data Support Methods

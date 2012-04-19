@@ -1,1 +1,0 @@
-[ {% for obj in object_list %}{% include 'pages/org/client/account/transaction/single.get.json' with instance=obj %}{% if not forloop.last %},{% endif %} {% endfor %} ]
