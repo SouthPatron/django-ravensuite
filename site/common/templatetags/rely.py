@@ -61,12 +61,6 @@ rely_graph = {
 		'deps' : [ 'superfish' ]
 		},
 
-	'date' : {
-			'js' : [ pe( 'date/date.js' ) ],
-			'css' : [],
-			'deps' : []
-		},
-
 	'jquery' : {
 			'js' : [ pe( 'jquery/jquery.js' ) ],
 			'css' : [],
@@ -136,6 +130,14 @@ rely_graph = {
 			'css' : [ ],
 			'deps' : [ 'jquery', ]
 		},
+
+	'sapi' : {
+			'js' : [ pi( 'sapi/sapi.js' ), ],
+			'css' : [ ],
+			'deps' : [ 'jquery', ]
+		},
+
+
 
 }
 
