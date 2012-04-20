@@ -21,12 +21,3 @@ class ProjectSingle( PageView ):
 	def get_object( self, request, *args, **kwargs ):
 		return get_object_or_404( Project, refnum = self.url_kwargs.pid, client__refnum = self.url_kwargs.cid, client__organization__refnum = self.url_kwargs.oid )
 
-	def update_object( self, request, data, *args, **kwargs ):
-		obj = self.dataset[ 'instance' ]
-		obj.status = data.get( 'status', obj.status )
-		obj.name = data.get( 'name', obj.name )
-		obj.description = data.get( 'name', obj.description )
-		obj.save()
-		return redirect( 'org-client-project-single', oid = obj.client.organization.refnum, cid = obj.client.refnum, pid = obj.refnum )
-
-
