@@ -1,5 +1,5 @@
 
-from sp.api.views import RestfulLogic
+from common.views.restfulview import RestfulLogic
 
 
 class Transaction( RestfulLogic ):

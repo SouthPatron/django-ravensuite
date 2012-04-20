@@ -1,11 +1,6 @@
 
-
-from django.db import models
-
-from common.views.restfulview import RestForbidden
+from common.views.restfulview import RestfulLogic
 from common.models import *
-
-from sp.api.views import RestfulLogic
 
 
 class Index( RestfulLogic ):
@@ -26,9 +21,8 @@ class View( RestfulLogic ):
 
 	class Meta:
 		allow_update = True
-		readonly = ( 'refnum', 'fax_number' )
+		readonly = ( 'refnum', )
 		fields = ( 'trading_name', 'telephone_number', 'fax_number' )
-		exclude = ( 'fax_numbers', )
 
 	def get_object( self, request, *args, **kwargs ):
 		return Organization.objects.get( pk = self.url_kwargs.oid )

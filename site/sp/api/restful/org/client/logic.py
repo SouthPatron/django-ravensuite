@@ -1,8 +1,6 @@
 
-from common.views.restfulview import RestForbidden
+from common.views.restfulview import RestfulLogic
 from common.models import *
-
-from sp.api.views import RestfulLogic
 
 
 class Index( RestfulLogic ):
