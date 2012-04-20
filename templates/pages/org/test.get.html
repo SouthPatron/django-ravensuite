@@ -9,7 +9,20 @@
 <body>
 <h1>Leroy Jeeeennnnkkins!!</h1>
 
-<button class="raltag_modal_org_new_organization" type="button">Load Modal Window</button>
+<p>
+<script type="text/javascript">
+	var api = new sapi.api.restful();
+	document.write( sapi.version );
+
+	var orgs = api.getOrganizations();
+	alert( orgs );
+
+	for ( var i = 0; i < orgs.length; i++ )
+	{
+		var obj = orgs[i];
+		document.write( '<p>' + obj.trading_name + '</p>' );
+	}
+</script>
 
 </body>
 </html>
