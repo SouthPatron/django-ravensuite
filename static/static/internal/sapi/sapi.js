@@ -31,22 +31,32 @@ if ( jQuery.fn.jquery < '1.6.2' ) {
 
 /* ------------------------------------------------------- */
 
-sapi = {}
+sapi = {
+	version : '1.0.0',
+	api : {}
+}
 
-sapi.version = '1.0.0';
+/* ------- SUPPORT ------------------------------------------- */
 
-sapi.api = {}
+String.prototype.sapi_format = function() {
+	var formatted = this;
+	for (var i = 0; i < arguments.length; i++) {
+		var regexp = new RegExp('\\{'+i+'\\}', 'gi');
+		formatted = formatted.replace(regexp, arguments[i]);
+	}
+	return formatted;
+};
 
 /* ******* QUEUE ********************************************* */
 
 sapi.api._ajaxqueues = { q:{}, r:null };
 
-sapi.api.ajaxq = ( function() {
+sapi.api.ajaxq = function() {}
 
-	function C() {
-	}
+sapi.api.ajaxq.prototype = {
 
-	function ajax( queue, options ) {
+	ajax : function( queue, options ) {
+
 
 		// Make sure this queue exists
 		if ( typeof sapi.api._ajaxqueues.q[queue] == "undefined" )
@@ -77,9 +87,11 @@ sapi.api.ajaxq = ( function() {
 			if ( originalComplete ) originalComplete( request, status );
 
 			if ( sapi.api._ajaxqueues.q[ queue ].length > 0 )
+			{
 				sapi.api._ajaxqueues.r = jQuery.ajax(
 						sapi.api._ajaxqueues.q[ queue ][ 0 ]
 					);
+			}
 		}
 
 		// Add in the new query
@@ -87,71 +99,145 @@ sapi.api.ajaxq = ( function() {
 
 		// Start it, if first one.
 		if ( sapi.api._ajaxqueues.q[ queue ].length == 1 )
-			sapi.api._ajaxqueues.r = jQuery.ajax( options );
+			sapi.api._ajaxqueues.r = jQuery.ajax( newOptions );
 	}
 
-	C.prototype.ajax = ajax;
-
-	return C;
-}());
+}
 
 /* ******* API *********************************************** */
 
 
-sapi.api.restful = ( function() {
+sapi.api.restful = function( options ) {
+	this.ajaxq = new sapi.api.ajaxq();
 
-	function C() {
-		this.ajaxq = new sapi.api.ajaxq();
-	}
+	this.default_options = {
+		timeout: 60000,
+		async: true,
+		dataType: 'json',
+		contentType: 'application/json',
+		success: function( data, status, xhr ) {},
+		error: function( xhr, textStatus, errorThrown ) {}
 
-	function getOrganizations() {
-		var objects = false;
+	};
 
-		this.ajaxq.ajax( "_api", {
-			url: '/api/restful/org',
-			type: 'GET',
-			data: { bob: 5, sam: '24234' },
-			success: function(result) {
-					objects = result;
-				},
-			timeout: 60000,
-			async: false,
-			error: function( xhr, textStatus, errorThrown ) {
-				if ( textStatus )
-				{
-					if ( textStatus === "timeout" )
-					{
-						alert( "Timeout occurred" );
-					}
-					else if ( textStatus === "error" )
-					{
-						alert( "Error: " + errorThrown );
-					}
-					else if ( textStatus === "abort" )
-					{
-						alert( "Aborted!" );
-					}
-					else if ( textStatus === "parseerror" )
-					{
-						alert( "Parse error!" );
-					}
-					else
-					{
-						alert( "Unknown error" );
-					}
-				}
-			},
-			complete: function() {
-				alert( 'Complete called' );
+	if ( options )
+		this.default_options = jQuery.extend( {}, this.default_options, options );
+}
+
+
+sapi.api.restful.prototype = {
+
+	_ajax : function( url, options, add_options ) {
+		var newOptions = jQuery.extend( {}, this.default_options, options, add_options, { url : url } );
+		this.ajaxq.ajax( "_api", newOptions );
+	},
+
+	_delete : function( url, options ) {
+		this._ajax( url, options, { type : 'DELETE' } );
+	},
+
+	_get : function( url, options ) {
+		this._ajax( url, options, { type : 'GET' } );
+	},
+
+	_post : function( url, data, options ) {
+		this._ajax( url, options,
+			{
+				type : 'POST',
+				data : JSON.stringify( data )
 			}
-		});
+		);
+	},
 
-		return objects;
-	}
+	_put : function( url, data, options ) {
+		this._ajax( url, options,
+			{
+				type : 'PUT',
+				data : JSON.stringify( data )
+			}
+		);
+	},
 
-	C.prototype.getOrganizations = getOrganizations;
+	/* ************ API ************************************* */
 
-	return C;
-}());
+	getOrganizationList : function( success, error ) {
+		this._get(
+			'/api/restful/org',
+			{ success: success, error: error }
+		);
+	},
+
+	getOrganization : function( ref, success, error ) {
+		this._get(
+			'/api/restful/org/{0}'.sapi_format( ref.oid ),
+			{ success: success, error: error }
+		);
+	},
+
+	updateOrganization : function( ref, data, success, error ) {
+		this._put(
+			'/api/restful/org/{0}'.sapi_format( ref.oid ),
+			data,
+			{ success: success, error: error }
+		);
+	},
+
+	getClientList : function( ref, success, error ) {
+		this._get(
+			'/api/restful/org/{0}/clients'.sapi_format( ref.oid ),
+			{ success: success, error: error }
+		);
+	},
+
+	getClient : function( ref, success, error ) {
+		this._get(
+			'/api/restful/org/{0}/client/{1}'.sapi_format( ref.oid, ref.cid ),
+			{ success: success, error: error }
+		);
+	},
+
+	getProjectList : function( ref, success, error ) {
+		this._get(
+			'/api/restful/org/{0}/client/{1}/projects'.sapi_format( ref.oid, ref.cid ),
+			{ success: success, error: error }
+		);
+	},
+
+	getProject : function( ref, success, error ) {
+		this._get(
+			'/api/restful/org/{0}/client/{1}/project/{2}'.sapi_format( ref.oid, ref.cid, ref.pid ),
+			{ success: success, error: error }
+		);
+	},
+
+	getActivityList : function( ref, success, error ) {
+		this._get(
+			'/api/restful/org/{0}/activities'.sapi_format( ref.oid ),
+			{ success: success, error: error }
+		);
+	},
+
+	getActivity : function( ref, success, error ) {
+		this._get(
+			'/api/restful/org/{0}/activity/{1}'.sapi_format( ref.oid, ref.actid ),
+			{ success: success, error: error }
+		);
+	},
+
+	getTaskList : function( ref, success, error ) {
+		this._get(
+			'/api/restful/org/{0}/activity/{1}/tasks'.sapi_format( ref.oid, ref.actid ),
+			{ success: success, error: error }
+		);
+	},
+
+	getTask : function( ref, success, error ) {
+		this._get(
+			'/api/restful/org/{0}/activity/{1}/task/{2}'.sapi_format( ref.oid, ref.actid, ref.taskid ),
+			{ success: success, error: error }
+		);
+	},
+
+}
 
 

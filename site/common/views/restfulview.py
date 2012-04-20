@@ -1,12 +1,12 @@
 from __future__ import unicode_literals
 
+from django.db import models
 from django.views.generic.base import View
 from django.views.decorators.csrf import csrf_exempt
 from django.http import HttpResponse, Http404, HttpResponseForbidden
 
 from common.serializers.serializer import Serializer
 
-import collections
 import json
 
 class RestForbidden( Exception ):
@@ -40,6 +40,54 @@ class RestfulView( View ):
 
 	def update_object( self, request, data, *args, **kwargs ):
 		raise RestForbidden()
+
+	# ************** Default Hooks
+
+	def def_update_object( self, request, data, obj, meta, *args, **kwargs ):
+
+		if meta is None:
+			raise RestForbidden()
+
+		if getattr( meta, 'allow_update', False ) is False:
+			raise RestForbidden()
+
+		if isinstance( obj, models.Model ) is False:
+			raise NotImplementedError( 'You must override this update_object method for non-Model objects because I don\'t know how to save those.' )
+
+		isDirty = False
+
+		for field in obj._meta.local_fields:
+			if field.serialize:
+
+				# You can't update primary keys
+				if field.primary_key is True:
+					continue
+
+				if field.rel is None:
+					name = field.attname
+				else:
+					name = field.attname[:-3]
+
+				if name not in data:
+					continue
+
+				if meta is not None:
+					if hasattr( meta, 'readonly' ) and name in meta.readonly:
+						continue
+					if hasattr( meta, 'exclude' ) and name in meta.exclude:
+						continue
+					if hasattr( meta, 'fields' ) and name not in meta.fields:
+						continue
+
+				setattr( obj, name, data[name] )
+				isDirty = True
+
+
+		if isDirty is True:
+			obj.save()
+		
+		return obj
+
 
 	# ************** Overridden View methods
 
@@ -88,8 +136,6 @@ class RestfulView( View ):
 
 	def delete( self, request, *args, **kwargs ):
 		obj = self.delete_object( request, *args, **kwargs )
-		if isinstance( obj, collections.Iterable ) is False:
-			obj = [ obj ]
 
 		response = HttpResponse( status = 204 )
 		response[ 'Content-Type' ] = self.supported_formats[ self.api_format ]
@@ -110,9 +156,6 @@ class RestfulView( View ):
 		obj = self.get_object( request, *args, **kwargs )
 		if obj is None:
 			self.not_found()
-
-		if isinstance( obj, collections.Iterable ) is False:
-			obj = [ obj ]
 
 		response = HttpResponse( status = 200 )
 		response[ 'Content-Type' ] = self.supported_formats[ self.api_format ]
@@ -141,8 +184,6 @@ class RestfulView( View ):
 		"""
 		data = self._get_body_data( request, self.api_format )
 		obj = self.create_object( request, data, *args, **kwargs )
-		if isinstance( obj, collections.Iterable ) is False:
-			obj = [ obj ]
 
 		response = HttpResponse( status = 204 )
 		response[ 'Content-Type' ] = self.supported_formats[ self.api_format ]
@@ -165,8 +206,6 @@ class RestfulView( View ):
 	def put( self, request, *args, **kwargs ):
 		data = self._get_body_data( request, self.api_format )
 		obj = self.update_object( request, data, *args, **kwargs )
-		if isinstance( obj, collections.Iterable ) is False:
-			obj = [ obj ]
 
 		response = HttpResponse( status = 204 )
 		response[ 'Content-Type' ] = self.supported_formats[ self.api_format ]

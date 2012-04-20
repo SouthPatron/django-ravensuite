@@ -14,10 +14,10 @@ class Serializer( Base ):
 	def straight_serialize( self, obj ):
 		json.dump( obj, fp = self.stream, ensure_ascii = False )
 
-	def start_serialization( self ):
+	def start_collection( self ):
 		self.stream.write( "[" )
 
-	def end_serialization( self ):
+	def end_collection( self ):
 		self.stream.write( "]" )
 
 	def start_object( self, obj ):

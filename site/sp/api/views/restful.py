@@ -10,6 +10,14 @@ from ..api_restful import restful_list
 
 
 class RestfulLogic( object ):
+
+#	class Meta:
+#		allow_update = True
+#		readonly = ( 'refnum', )
+#		fields = ( 'trading_name', 'telephone_number', )
+#		exclude = ( 'fax_number', )
+
+
 	def __init__( self, view, *args, **kwargs ):
 		super( RestfulLogic, self ).__init__( *args, **kwargs )
 		self.view = view
@@ -25,7 +33,9 @@ class RestfulLogic( object ):
 		return self.view.not_found()
 
 	def update_object( self, request, data, *args, **kwargs ):
-		raise RestForbidden()
+		meta = getattr( self, 'Meta', None )
+		obj = self.get_object( request, *args, **kwargs )
+		return self.view.def_update_object( request, data, obj, meta )
 
 
 class RestfulDispatcher( RestfulView ):
