@@ -5,6 +5,10 @@ from common.models import *
 
 class Index( RestfulLogic ):
 
+	class Meta:
+		name_map = { 'refnum' : 'id' }
+		include = ( 'refnum', )
+
 	def get_object( self, request, *args, **kwargs ):
 		umems = UserMembership.objects.filter( user = request.user )
 
@@ -21,8 +25,9 @@ class View( RestfulLogic ):
 
 	class Meta:
 		allow_update = True
+		name_map = { 'refnum' : 'id' }
+		include = ( 'refnum', )
 		readonly = ( 'refnum', )
-		fields = ( 'trading_name', 'telephone_number', 'fax_number' )
 
 	def get_object( self, request, *args, **kwargs ):
 		return Organization.objects.get( pk = self.url_kwargs.oid )

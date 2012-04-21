@@ -25,35 +25,41 @@ class Base( object ):
 			if field.serialize:
 				if field.rel is None:
 					if self.selected_fields is None or field.attname in self.selected_fields:
-						if firstField is False:
-							self.field_separator( obj )
-						else:
-							firstField = False
-						self.handle_field(obj, field )
+						if self.excluded_fields is None or field.attname not in self.excluded_fields:
+							if firstField is False:
+								self.field_separator( obj )
+							else:
+								firstField = False
+							self.handle_field( obj, field )
 				else:
 					if self.selected_fields is None or field.attname[:-3] in self.selected_fields:
-						if firstField is False:
-							self.field_separator( obj )
-						else:
-							firstField = False
-						self.handle_fk_field(obj, field )
+						if self.excluded_fields is None or field.attname not in self.excluded_fields:
+							if firstField is False:
+								self.field_separator( obj )
+							else:
+								firstField = False
+							self.handle_fk_field(obj, field )
 
 		for field in concrete_model._meta.many_to_many:
 			if field.serialize:
 				if self.selected_fields is None or field.attname in self.selected_fields:
-					if firstField is False:
-						self.field_separator( obj )
-					else:
-						firstField = False
-					self.handle_m2m_field( obj, field )
+					if self.excluded_fields is None or field.attname not in self.excluded_fields:
+						if firstField is False:
+							self.field_separator( obj )
+						else:
+							firstField = False
+						self.handle_m2m_field( obj, field )
 
 
-		if firstField is False:
-			self.field_separator( obj )
+		if self.included_fields is not None:
+			for key in self.included_fields:
+				if firstField is False:
+					self.field_separator( obj )
+				else:
+					firstField = False
 
-		field = getattr( obj, self.reference_key, None )
-		if field is not None:
-			self.handle_kvp( "pk", field )
+				field = getattr( obj, key )
+				self.handle_kvp( key, field )
 
 		self.end_object(obj)
 
@@ -70,8 +76,10 @@ class Base( object ):
 	def serialize( self, dimobj, **kwargs ):
 		self.stream = kwargs.pop( 'stream', StringIO() )
 		self.selected_fields = kwargs.pop( 'fields', None)
+		self.excluded_fields = kwargs.pop( 'exclude', None)
+		self.included_fields = kwargs.pop( 'include', None)
 		self.use_natural_keys = kwargs.pop( 'use_natural_keys', False)
-		self.reference_key = kwargs.pop( 'reference_key', 'id' )
+		self.name_map = kwargs.pop( 'name_map', {} )
 
 
 		if isinstance( dimobj, collections.Iterable ) is False:

@@ -9,7 +9,10 @@ import json
 class Serializer( Base ):
 
 	def _dumps( self, key, value ):
-		self.stream.write( u"{} : {}".format( json.dumps( key, ensure_ascii = False ), json.dumps( value, ensure_ascii = False )) )
+
+		newkey = self.name_map.get( key, key )
+
+		self.stream.write( u"{} : {}".format( json.dumps( newkey, ensure_ascii = False ), json.dumps( value, ensure_ascii = False )) )
 
 	def straight_serialize( self, obj ):
 		json.dump( obj, fp = self.stream, ensure_ascii = False )

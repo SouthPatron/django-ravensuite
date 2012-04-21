@@ -196,6 +196,15 @@ sapi.api.restful.prototype = {
 		);
 	},
 
+	updateClient : function( ref, data, success, error ) {
+		this._put(
+			'/api/restful/org/{0}/client/{1}'.sapi_format( ref.oid, ref.cid ),
+			data,
+			{ success: success, error: error }
+		);
+	},
+
+
 	getProjectList : function( ref, success, error ) {
 		this._get(
 			'/api/restful/org/{0}/client/{1}/projects'.sapi_format( ref.oid, ref.cid ),

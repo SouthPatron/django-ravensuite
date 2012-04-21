@@ -25,8 +25,10 @@ class RestfulLogic( object ):
 #	class Meta:
 #		allow_update = True
 #		readonly = ( 'refnum', )
-#		fields = ( 'trading_name', 'telephone_number', )
+#		fields = ( 'refnum', 'trading_name', 'telephone_number', )
 #		exclude = ( 'fax_number', )
+#		include = ( 'id', )
+#		name_map = { 'old_name' : 'new_name' }
 
 
 	def __init__( self, view, *args, **kwargs ):
@@ -43,10 +45,7 @@ class RestfulLogic( object ):
 	def get_object( self, request, *args, **kwargs ):
 		return self.view.not_found()
 
-	def update_object( self, request, data, *args, **kwargs ):
-		meta = getattr( self, 'Meta', None )
-		obj = self.get_object( request, *args, **kwargs )
-		return self.view.def_update_object( request, data, obj, meta )
+#	def update_object( self, request, data, *args, **kwargs ):
 
 
 
@@ -80,48 +79,68 @@ class RestfulView( View ):
 
 	def update_object( self, request, data, *args, **kwargs ):
 		self._prepare( request, *args, **kwargs )
-		return self.logic.update_object( request, data, *args, **kwargs )
+
+		meta = getattr( self.logic, 'Meta', None )
+
+		if meta is None or getattr( meta, 'allow_update', False ) is False:
+			raise RestForbidden()
+
+		if hasattr( self.logic, 'update_object' ) is True:
+			return self.logic.update_object( request, data, *args, **kwargs )
+
+		obj = self.get_object( request, *args, **kwargs )
+
+		if isinstance( obj, models.Model ) is False:
+			raise NotImplementedError( 'You must implement an update_object method in your logic class for non-model objects.' )
+
+		return self.def_model_update( request, data, obj, meta, *args, **kwargs )
 
 
 	# ************** Default Hooks
 
-	def def_update_object( self, request, data, obj, meta, *args, **kwargs ):
+	def _def_model_update( self, obj, data, meta, field ):
+		if not field.serialize:
+			return False
 
-		if meta is None:
-			raise RestForbidden()
+		if field.primary_key is True:
+			return False
 
-		if getattr( meta, 'allow_update', False ) is False:
-			raise RestForbidden()
+		if field.rel is None:
+			name = field.attname
+		else:
+			name = field.attname[:-3]
 
-		if isinstance( obj, models.Model ) is False:
-			raise NotImplementedError( 'You must override this update_object method for non-Model objects because I don\'t know how to save those.' )
+		# Get the name after mapping. confusing names, haha
+		map_name = name
+		if meta is not None:
+			name_map = getattr( meta, 'name_map', {} )
+			map_name = name_map.get( map_name, map_name )
 
+		if map_name not in data:
+			return False
+
+		if meta is not None:
+			if hasattr( meta, 'readonly' ) and name in meta.readonly:
+				return False
+			if hasattr( meta, 'exclude' ) and name in meta.exclude:
+				return False
+			if hasattr( meta, 'fields' ) and name not in meta.fields:
+				return False
+
+		setattr( obj, name, data[ map_name ] )
+		return True
+
+
+	def def_model_update( self, request, data, obj, meta, *args, **kwargs ):
 		isDirty = False
 
 		for field in obj._meta.local_fields:
-			if field.serialize:
+			if self._def_model_update( obj, data, meta, field ) is True:
+				isDirty = True
 
-				# You can't update primary keys
-				if field.primary_key is True:
-					continue
-
-				if field.rel is None:
-					name = field.attname
-				else:
-					name = field.attname[:-3]
-
-				if name not in data:
-					continue
-
-				if meta is not None:
-					if hasattr( meta, 'readonly' ) and name in meta.readonly:
-						continue
-					if hasattr( meta, 'exclude' ) and name in meta.exclude:
-						continue
-					if hasattr( meta, 'fields' ) and name not in meta.fields:
-						continue
-
-				setattr( obj, name, data[name] )
+		for name in getattr( meta, 'include', [] ):
+			field = obj._meta.get_field( name )
+			if self._def_model_update( obj, data, meta, field ) is True:
 				isDirty = True
 
 
@@ -200,6 +219,27 @@ class RestfulView( View ):
 		raise Http404( 'Object Not Found' )
 
 
+	# ************** Serialization with logic rules
+
+	def flatten( self, response, obj ):
+		meta = getattr( self.logic, 'Meta', {} )
+
+		fields = getattr( meta, 'fields', None )
+		exclude = getattr( meta, 'exclude', None )
+		name_map = getattr( meta, 'name_map', {} )
+		include = getattr( meta, 'include', None )
+
+		Serializer.serialize(
+				self.api_format,
+				obj,
+				stream = response,
+				fields = fields,
+				exclude = exclude,
+				name_map = name_map,
+				include = include
+			)
+
+
 	# ************** HTTP Operations
 
 	def delete( self, request, *args, **kwargs ):
@@ -211,12 +251,8 @@ class RestfulView( View ):
 
 		if obj is not None:
 			response.status_code = 200
-			Serializer.serialize(
-					self.api_format,
-					obj,
-					stream = response,
-					reference_key = 'refnum'
-				)
+			self.flatten( response, obj )
+
 		return response
 
 
@@ -229,12 +265,7 @@ class RestfulView( View ):
 		response[ 'Content-Type' ] = self.supported_formats[ self.api_format ]
 		response[ 'Cache-Control' ] = 'no-cache'
 
-		Serializer.serialize(
-				self.api_format,
-				obj,
-				stream = response,
-				reference_key = 'refnum'
-			)
+		self.flatten( response, obj )
 		return response
 
 	def post( self, request, *args, **kwargs ):
@@ -261,12 +292,7 @@ class RestfulView( View ):
 			response[ 'Location' ] = obj.get_absolute_url()
 			response.status_code = 201
 
-			Serializer.serialize(
-				self.api_format,
-				obj,
-				stream = response,
-				reference_key = 'refnum'
-			)
+			self.flatten( response, obj )
 
 		return response
 
@@ -282,12 +308,7 @@ class RestfulView( View ):
 		if obj is not None:
 			response.status_code = 200
 
-			Serializer.serialize(
-				self.api_format,
-				obj,
-				stream = response,
-				reference_key = 'refnum'
-			)
+			self.flatten( response, obj )
 
 		return response
 

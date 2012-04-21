@@ -14,6 +14,21 @@
 	var api = new sapi.api.restful();
 	document.write( sapi.version );
 
+	api.updateClient(
+		{
+			oid : 'd9cb214f8d384b5d85b1ab4bc5730b7a',
+			cid : 2
+		},
+		{
+			telephone_number : '011-555-2000',
+			id: 20,
+			fax_number : '011-300-2000',
+			postal_address : 'P.O. Box 666'
+		}
+	);
+
+
+/*
 	api.getOrganizationList( function( orgs ) {
 		for ( var i = 0; i < orgs.length; i++ )
 		{
@@ -24,13 +39,14 @@
 				{ oid : obj.pk },
 				{
 					telephone_number : '011-555-2000',
-					fax_number : '011-200-2000',
+					fax_number : '011-300-2000',
 					refnum : 'douglas',
 					pk : 'cheese'
 				}
 			);
 		}
 	} );
+*/
 
 </script>
 
