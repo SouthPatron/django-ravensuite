@@ -14,9 +14,6 @@ class Serializer( Base ):
 
 		self.stream.write( u"{} : {}".format( json.dumps( newkey, ensure_ascii = False ), json.dumps( value, ensure_ascii = False )) )
 
-	def straight_serialize( self, obj ):
-		json.dump( obj, fp = self.stream, ensure_ascii = False )
-
 	def start_collection( self ):
 		self.stream.write( "[" )
 

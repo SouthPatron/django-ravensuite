@@ -8,6 +8,7 @@ from django.http import HttpResponse, Http404, HttpResponseForbidden
 from common.utils.class_loader import ClassLoader
 from common.serializers.serializer import Serializer
 
+import collections
 import json
 import re
 
@@ -222,22 +223,28 @@ class RestfulView( View ):
 	# ************** Serialization with logic rules
 
 	def flatten( self, response, obj ):
-		meta = getattr( self.logic, 'Meta', {} )
 
-		fields = getattr( meta, 'fields', None )
-		exclude = getattr( meta, 'exclude', None )
-		name_map = getattr( meta, 'name_map', {} )
-		include = getattr( meta, 'include', None )
+		if isinstance( obj, models.Model ) is True or isinstance( obj, models.query.QuerySet ) is True:
+			meta = getattr( self.logic, 'Meta', {} )
 
-		Serializer.serialize(
-				self.api_format,
-				obj,
-				stream = response,
-				fields = fields,
-				exclude = exclude,
-				name_map = name_map,
-				include = include
-			)
+			fields = getattr( meta, 'fields', None )
+			exclude = getattr( meta, 'exclude', None )
+			name_map = getattr( meta, 'name_map', {} )
+			include = getattr( meta, 'include', None )
+
+			Serializer.serialize(
+					self.api_format,
+					obj,
+					stream = response,
+					fields = fields,
+					exclude = exclude,
+					name_map = name_map,
+					include = include
+				)
+		else:
+			json.dump( obj, fp = response, ensure_ascii = False )
+
+
 
 
 	# ************** HTTP Operations

@@ -19,9 +19,9 @@ class View( RestfulLogic ):
 		allow_update = True
 		name_map = { 'refnum' : 'id' }
 		readonly = ( 'refnum', )
-		exclude = ( 'postal_address', )
 
 
 	def get_object( self, request, *args, **kwargs ):
+#		return { 'cpu_usage' : '50%' }
 		return Client.objects.get( refnum = self.url_kwargs.cid, organization = self.url_kwargs.oid )
 

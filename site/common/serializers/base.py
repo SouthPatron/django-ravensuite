@@ -3,8 +3,6 @@ from StringIO import StringIO
 from django.utils.encoding import smart_unicode
 from django.db.models import Model
 
-import collections
-
 class Base( object ):
 	def __init__( self, *args, **kwargs ):
 		super( Base, self ).__init__( *args, **kwargs )
@@ -64,15 +62,6 @@ class Base( object ):
 		self.end_object(obj)
 
 
-	def _serialize_object( self, obj ):
-
-		if isinstance( obj, Model ) is True:
-			self._serialize_model( obj )
-		else:
-			self.straight_serialize( obj )
-
-
-
 	def serialize( self, dimobj, **kwargs ):
 		self.stream = kwargs.pop( 'stream', StringIO() )
 		self.selected_fields = kwargs.pop( 'fields', None)
@@ -82,15 +71,14 @@ class Base( object ):
 		self.name_map = kwargs.pop( 'name_map', {} )
 
 
-		if isinstance( dimobj, collections.Iterable ) is False:
-			self._serialize_object( dimobj )
+		if isinstance( dimobj, Model ) is True:
+			self._serialize_model( dimobj )
 		else:
 			self.start_collection()
 			for i, obj in enumerate( dimobj ):
 				if i != 0:
 					self.object_separator( obj )
-
-				self._serialize_object( obj )
+				self._serialize_model( obj )
 			self.end_collection()
 
 		return self.getvalue()
