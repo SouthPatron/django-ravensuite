@@ -21,7 +21,6 @@ urlpatterns = patterns('',
 	url(r'^v/account/', include('sp.account.urls')),
 	url(r'^v/org/', include('sp.org.urls')),
 	url(r'^v/timesheet/', include('sp.timesheet.urls')),
-	url(r'^v/home/', include('sp.home.urls')),
 
 	# Built-in Django admin tools
 	url(r'^v/admin/doc/', include('django.contrib.admindocs.urls')),
