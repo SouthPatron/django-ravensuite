@@ -22,6 +22,5 @@ class View( RestfulLogic ):
 
 
 	def get_object( self, request, *args, **kwargs ):
-#		return { 'cpu_usage' : '50%' }
 		return Client.objects.get( refnum = self.url_kwargs.cid, organization = self.url_kwargs.oid )
 
