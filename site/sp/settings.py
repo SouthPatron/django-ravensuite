@@ -87,7 +87,6 @@ INSTALLED_APPS = (
 
 	'sp.account',
 	'sp.org',
-	'sp.timesheet',
 )
 
 

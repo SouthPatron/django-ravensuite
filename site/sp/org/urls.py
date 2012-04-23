@@ -10,6 +10,8 @@ from common.views.modal import ModalView
 
 urlpatterns = patterns('',
 
+	url( r'^modals/(?P<modal_name>.*)$', login_required( ModalView.as_view() ) ),
+
 # ------- ORGANIZATION -------------------------
 
 	url( r'^$', login_required( OrgList.as_view() ), name = 'org-list' ),
@@ -110,7 +112,9 @@ urlpatterns = patterns('',
 	url( r'^(?P<oid>\w{32})/activity/(?P<actid>\d+)/task/(?P<taskid>\d+)$', login_required( TaskSingle.as_view() ), name = 'org-activity-task-single' ),
 
 
-	url( r'^modals/(?P<modal_name>.*)$', login_required( ModalView.as_view() ) ),
+# ------ TIMESHEET -----------------------------
+
+	url( r'^(?P<oid>\w{32})/timesheet$', login_required( timesheet.TimesheetEntryList.as_view() ), name = 'org-timesheet-entry-list' ),
 
 )
 

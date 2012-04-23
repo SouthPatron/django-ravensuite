@@ -9,8 +9,6 @@ from common.exceptions import *
 from common.utils.dbgdatetime import datetime
 
 
-from ..forms.timer import NewTimer as NewTimerForm
-
 
 class NewTimer( ModalLogic ):
 

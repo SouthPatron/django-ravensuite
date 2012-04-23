@@ -1,12 +1,8 @@
-{% extends 'layouts/member-base-full.html' %}
+{% extends 'pages/org/timesheet/base.html' %}
 
 {% block tpl_ps_rely %}datatables ral jquery.tools{% endblock %}
 
 {% block tpl_si_section %}Timesheet{% endblock %}
-
-{% block tpl_bl_body_functions_page %}
-{% include 'pages/timesheet/menu_top.html' %}
-{% endblock  %}
 
 
 {% block tpl_bl_head_onready %}
@@ -20,7 +16,7 @@
 		"sDom" : 't<"bottom"ip><"clear">'
 	});
 
-	ral.html.custom.attach_fetch( '#id_ral_new_timer', 'timesheet.new.timer' );
+	ral.html.custom.attach_fetch( '#id_ral_new_timer', 'org.timesheet.new.timer' );
 
 {% endblock %}
 

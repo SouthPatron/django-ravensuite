@@ -1,7 +1,5 @@
 
 
-from views import index
-
 from org import *
 from client import *
 from project import *
@@ -21,4 +19,5 @@ from user import *
 
 from admin import *
 
+import timesheet
 
