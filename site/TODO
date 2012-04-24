@@ -1,0 +1,5 @@
+
+When migrating to production:
+
+	Update sp/wsgi.py for virtualenv
+

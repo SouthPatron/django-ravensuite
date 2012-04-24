@@ -1,6 +1,4 @@
-autom4te.cache
+/site/venv
+/site/sp/settings_local.py
 *.pyc
 *.swp
-/media
-*.resp
-/site/sp/settings_local.py
