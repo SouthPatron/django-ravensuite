@@ -49,7 +49,6 @@ MIDDLEWARE_CLASSES = (
 	'django.contrib.auth.middleware.AuthenticationMiddleware',
 	'django.middleware.transaction.TransactionMiddleware',
 	'django.contrib.messages.middleware.MessageMiddleware',
-	'django.contrib.flatpages.middleware.FlatpageFallbackMiddleware',
 )
 
 ROOT_URLCONF = 'sp.urls'
@@ -73,7 +72,6 @@ INSTALLED_APPS = (
 	'django.contrib.contenttypes',
 	'django.contrib.sessions',
 	'django.contrib.sites',
-	'django.contrib.flatpages',
 	'django.contrib.messages',
 
 	'django.contrib.admin',
@@ -84,7 +82,6 @@ INSTALLED_APPS = (
 	'common',
 
 	'sp.api',
-
 	'sp.account',
 	'sp.org',
 )
