@@ -3,14 +3,26 @@
 <div id="id_header">
 
 	<div id="global-links">
+		{% if organization %}
 		<ul>
-			<li class="{% active request '^/org' %}"><a href='{% url org-list %}'>Organizations</a></li>
+			<li class="{% active request '^/workflow' %}"><a href=''>Workflow</a></li>
+			<li class="{% active request '^/accounting' %}"><a href='{% url accounting-dashboard organization.refnum %}'>Accounting</a></li>
+			<li class="{% active request '^/contacts' %}"><a href=''>Contacts</a></li>
 
 			<li>&nbsp;</li>
 		</ul>
+		{% endif %}
 	</div>
 
-	<div id="header-options"><a href='{% url account-profile %}'>{{ request.user.email }}</a> | <a href='{% url logout %}'>logout</a></div>
+	<div id="header-options">
+		{% if organization %}
+		<a href='{% url account-org-single organization.refnum %}'>{{ organization.trading_name }}</a> |
+		{% else %}
+		<a href='{% url account-org-list %}'>Choose an Organization</a> |
+		{% endif %}
+		<a href='{% url account-profile %}'>{{ request.user.email }}</a> |
+		<a href='{% url logout %}'>logout</a>
+	</div>
 
 </div> <!-- #id_header -->
 

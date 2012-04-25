@@ -1,0 +1,17 @@
+{% extends 'modals/account/edit/organization.get.html' %}
+
+{% block dialog_title %}Create a new Organization{% endblock %}
+
+{% block dialog_post_title %}
+<form method="POST" action="{{ request.META.PATH_INFO }}">
+{% csrf_token %}
+<input type="hidden" name="meta.action" value="apply" />
+{% endblock %}
+
+
+{% block dialog_buttons %}
+<button type="button" class="ral_action_close">Cancel</button>
+<button type="button" class="ral_action_submit">Create Organization</button>
+{% endblock %}
+
+

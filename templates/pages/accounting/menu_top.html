@@ -1,0 +1,9 @@
+{% load active %}
+
+<div>
+<ul>
+	<li class="{% active request '^/accounting$' %}">{% trans "Dashboard" %}</li>
+	<li class="{% active request '/reporting' %}">{% trans "Reporting" %}</li>
+	<li class="{% active request '/settings' %}">{% trans "Settings" %}</li>
+</ul>
+</div>
