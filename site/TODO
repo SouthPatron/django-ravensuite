@@ -3,3 +3,8 @@ When migrating to production:
 
 	Update sp/wsgi.py for virtualenv
 
+------
+import site
+site.addsitedir('/srv/python-environments/saltycrane/lib/python2.5/site-packages')
+------
+
