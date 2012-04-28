@@ -2,6 +2,8 @@ from __future__ import unicode_literals
 
 from django.db import models
 
+from common.utils.enum import ChoicesEnum
+
 import account.models as account_models
 
 import uuid
@@ -33,9 +35,8 @@ class Account( models.Model ):
 
 	code = models.BigIntegerField()
 
-	name = models.CharField( min_length = 3, max_length = 256 )
+	name = models.CharField( max_length = 256 )
 	description = models.TextField( blank = True, default = '' )
-
 
 
 

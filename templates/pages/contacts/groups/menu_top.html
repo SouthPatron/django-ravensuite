@@ -1,0 +1,9 @@
+{% load active %}
+
+<div>
+<ul>
+	<li class="label-item {% active request '\/settings' %}">Settings</li>
+	<li class="{% active request '\/settings' %}">Chart of Accounts</li>
+</ul>
+</div>
+

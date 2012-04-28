@@ -1,6 +1,6 @@
 from django import forms
 
-from common.models import *
+from workflow.models import *
 
 
 

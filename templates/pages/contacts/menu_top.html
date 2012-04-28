@@ -1,0 +1,9 @@
+{% load active %}
+
+<div>
+<ul>
+	<li class="{% active request 'contacts/dashboard$' %}"><a href='{% url contacts-dashboard organization.refnum %}'>{% trans "Dashboard" %}</a></li>
+	<li class="{% active request 'contacts/contacts' %}"><a href='{% url contacts-contact-list organization.refnum %}'>{% trans "Contacts" %}</a></li>
+	<li class="{% active request 'contacts/groups' %}"><a href='{% url contacts-group-list organization.refnum %}'>{% trans "Groups" %}</a></li>
+</ul>
+</div>
