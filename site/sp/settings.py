@@ -82,11 +82,10 @@ INSTALLED_APPS = (
 	'common',
 	'account',
 
-#	'sp.accounting',
-#	'sp.api',
-#	'sp.workflow',
+	'sp.accounting',
+	'sp.api',
 	'sp.contacts',
-
+	'sp.workflow',
 )
 
 

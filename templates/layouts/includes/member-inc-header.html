@@ -5,7 +5,9 @@
 	<div id="global-links">
 		{% if organization %}
 		<ul>
-			<li class="{% active request '^/contacts' %}"><a href='{% url contacts-dashboard organization.refnum %}'>Contacts</a></li>
+			<li class="{% active request '^/workflow' %}"><a href=''>Workflow</a></li>
+			<li class="{% active request '^/accounting' %}"><a href='{% url accounting-dashboard organization.refnum %}'>Accounting</a></li>
+			<li class="{% active request '^/contacts' %}"><a href=''>Contacts</a></li>
 
 			<li>&nbsp;</li>
 		</ul>
