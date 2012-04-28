@@ -1,4 +1,5 @@
 /site/venv
+/site/tobefixed.pl
 /site/sp/settings_local.py
 *.pyc
 *.swp
