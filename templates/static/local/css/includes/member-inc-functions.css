@@ -29,11 +29,12 @@
 #page-functions-proper ul li
 {
 	float: left;
-	margin: 0px 0px;
+	margin: 0px 5px;
 	background: #7e7e7e;
 	padding: 8px 20px 10px 20px;
 	border-top: 1px solid #e0e0e0;
 	border-left: 1px solid #e0e0e0;
+	border-right: 1px solid #e0e0e0;
 	background-color: #e2efe2;
 }
 
@@ -44,6 +45,7 @@
 
 	border-top: 1px solid #e0e0e0;
 	border-left: 1px solid #e0e0e0;
+	border-right: 1px solid #e0e0e0;
 }
 
 #page-functions-proper ul li a

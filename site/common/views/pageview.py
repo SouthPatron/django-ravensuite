@@ -29,7 +29,6 @@ class PageView( View ):
 
 	# ************** Probably want to override
 
-
 	def get_extra( self, request, *args, **kwargs ):
 		return None
 

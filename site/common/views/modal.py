@@ -93,8 +93,10 @@ class ModalView( View ):
 	# ************** Thunking operation
 
 	def _thunk( self, request, modal_name, dmap, *args, **kwargs ):
+		# TODO: This is hardcoded for SP module. So maybe work it out.
 		parts = modal_name.split('.')
-		parts.insert( 1, 'modals' )
+		parts.insert( 0, 'sp' )
+		parts.insert( 2, 'modals' )
 		full_modal_path = '.'.join( parts )
 
 		logic_class = ClassLoader.load( full_modal_path )

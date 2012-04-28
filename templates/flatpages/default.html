@@ -1,0 +1,25 @@
+{% extends 'layouts/home-base-full.html' %}
+
+{% block tpl_si_title %}{{ flatpage.title }}{% endblock %}
+
+{% load flatpages %}
+{% load evaluate %}
+
+{% block tpl_bl_body_content_center %}
+{% evaluate flatpage.content %}
+
+{% comment %}
+{% get_flatpages for request.user as flatpages %}
+{% get_flatpages '/about/' as flatpages %}
+{% get_flatpages as flatpages %}
+<ul>
+	{% for page in flatpages %}
+	<li><a href="{{ page.url }}">{{ page.title }}</a></li>
+	{% endfor %}
+</ul>
+{% endcomment %}
+
+{% endblock %}
+
+
+
