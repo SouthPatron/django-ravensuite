@@ -57,45 +57,61 @@ ral.version = '1.0.0';
 
 ral.html = {}
 
-ral.html.fetchObject = function( url, pdata, success ) {
-	jQuery.get( url, pdata, function(data, textStatus, x) {
-		success( data );
+ral.html.fetchObject = function( url, pdata, success, error ) {
+	jQuery.ajax( {
+		type : 'GET',
+		url : url,
+		timeout : 20000,
+		async : true,
+		data : pdata,
+		success : function( data, textStatus, xhr ) {
+			success( data );
+		},
+		error : error
 	});
 }
 
-ral.html.applyObject = function( url, pdata, success ) {
-	jQuery.post( url, pdata, function(data, textStatus, x) {
-		success( data );
+ral.html.applyObject = function( url, pdata, success, error ) {
+	jQuery.ajax( {
+		type : 'POST',
+		url : url,
+		timeout : 20000,
+		async : true,
+		data : pdata,
+		success : function( data, textStatus, xhr ) {
+			success( data );
+		},
+		error : error
 	});
 }
 
 ral.html.createContainer = function( url ) {
 	var digest = Crypto.MD5( url );
 
-	$(document).find( "#" + digest ).detach();
+	jQuery(document).find( "#" + digest ).detach();
 
 	var newdiv = jQuery( '<div id="' + digest + '" class="ral_container"><div class="ral_background">&nbsp;</div><div class="ral_box"></div>' );
 
-	$(document).find( "body" ).append( newdiv );
+	jQuery(document).find( "body" ).append( newdiv );
 
 	return newdiv;
 }
 
 ral.html.destroyContainer = function( url ) {
 	var digest = Crypto.MD5( url );
-	var mybox = $(document).find( "#" + digest ).detach();
+	var mybox = jQuery(document).find( "#" + digest ).detach();
 }
 
 ral.html.showContainer = function( url ) {
 	var digest = Crypto.MD5( url );
 
-	$(document).find( "#" + digest ).find( ".ral_box" ).css( "visibility", "visible" );
+	jQuery(document).find( "#" + digest ).find( ".ral_box" ).css( "visibility", "visible" );
 }
 
 ral.html.updateContainer = function( url, newhtml ) {
 	var digest = Crypto.MD5( url );
 
-	var mybox = $(document).find( "#" + digest ).find( ".ral_box" );
+	var mybox = jQuery(document).find( "#" + digest ).find( ".ral_box" );
 
 	var newcont = jQuery( newhtml );
 
@@ -106,21 +122,21 @@ ral.html.updateContainer = function( url, newhtml ) {
 
 	mybox.css( 'margin-left' , mleft ).css( 'margin-top', mtop );
 
-	var wleft = "" + ($(window).width() / 2) + "px";
-	var wtop = "" + ($(window).height() / 2) + "px";
+	var wleft = "" + (jQuery(window).width() / 2) + "px";
+	var wtop = "" + (jQuery(window).height() / 2) + "px";
 	
 	mybox.css( 'top', wtop ).css( 'left', wleft );
 }
 
 ral.html.resizeContainerContent = function( url ) {
 	var digest = Crypto.MD5( url );
-	var mybox = $(document).find( "#" + digest ).find( ".ral_box" );
+	var mybox = jQuery(document).find( "#" + digest ).find( ".ral_box" );
 
 	if ( mybox ) {
 		// Set Margin if buttonbar is present
 		var botmargin = 0;
 		mybox.find( ".ral_dialog_buttonbar" ).each( function() {
-			botmargin += $(this).outerHeight( true );
+			botmargin += jQuery(this).outerHeight( true );
 		});
 		mybox.find( ".ral_dialog_content" ).css( 'margin-bottom', botmargin + 'px' );
 
@@ -128,38 +144,48 @@ ral.html.resizeContainerContent = function( url ) {
 		var availableHeight = mybox.height();
 
 		mybox.find( ".ral_dialog_titlebar" ).each( function() {
-			availableHeight -= $(this).outerHeight( true );
+			availableHeight -= jQuery(this).outerHeight( true );
 		});
 
 		mybox.find( ".ral_dialog_buttonbar" ).each( function() {
-			availableHeight -= $(this).outerHeight( true );
+			availableHeight -= jQuery(this).outerHeight( true );
 		});
 
 		mybox.find( ".ral_dialog_content" ).height( availableHeight  );
 	}
 }
 
-ral.html.fetchContainer = function( url, pdata, success ) {
-	ral.html.fetchObject( url, pdata, function( obj ) {
-		ral.html.updateContainer( url, obj );
-		ral.html.resizeContainerContent( url );
-		success( url );
-	});
+ral.html.fetchContainer = function( url, pdata, success, error ) {
+	ral.html.fetchObject( url, pdata,
+		function( obj ) {
+			ral.html.updateContainer( url, obj );
+			ral.html.resizeContainerContent( url );
+			success( url );
+		},
+		function( obj ) {
+			error( url );
+		}
+	);
 }
 
-ral.html.applyContainer = function( url, pdata, success ) {
-	ral.html.applyObject( url, pdata, function( obj ) {
-		ral.html.updateContainer( url, obj );
-		ral.html.resizeContainerContent( url );
-		success( url );
-	});
+ral.html.applyContainer = function( url, pdata, success, error ) {
+	ral.html.applyObject( url, pdata,
+		function( obj ) {
+			ral.html.updateContainer( url, obj );
+			ral.html.resizeContainerContent( url );
+			success( url );
+		},
+		function( obj ) {
+			error( url );
+		}
+	);
 }
 
 
 
 ral.html.hookContainer = function( url ) {
 	var digest = Crypto.MD5( url );
-	var mybox = $(document).find( "#" + digest ).find( ".ral_box" );
+	var mybox = jQuery(document).find( "#" + digest ).find( ".ral_box" );
 
 	// Draggable
 
@@ -177,7 +203,7 @@ ral.html.hookContainer = function( url ) {
 
 		mybox.find( ".ral_dialog_buttonbar button" ).attr("disabled", "true");
 
-		var newdata = $(this).serializeArray();
+		var newdata = jQuery(this).serializeArray();
 
 		ral.html.applyContainer( url, newdata, function( url ) {
 			ral.html.showContainer( url );
@@ -201,7 +227,7 @@ ral.html.hookContainer = function( url ) {
 
 ral.html.getContainer = function( url ) {
 	var digest = Crypto.MD5( url );
-	var mybox = $(document).find( "#" + digest ).first();
+	var mybox = jQuery(document).find( "#" + digest ).first();
 	return mybox;
 }
 
@@ -210,7 +236,7 @@ ral.html.keyUpHook = function( e ) {
 	{
 		var url = e.data.url;
 		ral.html.destroyContainer( url );
-		$(document).unbind( "keyup", ral.html.keyUpHook );
+		jQuery(document).unbind( "keyup", ral.html.keyUpHook );
 	} 
 }
 
@@ -220,12 +246,18 @@ ral.html.fetch = function( url, pdata ) {
 
 	var newdiv = ral.html.createContainer( url );
 
-	ral.html.fetchContainer( url, pdata, function( url ) {
-		ral.html.showContainer( url );
-		ral.html.hookContainer( url );
+	ral.html.fetchContainer( url, pdata,
+		function( url ) {
+			ral.html.showContainer( url );
+			ral.html.hookContainer( url );
 
-		$(document).keyup( { 'url' : url }, ral.html.keyUpHook );
-	});
+			jQuery(document).keyup( { 'url' : url }, ral.html.keyUpHook );
+		},
+		function( url ) {
+			alert( 'Error fetching remote object.' );
+			ral.html.destroyContainer( url );
+		}
+	);
 }
 
 ral.html.post = function( url, pdata ) {
@@ -234,17 +266,20 @@ ral.html.post = function( url, pdata ) {
 
 	var newdiv = ral.html.createContainer( url );
 
-	ral.html.applyContainer( url, pdata, function( url ) {
-		ral.html.showContainer( url );
-		ral.html.hookContainer( url );
+	ral.html.applyContainer( url, pdata,
+		function( url ) {
+			ral.html.showContainer( url );
+			ral.html.hookContainer( url );
 
-		$(document).keyup( { 'url' : url }, ral.html.keyUpHook );
-	});
+			jQuery(document).keyup( { 'url' : url }, ral.html.keyUpHook );
+		},
+		function( url ) {
+			alert( 'Error posting remote object.' );
+			ral.html.destroyContainer( url );
+		}
+	);
 }
 
-ral.html.load = function( url, pdata ) {
-	ral.html.fetch( url, pdata );
-}
 
 
 

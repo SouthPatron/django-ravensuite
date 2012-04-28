@@ -128,22 +128,22 @@ var afes = new function() {
 
 	this.stubs.ih.activate = function( event ) {
 		var opset = afes.stubs.ih._cleanOpset( event.data[ 'opset' ] );
-		return opset.functional.activate( $(this), event, opset );
+		return opset.functional.activate( jQuery(this), event, opset );
 	}
 
 	this.stubs.ih.update = function( event ) {
 		var opset = afes.stubs.ih._cleanOpset( event.data[ 'opset' ] );
-		return opset.functional.update( $(this), event, opset );
+		return opset.functional.update( jQuery(this), event, opset );
 	}
 
 	this.stubs.ih.cancel = function( event ) {
 		var opset = afes.stubs.ih._cleanOpset( event.data[ 'opset' ] );
-		return opset.functional.cancel( $(this), event, opset );
+		return opset.functional.cancel( jQuery(this), event, opset );
 	}
 
 	this.stubs.ih.keystroke = function( event ) {
 		var opset = afes.stubs.ih._cleanOpset( event.data[ 'opset' ] );
-		return opset.functional.keystroke( $(this), event, opset );
+		return opset.functional.keystroke( jQuery(this), event, opset );
 	}
 
 
@@ -159,7 +159,7 @@ var afes = new function() {
 	this.ih.text = function() {}
 	
 	this.ih.text.activate = function( elem, event, opset ) {
-		var dsval = $(elem).html();
+		var dsval = jQuery(elem).html();
 		opset.scratchpad.original_value = dsval;
 
 		var callbacks = opset.settings.callbacks;
@@ -170,7 +170,7 @@ var afes = new function() {
 			
 			if ( rc === false )
 			{
-				$(elem).one(
+				jQuery(elem).one(
 					'click',
 					{ 'opset' : opset },
 					opset.functional.activate
@@ -181,9 +181,9 @@ var afes = new function() {
 			if ( rc !== true ) dsval = rc;
 		}
 
-		var sam = $( "<input/>", { text: "text", value: dsval } );
+		var sam = jQuery( "<input/>", { text: "text", value: dsval } );
 
-		$(elem).empty().append( sam );
+		jQuery(elem).empty().append( sam );
 
 		sam.focus()
 			.focusout( { 'opset' : opset }, afes.stubs.ih.update )
@@ -195,7 +195,7 @@ var afes = new function() {
 
 
 	this.ih.text.update = function( elem, event, opset ) {
-		var dsval = $(elem).val();
+		var dsval = jQuery(elem).val();
 		var callbacks = opset.settings.callbacks;
 
 		if ( callbacks.onUpdate )
@@ -209,7 +209,7 @@ var afes = new function() {
 
 			if ( rc === false )
 			{
-				$(elem).one( 'click', { 'opset' : opset }, afes.stubs.ih.activate);
+				jQuery(elem).one( 'click', { 'opset' : opset }, afes.stubs.ih.activate);
 				return false;
 			}
 
@@ -218,9 +218,9 @@ var afes = new function() {
 
 		// Update forms entries, if specified.
 		if ( opset.settings.behaviour.form_update )
-			$( opset.settings.behaviour.form_update ).val( dsval );
+			jQuery( opset.settings.behaviour.form_update ).val( dsval );
 
-		var par = $(elem).parent();
+		var par = jQuery(elem).parent();
 
 		par
 			.empty()
@@ -234,7 +234,7 @@ var afes = new function() {
 	}
 
 	this.ih.text.cancel = function( elem, event, opset ) {
-		var dsval = $(elem).val();
+		var dsval = jQuery(elem).val();
 		var callbacks = opset.settings.callbacks;
 
 		if ( callbacks.onCancel )
@@ -243,12 +243,12 @@ var afes = new function() {
 
 			if ( rc === false )
 			{
-				$(elem).one( 'click', { 'opset' : opset }, afes.stubs.ih.activate);
+				jQuery(elem).one( 'click', { 'opset' : opset }, afes.stubs.ih.activate);
 				return false;
 			}
 		}
 
-		var par = $(elem).parent();
+		var par = jQuery(elem).parent();
 
 		par
 			.empty()
@@ -307,7 +307,7 @@ var afes = new function() {
 					rc = opset.settings.behaviour.next.call( par, event );
 				}
 
-				if ( rc !== false ) $( rc ).click();
+				if ( rc !== false ) jQuery( rc ).click();
 			}
 
 			return dc;
@@ -340,14 +340,14 @@ var afes = new function() {
 	this.ih.currency = function() {}
 	
 	this.ih.currency.activate = function( elem, event, opset ) {
-		var dsval = afes.numberize( $(elem).html() );
-		$(elem).html( dsval );
+		var dsval = afes.numberize( jQuery(elem).html() );
+		jQuery(elem).html( dsval );
 		return afes.ih.text.activate( elem, event, opset );
 	}
 
 	this.ih.currency.update = function( elem, event, opset ) {
-		var dsval = afes.numberize( $(elem).val() );
-		$(elem).val( dsval );
+		var dsval = afes.numberize( jQuery(elem).val() );
+		jQuery(elem).val( dsval );
 		return afes.ih.text.update( elem, event, opset );
 	}
 
@@ -358,7 +358,7 @@ var afes = new function() {
 	this.ih.select = function() {}
 	
 	this.ih.select.activate = function( elem, event, opset ) {
-		var dsval = $(elem).html();
+		var dsval = jQuery(elem).html();
 		opset.scratchpad.original_value = dsval;
 
 		var callbacks = opset.settings.callbacks;
@@ -369,7 +369,7 @@ var afes = new function() {
 
 			if ( rc === false )
 			{
-				$(elem).one(
+				jQuery(elem).one(
 					'click',
 					{ 'opset' : opset },
 					opset.functional.activate
@@ -380,11 +380,11 @@ var afes = new function() {
 			if ( rc !== true ) dsval = rc;
 		}
 
-		var sam = $( "<select/>" );
+		var sam = jQuery( "<select/>" );
 
 		for ( key in opset.settings.options )
 		{
-			var opsie = $( "<option/>", { value : opset.settings.options[key] } );
+			var opsie = jQuery( "<option/>", { value : opset.settings.options[key] } );
 
 			if ( dsval == key )
 				opsie.attr( 'selected', 1 );
@@ -393,7 +393,7 @@ var afes = new function() {
 			sam.append( opsie );
 		}
 
-		$(elem).empty().append( sam );
+		jQuery(elem).empty().append( sam );
 
 		sam.focus()
 			.focusout( { 'opset' : opset }, afes.stubs.ih.update )
@@ -404,7 +404,7 @@ var afes = new function() {
 
 
 	this.ih.select.update = function( elem, event, opset ) {
-		var dsval = $(elem).val();
+		var dsval = jQuery(elem).val();
 		var callbacks = opset.settings.callbacks;
 
 		if ( callbacks.onUpdate )
@@ -419,7 +419,7 @@ var afes = new function() {
 
 			if ( rc === false )
 			{
-				$(elem).one( 'click', { 'opset' : opset }, afes.stubs.ih.activate);
+				jQuery(elem).one( 'click', { 'opset' : opset }, afes.stubs.ih.activate);
 				return false;
 			}
 
@@ -428,10 +428,10 @@ var afes = new function() {
 
 		// Update forms entries, if specified.
 		if ( opset.settings.behaviour.form_update )
-			$( opset.settings.behaviour.form_update ).val( dsval );
+			jQuery( opset.settings.behaviour.form_update ).val( dsval );
 
-		var par = $(elem).parent();
-		var text = $(elem).find(":selected").html();
+		var par = jQuery(elem).parent();
+		var text = jQuery(elem).find(":selected").html();
 
 		par
 			.empty()
@@ -452,22 +452,22 @@ var afes = new function() {
 	this.ih.date = function() {}
 	
 	this.ih.date.activate = function( elem, event, opset ) {
-		var dsval = Date.parse( $(elem).html() );
+		var dsval = Date.parse( jQuery(elem).html() );
 		if ( dsval == null ) dsval = Date.today();
 		dsval = dsval.toString( "d MMM yyyy" );
-		$(elem).html( dsval );
+		jQuery(elem).html( dsval );
 		return afes.ih.text.activate( elem, event, opset );
 	}
 
 	this.ih.date.update = function( elem, event, opset ) {
 
-		var gooba = $(elem).val();
+		var gooba = jQuery(elem).val();
 
 		var dsval = Date.parse( gooba );
 		if ( dsval == null ) dsval = Date.parse( opset.scratchpad.original_value );
 		dsval = dsval.toString( "d MMM yyyy" );
 
-		$(elem).val( dsval );
+		jQuery(elem).val( dsval );
 		return afes.ih.text.update( elem, event, opset );
 	}
 
@@ -487,10 +487,10 @@ var afes = new function() {
 			settings : thesettings
 		};
 
-		$( elem ).one( 'click', { 'opset' : opset }, afes.stubs.ih.activate );
+		jQuery( elem ).one( 'click', { 'opset' : opset }, afes.stubs.ih.activate );
 
-		$( elem ).addClass( 'afes-input' );
-		$( elem ).addClass( 'afes-input-type-text' );
+		jQuery( elem ).addClass( 'afes-input' );
+		jQuery( elem ).addClass( 'afes-input-type-text' );
 
 		return afes;
 	}
@@ -507,10 +507,10 @@ var afes = new function() {
 			settings : thesettings
 		};
 
-		$( elem ).one( 'click', { 'opset' : opset }, afes.stubs.ih.activate );
+		jQuery( elem ).one( 'click', { 'opset' : opset }, afes.stubs.ih.activate );
 
-		$( elem ).addClass( 'afes-input' );
-		$( elem ).addClass( 'afes-input-type-currency' );
+		jQuery( elem ).addClass( 'afes-input' );
+		jQuery( elem ).addClass( 'afes-input-type-currency' );
 
 		return afes;
 	}
@@ -527,10 +527,10 @@ var afes = new function() {
 			settings : thesettings
 		};
 
-		$( elem ).one( 'click', { 'opset' : opset }, afes.stubs.ih.activate );
+		jQuery( elem ).one( 'click', { 'opset' : opset }, afes.stubs.ih.activate );
 
-		$( elem ).addClass( 'afes-input' );
-		$( elem ).addClass( 'afes-input-type-select' );
+		jQuery( elem ).addClass( 'afes-input' );
+		jQuery( elem ).addClass( 'afes-input-type-select' );
 
 		return afes;
 	}
@@ -549,10 +549,10 @@ var afes = new function() {
 		};
 
 
-		$( elem ).one( 'click', { 'opset' : opset }, afes.stubs.ih.activate );
+		jQuery( elem ).one( 'click', { 'opset' : opset }, afes.stubs.ih.activate );
 
-		$( elem ).addClass( 'afes-input' );
-		$( elem ).addClass( 'afes-input-type-date' );
+		jQuery( elem ).addClass( 'afes-input' );
+		jQuery( elem ).addClass( 'afes-input-type-date' );
 		return afes;
 	}
 
