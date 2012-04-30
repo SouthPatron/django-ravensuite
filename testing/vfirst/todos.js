@@ -6,6 +6,13 @@
 // Load the application once the DOM is ready, using `jQuery.ready`:
 $(function(){
 
+	_.templateSettings = {
+		interpolate : /\{\{([\s\S]+?)\}\}/g,
+		evaluate : /\{%([\s\S]+?)%\}/g,
+		escape : /\{\-([\s\S]+?)\-\}/g
+	};
+
+
 	// Todo Model
 	// ----------
 
@@ -239,7 +246,10 @@ $(function(){
 
 	});
 
+
+
 	// Finally, we kick things off by creating the **App**.
 	var App = new AppView;
+
 
 });
