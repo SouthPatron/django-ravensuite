@@ -5,8 +5,8 @@ from django.views.generic.base import View
 from django.views.decorators.csrf import csrf_exempt
 from django.http import HttpResponse, Http404, HttpResponseForbidden
 
-from common.utils.class_loader import ClassLoader
-from common.serializers.serializer import Serializer
+from sptools.utils.class_loader import ClassLoader
+from sptools.serializers.serializer import Serializer
 
 import collections
 import json

@@ -3,8 +3,7 @@ import os.path
 from django import template
 from django.conf import settings
 
-from common.busobj.org.factory import Factory
-from common.utils.enum import enum
+from sptools.utils.enum import enum
 
 register = template.Library()
 

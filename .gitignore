@@ -1,5 +1,7 @@
 /site/venv
 /site/tobefixed.pl
 /site/sp/settings_local.py
+/dist
+/django_sptools.egg-info
 *.pyc
 *.swp
