@@ -1,4 +1,6 @@
 
+import datetime
+import decimal
 
 from django.utils.encoding import smart_unicode, is_protected_type
 
@@ -35,6 +37,30 @@ class Serializer( Base ):
 	def handle_kvp( self, key, value ):
 		self._dumps( key, value )
 
+	def _handle(self, o):
+		# See "Date Time String Format" in the ECMA-262 specification.
+		if isinstance(o, datetime.datetime):
+			r = o.isoformat()
+			if o.microsecond:
+				r = r[:23] + r[26:]
+			if r.endswith('+00:00'):
+				r = r[:-6] + 'Z'
+			return r
+		elif isinstance(o, datetime.date):
+			return o.isoformat()
+		elif isinstance(o, datetime.time):
+			if is_aware(o):
+				raise ValueError("JSON can't represent timezone-aware times.")
+			r = o.isoformat()
+			if o.microsecond:
+				r = r[:12]
+			return r
+		elif isinstance(o, decimal.Decimal):
+			return str(o)
+
+		return o
+
+
 	def handle_field( self, obj, field, name = None):
 		value = field._get_val_from_obj(obj)
 		newval = value
@@ -44,7 +70,9 @@ class Serializer( Base ):
 		else:
 			newval = field.value_to_string(obj)
 
-		self._dumps( name or field.name, newval )
+		newvy = self._handle( newval )
+
+		self._dumps( name or field.name, newvy )
 
 
 	def handle_fk_field(self, obj, field):
