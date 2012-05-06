@@ -1,9 +1,0 @@
-{% load sourcedoc %}
-{% get_document_obj instance as doc %}
-<div class="itol-payment-label">
-{% if doc.getTotals.getUnallocated == 0 %}
-<div class="paid">PAID</div>
-{% else %}
-<div class="unpaid">PAYMENT PENDING</div>
-{% endif %}
-</div>
