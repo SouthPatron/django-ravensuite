@@ -11,7 +11,7 @@ assets = {
 				'scripts/handlebars.js',
 				'scripts/moment.min.js',
 				'scripts/oss.js',
-				'scripts/bootstrap/js/bootstrap.js',
+				'bootstrap/js/bootstrap.js',
 				'scripts/bootbox.min.js',
 				'scripts/datepicker/js/bootstrap-datepicker.js',
 				'scripts/util.js',
