@@ -1,13 +1,13 @@
 ===========
-django-sptools
+django-ravensuite
 ===========
 
-django-sptools is a common set of tools used within SouthPatron.
+django-ravensuite is a set of common utilities used by all apps.
 
 Installation
 ============
 - From pypi:
-    $pip install django-sptools
+    $pip install django-ravensuite
 
 - From source:
     $python setup.py install
@@ -20,8 +20,6 @@ Use it like crazy.
 RUN   
 ===
 $python manage.py runserver
-That's it, the last command should start a local server on port 8000, now you can 
-open your browser and go to 127.0.0.1:8000/djide to edit your projects apps.
 
 TODOs and BUGS
 ==============
