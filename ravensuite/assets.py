@@ -1,6 +1,6 @@
 
 assets = {
-	'ravensuite-core.js' :	{
+	'ravensuite-core.min.js' :	{
 		'files' : [
 				'scripts/json2.js',
 				'scripts/jquery.js',
