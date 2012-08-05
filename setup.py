@@ -2,11 +2,11 @@ from setuptools import setup
 
 setup(
 		name = 'django-ravensuite',
-		version = '0.2.3',
-		author = 'SouthPatron',
-		author_email = 'support@southpatron.com',
+		version = '0.2.4',
+		author = 'SMK Software',
+		author_email = 'support@smksoftware.com',
 		packages = [ 'ravensuite', ],
-		url = 'http://www.southpatron.com',
+		url = 'http://www.smksoftware.com',
 		license = 'LICENSE.txt',
 		description = 'Ravensuite',
 		long_description=open('README.txt').read(),
