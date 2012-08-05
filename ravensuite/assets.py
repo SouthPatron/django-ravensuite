@@ -2,26 +2,26 @@
 assets = {
 	'ravensuite-core.min.js' :	{
 		'files' : [
-				'scripts/json2.js',
-				'scripts/jquery.js',
-				'scripts/underscore.js',
-				'scripts/backbone.js',
-				'scripts/backbone-tastypie.js',
-				'scripts/backbone-relational.js',
-				'scripts/handlebars.js',
-				'scripts/moment.min.js',
-				'scripts/oss.js',
-				'bootstrap/js/bootstrap.js',
-				'scripts/bootbox.min.js',
-				'scripts/datepicker/js/bootstrap-datepicker.js',
-				'scripts/util.js',
+				'scripts/ravensuite/json2.js',
+				'scripts/ravensuite/jquery.js',
+				'scripts/ravensuite/underscore.js',
+				'scripts/ravensuite/backbone.js',
+				'scripts/ravensuite/backbone-tastypie.js',
+				'scripts/ravensuite/backbone-relational.js',
+				'scripts/ravensuite/handlebars.js',
+				'scripts/ravensuite/moment.min.js',
+				'scripts/ravensuite/oss.js',
+				'scripts/ravensuite/bootstrap/js/bootstrap.js',
+				'scripts/ravensuite/bootbox.min.js',
+				'scripts/ravensuite/datepicker/js/bootstrap-datepicker.js',
+				'scripts/ravensuite/util.js',
 		],
 	},
 
 	'ravensuite-core.css' : {
 		'files' : [
-			'bootstrap/css/bootstrap.css',
-			'scripts/datepicker/css/datepicker.css',
+			'scripts/ravensuite/bootstrap/css/bootstrap.css',
+			'scripts/ravensuite/datepicker/css/datepicker.css',
 		],
 	},
 }
