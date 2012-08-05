@@ -5,7 +5,7 @@ from django.conf import settings
 register = template.Library()
 
 @register.simple_tag
-def raven( request, base ):
+def raven_include_javascript( request, base ):
 
 	if settings.DEBUG is True:
 		return '<!-- DEBUG IS TRUE ' + base + ' -->'
