@@ -10,10 +10,10 @@ def raven_js():
 	rc = '<!-- raven_js: start, debug mode {} -->'.format( settings.DEBUG )
 
 	if settings.DEBUG is True:
-		for fname in assets[ 'ravensuite-core.min.js' ][ 'files' ]:
+		for fname in assets[ 'ravensuite-core' ][ 'files' ]:
 			rc = rc + '<script type="text/javascript" src="{}{}"></script>'.format( settings.STATIC_URL, fname )
 	else:
-		rc = rc + '<script type="text/javascript" src="{}{}"></script>'.format( settings.STATIC_URL, "ravensuite-core.min.js" )
+		rc = rc + '<script type="text/javascript" src="{}{}{}"></script>'.format( settings.STATIC_URL, "ravensuite/", assets[ 'ravensuite-core' ][ 'output' ] )
 
 	rc = rc + '<!-- raven_js: end -->'
 	return rc
@@ -23,7 +23,7 @@ def raven_js():
 def raven_css():
 	rc = '<!-- raven_css: start, debug mode {} -->'.format( settings.DEBUG )
 
-	for fname in assets[ 'ravensuite-core.css' ][ 'files' ]:
+	for fname in assets[ 'ravensuite-css' ][ 'files' ]:
 		rc = rc + '<link rel="stylesheet" href="{}{}" media="screen" />'.format( settings.STATIC_URL, fname )
 			
 	rc = rc + '<!-- raven_css: end -->'

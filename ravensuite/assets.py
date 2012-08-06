@@ -1,6 +1,7 @@
 
 assets = {
-	'ravensuite-core.min.js' :	{
+	'ravensuite-core' :	{
+		'output' : 'ravensuite-core.min.js',
 		'files' : [
 				'scripts/ravensuite/json2.js',
 				'scripts/ravensuite/jquery.js',
@@ -18,7 +19,7 @@ assets = {
 		],
 	},
 
-	'ravensuite-core.css' : {
+	'ravensuite-css' : {
 		'files' : [
 			'scripts/ravensuite/bootstrap/css/bootstrap.css',
 			'scripts/ravensuite/datepicker/css/datepicker.css',
