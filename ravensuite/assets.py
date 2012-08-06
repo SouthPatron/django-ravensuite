@@ -1,7 +1,10 @@
 
+import pkg_resources
+version = pkg_resources.require( 'django-ravensuite' )[0].version
+
 assets = {
 	'ravensuite-core' :	{
-		'output' : 'ravensuite-core.min.js',
+		'output' : 'ravensuite-core-{}.min.js'.format( version ),
 		'files' : [
 				'scripts/ravensuite/json2.js',
 				'scripts/ravensuite/jquery.js',
