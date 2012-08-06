@@ -13,7 +13,7 @@ def raven_js():
 		for fname in assets[ 'ravensuite-core' ][ 'files' ]:
 			rc = rc + '<script type="text/javascript" src="{}{}"></script>'.format( settings.STATIC_URL, fname )
 	else:
-		rc = rc + '<script type="text/javascript" src="{}{}{}"></script>'.format( settings.STATIC_URL, "ravensuite/", assets[ 'ravensuite-core' ][ 'output' ] )
+		rc = rc + '<script type="text/javascript" src="{}{}{}"></script>'.format( settings.STATIC_URL, "scripts/ravensuite/", assets[ 'ravensuite-core' ][ 'output' ] )
 
 	rc = rc + '<!-- raven_js: end -->'
 	return rc
