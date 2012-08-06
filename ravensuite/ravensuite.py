@@ -19,22 +19,21 @@ def minify_and_concat( target, files ):
 
 
 
-def deploy_target( target, asset ):
+def build_asset( destdir, asset ):
 	newlist = [ os.path.join( os.path.dirname( os.path.realpath( __file__ ) ), 'static', fname ) for fname in assets.assets[ asset ]['files'] ]
 	minify_and_concat(
-		os.path.join( target, assets.assets[ asset ][ 'output' ] ),
+		os.path.join( destdir, assets.assets[ asset ][ 'output' ] ),
 		newlist
 	)
 
 
 def build():
 	destdir = os.path.join(
-				os.path.realpath( __file__ ),
-				'static',
+				settings.STATIC_ROOT,
 				'scripts/ravensuite'
 			)
 
-	deploy_target( destdir, 'ravensuite-core' )
+	build_asset( destdir, 'ravensuite-core' )
 
 
 
