@@ -28,7 +28,11 @@ def deploy_target( target, asset ):
 
 
 def build():
-	destdir = os.path.join( settings.STATIC_URL, 'scripts/ravensuite' )
+	destdir = os.path.join(
+				os.path.realpath( __file__ ),
+				'static',
+				'scripts/ravensuite'
+			)
 
 	deploy_target( destdir, 'ravensuite-core' )
 
