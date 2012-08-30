@@ -1,6 +1,6 @@
 
 import pkg_resources
-version = pkg_resources.require( 'django-ravensuite' )[0].version
+version = pkg_resources.require( 'ravensuite' )[0].version
 
 assets = {
 	'ravensuite-core' :	{
