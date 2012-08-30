@@ -1,13 +1,13 @@
 ===========
-ravensuite
+django-ravensuite
 ===========
 
-ravensuite is a set of common utilities used by all apps.
+django-ravensuite is a set of common utilities used by all apps.
 
 Installation
 ============
 - From pypi:
-    $pip install ravensuite
+    $pip install django-ravensuite
 
 - From source:
     $python setup.py install
