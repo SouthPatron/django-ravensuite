@@ -2,7 +2,7 @@ from setuptools import setup
 
 setup(
 		name = 'ravensuite',
-		version = '0.2.12',
+		version = '0.2.13',
 		author = 'SMK Software',
 		author_email = 'support@smksoftware.com',
 		packages = [ 'ravensuite', ],
