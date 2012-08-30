@@ -1,8 +1,8 @@
 from setuptools import setup
 
 setup(
-		name = 'ravensuite',
-		version = '0.2.13',
+		name = 'django-ravensuite',
+		version = '0.2.14',
 		author = 'SMK Software',
 		author_email = 'support@smksoftware.com',
 		packages = [ 'ravensuite', ],

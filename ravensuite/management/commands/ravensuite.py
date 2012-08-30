@@ -4,7 +4,7 @@ from django.conf import settings
 
 class Command(BaseCommand):
 	args = '<function_name> [ application application ... ]'
-	help = 'Runs the function name from ravensuite.py in each - or all if none - specified application'
+	help = 'Runs the function name from rs.py in each - or all if none - specified application'
 
 	def handle(self, *args, **options):
 
@@ -20,7 +20,7 @@ class Command(BaseCommand):
 
 		for app in applist:
 			try:
-				name = app + '.ravensuite'
+				name = app + '.rs'
 				mod = __import__( name, fromlist=[] )
 				components = name.split( '.' )
 				components.append( fname )
