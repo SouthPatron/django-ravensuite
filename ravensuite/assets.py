@@ -19,6 +19,8 @@ assets = {
 				'scripts/ravensuite/bootbox.min.js',
 				'scripts/ravensuite/datepicker/js/bootstrap-datepicker.js',
 				'scripts/ravensuite/util.js',
+
+				'scripts/ravensuite/highcharts/js/highcharts.js',
 		],
 	},
 
