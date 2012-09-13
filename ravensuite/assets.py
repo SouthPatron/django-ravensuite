@@ -38,7 +38,7 @@ assets = {
 			'datepicker' : 'scripts/ravensuite/datepicker/js/bootstrap-datepicker.js',
 			'util' : 'scripts/ravensuite/util.js',
 			'highcharts' : 'scripts/ravensuite/highcharts/js/highcharts.src.js',
-		}
+		},
 		'min_files' : {
 			'highcharts' : 'scripts/ravensuite/highcharts/js/highcharts.js',
 		},
