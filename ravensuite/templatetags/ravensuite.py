@@ -11,7 +11,9 @@ def raven_js():
 	rc = '<!-- raven_js: start, debug mode {} -->'.format( settings.DEBUG )
 
 	if settings.DEBUG is True:
-		for fname in assets[ 'ravensuite-core' ][ 'files' ]:
+
+		for jsname in assets[ 'ravensuite-core' ][ 'order' ]:
+			fname = assets['ravensuite-core' ][ 'max_files' ][ jsname ]
 			rc = rc + '<script type="text/javascript" src="{}{}"></script>'.format( settings.STATIC_URL, fname )
 	else:
 		rc = rc + '<script type="text/javascript" src="{}{}{}"></script>'.format(
