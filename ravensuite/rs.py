@@ -27,7 +27,7 @@ def minify_and_concat( target, files, append = False, minify = True ):
 
 def build_asset( destdir, asset ):
 
-	target = os.path.join( destdir, assets.assets[ asset ][ 'output' ] ),
+	target = os.path.join( destdir, assets.assets[ asset ][ 'output' ] )
 
 	destination = open( target, 'wb' )
 
