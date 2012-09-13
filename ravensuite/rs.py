@@ -44,7 +44,7 @@ def build_asset( destdir, asset ):
 
 		newname = os.path.join( os.path.dirname( os.path.realpath( __file__ ) ), 'static', fname )
 
-		f = open( fname, 'rb')
+		f = open( newname, 'rb')
 		if isMax is True:
 			print 'minifying and concatenating ' + fname
 			destination.write(
