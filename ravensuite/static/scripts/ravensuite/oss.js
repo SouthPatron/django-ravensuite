@@ -23,53 +23,28 @@
 
 	var dictionary = OSS.dictionary = {};
 
-	/* ------- Internal methods for management of pools and ids ---- */
+	/* ------- Internal methods for management of ids ---- */
 
-	var retrieve = OSS.retrieve = function( pool, id ) {
-		if ( this.dictionary[ pool ] === undefined ) return null;
-		if ( this.dictionary[ pool ][ id ] === undefined ) return null;
-		return this.dictionary[ pool ][ id ];
+	var retrieve = OSS.retrieve = function( id ) {
+		return ( this.dictionary[ id ] || null );
 	}
 
-	var store = OSS.store = function( pool, id, obj ) {
-		if ( this.dictionary[ pool ] === undefined ) {
-			this.dictionary[ pool ] = {};
-		}
-
-		if ( this.dictionary[ pool ][ id ] !== undefined ) {
-			delete this.dictionary[ pool ][ id ];
-		}
-
-		this.dictionary[ pool ][ id ] = obj;
+	var store = OSS.store = function( id, obj ) {
+		this.dictionary[ id ] = obj;
 	}
 
-	var remove = OSS.remove = function( pool, id ) {
-		if ( this.dictionary[ pool ] === undefined )
-			return null;
-
-		if ( this.dictionary[ pool ][ id ] !== undefined ) {
-			var obj = this.dictionary[ pool ][ id ];
-			delete this.dictionary[ pool ][ id ];
-			return obj;
-		}
-	}
-
-	var getPool = OSS.getPool = function( pool ) {
-		if ( this.dictionary[ pool ] === undefined ) {
-			return {}
-		}
-
-		return this.dictionary[ pool ];
+	var remove = OSS.remove = function( id ) {
+		delete this.dictionary[ id ];
 	}
 
 	/* ------- Support methods for easier access ---- */
 
 	var getApp = OSS.getApp = function() {
-		return this.retrieve( 'app', 'router' );
+		return this.retrieve( 'app.router' );
 	}
 
 	var setApp = OSS.setApp = function( app ) {
-		return this.store( 'app', 'router', app );
+		return this.store( 'app.router', app );
 	}
 
 
