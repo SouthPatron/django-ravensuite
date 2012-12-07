@@ -2,7 +2,7 @@ from setuptools import setup
 
 setup(
 		name = 'django-ravensuite',
-		version = '0.2.19',
+		version = '0.2.20',
 		author = 'SMK Software',
 		author_email = 'support@smksoftware.com',
 		packages = [ 'ravensuite', ],
@@ -12,7 +12,8 @@ setup(
 		long_description=open('README.txt').read(),
 		install_requires=[
 			"Django >= 1.4.0",
-			"slimit >= 0.7.4"
+			"slimit >= 0.7.4",
+			"pytz"
 		]
 	)
 
