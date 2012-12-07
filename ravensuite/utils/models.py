@@ -21,3 +21,29 @@ class MemoryModel( models.Model ):
 		return rc
 
 
+
+
+# --- MoneyField ------------------------------------------------
+
+class MoneyField( models.DecimalField ):
+	""" Convenience class which is a DecimalField with 19 digits and 2
+		decimal places.
+	"""
+	def __init__( self, *args, **kwargs ):
+		if 'max_digits' not in kwargs:
+			kwargs[ 'max_digits' ] = 19
+
+		if 'decimal_places' not in kwargs:
+			kwargs[ 'decimal_places' ] = 2
+
+		return super( MoneyField, self ).__init__( *args, **kwargs )
+
+try:
+	from south.modelsinspector import add_introspection_rules
+	add_introspection_rules([], ["^sp\.models\.MoneyField"])
+except ImportError, ie:
+	""" Presumably, south is not installed. So ... """
+	pass
+
+
+
