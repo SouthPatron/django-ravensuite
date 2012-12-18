@@ -20,7 +20,7 @@ def send_templated_email( template_name, from_address, keys = {}, cc_list = [], 
 	t_text = get_template( '{}.txt'.format( template_name ) )
 	t_html = get_template( '{}.html'.format( template_name ) )
 
-	dkey = copy.deepcopy( keys )
+	dkey = copy.copy( keys )
 	dkey[ 'user' ] = user
 
 	d = Context( dkey )
