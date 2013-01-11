@@ -57,3 +57,13 @@ class CaptureasNode(template.Node):
 		context[self.varname] = output
 		return ''
 
+
+
+@register.simple_tag
+def isactive( request, pattern ):
+	import re
+	if re.search( pattern, request.path ):
+		return 'active'
+	return ''
+
+
