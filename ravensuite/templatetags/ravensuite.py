@@ -67,9 +67,25 @@ def isactive( request, pattern ):
 	return ''
 
 
-@register.simple_tag
-def isappinstalled( request, appname ):
-	from django.conf import settings
-	return appname in settings.INSTALLED_APPS
+@register.tag(name='ifapp')
+def ifapp(parser, token):
+	try:
+		tag_name, args = token.contents.split(None, 1)
+	except ValueError:
+		raise template.TemplateSyntaxError("'ifapp' node requires an app name.")
+	nodelist = parser.parse(('endifapp',))
+	parser.delete_first_token()
+	return IfAppNode(nodelist, args)
+
+class IfAppNode(template.Node):
+	def __init__(self, nodelist, appname):
+		self.nodelist = nodelist
+		self.appname = appname
+
+	def render(self, context):
+		from django.conf import settings
+		if self.appname in settings.INSTALLED_APPS:
+			return self.nodelist.render(context)
+		return ''
 
 
