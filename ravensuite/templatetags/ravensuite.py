@@ -67,3 +67,9 @@ def isactive( request, pattern ):
 	return ''
 
 
+@register.simple_tag
+def isappinstalled( request, appname ):
+	from django.conf import settings
+	return appname in settings.INSTALLED_APPS
+
+
