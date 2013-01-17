@@ -88,4 +88,8 @@ class IfAppNode(template.Node):
 			return self.nodelist.render(context)
 		return ''
 
+@register.simple_tag
+def settings_value( attrname ):
+	from django.conf import settings
+	return getattr( settings, attr, '' )
 
