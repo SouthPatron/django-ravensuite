@@ -91,5 +91,5 @@ class IfAppNode(template.Node):
 @register.simple_tag
 def settings_value( attrname ):
 	from django.conf import settings
-	return getattr( settings, attr, '' )
+	return getattr( settings, attrname, '' )
 
