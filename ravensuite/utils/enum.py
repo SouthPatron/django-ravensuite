@@ -7,19 +7,19 @@ class ChoicesEnum( object ):
 	def __init__( self, *args, **kwargs ):
 		super( ChoicesEnum, self ).__init__()
 		vals = {}
-		for key,val in kwargs.iteritems():
+		for key,val in iter(kwargs.items()):
 			vals[ key ] = val
 		object.__setattr__( self, "_vals", vals )
 
 	def choices( self ):
 		cho = []
-		for key, val in object.__getattribute__( self, "_vals" ).iteritems():
+		for key, val in iter(object.__getattribute__( self, "_vals" ).items()):
 			cho.append( val )
 		cho.sort()
 		return cho
 
 	def contains( self, needle ):
-		for key, val in object.__getattribute__( self, "_vals" ).iteritems():
+		for key, val in iter(object.__getattribute__( self, "_vals" ).items()):
 			if needle == val[0]:
 				return True
 		return False
@@ -28,13 +28,13 @@ class ChoicesEnum( object ):
 		object.__getattribute__( self, "_vals" )[ name ] = val
 
 	def get( self, value ):
-		for key, val in object.__getattribute__( self, "_vals" ).iteritems():
+		for key, val in iter(object.__getattribute__( self, "_vals" ).items()):
 			if value == val[0]:
 				return val
 		return None
 
 	def get_by_display( self, value ):
-		for key, val in object.__getattribute__( self, "_vals" ).iteritems():
+		for key, val in iter(object.__getattribute__( self, "_vals" ).items()):
 			if value == val[1]:
 				return val
 		return None
